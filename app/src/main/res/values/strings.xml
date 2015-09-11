@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HTTPServer</string>
+    <string name="http_daemon_started">HTTP daemon started</string>
+    <string name="http_daemon_stopped">HTTP daemon stopped</string>
+    <string name="http_daemon_label">HTTP daemon</string>
+</resources>

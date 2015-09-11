@@ -1,0 +1,137 @@
+/*
+* JavaLittleWebServer
+* Administration panel style
+*
+* Copyright Piotr Polak <piotr@polak.ro>
+*/
+
+* {margin: 0;padding: 0;}
+
+body {
+	font-family: Arial, Tahoma, Verdana, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #333;
+	background-color: #111;
+	text-align: center;	
+	background-repeat: repeat-x;
+}
+#main {
+	width: 800px;
+	padding-bottom: 15px;
+	padding: 20px 15px 15px 15px;
+	text-align: left;
+	margin-left: auto;
+	background-color: #FFF;
+	margin-right: auto;
+	box-shadow: 0px 0px 100px #888;
+	border-radius: 0 0 10px 10px;
+}
+#main div.menu {
+	float: left;
+	width: 200px;
+}
+#main div.content {
+	width: 560px;
+	float: right;
+}
+
+a {
+	color:#2D498C;
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+p {
+	padding: 5px;
+	font-size: 12px;
+	line-height: 16px;
+	padding-right: 20px;
+	padding-left: 20px;
+	text-align: justify;
+}
+h1 {
+	padding-bottom: 5px;
+	margin-right: 20px;
+	margin-bottom: 15px;
+	color: #FF3300;
+	font-size: 28px;
+	font-weight: bolder;
+	border-bottom: #E2E2E2 solid 1px;
+}
+h2 {
+	margin: 5px;
+	font-size: 16px;
+	color: #333;
+}
+img {
+	border: none;
+}
+ul, li {
+	width: 200px;
+	list-style: none;
+}
+ul {
+	border: #C9C9C9 solid 1px;
+	border-bottom: none;
+}
+#main div.menu a {
+	border-top:#F5F5F5 solid 2px;
+	border-bottom:#C9C9C9 solid 1px;
+	color: #919191;
+	font-weight: bold;
+	background: #EEEEEE;
+	display: block;
+	padding: 8px;
+	text-decoration: none;
+}
+#main div.menu a:hover {
+	color: #FFFFFF;
+	border-top:#F5F5F5 solid 2px;
+	background: #ADC2DA;
+}
+label {
+	display: block;
+}
+.input_i {
+	border: #B3C2D1 solid 1px;
+	padding: 3px;
+	background-color: #F9F9F9;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color:#000066;
+}
+.input_b {
+	display: block;
+	margin-top: 5px;
+	border: #B3C2D1 solid 1px;
+	padding: 3px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: #F9F9F9;
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #333333;
+}
+p.filemanager {
+	margin: 0px;
+	margin-left: 20px;
+	padding: 0px;
+	text-align: left;
+}
+form {
+	margin-left: 20px;
+}
+p.path {
+	background-color:#F3F3F3;
+	border: #E8E8E8 solid 1px;
+	padding: 4px;
+	width: 100%;
+	margin: 10px;
+}
+.clearfooter {
+	clear: both;
+	color:#99CC00;
+	font-size: 12px;
+	padding-top: 10px;
+}

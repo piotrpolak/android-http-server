@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:padding="10px"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout02" android:layout_marginTop="20px"
+        android:layout_centerHorizontal="true" android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+        <ImageView android:layout_height="32px" android:id="@+id/ImageView01"
+            android:layout_width="22px" android:gravity="center_vertical"></ImageView>
+        <TextView android:layout_toRightOf="@+id/ImageView01"
+            android:textSize="32px"
+            android:layout_marginLeft="10px" android:layout_height="wrap_content"
+            android:id="@+id/TextView01" android:layout_width="wrap_content"
+            android:text="Initializing..." android:textStyle="bold"
+            android:layout_centerVertical="true"></TextView>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/RelativeLayout03" android:layout_marginTop="20px"
+        android:layout_marginBottom="40px" android:layout_centerHorizontal="true"
+        android:layout_below="@+id/RelativeLayout02" android:layout_height="wrap_content"
+        android:layout_width="wrap_content">
+        <TextView
+            android:layout_height="wrap_content" android:id="@+id/TextView02"
+            android:layout_width="wrap_content" android:text="localhost"
+            android:autoLink="web" android:layout_centerHorizontal="true"></TextView>
+    </RelativeLayout>
+
+    <Button android:layout_height="wrap_content" android:id="@+id/Button01"
+        android:text="..." android:layout_alignParentLeft="true"
+        android:layout_below="@+id/RelativeLayout03" android:layout_width="match_parent"
+        android:layout_marginBottom="40px"></Button>
+
+    <Button android:layout_height="wrap_content"
+        android:layout_width="wrap_content" android:text="Run in background"
+        android:id="@+id/Button02" android:layout_alignParentLeft="true"
+        android:layout_below="@+id/Button01"></Button>
+    <Button android:layout_height="wrap_content"
+        android:layout_width="wrap_content" android:text="Stop and exit"
+        android:id="@+id/Button03" android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/Button02" android:layout_below="@+id/Button01"></Button>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/Button02"
+        android:layout_alignRight="@+id/Button03"
+        android:layout_below="@+id/Button02"
+        android:fitsSystemWindows="true"
+        android:lines="14"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="8dp" />
+
+</RelativeLayout>

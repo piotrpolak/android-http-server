@@ -18,6 +18,8 @@ import java.net.Socket;
  */
 public class HTTPError {
 
+	// TODO Split the error into multiple subclasses
+
 	protected HTTPResponse response;
 	protected HTMLErrorDocument doc;
 

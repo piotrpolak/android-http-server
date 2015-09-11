@@ -1,29 +1,30 @@
 package ro.polak.webserver.controller;
 
 import ro.polak.webserver.WebServer;
+
 import java.lang.Object;
 
 public interface ControllerInterface {
 
-	public void println(String text);
+    void println(String text);
 
-	public void start();
+    void start();
 
-	public void stop();
+    void stop();
 
-	public WebServer getServer();
+    WebServer getServer();
 
-	/**
-	 * Returns application context, this is mostly used for android applications
-	 * 
-	 * @return
-	 */
-	public Object getContext();
+    /**
+     * Returns application context, this is mostly used for android applications
+     *
+     * @return
+     */
+    Object getContext();
 
-	/**
-	 * Sets applicatiion context, this is mostly used for android applications
-	 * 
-	 * @param context
-	 */
-	public void setContext(Object context);
+    /**
+     * Sets applicatiion context, this is mostly used for android applications
+     *
+     * @param context
+     */
+    void setContext(Object context);
 }

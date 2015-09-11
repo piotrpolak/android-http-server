@@ -14,167 +14,161 @@ import ro.polak.webserver.JLWSConfig;
 
 /**
  * Session mechanism for little servlets
- * 
+ *
  * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
  * @version 1.1/22.02.2008
- * 
  */
 public class HTTPSession {
 
-	public static final Pattern pattern = Pattern.compile("[a-z]+");
-	private transient HTTPRequest request;
-	private transient HTTPResponse response;
-	private String sid;
-	private String directoryPath = JLWSConfig.TempDir;
-	private String cookieName = "JSSSESSIONID";
-	private StringHashTable vars;
-	private boolean isStarted = false;
+    public static final Pattern pattern = Pattern.compile("[a-z]+");
+    private transient HTTPRequest request;
+    private transient HTTPResponse response;
+    private String sid;
+    private String directoryPath = JLWSConfig.TempDir;
+    private String cookieName = "JSSSESSIONID";
+    private StringHashTable vars;
+    private boolean isStarted = false;
 
-	/**
-	 * Session constructor
-	 * 
-	 * @param request
-	 *            http request
-	 * @param response
-	 *            http response
-	 */
-	public HTTPSession(HTTPRequest request, HTTPResponse response) {
-		this.response = response;
-		this.request = request;
-	}
+    /**
+     * Session constructor
+     *
+     * @param request  http request
+     * @param response http response
+     */
+    public HTTPSession(HTTPRequest request, HTTPResponse response) {
+        this.response = response;
+        this.request = request;
+    }
 
-	/**
-	 * Initializes session, makes the session variables usable.
-	 * <p>
-	 * Unfreezes or starts a new session
-	 */
-	private void start() {
-		if (isStarted == true) {
-			return;
-		}
+    /**
+     * Initializes session, makes the session variables usable.
+     * <p/>
+     * Unfreezes or starts a new session
+     */
+    private void start() {
+        if (isStarted == true) {
+            return;
+        }
 
-		// Checks for cookie
-		sid = request.getCookie(cookieName);
-		boolean sessionUnfreezed = false;
+        // Checks for cookie
+        sid = request.getCookie(cookieName);
+        boolean sessionUnfreezed = false;
 
-		// Adds protection
-		if (sid != null && sid.length() == 32 && pattern.matcher(sid).matches()) {
-			sessionUnfreezed = unfreeze();
-		}
+        // Adds protection
+        if (sid != null && sid.length() == 32 && pattern.matcher(sid).matches()) {
+            sessionUnfreezed = unfreeze();
+        }
 
-		if (!sessionUnfreezed) {
-			sid = RandomStringGenerator.generate();
-			response.setCookie(cookieName, sid);
-			vars = new StringHashTable();
-		}
+        if (!sessionUnfreezed) {
+            sid = RandomStringGenerator.generate();
+            response.setCookie(cookieName, sid);
+            vars = new StringHashTable();
+        }
 
-		isStarted = true;
-	}
+        isStarted = true;
+    }
 
-	/**
-	 * Sets session attribute
-	 * 
-	 * @param varName
-	 *            attribute name
-	 * @param varValue
-	 *            attribute value
-	 */
-	public void setAttribute(String varName, String varValue) {
-		if (!isStarted) {
-			this.start();
-		}
-		vars.set(varName, varValue);
-	}
+    /**
+     * Sets session attribute
+     *
+     * @param varName  attribute name
+     * @param varValue attribute value
+     */
+    public void setAttribute(String varName, String varValue) {
+        if (!isStarted) {
+            this.start();
+        }
+        vars.set(varName, varValue);
+    }
 
-	/**
-	 * Gets session attribute of the specified name
-	 * 
-	 * @param varName
-	 *            Attribute name
-	 * @return Attribute value
-	 */
-	public String getAttribute(String varName) {
-		if (!isStarted) {
-			this.start();
-		}
-		try {
-			return vars.get(varName);
-		} catch (NullPointerException e) {
-			return null;
-		}
-	}
+    /**
+     * Gets session attribute of the specified name
+     *
+     * @param varName Attribute name
+     * @return Attribute value
+     */
+    public String getAttribute(String varName) {
+        if (!isStarted) {
+            this.start();
+        }
+        try {
+            return vars.get(varName);
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
 
-	/**
-	 * Returns session's id
-	 * 
-	 * @return session's id
-	 */
-	public String getID() {
-		return this.sid;
-	}
+    /**
+     * Returns session's id
+     *
+     * @return session's id
+     */
+    public String getID() {
+        return this.sid;
+    }
 
-	/**
-	 * Destroys session and frees resources
-	 */
-	public void destroy() {
-		// For freeze method
-		isStarted = false;
+    /**
+     * Destroys session and frees resources
+     */
+    public void destroy() {
+        // For freeze method
+        isStarted = false;
 
-		// Remove cookie
-		response.setCookie(cookieName, "", -100);
+        // Remove cookie
+        response.setCookie(cookieName, "", -100);
 
-		// Delete file
-		File file = new File(directoryPath + sid);
-		try {
-			file.delete();
-		} catch (Exception e) {
-		}
-	}
+        // Delete file
+        File file = new File(directoryPath + sid);
+        try {
+            file.delete();
+        } catch (Exception e) {
+        }
+    }
 
-	protected void freeze() {
-		if (isStarted == false) {
-			return;
-		}
+    protected void freeze() {
+        if (isStarted == false) {
+            return;
+        }
 
-		File file = new File(directoryPath + sid);
-		try {
-			file.createNewFile();
-		} catch (Exception e) { /* Unable to create session file */
-		}
+        File file = new File(directoryPath + sid);
+        try {
+            file.createNewFile();
+        } catch (Exception e) { /* Unable to create session file */
+        }
 
-		FileOutputStream fos = null;
-		ObjectOutputStream out = null;
-		try {
-			fos = new FileOutputStream(file);
-			out = new ObjectOutputStream(fos);
-			out.writeObject(vars);
-			out.close();
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-	}
+        FileOutputStream fos = null;
+        ObjectOutputStream out = null;
+        try {
+            fos = new FileOutputStream(file);
+            out = new ObjectOutputStream(fos);
+            out.writeObject(vars);
+            out.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-	protected boolean unfreeze() {
-		if (isStarted == true) {
-			return false;
-		}
+    protected boolean unfreeze() {
+        if (isStarted == true) {
+            return false;
+        }
 
-		FileInputStream fis = null;
-		ObjectInputStream in = null;
-		try {
-			fis = new FileInputStream(new File(directoryPath + sid));
-			in = new ObjectInputStream(fis);
-			vars = (StringHashTable) in.readObject();
-			in.close();
-			return true;
-		} catch (IOException e) {
-			sid = RandomStringGenerator.generate();
-			response.setCookie(cookieName, sid);
-			vars = new StringHashTable();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+        FileInputStream fis = null;
+        ObjectInputStream in = null;
+        try {
+            fis = new FileInputStream(new File(directoryPath + sid));
+            in = new ObjectInputStream(fis);
+            vars = (StringHashTable) in.readObject();
+            in.close();
+            return true;
+        } catch (IOException e) {
+            sid = RandomStringGenerator.generate();
+            response.setCookie(cookieName, sid);
+            vars = new StringHashTable();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

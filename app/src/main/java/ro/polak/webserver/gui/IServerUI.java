@@ -8,32 +8,31 @@ package ro.polak.webserver.gui;
 import ro.polak.webserver.controller.ControllerInterface;
 
 /**
- * 
  * @author Admin
  */
 public interface IServerUI {
 
-	/**
-	 * GUI initialization method
-	 * 
-	 * @param controller
-	 */
-	public void initialize(ControllerInterface controller);
+    /**
+     * GUI initialization method
+     *
+     * @param controller
+     */
+    void initialize(ControllerInterface controller);
 
-	/**
-	 * GUI print debug method
-	 * 
-	 * @param text
-	 */
-	public void println(String text);
+    /**
+     * GUI print debug method
+     *
+     * @param text
+     */
+    void println(String text);
 
-	/**
-	 * GUI method called by controller on stop
-	 */
-	public void stop();
+    /**
+     * GUI method called by controller on stop
+     */
+    void stop();
 
-	/**
-	 * GUI method called by controller on start
-	 */
-	public void start();
+    /**
+     * GUI method called by controller on start
+     */
+    void start();
 }

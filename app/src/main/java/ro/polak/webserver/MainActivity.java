@@ -193,9 +193,8 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
      */
     public void println(String text) {
         try {
-            consoleText.setText(text+"\n"+consoleText.getText());
-        }
-        catch(Exception e) {
+            consoleText.setText(text + "\n" + consoleText.getText());
+        } catch (Exception e) {
             Log.i("HTTP", text);
         }
     }
@@ -214,14 +213,11 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
             InetAddress addr = InetAddress.getByAddress(BigInteger.valueOf(wifiInfo.getIpAddress()).toByteArray());
             ipAddress = addr.getHostAddress().toString();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             try {
-                for (Enumeration<NetworkInterface> en = NetworkInterface
-                        .getNetworkInterfaces(); en.hasMoreElements();) {
+                for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
                     NetworkInterface intf = en.nextElement();
-                    for (Enumeration<InetAddress> enumIpAddr = intf
-                            .getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                         InetAddress inetAddress = enumIpAddr.nextElement();
                         if (!inetAddress.isLoopbackAddress()) {
                             ipAddress = inetAddress.getHostAddress().toString();

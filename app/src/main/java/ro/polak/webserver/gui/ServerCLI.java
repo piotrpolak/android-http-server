@@ -7,24 +7,23 @@ package ro.polak.webserver.gui;
 import ro.polak.webserver.controller.ControllerInterface;
 
 /**
- * 
  * @author Admin
  */
 public class ServerCLI implements IServerUI {
 
-	public void initialize(ControllerInterface controller) {
+    public void initialize(ControllerInterface controller) {
 
-	}
+    }
 
-	public void println(String text) {
-		System.out.println(text);
-	}
+    public void println(String text) {
+        System.out.println(text);
+    }
 
-	public void stop() {
-		this.println("The server has stopped.");
-	}
+    public void stop() {
+        this.println("The server has stopped.");
+    }
 
-	public void start() {
-		this.println("The server has started.");
-	}
+    public void start() {
+        this.println("The server has started.");
+    }
 }

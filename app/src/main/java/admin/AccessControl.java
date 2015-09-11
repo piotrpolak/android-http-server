@@ -5,52 +5,52 @@ import ro.polak.webserver.JLWSConfig;
 
 public class AccessControl {
 
-	protected ro.polak.webserver.servlet.HTTPSession session;
+    protected ro.polak.webserver.servlet.HTTPSession session;
 
-	public AccessControl(ro.polak.webserver.servlet.HTTPSession session) {
-		this.session = session;
-	}
+    public AccessControl(ro.polak.webserver.servlet.HTTPSession session) {
+        this.session = session;
+    }
 
-	public boolean isLogged() {
-		if (session == null) {
-			return false;
-		}
-		if (session.getAttribute("loggedin") == null) {
-			return false;
-		}
-		if (session.getAttribute("loggedin").equals("1")) {
-			return true;
-		}
-		return false;
-	}
+    public boolean isLogged() {
+        if (session == null) {
+            return false;
+        }
+        if (session.getAttribute("loggedin") == null) {
+            return false;
+        }
+        if (session.getAttribute("loggedin").equals("1")) {
+            return true;
+        }
+        return false;
+    }
 
-	public void logout() {
-		session.setAttribute("loggedin", null);
-	}
+    public void logout() {
+        session.setAttribute("loggedin", null);
+    }
 
-	public boolean doLogin(String login, String password) {
-		boolean logged = false;
-		try {
-			if (AccessControl.getConfig().get("_managementLogin").equals(login)
-					&& AccessControl.getConfig().get("_managementPassword")
-							.equals(password)) {
+    public boolean doLogin(String login, String password) {
+        boolean logged = false;
+        try {
+            if (AccessControl.getConfig().get("_managementLogin").equals(login)
+                    && AccessControl.getConfig().get("_managementPassword")
+                    .equals(password)) {
 
-				session.setAttribute("loggedin", "1");
-				logged = true;
+                session.setAttribute("loggedin", "1");
+                logged = true;
 
-				// Get user from DB
-			}
-		} catch (NullPointerException e) {
-			// e.printStackTrace();
-			logged = false;
-		}
-		return logged;
-	}
+                // Get user from DB
+            }
+        } catch (NullPointerException e) {
+            // e.printStackTrace();
+            logged = false;
+        }
+        return logged;
+    }
 
-	public static Config getConfig() {
-		Config config = new Config();
-		config.read(JLWSConfig.getBaseFilesPath() + "admin.conf");
+    public static Config getConfig() {
+        Config config = new Config();
+        config.read(JLWSConfig.getBaseFilesPath() + "admin.conf");
 
-		return config;
-	}
+        return config;
+    }
 }

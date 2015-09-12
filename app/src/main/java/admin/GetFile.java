@@ -37,7 +37,7 @@ public class GetFile extends Servlet {
 						"Content-disposition",
 						"attachment; filename="
 								+ Utilities.URLEncode(f.getName()));
-				response.setContentType(JLWSConfig.MimeType
+				response.setContentType(JLWSConfig.MimeTypeMapping
 						.getMimeTypeByExtension(Utilities.getExtension(f
 								.getName())));
 				response.serveFile(f);

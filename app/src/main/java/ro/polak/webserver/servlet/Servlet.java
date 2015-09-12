@@ -6,7 +6,7 @@ package ro.polak.webserver.servlet;
  * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
  * @version 1.0/21.02.2008
  */
-public abstract class Servlet implements ServletInterface {
+public abstract class Servlet implements IServlet {
 
     protected HTTPSession session;
     // Info
@@ -25,9 +25,17 @@ public abstract class Servlet implements ServletInterface {
         this.terminate(request, response);
     }
 
+    /**
+     * The servlet initialization method. The reusable resources should be
+     * initialized in the initialize method
+     */
     public void initialize() {
     }
 
+    /**
+     * The servlet destroy method. The reusable resources should be destoroyed
+     * in the finalize method
+     */
     public void finalize() {
     }
 

@@ -5,7 +5,7 @@
 
 package ro.polak.webserver.gui;
 
-import ro.polak.webserver.controller.ControllerInterface;
+import ro.polak.webserver.controller.IController;
 
 /**
  * @author Admin
@@ -17,7 +17,7 @@ public interface IServerUI {
      *
      * @param controller
      */
-    void initialize(ControllerInterface controller);
+    void initialize(IController controller);
 
     /**
      * GUI print debug method

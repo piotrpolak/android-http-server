@@ -8,7 +8,7 @@
  **************************************************/
 package ro.polak.webserver;
 
-import ro.polak.webserver.controller.ControllerInterface;
+import ro.polak.webserver.controller.IController;
 
 import java.io.*;
 import java.net.*;
@@ -32,14 +32,14 @@ public class WebServer extends Thread {
 
     private boolean listen = false;
     private ServerSocket serverSocket = null;
-    private ControllerInterface controller = null;
+    private IController controller = null;
 
     /**
      * Default constructor
      *
      * @param controller
      */
-    public WebServer(ControllerInterface controller) {
+    public WebServer(IController controller) {
         this.controller = controller;
         this.controller.println("Initializing WebServer.");
     }
@@ -91,7 +91,7 @@ public class WebServer extends Thread {
 
         // Checking document root
         if (!(new File(JLWSConfig.DocumentRoot).isDirectory())) {
-            this.controller.println("ERROR: DocumentRoot does not exist! PATH: "+ JLWSConfig.DocumentRoot);
+            this.controller.println("ERROR: DocumentRoot does not exist! PATH: " + JLWSConfig.DocumentRoot);
             // return false;
         }
 

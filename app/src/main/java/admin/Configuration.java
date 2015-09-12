@@ -23,7 +23,7 @@ public class Configuration extends Servlet {
         // paramNames.add("TempDir");
         // paramNames.add("ServletMappedExtension");
         // paramNames.add("DirectoryIndex");
-        // paramNames.add("MimeType");
+        // paramNames.add("MimeTypeMapping");
         // paramNames.add("DefaultMimeType");
         // paramNames.add("MaxThreads");
         // paramNames.add("KeepAlive");

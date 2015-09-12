@@ -10,13 +10,15 @@ import ro.polak.utilities.Config;
 
 public class JLWSConfig {
 
+    // TODO Eliminate static public variables and make it possible to get config out of the webserver instance
+
     private static String basePath = Environment.getExternalStorageDirectory() + "/httpd/";
     public static int Listen = 8080;
     public static String DocumentRoot = JLWSConfig.basePath + "www/";
     public static String TempDir = JLWSConfig.basePath + "temp/";
     public static String ServletMappedExtension = "dhtml";
     public static Vector<String> DirectoryIndex = new Vector<String>(5);
-    public static MimeType MimeType = null;
+    public static MimeTypeMapping MimeTypeMapping = null;
     public static String DefaultMimeType = "text/plain";
     public static int MaxThreads = 50;
     public static boolean KeepAlive = false;
@@ -51,11 +53,10 @@ public class JLWSConfig {
             } catch (Exception e) {
             }
 
-            JLWSConfig.ServletMappedExtension = config
-                    .get("ServletMappedExtension");
+            JLWSConfig.ServletMappedExtension = config.get("ServletMappedExtension");
 
             // TODO Mimetype
-            JLWSConfig.MimeType = new MimeType(JLWSConfig.basePath + config.get("MimeType"), config.get("DefaultMimeType"));
+            JLWSConfig.MimeTypeMapping = new MimeTypeMapping(JLWSConfig.basePath + config.get("MimeTypeMapping"), config.get("DefaultMimeType"));
             JLWSConfig.DefaultMimeType = config.get("DefaultMimeType");
             JLWSConfig.MaxThreads = Integer.parseInt(config.get("MaxThreads"));
             JLWSConfig.KeepAlive = config.get("KeepAlive").equals("On");

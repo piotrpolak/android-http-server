@@ -146,7 +146,7 @@ public class ServerThread extends Thread {
                 if (fileToBeServed != null) {
                     fileExt = Utilities.getExtension(fileToBeServed.getName());
                     response.setStatus(HTTPResponseHeaders.STATUS_OK);
-                    response.setContentType(JLWSConfig.MimeType.getMimeTypeByExtension(fileExt));
+                    response.setContentType(JLWSConfig.MimeTypeMapping.getMimeTypeByExtension(fileExt));
                     response.setContentLength(fileToBeServed.length());
                     response.flushHeaders();
 
@@ -217,7 +217,7 @@ public class ServerThread extends Thread {
 
                     if (asset_exists) {
                         response.setStatus(HTTPResponseHeaders.STATUS_OK);
-                        // response.setContentType(JLWSConfig.MimeType.getMimeTypeByExtension(fileExt));
+                        // response.setContentType(JLWSConfig.MimeTypeMapping.getMimeTypeByExtension(fileExt));
 
                         response.flushHeaders();
                         response.serveAsset(asset_path);

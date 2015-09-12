@@ -1,4 +1,4 @@
-package ro.polak.webserver;
+package ro.polak.webserver.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,7 +21,8 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import ro.polak.webserver.controller.ControllerInterface;
+import ro.polak.webserver.R;
+import ro.polak.webserver.controller.IController;
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.gui.IServerUI;
 
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
      *
      * @param controller
      */
-    public void initialize(ControllerInterface controller) {
+    public void initialize(IController controller) {
         // This is ignored as GUI is the starter
     }
 

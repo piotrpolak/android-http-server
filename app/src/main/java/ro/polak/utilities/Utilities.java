@@ -21,8 +21,9 @@ public class Utilities {
      */
     public static String getExtension(String filename) {
 
-        if (filename == null)
+        if (filename == null) {
             return null;
+        }
 
         filename = filename.toLowerCase();
         String ext = "";

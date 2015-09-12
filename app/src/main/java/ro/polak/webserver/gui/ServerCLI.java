@@ -4,14 +4,14 @@
  */
 package ro.polak.webserver.gui;
 
-import ro.polak.webserver.controller.ControllerInterface;
+import ro.polak.webserver.controller.IController;
 
 /**
  * @author Admin
  */
 public class ServerCLI implements IServerUI {
 
-    public void initialize(ControllerInterface controller) {
+    public void initialize(IController controller) {
 
     }
 

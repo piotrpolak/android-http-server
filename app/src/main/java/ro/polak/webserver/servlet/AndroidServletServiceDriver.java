@@ -17,26 +17,24 @@ public class AndroidServletServiceDriver implements IServletServiceDriver {
      */
     public boolean loadServlet(String servletPath) throws InstantiationException, IllegalAccessException, ClassCastException {
 
-        int lastSlashpos = 0;
+        int lastSlashPos = 0;
 
         try {
-            lastSlashpos = servletPath.lastIndexOf("/");
+            lastSlashPos = servletPath.lastIndexOf("/");
         } catch (Exception e) {
         }
 
-        String servletName = servletPath.substring(lastSlashpos + 1);
-        String servletDir = servletPath.substring(0, lastSlashpos + 1);
+        String servletName = servletPath.substring(lastSlashPos + 1);
+        String servletDir = servletPath.substring(0, lastSlashPos + 1);
 
         try {
             servletName = servletName.substring(0, servletName.indexOf("."));
         } catch (Exception e) {
         }
 
-        servletName = servletName.substring(0, 1).toUpperCase()
-                + servletName.substring(1);
+        servletName = servletName.substring(0, 1).toUpperCase() + servletName.substring(1);
 
-        servletName = servletDir.substring(1).replaceAll("/", ".")
-                + servletName;
+        servletName = servletDir.substring(1).replaceAll("/", ".") + servletName;
 
         try {
             littleServlet = (Servlet) Class.forName(servletName).newInstance();

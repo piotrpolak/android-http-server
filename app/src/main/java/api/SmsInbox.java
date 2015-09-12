@@ -6,11 +6,8 @@ import ro.polak.webserver.servlet.HTTPResponse;
 import ro.polak.webserver.servlet.Servlet;
 
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.telephony.SmsManager;
 
 public class SmsInbox extends Servlet {
 

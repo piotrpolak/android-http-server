@@ -21,10 +21,10 @@ public class UpdateConfiguration extends Servlet {
         FileUpload fu = request.getFileUpload();
 
         if (fu.getFile("file") == null) {
-            doc.writeln("<p>Error: no file uploaded</p>");
+            doc.writeln("<p>Error: no file uploaded ("+fu.size()+")</p>");
         } else {
             if (Utilities.getExtension(fu.getFile("file").getFileName()).equals("conf")) {
-                if (fu.getFile("file").moveTo("httpd_test.conf")) {
+                if (fu.getFile("file").moveTo(JLWSConfig.getBaseFilesPath() +"httpd_test.conf")) {
 
                     (new File(JLWSConfig.getBaseFilesPath() + "bakup_httpd.conf")).delete();
                     (new File(JLWSConfig.getBaseFilesPath() + "httpd.conf")).renameTo(new File(JLWSConfig.getBaseFilesPath() + "bakup_httpd.conf"));

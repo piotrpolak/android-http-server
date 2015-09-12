@@ -40,8 +40,7 @@ public class FileUpload {
             return null;
         }
         for (int i = 0; i < uploadedFiles.size(); i++) {
-            if (((UploadedFile) uploadedFiles.elementAt(i)).getName().equals(
-                    fileFormName)) {
+            if (((UploadedFile) uploadedFiles.elementAt(i)).getName().equals(fileFormName)) {
                 return (UploadedFile) uploadedFiles.elementAt(i);
             }
         }

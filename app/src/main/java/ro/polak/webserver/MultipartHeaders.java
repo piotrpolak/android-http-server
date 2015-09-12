@@ -5,68 +5,102 @@ package ro.polak.webserver;
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @version 201509
- * @since 200802
  * @link http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
+ * @since 200802
  */
 public class MultipartHeaders extends Headers {
 
-    // TODO Make protected
-    public String fileName = null;
-    // TODO Make protected
-    public String contentType = null;
-    // TODO Make protected
-    public String name = null;
+    private String fileName = null;
+    private String contentType = null;
+    private String postFieldName = null;
 
     /**
      * Parses multipart headers
      *
      * @param headersString headers
      */
-    public static MultipartHeaders parse(String headersString) {
+    public void parse(String headersString) {
 
-        MultipartHeaders h = (MultipartHeaders) Headers.parse(headersString);
+        // Parsing header pairs
+        super.parse(headersString);
 
-        String contentDisposition = h.getHeader("Content-Disposition");
-        String name = contentDisposition.substring(contentDisposition.indexOf("name=\"") + 6);
+        // Reading uploaded file name
+        String contentDisposition = this.getHeader("Content-Disposition");
+        String n = contentDisposition.substring(contentDisposition.indexOf("name=\"") + 6);
         try {
-            name = name.substring(0, name.indexOf("\""));
-            h.setName(name);
+            n = n.substring(0, n.indexOf("\""));
         } catch (Exception e) {
             // Do nothing
+            //e.printStackTrace();
         }
 
-        String contentType = h.getHeader("Content-Type");
+        // Getting file type
+        String ct = this.getHeader("Content-Type");
 
-        if (contentType != null) {
-            String fileName = contentDisposition.substring(contentDisposition.indexOf("filename=\"") + 10);
-            fileName = fileName.substring(0, fileName.indexOf("\""));
-            h.setFileName(fileName);
+        // Getting file name
+        String fn = null;
+        if (ct != null) {
+            fn = contentDisposition.substring(contentDisposition.indexOf("filename=\"") + 10);
+            fn = fn.substring(0, fn.indexOf("\""));
         }
 
-        return h;
+        // Assigning values
+        setPostFieldName(n);
+        setContentType(ct);
+        setFileName(fn);
     }
 
+    /**
+     * Returns the uploaded file name
+     *
+     * @return
+     */
     public String getFileName() {
         return fileName;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
+    /**
+     * Returns the content type of the uploaded file
+     *
+     * @return
+     */
     public String getContentType() {
         return contentType;
     }
 
-    public void setContentType(String contentType) {
+    /**
+     * Returns the name of the form post field
+     *
+     * @return
+     */
+    public String getPostFieldName() {
+        return postFieldName;
+    }
+
+    /**
+     * Sets the uploaded file name
+     *
+     * @param fileName
+     */
+    private void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    /**
+     * Sets the content type of the uploaded file
+     *
+     * @param contentType
+     */
+    private void setContentType(String contentType) {
         this.contentType = contentType;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    /**
+     * Sets the name of the form post field
+     *
+     * @param name
+     */
+    private void setPostFieldName(String name) {
+        this.postFieldName = name;
     }
 }

@@ -16,7 +16,7 @@ import ro.polak.webserver.*;
  */
 public class HTTPRequest {
 
-    private HTTPRequestHeaders headers = null;
+    private HTTPRequestHeaders headers;
     private boolean isKeepAlive = false;
     private boolean isMultipart = false;
     private String remoteAddress = null;
@@ -54,9 +54,9 @@ public class HTTPRequest {
                 break;
             }
 
-			/* Seting status line, getting method, URI etc */
-            headers.setStatus(statusLine.toString());
 
+            /* Seting status line, getting method, URI etc */
+            headers.setStatus(statusLine.toString());
             Statistics.addBytesReceived(statusLine.length());
 
 			/*
@@ -84,6 +84,12 @@ public class HTTPRequest {
             if (inputHeaders.length() >= 3) {
                 headers.parse(inputHeaders.substring(0, inputHeaders.length() - 3));
             }
+            else
+            {
+                headers = new HTTPRequestHeaders();
+            }
+
+
 
 			/*
 			 * For post method
@@ -146,7 +152,7 @@ public class HTTPRequest {
 
 		/* Setting keep alive */
         try {
-            if (headers.getHeader("Connection").substring(0, 4).equals("keep")) {
+            if (headers != null && headers.getHeader("Connection").substring(0, 4).equals("keep")) {
                 isKeepAlive = true;
             }
         } catch (Exception e) {

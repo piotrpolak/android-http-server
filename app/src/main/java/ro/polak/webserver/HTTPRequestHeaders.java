@@ -19,10 +19,6 @@ public class HTTPRequestHeaders extends Headers {
     private Hashtable _post = new Hashtable<String,String>();
     private Hashtable _get = new Hashtable<String,String>();
 
-    public HTTPRequestHeaders() {
-        super();
-    }
-
     /**
      * Sets the status line
      *

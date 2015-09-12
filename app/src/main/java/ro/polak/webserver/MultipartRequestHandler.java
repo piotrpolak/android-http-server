@@ -16,8 +16,8 @@ import ro.polak.webserver.servlet.UploadedFile;
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @version 201509
- * @since 200802
  * @link http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
+ * @since 200802
  */
 public class MultipartRequestHandler {
 
@@ -50,6 +50,7 @@ public class MultipartRequestHandler {
      * @param boundary   boundary string
      */
     public MultipartRequestHandler(InputStream in, int postLength, String boundary) {
+        this.mHeaders = new MultipartHeaders();
         this.boundary = "\r\n--" + boundary;
         this.begin = "--" + boundary;
         this.postLength = postLength;
@@ -99,7 +100,7 @@ public class MultipartRequestHandler {
                 }
             } catch (IOException e) {
                 // TODO Throw exception instead of printing it
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
         this.body();
@@ -148,7 +149,7 @@ public class MultipartRequestHandler {
 					 */
                     if (currentDeliminator.charAt(charPosition) == buffer[i]) {
                         /*
-						 * Temp buffer is used in the case that there were some
+                         * Temp buffer is used in the case that there were some
 						 * positive comparisons at the end of the buffer, in
 						 * the case that the next read buffer contains chars
 						 * that are not the boundary, then this buffer is added
@@ -218,7 +219,7 @@ public class MultipartRequestHandler {
             }
         } catch (IOException e) {
             // TODO Throw exception instead of printing it
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         buffer = null;
     }
@@ -247,7 +248,7 @@ public class MultipartRequestHandler {
             } // HERE IT IS OK, when changed, it really sucks
             catch (IOException e) {
                 // TODO Throw exception instead of printing it
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         } else {
 			/* For variables */
@@ -282,7 +283,7 @@ public class MultipartRequestHandler {
                 fos.write(buffer, begin, end - begin);
             } catch (IOException e) {
                 // TODO Throw exception instead of printing it
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         } else {
 			/* For variables */
@@ -310,16 +311,16 @@ public class MultipartRequestHandler {
 			/*
 			 * Creating headers
 			 */
-            mHeaders = MultipartHeaders.parse(headersStringBuffered.toString() + "\r");
+            mHeaders.parse(headersStringBuffered.toString() + "\r");
 
-            if (mHeaders.contentType != null) {
+            if (mHeaders.getContentType() != null) {
 				/* For files */
                 try {
                     file = new File(JLWSConfig.TempDir + RandomStringGenerator.generate());
                     fos = new FileOutputStream(file);
                 } catch (FileNotFoundException e) {
                     // TODO Throw exception instead of printing it
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             } else {
 				/* For values */
@@ -365,7 +366,7 @@ public class MultipartRequestHandler {
                     fos.write(buffer, begin, len);
                 } catch (IOException e) {
                     // TODO Throw exception instead of printing it
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
 
@@ -375,7 +376,7 @@ public class MultipartRequestHandler {
                 fos.close();
             } catch (Exception e) {
                 // TODO Throw exception instead of printing it
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         } else {
 			/* For variables */
@@ -384,7 +385,7 @@ public class MultipartRequestHandler {
                     valueStringBuffered.append(buffer[i]);
                 }
             }
-            this._post.put(mHeaders.name, valueStringBuffered.toString());
+            this._post.put(mHeaders.getPostFieldName(), valueStringBuffered.toString());
         }
     }
 }

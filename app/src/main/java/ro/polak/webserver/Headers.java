@@ -1,5 +1,7 @@
 package ro.polak.webserver;
 
+import android.util.Log;
+
 import java.util.Hashtable;
 
 /**
@@ -19,22 +21,17 @@ public class Headers {
      *
      * @param headersString raw headers
      */
-    public static Headers parse(String headersString) {
-
-        Headers h = new Headers();
+    public void parse(String headersString) {
 
         String headerLines[] = headersString.split("\n");
         for (int i = 0; i < headerLines.length; i++) {
             try {
                 String headerLineValues[] = headerLines[i].split(": ");
-                h.setHeader(headerLineValues[0], headerLineValues[1].substring(0, headerLineValues[1].length() - 1)); // Avoid
-                // \n\r
+                this.setHeader(headerLineValues[0], headerLineValues[1].substring(0, headerLineValues[1].length() - 1)); // Avoid \n\r
             } catch (ArrayIndexOutOfBoundsException e) {
-                // e.printStackTrace();
+                //e.printStackTrace();
             }
         }
-
-        return h;
     }
 
     /**

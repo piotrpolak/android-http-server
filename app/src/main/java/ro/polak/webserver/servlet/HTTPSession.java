@@ -79,7 +79,11 @@ public class HTTPSession {
         if (!isStarted) {
             this.start();
         }
-        vars.put(varName, varValue);
+        if (varValue == null) {
+            vars.remove(varName);
+        } else {
+            vars.put(varName, varValue);
+        }
     }
 
     /**

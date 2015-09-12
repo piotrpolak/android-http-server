@@ -24,8 +24,8 @@ public class UploadedFile {
      * @param file uploaded file (temp)
      */
     public UploadedFile(MultipartHeaders h, File file) {
-        this.name = h.name;
-        this.fileName = h.fileName;
+        this.name = h.getPostFieldName();
+        this.fileName = h.getFileName();
         this.file = file;
     }
 

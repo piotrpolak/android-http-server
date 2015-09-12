@@ -12,7 +12,6 @@ import java.util.Hashtable;
 public class Headers {
 
     protected String status = "";
-    protected String headersString = "";
     protected Hashtable vars = new Hashtable<String, String>();
 
     /**
@@ -20,19 +19,22 @@ public class Headers {
      *
      * @param headersString raw headers
      */
-    public void parse(String headersString) {
-        this.headersString = headersString;
+    public static Headers parse(String headersString) {
+
+        Headers h = new Headers();
 
         String headerLines[] = headersString.split("\n");
         for (int i = 0; i < headerLines.length; i++) {
             try {
                 String headerLineValues[] = headerLines[i].split(": ");
-                setHeader(headerLineValues[0], headerLineValues[1].substring(0, headerLineValues[1].length() - 1)); // Avoid
+                h.setHeader(headerLineValues[0], headerLineValues[1].substring(0, headerLineValues[1].length() - 1)); // Avoid
                 // \n\r
             } catch (ArrayIndexOutOfBoundsException e) {
                 // e.printStackTrace();
             }
         }
+
+        return h;
     }
 
     /**

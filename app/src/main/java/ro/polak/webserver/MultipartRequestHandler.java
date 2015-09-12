@@ -310,7 +310,7 @@ public class MultipartRequestHandler {
 			/*
 			 * Creating headers
 			 */
-            mHeaders = new MultipartHeaders(headersStringBuffered.toString() + "\r");
+            mHeaders = MultipartHeaders.parse(headersStringBuffered.toString() + "\r");
 
             if (mHeaders.contentType != null) {
 				/* For files */

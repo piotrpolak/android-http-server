@@ -11,11 +11,9 @@ import android.net.Uri;
 
 public class SmsInbox extends Servlet {
 
-    public void main(HTTPRequest request, HTTPResponse response) {
+    public void service(HTTPRequest request, HTTPResponse response) {
 
-        Cursor cursor = ((Activity) MainController.getInstance().getContext())
-                .getContentResolver().query(Uri.parse("content://sms/inbox"),
-                        null, null, null, null);
+        Cursor cursor = ((Activity) MainController.getInstance().getContext()).getContentResolver().query(Uri.parse("content://sms/inbox"), null, null, null, null);
         cursor.moveToFirst();
 
         int max = 50;
@@ -31,9 +29,9 @@ public class SmsInbox extends Servlet {
             int ccm1 = cc - 1;
             for (int idx = 0; idx < cc; idx++) {
                 json += "\t\t\t\"" + cursor.getColumnName(idx) + "\":\"";
-                if (cursor.getString(idx) != null)
-                    json += cursor.getString(idx).toString()
-                            .replace("\"", "\\\"");
+                if (cursor.getString(idx) != null) {
+                    json += cursor.getString(idx).toString().replace("\"", "\\\"");
+                }
 
                 json += "\"";
 

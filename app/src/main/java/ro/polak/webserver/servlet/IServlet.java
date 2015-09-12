@@ -12,19 +12,19 @@ public interface IServlet {
 
     /**
      * The servlet initialization method. The reusable resources should be
-     * initialized in the initialize method
+     * initialized in the init method
      */
-    void initialize();
+    void init();
 
     /**
      * The servlet destroy method. The reusable resources should be destoroyed
-     * in the finalize method
+     * in the destroy method
      */
-    void finalize();
+    void destroy();
 
     /**
      * The main method of the servlet. Must be overridden, contains the servlet
      * body.
      */
-    void main(HTTPRequest request, HTTPResponse response);
+    void service(HTTPRequest request, HTTPResponse response);
 }

@@ -6,7 +6,7 @@ import ro.polak.webserver.servlet.Servlet;
 
 public class Logout extends Servlet {
 
-    public void main(HTTPRequest request, HTTPResponse response) {
+    public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(session);
         ac.logout();
 

@@ -86,7 +86,7 @@ public class ServletPool {
             ServletPoolItem spi = it.next();
 
             if (spi.getTimestamp() < expireTimestamp) {
-                spi.getServlet().finalize();
+                spi.getServlet().destroy();
                 spi.finalize();
                 it.remove();
             }
@@ -123,7 +123,7 @@ class ServletPoolItem {
     }
 
     public void finalize() {
-        this.servlet.finalize();
+        this.servlet.destroy();
         this.servlet = null;
     }
 }

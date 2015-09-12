@@ -12,7 +12,7 @@ import android.telephony.SmsManager;
 
 public class SmsSend extends Servlet {
 
-    public void main(HTTPRequest request, HTTPResponse response) {
+    public void service(HTTPRequest request, HTTPResponse response) {
 
         String to = request._post("to");
         String message = request._post("message");
@@ -49,8 +49,7 @@ public class SmsSend extends Servlet {
     private void sendSMS(String phoneNo, String message) {
         Activity a = ((Activity) MainController.getInstance().getContext());
 
-        PendingIntent pi = PendingIntent.getActivity(a, 0,
-                new Intent(a, a.getClass()), 0);
+        PendingIntent pi = PendingIntent.getActivity(a, 0, new Intent(a, a.getClass()), 0);
         SmsManager sms = SmsManager.getDefault();
         sms.sendTextMessage(phoneNo, null, message, pi, null);
     }

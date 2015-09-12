@@ -5,7 +5,7 @@ import ro.polak.utilities.Utilities;
 
 public class Configuration extends Servlet {
 
-    public void main(HTTPRequest request, HTTPResponse response) {
+    public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(session);
         if (!ac.isLogged()) {
             response.sendRedirect("Login.dhtml?relocate="

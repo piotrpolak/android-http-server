@@ -5,7 +5,7 @@ import ro.polak.utilities.Utilities;
 
 public class Login extends Servlet {
 
-    public void main(HTTPRequest request, HTTPResponse response) {
+    public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(session);
 
         HTMLDocument doc = new HTMLDocument("JavaLittleServer", false);
@@ -25,8 +25,7 @@ public class Login extends Servlet {
 
         String location = "Login.dhtml";
         if (request._get("relocate") != null) {
-            location += "?relocate="
-                    + Utilities.URLEncode(request._get("relocate"));
+            location += "?relocate=" + Utilities.URLEncode(request._get("relocate"));
         }
 
         String ff = "<form action=\""

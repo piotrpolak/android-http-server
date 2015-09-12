@@ -44,7 +44,7 @@ public class HTMLDocument {
         out += "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
         out += "<head>\n";
         out += "<title>" + this.title + "</title>\n";
-        out += "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=8859-2\" />\n";
+        out += "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n";
         out += headers;
         out += "<link href=\"/assets/css/screen.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
         out += "</head>\n";

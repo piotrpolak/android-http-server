@@ -21,22 +21,22 @@ public abstract class Servlet implements IServlet {
     protected void run(HTTPRequest request, HTTPResponse response) {
         this.session = new HTTPSession(request, response);
 
-        this.main(request, response);
+        this.service(request, response);
         this.terminate(request, response);
     }
 
     /**
      * The servlet initialization method. The reusable resources should be
-     * initialized in the initialize method
+     * initialized in the init method
      */
-    public void initialize() {
+    public void init() {
     }
 
     /**
      * The servlet destroy method. The reusable resources should be destoroyed
-     * in the finalize method
+     * in the destroy method
      */
-    public void finalize() {
+    public void destroy() {
     }
 
     /**

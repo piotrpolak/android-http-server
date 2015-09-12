@@ -18,20 +18,17 @@ public class DriveAccess extends Servlet {
         return this.roots;
     }
 
-    public void main(HTTPRequest request, HTTPResponse response) {
+    public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(session);
         if (!ac.isLogged()) {
-            response.sendRedirect("Login.dhtml?relocate="
-                    + Utilities.URLEncode((request.getHeaders()
-                    .getQueryString())));
+            response.sendRedirect("Login.dhtml?relocate=" + Utilities.URLEncode((request.getHeaders().getQueryString())));
             return;
         }
 
         HTMLDocument doc = new HTMLDocument("JavaLittleServer - Drive Access");
         doc.writeln("<h2>Drive Access</h2>");
 
-        if (!AccessControl.getConfig().get("_managementEnableDriveAccess")
-                .equals("On")) {
+        if (!AccessControl.getConfig().get("_managementEnableDriveAccess").equals("On")) {
             doc.writeln("<p>Option disabled in configuration.</p><p>See <b>httpd.conf</b>, parameter <b>_managementEnableDriveAccess</b> must be <b>On</b>.</p>");
             response.getPrintWriter().print(doc.toString());
             return;

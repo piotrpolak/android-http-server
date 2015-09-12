@@ -104,7 +104,7 @@ public class HTTPSession {
      *
      * @return session's id
      */
-    public String getID() {
+    public String getId() {
         return this.sid;
     }
 
@@ -126,6 +126,9 @@ public class HTTPSession {
         }
     }
 
+     /**
+      * Persists the session to the storage
+      */
     protected void freeze() {
         if (isStarted == false) {
             return;
@@ -150,27 +153,32 @@ public class HTTPSession {
         }
     }
 
-    protected boolean unfreeze() {
-        if (isStarted == true) {
-            return false;
-        }
+     /**
+      * Restores session from the storage
+      *
+      * @return
+      */
+     protected boolean unfreeze() {
+         if (isStarted == true) {
+             return false;
+         }
 
-        FileInputStream fis = null;
-        ObjectInputStream in = null;
-        try {
-            fis = new FileInputStream(new File(directoryPath + sid));
-            in = new ObjectInputStream(fis);
-            vars = (Hashtable) in.readObject();
-            in.close();
-            return true;
-        } catch (IOException e) {
-            sid = RandomStringGenerator.generate();
-            response.setCookie(cookieName, sid);
-            vars = new Hashtable<String,String>();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+         FileInputStream fis = null;
+         ObjectInputStream in = null;
+         try {
+             fis = new FileInputStream(new File(directoryPath + sid));
+             in = new ObjectInputStream(fis);
+             vars = (Hashtable) in.readObject();
+             in.close();
+             return true;
+         } catch (IOException e) {
+             sid = RandomStringGenerator.generate();
+             response.setCookie(cookieName, sid);
+             vars = new Hashtable<String, String>();
+         } catch (ClassNotFoundException e) {
+             e.printStackTrace();
+         }
 
-        return false;
-    }
+         return false;
+     }
 }

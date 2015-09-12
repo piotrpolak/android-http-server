@@ -44,7 +44,7 @@ public class AndroidServletServiceDriver implements IServletServiceDriver {
         }
 
         // ServletService.servletPool.add(servletName, littleServlet);
-        littleServlet.initialize();
+        littleServlet.init();
         return true;
     }
 

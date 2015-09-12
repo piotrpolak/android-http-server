@@ -2,16 +2,16 @@ package ro.polak.utilities;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Hashtable;
 
 /**
  * Server configuration
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.0.1/11.04.2008
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200802
  */
-public class Config extends StringHashTable {
-
-    public static final long serialVersionUID = 225354234;
+public class Config extends Hashtable<String, String> {
 
     /**
      * Reads the config file
@@ -20,6 +20,7 @@ public class Config extends StringHashTable {
      * @return
      */
     public boolean read(String config_file) {
+
         String line = null;
         String param_name = null;
         String param_value = null;
@@ -40,26 +41,15 @@ public class Config extends StringHashTable {
 
                 param_name = line.substring(0, line.indexOf(" "));
                 param_value = line.substring(line.indexOf(" ") + 1).trim();
-                this.set(param_name, param_value);
+                this.put(param_name, param_value);
             }
 
             input.close();
         } catch (Exception e) {
+            // TODO Throw exception
             return false;
         }
 
         return true;
-    }
-
-    public String get(String key) {
-        return (String) super.get(key);
-    }
-
-    /**
-     * @param attributeName name of the attribute
-     * @return specified attribute value as integer
-     */
-    public int getInteger(String attributeName) {
-        return Integer.parseInt((String) this.get(attributeName));
     }
 }

@@ -1,5 +1,7 @@
 package ro.polak.webserver;
 
+import java.util.Enumeration;
+
 /**
  * HTTP response headers representation
  * <p/>
@@ -79,11 +81,12 @@ public class HTTPResponseHeaders extends Headers {
      */
     public String toString() {
         String headersStr = status;
-        int counter = vars.size();
+        Enumeration<String> keys = vars.keys();
 
-        for (int i = 0; i < counter; i++) {
-            headersStr += vars.getNameAt(i) + ": " + vars.getValueAt(i)
-                    + "\r\n";
+        while( keys.hasMoreElements() )
+        {
+            String key = keys.nextElement();
+            headersStr += key + ": " + vars.get(key) + "\r\n";
         }
 
         if (keepAlive) {

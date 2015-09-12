@@ -1,15 +1,13 @@
 package ro.polak.webserver;
 
-import ro.polak.utilities.StringHashTable;
+import java.util.Hashtable;
 
 /**
- * HTTP request headers representation
- * <p/>
- * <a href="http://www.polak.ro/javalittlewebserver/">Java Little Web Server
- * Homepage</a>
+ * HTTP request headers wrapper
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.1/22.12.2010
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200802
  */
 public class HTTPRequestHeaders extends Headers {
 
@@ -18,8 +16,8 @@ public class HTTPRequestHeaders extends Headers {
     private String protocol;
     private String uri;
     private String queryParameters;
-    private StringHashTable _post = new StringHashTable();
-    private StringHashTable _get = new StringHashTable();
+    private Hashtable _post = new Hashtable<String,String>();
+    private Hashtable _get = new Hashtable<String,String>();
 
     public HTTPRequestHeaders() {
         super();
@@ -72,9 +70,9 @@ public class HTTPRequestHeaders extends Headers {
                     varName = parameterPair[0];
                     try {
                         varValue = parameterPair[1];
-                        _get.set(varName, varValue);
+                        _get.put(varName, varValue);
                     } catch (Exception e) {
-                        _get.set(varName, "");
+                        _get.put(varName, "");
                     }
 
                 } catch (Exception e) {
@@ -102,10 +100,10 @@ public class HTTPRequestHeaders extends Headers {
                 varName = parameterPair[0];
                 try {
                     varValue = parameterPair[1];
-                    _post.set(varName, varValue);
-                    _get.set(varName, varValue);
+                    _post.put(varName, varValue);
+                    _get.put(varName, varValue);
                 } catch (Exception e) {
-                    _post.set(varName, "");
+                    _post.put(varName, "");
                 }
 
             } catch (Exception e) {
@@ -119,7 +117,7 @@ public class HTTPRequestHeaders extends Headers {
      *
      * @param _post POST AttributeList
      */
-    public void setPost(StringHashTable _post) {
+    public void setPost(Hashtable<String, String> _post) {
         this._post = _post;
     }
 
@@ -130,7 +128,7 @@ public class HTTPRequestHeaders extends Headers {
      * @param attributeValue
      */
     public void setPostAttribute(String attributeName, String attributeValue) {
-        _post.set(attributeName, attributeValue);
+        _post.put(attributeName, attributeValue);
     }
 
     /**

@@ -1,21 +1,19 @@
 package ro.polak.webserver;
 
-import ro.polak.utilities.StringHashTable;
+import java.util.Hashtable;
 
 /**
  * HTTP headers representation
- * <p/>
- * <a href="http://www.polak.ro/javalittlewebserver/">Java Little Web Server
- * Homepage</a>
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.1/22.12.2010
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200802
  */
 public class Headers {
     protected String status = "";
     protected String headersString = "";
     protected String postParameters = "";
-    protected StringHashTable vars = new StringHashTable();
+    protected Hashtable vars = new Hashtable<String, String>();
 
     /**
      * Parses headers
@@ -44,7 +42,7 @@ public class Headers {
      * @param headerValue header value
      */
     public void setHeader(String headerName, String headerValue) {
-        vars.set(headerName, headerValue);
+        vars.put(headerName, headerValue);
     }
 
     /**

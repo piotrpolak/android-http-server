@@ -7,16 +7,17 @@ import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.util.regex.Pattern;
+import java.util.Hashtable;
 
-import ro.polak.utilities.StringHashTable;
 import ro.polak.utilities.RandomStringGenerator;
 import ro.polak.webserver.JLWSConfig;
 
-/**
+ /**
  * Session mechanism for little servlets
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.1/22.02.2008
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200802
  */
 public class HTTPSession {
 
@@ -26,7 +27,7 @@ public class HTTPSession {
     private String sid;
     private String directoryPath = JLWSConfig.TempDir;
     private String cookieName = "JSSSESSIONID";
-    private StringHashTable vars;
+    private Hashtable vars;
     private boolean isStarted = false;
 
     /**
@@ -62,7 +63,7 @@ public class HTTPSession {
         if (!sessionUnfreezed) {
             sid = RandomStringGenerator.generate();
             response.setCookie(cookieName, sid);
-            vars = new StringHashTable();
+            vars = new Hashtable<String,String>();
         }
 
         isStarted = true;
@@ -78,7 +79,7 @@ public class HTTPSession {
         if (!isStarted) {
             this.start();
         }
-        vars.set(varName, varValue);
+        vars.put(varName, varValue);
     }
 
     /**
@@ -92,7 +93,7 @@ public class HTTPSession {
             this.start();
         }
         try {
-            return vars.get(varName);
+            return (String) vars.get(varName);
         } catch (NullPointerException e) {
             return null;
         }
@@ -133,7 +134,8 @@ public class HTTPSession {
         File file = new File(directoryPath + sid);
         try {
             file.createNewFile();
-        } catch (Exception e) { /* Unable to create session file */
+        } catch (Exception e) {
+            // Unable to create session file
         }
 
         FileOutputStream fos = null;
@@ -158,13 +160,13 @@ public class HTTPSession {
         try {
             fis = new FileInputStream(new File(directoryPath + sid));
             in = new ObjectInputStream(fis);
-            vars = (StringHashTable) in.readObject();
+            vars = (Hashtable) in.readObject();
             in.close();
             return true;
         } catch (IOException e) {
             sid = RandomStringGenerator.generate();
             response.setCookie(cookieName, sid);
-            vars = new StringHashTable();
+            vars = new Hashtable<String,String>();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

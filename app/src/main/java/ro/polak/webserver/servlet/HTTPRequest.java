@@ -2,15 +2,17 @@ package ro.polak.webserver.servlet;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Hashtable;
 
 import ro.polak.utilities.*;
 import ro.polak.webserver.*;
 
 /**
- * HTTP request handler
+ * HTTP request wrapper
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.0/21.02.2008
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200802
  */
 public class HTTPRequest {
 
@@ -18,7 +20,7 @@ public class HTTPRequest {
     private boolean isKeepAlive = false;
     private boolean isMultipart = false;
     private String remoteAddress = null;
-    private StringHashTable _cookies = null;
+    private Hashtable _cookies = null;
     private MultipartRequestHandler mrh = null;
 
     /**
@@ -204,7 +206,7 @@ public class HTTPRequest {
     public String getCookie(String cookieName) {
         if (_cookies == null) {
             // now parsing only for a new cookies
-            _cookies = new StringHashTable();
+            _cookies = new Hashtable<String,String>();
 
             String cookieStr = headers.getHeader("Cookie");
             if (cookieStr == null) {
@@ -218,7 +220,7 @@ public class HTTPRequest {
                     String cookieValues[] = cookies[i].split("=");
                     // System.out.println("Cookie1:" + cookieValues[0] + ":" +
                     // cookieValues[1] + ":");
-                    _cookies.set(cookieValues[0], cookieValues[1]);
+                    _cookies.put(cookieValues[0], cookieValues[1]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
@@ -226,7 +228,7 @@ public class HTTPRequest {
 
         }
         try {
-            return (String) Utilities.URLDecode(_cookies.get(cookieName));
+            return Utilities.URLDecode((String)_cookies.get(cookieName));
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -5,20 +5,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Hashtable;
 import java.util.Vector;
 
-import ro.polak.utilities.StringHashTable;
 import ro.polak.utilities.RandomStringGenerator;
 import ro.polak.webserver.servlet.UploadedFile;
 
-/**
+ /**
  * Multipart request handler
- * <p/>
- * <a href="http://www.polak.ro/javalittlewebserver/">Java Little Web Server
- * Homepage</a>
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.0/21.02.2008
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200802
  */
 public class MultipartRequestHandler {
 
@@ -41,7 +39,7 @@ public class MultipartRequestHandler {
     private String currentDeliminator;
     private MultipartHeaders mHeaders;
     private Vector<UploadedFile> uploadedFiles = new Vector<UploadedFile>();
-    private StringHashTable _post = new StringHashTable();
+    private Hashtable _post = new Hashtable<String, String>();
 
     /**
      * Creates MultipartRequestHandler
@@ -363,7 +361,7 @@ public class MultipartRequestHandler {
                     valueStringBuffered.append(buffer[i]);
                 }
             }
-            this._post.set(mHeaders.name, valueStringBuffered.toString());
+            this._post.put(mHeaders.name, valueStringBuffered.toString());
         }
     }
 
@@ -372,7 +370,7 @@ public class MultipartRequestHandler {
      *
      * @return AttributeList representation of POST attributes
      */
-    public StringHashTable getPost() {
+    public Hashtable<String, String> getPost() {
         return this._post;
     }
 

@@ -11,12 +11,13 @@ import java.util.Vector;
 import ro.polak.utilities.RandomStringGenerator;
 import ro.polak.webserver.servlet.UploadedFile;
 
- /**
+/**
  * Multipart request handler
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @version 201509
  * @since 200802
+ * @link http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
  */
 public class MultipartRequestHandler {
 
@@ -58,6 +59,24 @@ public class MultipartRequestHandler {
         this.begin();
     }
 
+    /**
+     * Returns AttributeList representation of POST attributes
+     *
+     * @return AttributeList representation of POST attributes
+     */
+    public Hashtable<String, String> getPost() {
+        return this._post;
+    }
+
+    /**
+     * Returns Vector of uploaded files
+     *
+     * @return Vector of UploadedFiles
+     */
+    public Vector<UploadedFile> getUploadedFiles() {
+        return this.uploadedFiles;
+    }
+
     private void begin() {
         boolean beginReached = false;
         byte[] smallBuffer = new byte[1];
@@ -79,6 +98,7 @@ public class MultipartRequestHandler {
                     charPosition = 0;
                 }
             } catch (IOException e) {
+                // TODO Throw exception instead of printing it
                 e.printStackTrace();
             }
         }
@@ -127,9 +147,9 @@ public class MultipartRequestHandler {
 					 * deliminator
 					 */
                     if (currentDeliminator.charAt(charPosition) == buffer[i]) {
-						/*
+                        /*
 						 * Temp buffer is used in the case that there were some
-						 * positive comparisants at the end of the buffer, in
+						 * positive comparisons at the end of the buffer, in
 						 * the case that the next read buffer contains chars
 						 * that are not the boundary, then this buffer is added
 						 * to the read string and furthermore processed. Else
@@ -142,7 +162,7 @@ public class MultipartRequestHandler {
 						 */
                         if (++charPosition == currentDeliminator.length()) {
 							/*
-							 * Swaping states header -> content OR content
+							 * Swapping states header -> content OR content
 							 * ->header
 							 * 
 							 * Processing the last read (accepted) characters
@@ -184,21 +204,20 @@ public class MultipartRequestHandler {
                 }
 
 				/*
-				 * This means that some buffer was recorded at the end of the
-				 * buffer
+				 * This means that some buffer was recorded at the end of the buffer
 				 */
                 if (charPosition > 0) {
                     wasPreviousBuffered = true; // !THIS IS VALID FOR THE NEXT
                     // LOOP ONLY
                 }
 				/*
-				 * Releasing the read buffer, excluding temp last bytes (see
-				 * -charPosition)
+				 * Releasing the read buffer, excluding temp last bytes (see -charPosition)
 				 */
                 this.releaseBuffer(begin, bytesRead - charPosition);
 
             }
         } catch (IOException e) {
+            // TODO Throw exception instead of printing it
             e.printStackTrace();
         }
         buffer = null;
@@ -219,7 +238,7 @@ public class MultipartRequestHandler {
         }
 
 		/*
-		 * For contents
+		 * For the contents
 		 */
 
         if (file != null) {
@@ -227,6 +246,7 @@ public class MultipartRequestHandler {
                 fos.write(tempBuffer, 0, tempBufferCharPosition);
             } // HERE IT IS OK, when changed, it really sucks
             catch (IOException e) {
+                // TODO Throw exception instead of printing it
                 e.printStackTrace();
             }
         } else {
@@ -261,6 +281,7 @@ public class MultipartRequestHandler {
             try {
                 fos.write(buffer, begin, end - begin);
             } catch (IOException e) {
+                // TODO Throw exception instead of printing it
                 e.printStackTrace();
             }
         } else {
@@ -289,8 +310,7 @@ public class MultipartRequestHandler {
 			/*
 			 * Creating headers
 			 */
-            mHeaders = new MultipartHeaders(headersStringBuffered.toString()
-                    + "\r");
+            mHeaders = new MultipartHeaders(headersStringBuffered.toString() + "\r");
 
             if (mHeaders.contentType != null) {
 				/* For files */
@@ -298,6 +318,7 @@ public class MultipartRequestHandler {
                     file = new File(JLWSConfig.TempDir + RandomStringGenerator.generate());
                     fos = new FileOutputStream(file);
                 } catch (FileNotFoundException e) {
+                    // TODO Throw exception instead of printing it
                     e.printStackTrace();
                 }
             } else {
@@ -343,6 +364,7 @@ public class MultipartRequestHandler {
                 try {
                     fos.write(buffer, begin, len);
                 } catch (IOException e) {
+                    // TODO Throw exception instead of printing it
                     e.printStackTrace();
                 }
             }
@@ -352,6 +374,7 @@ public class MultipartRequestHandler {
             try {
                 fos.close();
             } catch (Exception e) {
+                // TODO Throw exception instead of printing it
                 e.printStackTrace();
             }
         } else {
@@ -363,23 +386,5 @@ public class MultipartRequestHandler {
             }
             this._post.put(mHeaders.name, valueStringBuffered.toString());
         }
-    }
-
-    /**
-     * Returns AttributeList representation of POST attributes
-     *
-     * @return AttributeList representation of POST attributes
-     */
-    public Hashtable<String, String> getPost() {
-        return this._post;
-    }
-
-    /**
-     * Returns Vector of uploaded files
-     *
-     * @return Vector of UploadedFiles
-     */
-    public Vector<UploadedFile> getUploadedFiles() {
-        return this.uploadedFiles;
     }
 }

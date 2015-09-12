@@ -18,7 +18,6 @@ public class DesktopServletServiceDriver implements IServletServiceDriver {
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -31,22 +30,22 @@ public class DesktopServletServiceDriver implements IServletServiceDriver {
      * @throws ClassCastException
      */
     public boolean loadServlet(String servletPath) throws InstantiationException, IllegalAccessException, ClassCastException {
-        int lastSlashpos = 0;
+
+        int lastSlashPos = 0;
 
         try {
-            lastSlashpos = servletPath.lastIndexOf("/");
+            lastSlashPos = servletPath.lastIndexOf("/");
         } catch (Exception e) {
         }
 
-        String servletName = servletPath.substring(lastSlashpos + 1);
-        String servletDir = servletPath.substring(0, lastSlashpos + 1);
+        String servletName = servletPath.substring(lastSlashPos + 1);
+        String servletDir = servletPath.substring(0, lastSlashPos + 1);
 
         try {
             servletName = servletName.substring(0, servletName.indexOf("."));
         } catch (Exception e) {
         }
-        servletName = servletDir.substring(1).replaceAll("/", ".")
-                + servletName;
+        servletName = servletDir.substring(1).replaceAll("/", ".") + servletName;
 
         // littleServlet = ServletService.servletPool.getServlet( servletName );
         //
@@ -57,12 +56,10 @@ public class DesktopServletServiceDriver implements IServletServiceDriver {
         // }
 
         try {
-            littleServlet = (Servlet) DesktopServletServiceDriver.classLoader
-                    .loadClass(servletName).newInstance();
+            littleServlet = (Servlet) DesktopServletServiceDriver.classLoader.loadClass(servletName).newInstance();
 
             try {
-                littleServlet.directory = (new File(JLWSConfig.DocumentRoot))
-                        .getCanonicalPath();
+                littleServlet.directory = (new File(JLWSConfig.DocumentRoot)).getCanonicalPath();
             } catch (java.io.IOException e) {
                 littleServlet.directory = JLWSConfig.DocumentRoot;
             }

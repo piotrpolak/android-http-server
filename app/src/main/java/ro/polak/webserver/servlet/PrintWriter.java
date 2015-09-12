@@ -13,43 +13,92 @@ public class PrintWriter {
     public boolean initialized = false;
     public StringBuffer out = new StringBuffer();
 
+    /**
+     * Print a string
+     *
+     * @param s
+     */
     public void print(String s) {
         initialized = true;
         out.append(s);
     }
 
+    /**
+     * Prints a boolean
+     *
+     * @param b
+     */
     public void print(boolean b) {
         out.append(b);
     }
 
+    /**
+     * Prints an integer
+     *
+     * @param i
+     */
     public void print(int i) {
         out.append(i);
     }
 
+    /**
+     * Prints a float
+     *
+     * @param f
+     */
     public void print(float f) {
         out.append(f);
     }
 
+    /**
+     * Prints a character
+     *
+     * @param c
+     */
     public void print(char c) {
         out.append(c);
     }
 
+    /**
+     * Prints an empty newline
+     */
     public void println() {
         out.append("\n");
     }
 
+    /**
+     * Prints a string followed by a newline
+     *
+     * @param s
+     */
     public void println(String s) {
-        out.append(s + "\n");
+        out.append(s);
+        println();
     }
 
+    /**
+     * Returns the length of the buffer
+     *
+     * @return
+     */
     public long length() {
         return out.length();
     }
 
+    /**
+     * Serializes the output buffer into the string
+     *
+     * @return
+     */
     public String toString() {
         return out.toString();
     }
 
+    /**
+     * Writes the buffer into the response
+     *
+     * @param response
+     */
     public void writeToResponse(HTTPResponse response) {
         int bSize = 1024;
 

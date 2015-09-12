@@ -28,7 +28,7 @@ public class HTTPRequestHeaders extends Headers {
      *
      * @param status raw status line
      */
-    public void setStatusLine(String status) {
+    public void setStatus(String status) {
         this.status = status;
 
         String statusArray[] = status.split(" ");

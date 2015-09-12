@@ -141,11 +141,9 @@ public class HTTPSession {
             // Unable to create session file
         }
 
-        FileOutputStream fos = null;
-        ObjectOutputStream out = null;
         try {
-            fos = new FileOutputStream(file);
-            out = new ObjectOutputStream(fos);
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream out = new ObjectOutputStream(fos);
             out.writeObject(vars);
             out.close();
         } catch (IOException ex) {
@@ -163,11 +161,9 @@ public class HTTPSession {
              return false;
          }
 
-         FileInputStream fis = null;
-         ObjectInputStream in = null;
          try {
-             fis = new FileInputStream(new File(directoryPath + sid));
-             in = new ObjectInputStream(fis);
+             FileInputStream fis = new FileInputStream(new File(directoryPath + sid));
+             ObjectInputStream in = new ObjectInputStream(fis);
              vars = (Hashtable) in.readObject();
              in.close();
              return true;

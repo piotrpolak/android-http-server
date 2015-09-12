@@ -10,6 +10,10 @@ public class ServletService implements IServletServiceDriver {
 
     private IServletServiceDriver driver;
 
+    /**
+     * Default constructor
+     * @param driver
+     */
     public ServletService(IServletServiceDriver driver) {
         this.driver = driver;
     }

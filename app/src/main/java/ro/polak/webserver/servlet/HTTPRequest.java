@@ -55,7 +55,7 @@ public class HTTPRequest {
             }
 
 			/* Seting status line, getting method, URI etc */
-            headers.setStatusLine(statusLine.toString());
+            headers.setStatus(statusLine.toString());
 
             Statistics.addBytesReceived(statusLine.length());
 
@@ -82,8 +82,7 @@ public class HTTPRequest {
 			 * Setting headers removing last 3 chars
 			 */
             if (inputHeaders.length() >= 3) {
-                headers.parse(inputHeaders.substring(0,
-                        inputHeaders.length() - 3));
+                headers.parse(inputHeaders.substring(0, inputHeaders.length() - 3));
             }
 
 			/*

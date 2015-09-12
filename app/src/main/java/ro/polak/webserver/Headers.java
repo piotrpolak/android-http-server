@@ -10,9 +10,9 @@ import java.util.Hashtable;
  * @since 200802
  */
 public class Headers {
+
     protected String status = "";
     protected String headersString = "";
-    protected String postParameters = "";
     protected Hashtable vars = new Hashtable<String, String>();
 
     /**
@@ -36,7 +36,7 @@ public class Headers {
     }
 
     /**
-     * Sets header
+     * Sets a header
      *
      * @param headerName  header name
      * @param headerValue header value
@@ -56,6 +56,13 @@ public class Headers {
     }
 
     /**
+     * Sets the status, the first line of HTTP headers
+     */
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    /**
      * Returns the status, the first line of HTTP headers
      *
      * @return status
@@ -64,12 +71,4 @@ public class Headers {
         return status;
     }
 
-    /**
-     * Returns raw headers
-     *
-     * @return raw headers
-     */
-    public String toString() {
-        return headersString;
-    }
 }

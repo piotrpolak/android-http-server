@@ -1,14 +1,13 @@
 package ro.polak.webserver.servlet;
 
 /**
- * Servlet v2 interface, declares main() method
+ * Servlet v3 interface, declares service() method
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 2.0/02.02.2009
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200902
  */
 public interface IServlet {
-
-    // TODO Rename according the real Servlet method names
 
     /**
      * The servlet initialization method. The reusable resources should be

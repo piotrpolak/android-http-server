@@ -80,9 +80,7 @@ public class HTTPResponse {
         String cookie = cookieName + "=" + Utilities.URLEncode(cookieValue);
 
         if (cookieExpiresSeconds != 0) {
-            cookie += "; expires="
-                    + WebServer.sdf.format(new java.util.Date(System.currentTimeMillis()
-                    + (cookieExpiresSeconds * 1000)));
+            cookie += "; expires="                    + WebServer.sdf.format(new java.util.Date(System.currentTimeMillis()                    + (cookieExpiresSeconds * 1000)));
         }
 
         if (cookiePath != null) {
@@ -218,6 +216,10 @@ public class HTTPResponse {
 
     }
 
+    /**
+     * Serves asset file
+     * @param asset
+     */
     public void serveAsset(String asset) {
         this.flushHeaders();
 
@@ -254,74 +256,6 @@ public class HTTPResponse {
             android.util.Log.i("HTTP", e.getMessage());
         }
     }
-
-    // /**
-    // * Flushes headers and serves the specified file
-    // *
-    // * @param file file to be served
-    // */
-    // public void serveFile(File file)
-    // {
-    // this.flushHeaders();
-    //
-    // String filename = file.getAbsolutePath();
-    //
-    // FileInputStream file_input = null;
-    // int buffer_read_n_bytes = 0;
-    // byte[] buffer = new byte[8192]; //8192 4096 2048
-    //
-    //
-    // try {
-    // byte[] buffer2 = WebServer.jmemcache.get(filename);
-    //
-    //
-    // this.out.write(buffer2, 0, buffer2.length);
-    // this.out.flush();
-    // System.out.println("From cache");
-    // Statistics.addBytesSend(buffer2.length);
-    // return;
-    // }
-    // catch(ro.polak.jmemcache.NoSuchKeyException e)
-    // {
-    // //e.printStackTrace();
-    // }
-    // catch(Exception e)
-    // {}
-    //
-    // int index = WebServer.jmemcache.reserveKey( filename);
-    //
-    //
-    // try {
-    //
-    // file_input = new FileInputStream(file);
-    //
-    //
-    // try {
-    //
-    // while( true ) { // While reading from file
-    //
-    //
-    // if( (buffer_read_n_bytes = file_input.read(buffer)) == -1) break;
-    //
-    //
-    // WebServer.jmemcache.append(index,buffer, 0, buffer_read_n_bytes);
-    //
-    //
-    // this.out.write(buffer, 0, buffer_read_n_bytes);
-    // this.out.flush();
-    // Statistics.addBytesSend(buffer_read_n_bytes);
-    // }
-    // this.out.flush(); // Flushing remaining buffer
-    //
-    // } catch(IOException e) {}
-    //
-    //
-    // try { file_input.close(); } // Closing file input stream
-    // catch(IOException e) {}
-    //
-    // } catch(FileNotFoundException e) {}
-    //
-    // }
 
     /**
      * Sets content type

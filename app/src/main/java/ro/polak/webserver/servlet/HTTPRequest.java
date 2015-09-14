@@ -29,6 +29,9 @@ public class HTTPRequest {
      * @param socket - socket to be read
      */
     public HTTPRequest(Socket socket) {
+
+        // TODO add a static builder
+
         Statistics.addRequest();
 
         // StringBuilder is more efficient when the string will be accessed from

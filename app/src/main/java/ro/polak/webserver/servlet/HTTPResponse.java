@@ -79,14 +79,17 @@ public class HTTPResponse {
     public void setCookie(String cookieName, String cookieValue, int cookieExpiresSeconds, String cookiePath) {
         String cookie = cookieName + "=" + Utilities.URLEncode(cookieValue);
 
+        // Seting optional expiration time
         if (cookieExpiresSeconds != 0) {
-            cookie += "; expires="                    + WebServer.sdf.format(new java.util.Date(System.currentTimeMillis()                    + (cookieExpiresSeconds * 1000)));
+            cookie += "; expires=" + WebServer.sdf.format(new java.util.Date(System.currentTimeMillis() + (cookieExpiresSeconds * 1000)));
         }
 
+        // Setting optional path
         if (cookiePath != null) {
             cookie += "; path=" + cookiePath;
         }
 
+        // Setting the built cookie
         headers.setHeader("Set-Cookie", cookie);
     }
 
@@ -130,18 +133,20 @@ public class HTTPResponse {
      * @return true if headers flushed
      */
     public boolean flushHeaders() {
+
+        // Prevent from flushing headers more than once
         if (headersFlushed) {
-            return false; // Prevents double flushing
+            // TODO Throw an exception
+            return false;
         }
         headersFlushed = true;
         write(headers.toString());
-        // headers = null; // TODO check why this must be null? 25.11.2009
         return true;
     }
 
     /**
      * Returns a boolean indicating if the response has been committed. A
-     * commited response has already had its status code and headers written.
+     * committed response has already had its status code and headers written.
      *
      * @return a boolean indicating if the response has been committed
      */
@@ -218,6 +223,7 @@ public class HTTPResponse {
 
     /**
      * Serves asset file
+     *
      * @param asset
      */
     public void serveAsset(String asset) {
@@ -303,6 +309,11 @@ public class HTTPResponse {
         this.headers.setContentLength(length);
     }
 
+    /**
+     * Returns the response headers
+     *
+     * @return
+     */
     public HTTPResponseHeaders getHeaders() {
         return headers;
     }
@@ -332,6 +343,7 @@ public class HTTPResponse {
      * @return request's print writer
      */
     public PrintWriter getPrintWriter() {
+        // Creating print writer if it does not exist
         if (this.printWriter == null) {
             this.printWriter = new PrintWriter();
         }

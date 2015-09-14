@@ -31,9 +31,7 @@ public class AccessControl {
     public boolean doLogin(String login, String password) {
         boolean logged = false;
         try {
-            if (AccessControl.getConfig().get("_managementLogin").equals(login)
-                    && AccessControl.getConfig().get("_managementPassword")
-                    .equals(password)) {
+            if (AccessControl.getConfig().get("_managementLogin").equals(login) && AccessControl.getConfig().get("_managementPassword").equals(password)) {
 
                 session.setAttribute("loggedin", "1");
                 logged = true;

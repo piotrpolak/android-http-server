@@ -10,6 +10,7 @@ import ro.polak.utilities.Config;
 
 public class JLWSConfig {
 
+    // FIXME
     // TODO Eliminate static public variables and make it possible to get config out of the webserver instance
 
     private static String basePath = Environment.getExternalStorageDirectory() + "/httpd/";

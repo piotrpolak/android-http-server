@@ -29,15 +29,18 @@ public class HTTPRequestHeaders extends Headers {
 
         String statusArray[] = status.split(" ");
 
-        String varName, varValue;
+        String variableName, variableValue;
 
         if (statusArray.length < 2) {
             return;
         }
 
+        // First element of the array is the HTTP method
         method = statusArray[0].toUpperCase();
+        // Second element of the array is the HTTP queryString
         queryString = statusArray[1];
 
+        // The last part is the protocol
         try {
             protocol = statusArray[2];
         } catch (Exception e) {
@@ -52,8 +55,10 @@ public class HTTPRequestHeaders extends Headers {
             queryParameters = queryString.substring(pos + 1);
         }
 
-		/* If there are any query parameters */
+		// If there are any query parameters
         if (queryParameters != null) {
+
+            // TODO Implement query parameters parser
 
             String queryParametersArray[] = queryParameters.split("&");
             if (queryParametersArray.length == 0) {
@@ -63,12 +68,12 @@ public class HTTPRequestHeaders extends Headers {
             for (int i = 0; i < queryParametersArray.length; i++) {
                 String parameterPair[] = queryParametersArray[i].split("=");
                 try {
-                    varName = parameterPair[0];
+                    variableName = parameterPair[0];
                     try {
-                        varValue = parameterPair[1];
-                        _get.put(varName, varValue);
+                        variableValue = parameterPair[1];
+                        _get.put(variableName, variableValue);
                     } catch (Exception e) {
-                        _get.put(varName, "");
+                        _get.put(variableName, "");
                     }
 
                 } catch (Exception e) {
@@ -84,22 +89,29 @@ public class HTTPRequestHeaders extends Headers {
      * @param rawPostLine POST parameters line
      */
     public void setPostLine(String rawPostLine) {
-        String varName, varValue;
+        String variableName, variableValue;
+
+        // TODO Implement query parameters parser
+
+        // Extracting the name=value parameters
         String queryParametersArray[] = rawPostLine.split("&");
         if (queryParametersArray.length == 0) {
             return;
         }
 
+        // Parsing each pair
         for (int i = 0; i < queryParametersArray.length; i++) {
+            // Extracting the name=value pair
             String parameterPair[] = queryParametersArray[i].split("=");
             try {
-                varName = parameterPair[0];
+                variableName = parameterPair[0];
                 try {
-                    varValue = parameterPair[1];
-                    _post.put(varName, varValue);
-                    _get.put(varName, varValue);
+                    variableValue = parameterPair[1];
+                    _post.put(variableName, variableValue);
+                    _get.put(variableName, variableValue);
                 } catch (Exception e) {
-                    _post.put(varName, "");
+                    // TODO Catch out of bound exception instead of Exception
+                    _post.put(variableName, "");
                 }
 
             } catch (Exception e) {

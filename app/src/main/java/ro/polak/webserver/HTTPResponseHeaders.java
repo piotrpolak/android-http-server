@@ -59,25 +59,27 @@ public class HTTPResponseHeaders extends Headers {
     /**
      * Sets content length in bytes
      *
-     * @param lenght content length in bytes
+     * @param length content length in bytes
      */
-    public void setContentLength(long lenght) {
+    public void setContentLength(long length) {
         this.setHeader("Accept-Ranges", "bytes");
-        this.setHeader("Content-Length", "" + lenght);
+        this.setHeader("Content-Length", "" + length);
     }
 
     /**
      * Sets content length in bytes
      *
-     * @param lenght content length in bytes
+     * @param length content length in bytes
      */
-    public void setContentLength(int lenght) {
+    public void setContentLength(int length) {
         this.setHeader("Accept-Ranges", "bytes");
-        this.setHeader("Content-Length", "" + lenght);
+        this.setHeader("Content-Length", "" + length);
     }
 
     /**
      * String representation of headers
+     *
+     * @return
      */
     public String toString() {
         String headersStr = status;

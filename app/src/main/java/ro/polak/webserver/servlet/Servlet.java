@@ -1,15 +1,17 @@
 package ro.polak.webserver.servlet;
 
 /**
- * Little servlet
+ * Servlet
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.0/21.02.2008
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200802
  */
 public abstract class Servlet implements IServlet {
 
+    // TODO Make private with protected setters
     protected HTTPSession session;
-    // Info
+    // TODO Make private with protected setters
     protected String directory;
 
     /**
@@ -98,6 +100,7 @@ public abstract class Servlet implements IServlet {
      * @return servlet path
      */
     public String getPath() {
+        // TODO This is not valid for the Android paths
         return this.getDirectory() + java.io.File.separator + this.getName() + ".class";
     }
 

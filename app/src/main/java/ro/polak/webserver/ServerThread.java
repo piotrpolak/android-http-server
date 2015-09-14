@@ -25,28 +25,30 @@ public class ServerThread extends Thread {
 
     private Socket socket;
 
+    /**
+     * Default constructor
+     *
+     * @param socket
+     */
     public ServerThread(Socket socket) {
         this.socket = socket;
         this.start();
     }
 
+    /**
+     * This method is called to handle request in a new thread
+     */
     public void run() {
-        handleRequest((new HTTPRequest(socket)), (new HTTPResponse(socket)));
-    }
+        HTTPRequest request = new HTTPRequest(socket);
+        HTTPResponse response = new HTTPResponse(socket);
 
-    private void handleRequest(HTTPRequest request, HTTPResponse response) {
-        String fileExt = "";
+        String fileExtension = "";
         File indexFile = null;
         File fileToBeServed = null;
-        ServletService lss = null;
-        String requestMethod = request.getHeaders().getMethod();
+        ServletService servletService = null;
 
-		/*
-         * Checking the requested URI
-		 */
-        if (request.getHeaders().getURI() == null
-                || request.getHeaders().getURI().startsWith("../")
-                || request.getHeaders().getURI().indexOf("/../") != -1) {
+		// Checking the requested URI, blocking illegal paths
+        if (request.getHeaders().getURI() == null || request.getHeaders().getURI().startsWith("../") || request.getHeaders().getURI().indexOf("/../") != -1) {
             try {
                 response.close();
                 response.close();
@@ -55,24 +57,20 @@ public class ServerThread extends Thread {
             return;
         }
 
-		/*
-         * Setting keep alive header
-		 */
+		// Setting keep alive header
         if (request.isKeepAlive() && JLWSConfig.KeepAlive) {
             response.setKeepAlive(true);
         } else {
             response.setKeepAlive(false);
         }
 
-		/* Checking allowed method */
-        if (requestMethod.equals("GET") || requestMethod.equals("POST") || requestMethod.equals("HEAD")) {
+		// Checking allowed method
+        if (request.getHeaders().getMethod().equals("GET") || request.getHeaders().getMethod().equals("POST") || request.getHeaders().getMethod().equals("HEAD")) {
 
             File file = new File(JLWSConfig.DocumentRoot + request.getHeaders().getURI());
             response.setHeader("Server", WebServer.SERVER_SMALL_SIGNATURE);
 
-			/*
-			 * File or directory existing
-			 */
+			// File or directory existing
             if (file.exists()) {
                 if (file.isDirectory()) {
                     // Getting the last character for directory addresses only
@@ -82,22 +80,22 @@ public class ServerThread extends Thread {
                     } else {
                         boolean isThereAServlet = false;
 
-						/* Searching for index file */
+						// Searching for index file
                         for (int i = 0; i < JLWSConfig.DirectoryIndex.size(); i++) {
 
-							/* Getting the extension */
-                            fileExt = Utilities.getExtension((String) JLWSConfig.DirectoryIndex.elementAt(i));
+							// Getting the extension
+                            fileExtension = Utilities.getExtension((String) JLWSConfig.DirectoryIndex.elementAt(i));
 
-                            if (fileExt.equals(JLWSConfig.ServletMappedExtension)) {
+                            if (fileExtension.equals(JLWSConfig.ServletMappedExtension)) {
                                 // checking for a class
                                 try {
 
                                     String index = (String) request.getHeaders().getURI() + JLWSConfig.DirectoryIndex.elementAt(i);
-                                    lss = new ServletService(new AndroidServletServiceDriver());
-                                    if (lss.loadServlet(index)) {
+                                    servletService = new ServletService(new AndroidServletServiceDriver());
+                                    if (servletService.loadServlet(index)) {
                                         // Servet found and loaded
                                         response.setStatus(HTTPResponseHeaders.STATUS_OK);
-                                        lss.rollServlet(request, response);
+                                        servletService.rollServlet(request, response);
                                         isThereAServlet = true; // If this is
                                         // false 403
                                         // might be sent
@@ -127,8 +125,7 @@ public class ServerThread extends Thread {
                             }
                         }
 
-						/* No index found? Serving 403 error */
-
+						// No index found? Serving 403 error
                         if (fileToBeServed == null && isThereAServlet == false) {
                             // Serving 403 error
                             (new HTTPError(response)).serve403();
@@ -140,53 +137,49 @@ public class ServerThread extends Thread {
                     fileToBeServed = file;
                 }
 
-				/*
-				 * For existing files (not servlets)
-				 */
+				// For existing files (not servlets)
                 if (fileToBeServed != null) {
-                    fileExt = Utilities.getExtension(fileToBeServed.getName());
+                    fileExtension = Utilities.getExtension(fileToBeServed.getName());
                     response.setStatus(HTTPResponseHeaders.STATUS_OK);
-                    response.setContentType(JLWSConfig.MimeTypeMapping.getMimeTypeByExtension(fileExt));
+                    response.setContentType(JLWSConfig.MimeTypeMapping.getMimeTypeByExtension(fileExtension));
                     response.setContentLength(fileToBeServed.length());
                     response.flushHeaders();
 
-					/* Serving file for all the request but for HEAD */
-                    if (!requestMethod.equals("HEAD")) {
+					// Serving file for all the request but for HEAD
+                    if (!request.getHeaders().getMethod().equals("HEAD")) {
                         response.serveFile(fileToBeServed);
                     }
 
                 }
             }
-			/*
-			 * File not existing, but maybe a servlet?
-			 */
+			// File not existing, but maybe a servlet?
             else {
 
-                fileExt = Utilities.getExtension(request.getHeaders().getURI());
+                fileExtension = Utilities.getExtension(request.getHeaders().getURI());
                 Log.i("HTTP", "SERVE");
 
-                if (fileExt.equals(JLWSConfig.ServletMappedExtension)) {
+                if (fileExtension.equals(JLWSConfig.ServletMappedExtension)) {
 
                     Log.i("SERVLET", "Attempt to load servlet for " + request.getHeaders().getURI());
 
-                    // checking for a class
+                    // Checking for a class
                     try {
-                        lss = new ServletService(new AndroidServletServiceDriver());
-                        if (lss.loadServlet(request.getHeaders().getURI())) {
-                            // Servet found and loaded
+                        servletService = new ServletService(new AndroidServletServiceDriver());
+                        if (servletService.loadServlet(request.getHeaders().getURI())) {
+                            // Servlet found and loaded
                             response.setStatus(HTTPResponseHeaders.STATUS_OK);
-                            lss.rollServlet(request, response);
+                            servletService.rollServlet(request, response);
                             MainController.getInstance().println("Rolling servlet " + request.getHeaders().getURI());
                         } else {
                             (new HTTPError(response)).serve404();
                         }
                     } catch (Exception e) {
-						/* For servlet uncought exceptions */
+						// For servlet uncaught exceptions
                         HTTPError error = new HTTPError(response);
                         error.setReason(e);
                         error.serve500();
                     } catch (Error e) {
-						/* For compilation problems */
+						// For compilation problems
                         HTTPError error = new HTTPError(response);
                         error.setReason(e);
                         error.serve500();

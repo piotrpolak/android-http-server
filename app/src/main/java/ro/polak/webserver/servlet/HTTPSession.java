@@ -76,10 +76,13 @@ public class HTTPSession {
      * @param varValue attribute value
      */
     public void setAttribute(String varName, String varValue) {
+        // Lazy load
         if (!isStarted) {
             this.start();
         }
+
         if (varValue == null) {
+            // Removing the attribute when the value is null
             vars.remove(varName);
         } else {
             vars.put(varName, varValue);
@@ -93,9 +96,11 @@ public class HTTPSession {
      * @return Attribute value
      */
     public String getAttribute(String varName) {
+        // Lazy load
         if (!isStarted) {
             this.start();
         }
+
         try {
             return (String) vars.get(varName);
         } catch (NullPointerException e) {
@@ -134,6 +139,7 @@ public class HTTPSession {
       * Persists the session to the storage
       */
     protected void freeze() {
+        // Prevent from saving an empty session
         if (isStarted == false) {
             return;
         }
@@ -145,6 +151,7 @@ public class HTTPSession {
             // Unable to create session file
         }
 
+        // Writing session object to the file
         try {
             FileOutputStream fos = new FileOutputStream(file);
             ObjectOutputStream out = new ObjectOutputStream(fos);
@@ -161,17 +168,21 @@ public class HTTPSession {
       * @return
       */
      protected boolean unfreeze() {
+         // Prevent from reading an empty session
          if (isStarted == true) {
              return false;
          }
 
+         // Reading session object to the file
          try {
+             // TODO Check if the file exists
              FileInputStream fis = new FileInputStream(new File(directoryPath + sid));
              ObjectInputStream in = new ObjectInputStream(fis);
              vars = (Hashtable) in.readObject();
              in.close();
              return true;
          } catch (IOException e) {
+             // TODO Check if the file exists, generate session only if the file is missing
              sid = RandomStringGenerator.generate();
              response.setCookie(cookieName, sid);
              vars = new Hashtable<String, String>();

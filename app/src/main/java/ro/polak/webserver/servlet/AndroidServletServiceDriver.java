@@ -27,23 +27,30 @@ public class AndroidServletServiceDriver implements IServletServiceDriver {
         String servletName = servletPath.substring(lastSlashPos + 1);
         String servletDir = servletPath.substring(0, lastSlashPos + 1);
 
+        // Generating package name out of the directory name
         try {
             servletName = servletName.substring(0, servletName.indexOf("."));
         } catch (Exception e) {
         }
 
+        // Generating class name
         servletName = servletName.substring(0, 1).toUpperCase() + servletName.substring(1);
 
+        // Prepending directory name
         servletName = servletDir.substring(1).replaceAll("/", ".") + servletName;
 
         try {
+            // Initializing servlet
             littleServlet = (Servlet) Class.forName(servletName).newInstance();
         } catch (Exception e) {
             Log.i("SERVLET", "Unable to load servlet at " + servletName);
             return false;
         }
 
+        // The following code has been disabled on Android for memory usage
         // ServletService.servletPool.add(servletName, littleServlet);
+
+        // Initializing the servlet
         littleServlet.init();
         return true;
     }
@@ -55,6 +62,8 @@ public class AndroidServletServiceDriver implements IServletServiceDriver {
      * @param response http response
      */
     public void rollServlet(HTTPRequest request, HTTPResponse response) {
+
+        // Make suer it was initialized before
         if (littleServlet == null) {
             return;
         }

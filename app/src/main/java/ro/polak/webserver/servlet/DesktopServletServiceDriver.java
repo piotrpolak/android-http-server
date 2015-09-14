@@ -56,6 +56,8 @@ public class DesktopServletServiceDriver implements IServletServiceDriver {
         // }
 
         try {
+
+            // Initializing servlet
             littleServlet = (Servlet) DesktopServletServiceDriver.classLoader.loadClass(servletName).newInstance();
 
             try {
@@ -82,6 +84,8 @@ public class DesktopServletServiceDriver implements IServletServiceDriver {
      * @param response http response
      */
     public void rollServlet(HTTPRequest request, HTTPResponse response) {
+
+        // Make suer it was initialized before
         if (littleServlet == null) {
             return;
         }

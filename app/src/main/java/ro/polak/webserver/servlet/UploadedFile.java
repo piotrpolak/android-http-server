@@ -5,10 +5,11 @@ import java.io.File;
 import ro.polak.webserver.MultipartHeaders;
 
 /**
- * Uploaded file
+ * Uploaded file representation
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.0/21.02.2008
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200802
  */
 public class UploadedFile {
 

@@ -16,32 +16,40 @@ public class Config extends Hashtable<String, String> {
     /**
      * Reads the config file
      *
-     * @param config_file
+     * @param configFilePath
      * @return
      */
-    public boolean read(String config_file) {
+    public boolean read(String configFilePath) {
 
-        String line = null;
-        String param_name = null;
-        String param_value = null;
+        String line;
+        String parameterName;
+        String parameterValue;
 
         try {
             // TODO Read from assets
-            BufferedReader input = new BufferedReader(new FileReader(config_file));
+            BufferedReader input = new BufferedReader(new FileReader(configFilePath));
 
             while ((line = input.readLine()) != null) {
 
-				/* For comments */
+				// Ignoring any line that is shorter than 3 characters
                 if (line.length() < 3) {
                     continue;
                 }
+                // Ignoring comments
                 if (line.charAt(0) == '#') {
                     continue;
                 }
 
-                param_name = line.substring(0, line.indexOf(" "));
-                param_value = line.substring(line.indexOf(" ") + 1).trim();
-                this.put(param_name, param_value);
+                // Protection against empty parameter name
+                int firstSpacePosition = line.indexOf(" ");
+                if( firstSpacePosition < 1 )
+                {
+                    continue;
+                }
+
+                parameterName = line.substring(0, firstSpacePosition);
+                parameterValue = line.substring(firstSpacePosition + 1).trim();
+                this.put(parameterName, parameterValue);
             }
 
             input.close();

@@ -229,7 +229,7 @@ public class HTTPResponse {
     public void serveAsset(String asset) {
         this.flushHeaders();
 
-        //MainController.getInstance().println("Serving asset " + asset);
+        MainController.getInstance().println("Serving asset " + asset);
 
         int buffer_read_n_bytes = 0;
         byte[] buffer = new byte[512];

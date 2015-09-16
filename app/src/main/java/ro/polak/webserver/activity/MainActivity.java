@@ -60,29 +60,6 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
         this.mainController.start();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-        return true;
-    }
-
     public MainController getMainController() {
         return this.mainController;
     }
@@ -192,12 +169,18 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
      *
      * @param text
      */
-    public void println(String text) {
-        try {
-            consoleText.setText(text + "\n" + consoleText.getText());
-        } catch (Exception e) {
-            Log.i("HTTP", text);
-        }
+    public void println(final String text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    consoleText.setText(text + "\n" + consoleText.getText());
+                } catch (Exception e) {
+                    Log.i("HTTP", text);
+                }
+            }
+        });
     }
 
     /**

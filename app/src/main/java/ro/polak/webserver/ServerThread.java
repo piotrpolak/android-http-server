@@ -171,7 +171,7 @@ public class ServerThread extends Thread {
                             // Servlet found and loaded
                             response.setStatus(HTTPResponseHeaders.STATUS_OK);
                             servletService.rollServlet(request, response);
-                            //MainController.getInstance().println("Rolling servlet " + request.getHeaders().getURI());
+                            MainController.getInstance().println("Rolling servlet " + request.getHeaders().getURI());
                         } else {
                             (new HTTPError(response)).serve404();
                         }

@@ -1,7 +1,7 @@
 package admin;
 
 import ro.polak.utilities.Config;
-import ro.polak.webserver.JLWSConfig;
+import ro.polak.webserver.controller.MainController;
 
 public class AccessControl {
 
@@ -47,7 +47,7 @@ public class AccessControl {
 
     public static Config getConfig() {
         Config config = new Config();
-        config.read(JLWSConfig.getBaseFilesPath() + "admin.conf");
+        config.read(MainController.getInstance().getServer().getServerConfig().getBasePath() + "admin.conf");
 
         return config;
     }

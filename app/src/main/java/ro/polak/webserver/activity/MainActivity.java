@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
         if (ip == null) {
             ip = "localhost";
         }
-        int port = this.mainController.getServer().getPort();
+        int port = this.mainController.getServer().getServerConfig().getListenPort();
         String portString = "";
         if (port != 80) {
             portString = ":" + port;

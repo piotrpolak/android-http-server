@@ -24,6 +24,11 @@ public class MimeTypeMapping {
     private Vector<Integer> mimeTypesExtLinks = new Vector<Integer>(0);
     private Vector<String> mimeTypes = new Vector<String>(0);
 
+
+    public MimeTypeMapping() {
+
+    }
+
     /**
      * Creates mime type list
      *

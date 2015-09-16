@@ -3,8 +3,6 @@ package ro.polak.utilities;
 import java.io.File;
 import java.text.DecimalFormat;
 
-import ro.polak.webserver.JLWSConfig;
-
 /**
  * Utilities
  *
@@ -43,8 +41,8 @@ public class Utilities {
     /**
      * Once called, deletes all the files inside the temporary files directory
      */
-    public static void clearTemp() {
-        File f = new File(JLWSConfig.TempDir);
+    public static void clearDirectory(String directoryPath) {
+        File f = new File(directoryPath);
         File files[] = f.listFiles();
         if (files != null) {
             for (int i = 0; i < files.length; i++) {

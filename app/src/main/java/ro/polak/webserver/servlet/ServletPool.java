@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ro.polak.webserver.JLWSConfig;
+import ro.polak.webserver.controller.MainController;
 
 /**
  * Servlet pool Used for resource reusing
@@ -25,7 +25,7 @@ public class ServletPool {
     public ServletPool() {
         this.map = new HashMap<String, ServletPoolItem>();
         this.pingerTimer = new Timer();
-        this.pingerTimer.schedule(new RevalidatorTask(this), 1000, JLWSConfig.ServletServicePoolPingerInterval);
+        this.pingerTimer.schedule(new RevalidatorTask(this), 1000, MainController.getInstance().getServer().getServerConfig().getServletServicePoolPingerInterval());
     }
 
     /**
@@ -75,7 +75,7 @@ public class ServletPool {
             return;
         }
 
-        long expireTimestamp = new Date().getTime() - JLWSConfig.ServletServicePoolServletExpires;
+        long expireTimestamp = new Date().getTime() - MainController.getInstance().getServer().getServerConfig().getServletServicePoolServletExpires();
 
         while (this.locked) {
         }

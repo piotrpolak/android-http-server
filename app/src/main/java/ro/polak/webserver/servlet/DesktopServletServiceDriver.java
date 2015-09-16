@@ -4,7 +4,7 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import ro.polak.webserver.JLWSConfig;
+import ro.polak.webserver.controller.MainController;
 
 public class DesktopServletServiceDriver implements IServletServiceDriver {
 
@@ -14,7 +14,7 @@ public class DesktopServletServiceDriver implements IServletServiceDriver {
 
     static {
         try {
-            DesktopServletServiceDriver.classLoader = new URLClassLoader((new URL[]{new URL("file", "", new File(JLWSConfig.DocumentRoot).getCanonicalPath().replace('\\', '/') + "/")}));
+            DesktopServletServiceDriver.classLoader = new URLClassLoader((new URL[]{new URL("file", "", new File(MainController.getInstance().getServer().getServerConfig().getDocumentRootPath()).getCanonicalPath().replace('\\', '/') + "/")}));
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
@@ -61,9 +61,9 @@ public class DesktopServletServiceDriver implements IServletServiceDriver {
             littleServlet = (Servlet) DesktopServletServiceDriver.classLoader.loadClass(servletName).newInstance();
 
             try {
-                littleServlet.directory = (new File(JLWSConfig.DocumentRoot)).getCanonicalPath();
+                littleServlet.directory = (new File(MainController.getInstance().getServer().getServerConfig().getDocumentRootPath())).getCanonicalPath();
             } catch (java.io.IOException e) {
-                littleServlet.directory = JLWSConfig.DocumentRoot;
+                littleServlet.directory = MainController.getInstance().getServer().getServerConfig().getDocumentRootPath();
             }
         } catch (ClassCastException e) {
             return false;

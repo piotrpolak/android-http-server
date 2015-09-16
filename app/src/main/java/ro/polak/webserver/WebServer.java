@@ -8,6 +8,7 @@
  **************************************************/
 package ro.polak.webserver;
 
+import ro.polak.utilities.Utilities;
 import ro.polak.webserver.controller.IController;
 
 import java.io.*;
@@ -15,6 +16,13 @@ import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+/**
+ * Web server main class
+ *
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200802
+ */
 public class WebServer extends Thread {
 
     // Some static info
@@ -33,6 +41,8 @@ public class WebServer extends Thread {
     private boolean listen = false;
     private ServerSocket serverSocket = null;
     private IController controller = null;
+
+    private ServerConfig serverConfig;
 
     /**
      * Default constructor
@@ -57,9 +67,9 @@ public class WebServer extends Thread {
                 socket = serverSocket.accept();
                 // this.controller.println("Accepting connection from "+socket.getInetAddress().getHostAddress().toString());
 
-                if (JLWSConfig.MaxThreads >= ServerThread.activeCount()) {
+                if (serverConfig.getMaxServerThreads() >= ServerThread.activeCount()) {
                     // If there are threads allowed to start
-                    new ServerThread(socket); // Creating new thread
+                    new ServerThread(socket, this); // Creating new thread
                 } else {
                     // 503 Service Unavailable HERE
                     HTTPError.serve503(socket);
@@ -87,37 +97,34 @@ public class WebServer extends Thread {
     public boolean startServer() {
         this.listen = true;
 
-        JLWSConfig.initialize();
+        serverConfig = new ServerConfig();
 
         // Checking document root
-        if (!(new File(JLWSConfig.DocumentRoot).isDirectory())) {
-            this.controller.println("ERROR: DocumentRoot does not exist! PATH: " + JLWSConfig.DocumentRoot);
+        if (!(new File(serverConfig.getDocumentRootPath()).isDirectory())) {
+            this.controller.println("ERROR: DocumentRoot does not exist! PATH: " + serverConfig.getDocumentRootPath());
             // return false;
         }
 
         // Getting the maximum number of server threads and veryfying
-        if (JLWSConfig.MaxThreads < 1) {
+        if (serverConfig.getMaxServerThreads() < 1) {
             this.controller.println("ERROR: MaxThreads should be greater or equal to 1!");
             return false;
         }
 
         // Trying to create socket
         try {
-            serverSocket = new ServerSocket(JLWSConfig.Listen);
+            serverSocket = new ServerSocket(serverConfig.getListenPort());
         } catch (IOException e) {
             e.printStackTrace();
-            this.controller.println("ERROR: Unable to start server: unable to listen on port " + JLWSConfig.Listen);
+            this.controller.println("ERROR: Unable to start server: unable to listen on port " + serverConfig.getListenPort());
             return false;
         }
 
-        this.controller.println("Server started. Listening on port " + JLWSConfig.Listen);
+        Utilities.clearDirectory(serverConfig.getTempPath());
+
+        this.controller.println("Server started. Listening on port " + serverConfig.getListenPort());
         this.start();
         return true;
-    }
-
-    public int getPort() {
-        // TODO eliminate alias
-        return JLWSConfig.Listen;
     }
 
     /**
@@ -140,5 +147,9 @@ public class WebServer extends Thread {
      */
     public boolean isRunning() {
         return this.listen;
+    }
+
+    public ServerConfig getServerConfig() {
+        return serverConfig;
     }
 }

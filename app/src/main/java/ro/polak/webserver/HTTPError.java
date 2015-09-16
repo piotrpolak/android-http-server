@@ -2,6 +2,7 @@ package ro.polak.webserver;
 
 import java.io.File;
 
+import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HTTPResponse;
 
 import java.net.Socket;
@@ -40,14 +41,14 @@ public class HTTPError {
 		response.setStatus(HTTPResponseHeaders.STATUS_NOT_FOUND);
 		response.setContentType("text/html");
 
-		if (JLWSConfig.ErrorDocument404 == null) {
+		if (MainController.getInstance().getServer().getServerConfig().getErrorDocument404Path() == null) {
 			doc.title = "Error 404 - File Not Found";
 			doc.message = "<p>The server has not found anything matching the Request-URI.</p>";
 			response.setContentLength(doc.toString().length());
 			response.flushHeaders();
 			response.write(doc.toString());
 		} else {
-			File file = new File(JLWSConfig.ErrorDocument404);
+			File file = new File(MainController.getInstance().getServer().getServerConfig().getErrorDocument404Path());
 
 			if (file.exists()) {
 				response.setContentLength(file.length());
@@ -67,14 +68,14 @@ public class HTTPError {
 		response.setStatus(HTTPResponseHeaders.STATUS_ACCESS_DENIED);
 		response.setContentType("text/html");
 
-		if (JLWSConfig.ErrorDocument403 == null) {
+		if (MainController.getInstance().getServer().getServerConfig().getErrorDocument403Path() == null) {
 			doc.title = "Error 403 - Forbidden";
 			doc.message = "<p>Access Denied.</p>";
 			response.setContentLength(doc.toString().length());
 			response.flushHeaders();
 			response.write(doc.toString());
 		} else {
-			File file = new File(JLWSConfig.ErrorDocument403);
+			File file = new File(MainController.getInstance().getServer().getServerConfig().getErrorDocument403Path());
 			if (file.exists()) {
 				response.setContentLength(file.length());
 				response.flushHeaders();

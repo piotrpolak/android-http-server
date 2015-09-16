@@ -10,9 +10,9 @@ import java.util.regex.Pattern;
 import java.util.Hashtable;
 
 import ro.polak.utilities.RandomStringGenerator;
-import ro.polak.webserver.JLWSConfig;
+import ro.polak.webserver.controller.MainController;
 
- /**
+/**
  * Session mechanism for little servlets
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
@@ -25,7 +25,7 @@ public class HTTPSession {
     private transient HTTPRequest request;
     private transient HTTPResponse response;
     private String sid;
-    private String directoryPath = JLWSConfig.TempDir;
+    private String directoryPath = MainController.getInstance().getServer().getServerConfig().getTempPath();
     private String cookieName = "JSSSESSIONID";
     private Hashtable vars;
     private boolean isStarted = false;

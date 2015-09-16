@@ -68,7 +68,6 @@ public class MainController implements IController {
         } else {
             this.gui.stop();
         }
-        Utilities.clearTemp();
     }
 
     /**

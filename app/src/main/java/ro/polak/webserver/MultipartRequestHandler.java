@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import ro.polak.utilities.RandomStringGenerator;
+import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.UploadedFile;
 
 /**
@@ -316,7 +317,7 @@ public class MultipartRequestHandler {
             if (mHeaders.getContentType() != null) {
 				/* For files */
                 try {
-                    file = new File(JLWSConfig.TempDir + RandomStringGenerator.generate());
+                    file = new File(MainController.getInstance().getServer().getServerConfig().getTempPath() + RandomStringGenerator.generate());
                     fos = new FileOutputStream(file);
                 } catch (FileNotFoundException e) {
                     // TODO Throw exception instead of printing it

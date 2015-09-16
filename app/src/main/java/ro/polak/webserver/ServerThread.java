@@ -24,14 +24,16 @@ import ro.polak.utilities.Utilities;
 public class ServerThread extends Thread {
 
     private Socket socket;
+    private WebServer webServer;
 
     /**
      * Default constructor
      *
      * @param socket
      */
-    public ServerThread(Socket socket) {
+    public ServerThread(Socket socket, WebServer webServer) {
         this.socket = socket;
+        this.webServer = webServer;
         this.start();
     }
 
@@ -58,7 +60,7 @@ public class ServerThread extends Thread {
         }
 
 		// Setting keep alive header
-        if (request.isKeepAlive() && JLWSConfig.KeepAlive) {
+        if (request.isKeepAlive() && webServer.getServerConfig().isKeepAlive()) {
             response.setKeepAlive(true);
         } else {
             response.setKeepAlive(false);
@@ -67,7 +69,7 @@ public class ServerThread extends Thread {
 		// Checking allowed method
         if (request.getHeaders().getMethod().equals("GET") || request.getHeaders().getMethod().equals("POST") || request.getHeaders().getMethod().equals("HEAD")) {
 
-            File file = new File(JLWSConfig.DocumentRoot + request.getHeaders().getURI());
+            File file = new File(webServer.getServerConfig().getDocumentRootPath() + request.getHeaders().getURI());
             response.setHeader("Server", WebServer.SERVER_SMALL_SIGNATURE);
 
 			// File or directory existing
@@ -81,16 +83,16 @@ public class ServerThread extends Thread {
                         boolean isThereAServlet = false;
 
 						// Searching for index file
-                        for (int i = 0; i < JLWSConfig.DirectoryIndex.size(); i++) {
+                        for (int i = 0; i < webServer.getServerConfig().getDirectoryIndex().size(); i++) {
 
 							// Getting the extension
-                            fileExtension = Utilities.getExtension((String) JLWSConfig.DirectoryIndex.elementAt(i));
+                            fileExtension = Utilities.getExtension((String) webServer.getServerConfig().getDirectoryIndex().elementAt(i));
 
-                            if (fileExtension.equals(JLWSConfig.ServletMappedExtension)) {
+                            if (fileExtension.equals(webServer.getServerConfig().getServletMappedExtension())) {
                                 // checking for a class
                                 try {
 
-                                    String index = (String) request.getHeaders().getURI() + JLWSConfig.DirectoryIndex.elementAt(i);
+                                    String index = (String) request.getHeaders().getURI() + webServer.getServerConfig().getDirectoryIndex().elementAt(i);
                                     servletService = new ServletService(new AndroidServletServiceDriver());
                                     if (servletService.loadServlet(index)) {
                                         // Servet found and loaded
@@ -117,7 +119,7 @@ public class ServerThread extends Thread {
                                     break;
                                 }
                             } else {
-                                indexFile = new File(JLWSConfig.DocumentRoot + request.getHeaders().getURI() + JLWSConfig.DirectoryIndex.elementAt(i));
+                                indexFile = new File(webServer.getServerConfig().getDocumentRootPath() + request.getHeaders().getURI() + webServer.getServerConfig().getDirectoryIndex().elementAt(i));
                                 if (indexFile.exists()) {
                                     fileToBeServed = indexFile;
                                     break;
@@ -141,7 +143,7 @@ public class ServerThread extends Thread {
                 if (fileToBeServed != null) {
                     fileExtension = Utilities.getExtension(fileToBeServed.getName());
                     response.setStatus(HTTPResponseHeaders.STATUS_OK);
-                    response.setContentType(JLWSConfig.MimeTypeMapping.getMimeTypeByExtension(fileExtension));
+                    response.setContentType(webServer.getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(fileExtension));
                     response.setContentLength(fileToBeServed.length());
                     response.flushHeaders();
 
@@ -158,7 +160,7 @@ public class ServerThread extends Thread {
                 fileExtension = Utilities.getExtension(request.getHeaders().getURI());
                 Log.i("HTTP", "SERVE");
 
-                if (fileExtension.equals(JLWSConfig.ServletMappedExtension)) {
+                if (fileExtension.equals(webServer.getServerConfig().getServletMappedExtension())) {
 
                     Log.i("SERVLET", "Attempt to load servlet for " + request.getHeaders().getURI());
 
@@ -169,7 +171,7 @@ public class ServerThread extends Thread {
                             // Servlet found and loaded
                             response.setStatus(HTTPResponseHeaders.STATUS_OK);
                             servletService.rollServlet(request, response);
-                            MainController.getInstance().println("Rolling servlet " + request.getHeaders().getURI());
+                            //MainController.getInstance().println("Rolling servlet " + request.getHeaders().getURI());
                         } else {
                             (new HTTPError(response)).serve404();
                         }

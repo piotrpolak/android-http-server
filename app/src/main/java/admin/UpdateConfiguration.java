@@ -1,7 +1,7 @@
 package admin;
 
 import ro.polak.utilities.Utilities;
-import ro.polak.webserver.JLWSConfig;
+import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.*;
 
 import java.io.File;
@@ -21,14 +21,17 @@ public class UpdateConfiguration extends Servlet {
         FileUpload fu = request.getFileUpload();
 
         if (fu.getFile("file") == null) {
-            doc.writeln("<p>Error: no file uploaded ("+fu.size()+")</p>");
+            doc.writeln("<p>Error: no file uploaded (" + fu.size() + ")</p>");
         } else {
-            if (Utilities.getExtension(fu.getFile("file").getFileName()).equals("conf")) {
-                if (fu.getFile("file").moveTo(JLWSConfig.getBaseFilesPath() +"httpd_test.conf")) {
 
-                    (new File(JLWSConfig.getBaseFilesPath() + "bakup_httpd.conf")).delete();
-                    (new File(JLWSConfig.getBaseFilesPath() + "httpd.conf")).renameTo(new File(JLWSConfig.getBaseFilesPath() + "bakup_httpd.conf"));
-                    if ((new File(JLWSConfig.getBaseFilesPath() + "httpd_test.conf")).renameTo((new File(JLWSConfig.getBaseFilesPath() + "httpd.conf")))) {
+            String basePath = MainController.getInstance().getServer().getServerConfig().getBasePath();
+
+            if (Utilities.getExtension(fu.getFile("file").getFileName()).equals("conf")) {
+                if (fu.getFile("file").moveTo(basePath + "httpd_test.conf")) {
+
+                    (new File(basePath + "bakup_httpd.conf")).delete();
+                    (new File(basePath + "httpd.conf")).renameTo(new File(basePath + "bakup_httpd.conf"));
+                    if ((new File(basePath + "httpd_test.conf")).renameTo((new File(basePath + "httpd.conf")))) {
                         doc.writeln("<p>New configuration will be applied after server restart.</p>");
                     } else {
                         doc.writeln("<p>Unable to apply new configuration file.</p>");

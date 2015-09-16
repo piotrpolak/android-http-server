@@ -1,6 +1,6 @@
 package admin;
 
-import ro.polak.webserver.JLWSConfig;
+import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.*;
 import ro.polak.utilities.Utilities;
 
@@ -15,6 +15,6 @@ public class BackupConfiguration extends Servlet {
 
         response.setHeader("Content-disposition", "attachment; filename=httpd.conf");
         response.setContentType("application/octet-stream");
-        response.serveFile(new java.io.File(JLWSConfig.getBaseFilesPath() + "httpd.conf"));
+        response.serveFile(new java.io.File(MainController.getInstance().getServer().getServerConfig().getBasePath() + "httpd.conf"));
     }
 }

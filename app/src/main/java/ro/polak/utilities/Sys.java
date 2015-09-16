@@ -1,3 +1,12 @@
+/**************************************************
+ *
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ *
+ * Copyright (c) Piotr Polak 2008-2015
+ *
+ **************************************************/
+
 package ro.polak.utilities;
 
 import java.io.BufferedReader;

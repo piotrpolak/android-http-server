@@ -1,3 +1,10 @@
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2015
+ **************************************************/
+
 package ro.polak.webserver;
 
 import java.io.File;
@@ -160,7 +167,7 @@ public class MultipartRequestHandler {
                         tempBuffer[tempBufferCharPosition++] = buffer[i]; // buffering
 
 						/*
-						 * Checkig for the last character of the deliminator
+                         * Checkig for the last character of the deliminator
 						 */
                         if (++charPosition == currentDeliminator.length()) {
 							/*

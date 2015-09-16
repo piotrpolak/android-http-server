@@ -1,3 +1,10 @@
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2015
+ **************************************************/
+
 package ro.polak.webserver.servlet;
 
 import java.io.File;
@@ -63,7 +70,7 @@ public class HTTPSession {
         if (!sessionUnfreezed) {
             sid = RandomStringGenerator.generate();
             response.setCookie(cookieName, sid);
-            vars = new Hashtable<String,String>();
+            vars = new Hashtable<String, String>();
         }
 
         isStarted = true;
@@ -135,9 +142,9 @@ public class HTTPSession {
         }
     }
 
-     /**
-      * Persists the session to the storage
-      */
+    /**
+     * Persists the session to the storage
+     */
     protected void freeze() {
         // Prevent from saving an empty session
         if (isStarted == false) {
@@ -162,34 +169,34 @@ public class HTTPSession {
         }
     }
 
-     /**
-      * Restores session from the storage
-      *
-      * @return
-      */
-     protected boolean unfreeze() {
-         // Prevent from reading an empty session
-         if (isStarted == true) {
-             return false;
-         }
+    /**
+     * Restores session from the storage
+     *
+     * @return
+     */
+    protected boolean unfreeze() {
+        // Prevent from reading an empty session
+        if (isStarted == true) {
+            return false;
+        }
 
-         // Reading session object to the file
-         try {
-             // TODO Check if the file exists
-             FileInputStream fis = new FileInputStream(new File(directoryPath + sid));
-             ObjectInputStream in = new ObjectInputStream(fis);
-             vars = (Hashtable) in.readObject();
-             in.close();
-             return true;
-         } catch (IOException e) {
-             // TODO Check if the file exists, generate session only if the file is missing
-             sid = RandomStringGenerator.generate();
-             response.setCookie(cookieName, sid);
-             vars = new Hashtable<String, String>();
-         } catch (ClassNotFoundException e) {
-             e.printStackTrace();
-         }
+        // Reading session object to the file
+        try {
+            // TODO Check if the file exists
+            FileInputStream fis = new FileInputStream(new File(directoryPath + sid));
+            ObjectInputStream in = new ObjectInputStream(fis);
+            vars = (Hashtable) in.readObject();
+            in.close();
+            return true;
+        } catch (IOException e) {
+            // TODO Check if the file exists, generate session only if the file is missing
+            sid = RandomStringGenerator.generate();
+            response.setCookie(cookieName, sid);
+            vars = new Hashtable<String, String>();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
-         return false;
-     }
+        return false;
+    }
 }

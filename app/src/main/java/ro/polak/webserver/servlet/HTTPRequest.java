@@ -1,3 +1,10 @@
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2015
+ **************************************************/
+
 package ro.polak.webserver.servlet;
 
 import java.io.*;
@@ -63,7 +70,7 @@ public class HTTPRequest {
             Statistics.addBytesReceived(statusLine.length());
 
 			/*
-			 * Reading the rest of headers until \r\n
+             * Reading the rest of headers until \r\n
 			 */
             buffer = new byte[1];
 
@@ -86,9 +93,7 @@ public class HTTPRequest {
 			 */
             if (inputHeaders.length() >= 3) {
                 headers.parse(inputHeaders.substring(0, inputHeaders.length() - 3));
-            }
-            else
-            {
+            } else {
                 headers = new HTTPRequestHeaders();
             }
 
@@ -214,7 +219,7 @@ public class HTTPRequest {
     public String getCookie(String cookieName) {
         if (_cookies == null) {
             // now parsing only for a new cookies
-            _cookies = new Hashtable<String,String>();
+            _cookies = new Hashtable<String, String>();
 
             String cookieStr = headers.getHeader("Cookie");
             if (cookieStr == null) {
@@ -236,7 +241,7 @@ public class HTTPRequest {
 
         }
         try {
-            return Utilities.URLDecode((String)_cookies.get(cookieName));
+            return Utilities.URLDecode((String) _cookies.get(cookieName));
         } catch (Exception e) {
             e.printStackTrace();
             return null;

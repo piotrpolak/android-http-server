@@ -1,15 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2015
+ **************************************************/
 
 package ro.polak.webserver.gui;
 
 import ro.polak.webserver.controller.IController;
 
-/**
- * @author Admin
- */
 public interface IServerUI {
 
     /**

@@ -1,3 +1,10 @@
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2015
+ **************************************************/
+
 package ro.polak.webserver;
 
 import java.util.Hashtable;
@@ -16,8 +23,8 @@ public class HTTPRequestHeaders extends Headers {
     private String protocol;
     private String uri;
     private String queryParameters;
-    private Hashtable _post = new Hashtable<String,String>();
-    private Hashtable _get = new Hashtable<String,String>();
+    private Hashtable _post = new Hashtable<String, String>();
+    private Hashtable _get = new Hashtable<String, String>();
 
     /**
      * Sets the status line
@@ -55,7 +62,7 @@ public class HTTPRequestHeaders extends Headers {
             queryParameters = queryString.substring(pos + 1);
         }
 
-		// If there are any query parameters
+        // If there are any query parameters
         if (queryParameters != null) {
 
             // TODO Implement query parameters parser

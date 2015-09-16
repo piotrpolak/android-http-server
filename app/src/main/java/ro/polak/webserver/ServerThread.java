@@ -1,3 +1,10 @@
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2015
+ **************************************************/
+
 package ro.polak.webserver;
 
 import java.io.File;
@@ -49,7 +56,7 @@ public class ServerThread extends Thread {
         File fileToBeServed = null;
         ServletService servletService = null;
 
-		// Checking the requested URI, blocking illegal paths
+        // Checking the requested URI, blocking illegal paths
         if (request.getHeaders().getURI() == null || request.getHeaders().getURI().startsWith("../") || request.getHeaders().getURI().indexOf("/../") != -1) {
             try {
                 response.close();
@@ -59,20 +66,20 @@ public class ServerThread extends Thread {
             return;
         }
 
-		// Setting keep alive header
+        // Setting keep alive header
         if (request.isKeepAlive() && webServer.getServerConfig().isKeepAlive()) {
             response.setKeepAlive(true);
         } else {
             response.setKeepAlive(false);
         }
 
-		// Checking allowed method
+        // Checking allowed method
         if (request.getHeaders().getMethod().equals("GET") || request.getHeaders().getMethod().equals("POST") || request.getHeaders().getMethod().equals("HEAD")) {
 
             File file = new File(webServer.getServerConfig().getDocumentRootPath() + request.getHeaders().getURI());
             response.setHeader("Server", WebServer.SERVER_SMALL_SIGNATURE);
 
-			// File or directory existing
+            // File or directory existing
             if (file.exists()) {
                 if (file.isDirectory()) {
                     // Getting the last character for directory addresses only
@@ -82,10 +89,10 @@ public class ServerThread extends Thread {
                     } else {
                         boolean isThereAServlet = false;
 
-						// Searching for index file
+                        // Searching for index file
                         for (int i = 0; i < webServer.getServerConfig().getDirectoryIndex().size(); i++) {
 
-							// Getting the extension
+                            // Getting the extension
                             fileExtension = Utilities.getExtension((String) webServer.getServerConfig().getDirectoryIndex().elementAt(i));
 
                             if (fileExtension.equals(webServer.getServerConfig().getServletMappedExtension())) {
@@ -104,7 +111,7 @@ public class ServerThread extends Thread {
                                         break;
                                     }
                                 } catch (Exception e) {
-									/* For uncought exceptions */
+                                    /* For uncought exceptions */
                                     isThereAServlet = true;
                                     HTTPError error = new HTTPError(response);
                                     error.setReason(e);
@@ -127,7 +134,7 @@ public class ServerThread extends Thread {
                             }
                         }
 
-						// No index found? Serving 403 error
+                        // No index found? Serving 403 error
                         if (fileToBeServed == null && isThereAServlet == false) {
                             // Serving 403 error
                             (new HTTPError(response)).serve403();
@@ -139,7 +146,7 @@ public class ServerThread extends Thread {
                     fileToBeServed = file;
                 }
 
-				// For existing files (not servlets)
+                // For existing files (not servlets)
                 if (fileToBeServed != null) {
                     fileExtension = Utilities.getExtension(fileToBeServed.getName());
                     response.setStatus(HTTPResponseHeaders.STATUS_OK);
@@ -147,14 +154,14 @@ public class ServerThread extends Thread {
                     response.setContentLength(fileToBeServed.length());
                     response.flushHeaders();
 
-					// Serving file for all the request but for HEAD
+                    // Serving file for all the request but for HEAD
                     if (!request.getHeaders().getMethod().equals("HEAD")) {
                         response.serveFile(fileToBeServed);
                     }
 
                 }
             }
-			// File not existing, but maybe a servlet?
+            // File not existing, but maybe a servlet?
             else {
 
                 fileExtension = Utilities.getExtension(request.getHeaders().getURI());
@@ -176,12 +183,12 @@ public class ServerThread extends Thread {
                             (new HTTPError(response)).serve404();
                         }
                     } catch (Exception e) {
-						// For servlet uncaught exceptions
+                        // For servlet uncaught exceptions
                         HTTPError error = new HTTPError(response);
                         error.setReason(e);
                         error.serve500();
                     } catch (Error e) {
-						// For compilation problems
+                        // For compilation problems
                         HTTPError error = new HTTPError(response);
                         error.setReason(e);
                         error.serve500();

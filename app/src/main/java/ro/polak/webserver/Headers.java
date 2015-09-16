@@ -1,6 +1,11 @@
-package ro.polak.webserver;
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2015
+ **************************************************/
 
-import android.util.Log;
+package ro.polak.webserver;
 
 import java.util.Hashtable;
 

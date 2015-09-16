@@ -1,3 +1,10 @@
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2015
+ **************************************************/
+
 package ro.polak.webserver;
 
 import java.util.Enumeration;
@@ -85,8 +92,7 @@ public class HTTPResponseHeaders extends Headers {
         String headersStr = status;
         Enumeration<String> keys = vars.keys();
 
-        while( keys.hasMoreElements() )
-        {
+        while (keys.hasMoreElements()) {
             String key = keys.nextElement();
             headersStr += key + ": " + vars.get(key) + "\r\n";
         }

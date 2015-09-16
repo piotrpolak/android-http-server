@@ -1,9 +1,18 @@
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2015
+ **************************************************/
+
 package ro.polak.webserver;
 
 import android.os.Environment;
 import android.util.Log;
+
 import java.io.File;
 import java.util.Vector;
+
 import ro.polak.utilities.Config;
 
 /**
@@ -13,7 +22,7 @@ import ro.polak.utilities.Config;
  * @version 201509
  * @since 201509
  */
-public class ServerConfig extends Config{
+public class ServerConfig extends Config {
 
     private String basePath = Environment.getExternalStorageDirectory() + "/httpd/";
     private String documentRootPath = basePath + "www/";
@@ -33,18 +42,15 @@ public class ServerConfig extends Config{
     /**
      * Default constructor
      */
-    public ServerConfig()
-    {
+    public ServerConfig() {
         this.read();
     }
 
     /**
      * Reads the config from the file
      */
-    public void read()
-    {
-        if( super.read(basePath + "httpd.conf") )
-        {
+    public void read() {
+        if (super.read(basePath + "httpd.conf")) {
             Log.i("HTTP", "Config file read");
 
             // Assigning values
@@ -75,9 +81,7 @@ public class ServerConfig extends Config{
             for (int i = 0; i < directoryIndexLine.length; i++) {
                 directoryIndex.addElement(directoryIndexLine[i]);
             }
-        }
-        else
-        {
+        } else {
             // Initializing an empty mime type mapping to prevent null pointer exceptions
             mimeTypeMapping = new MimeTypeMapping();
         }

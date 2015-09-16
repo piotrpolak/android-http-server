@@ -1,11 +1,10 @@
 /**************************************************
- * JavaLittleWebServer
- * Version 1.0 Beta
- * Date: 18/02/2008
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
  * <p/>
- * Author: Piotr Polak <piotr@polak.ro>
- * WWW: http://www.polak.ro
+ * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
+
 package ro.polak.webserver;
 
 import ro.polak.utilities.Utilities;

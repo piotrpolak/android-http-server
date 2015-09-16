@@ -1,6 +1,13 @@
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2015
+ **************************************************/
+
 package ro.polak.webserver.servlet;
 
- /**
+/**
  * Little servlet service for loading and rolling servlets
  *
  * @author Piotr Polak piotr [at] polak [dot] ro

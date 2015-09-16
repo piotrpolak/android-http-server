@@ -32,20 +32,20 @@ public class MimeTypeMapping {
     /**
      * Creates mime type list
      *
-     * @param mimeTypeFile    path to mime type file
+     * @param mimeTypeFilePath    path to mime type file
      * @param defaultMimeType default mime type
      */
-    public MimeTypeMapping(String mimeTypeFile, String defaultMimeType) {
-        this(mimeTypeFile);
+    public MimeTypeMapping(String mimeTypeFilePath, String defaultMimeType) {
+        this(mimeTypeFilePath);
         this.defaultMimeType = defaultMimeType;
     }
 
     /**
      * Creates mime type list out of the file
      *
-     * @param mime_type_file path to mime type file
+     * @param mimeTypeFilePath path to mime type file
      */
-    public MimeTypeMapping(String mime_type_file) {
+    public MimeTypeMapping(String mimeTypeFilePath) {
 
         String line = null;
 
@@ -57,7 +57,7 @@ public class MimeTypeMapping {
         // }
 
         try {
-            BufferedReader input = new BufferedReader(new FileReader(mime_type_file));
+            BufferedReader input = new BufferedReader(new FileReader(mimeTypeFilePath));
 
             while ((line = input.readLine()) != null) {
                 String mime[] = line.split(" ");

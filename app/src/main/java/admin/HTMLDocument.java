@@ -38,44 +38,66 @@ public class HTMLDocument {
     }
 
     public void attachStyle(String style) {
-        headers += "<link href=\"" + style
-                + "\" rel=\"stylesheet\" type=\"text/css\" />\n";
+        headers += "<link href=\"" + style + "\" rel=\"stylesheet\" type=\"text/css\" />\n";
     }
 
-    public void favidon(String favicon) {
+    public void setFavicon(String favicon) {
         headers += "<link href=\"" + favicon + "\" rel=\"shortcut icon\" />\n";
     }
 
     public String toString() {
-        String out = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
-        out += "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n";
-        out += "<head>\n";
-        out += "<title>" + this.title + "</title>\n";
-        out += "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n";
+        String out = "\n" +
+                "<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "<meta charset=\"utf-8\">\n" +
+                "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
+                "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+                "<meta name=\"description\" content=\"\">\n" +
+                "<meta name=\"author\" content=\"\">\n";
+
+        out += "<title>" + this.title + " - Android HTTP Server</title>\n";
         out += headers;
-        out += "<link href=\"/assets/css/screen.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
+        out += "<link href=\"/assets/css/bootstrap.min.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
+        out += "<link href=\"/assets/css/bootstrap-theme.min.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
+        out += "<link href=\"/assets/css/styles.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
+
         out += "</head>\n";
         out += "<body>\n";
-        out += "<div id=\"main\">\n";
-        out += "<h1>JavaLittleWebServer!</h1>\n";
+
+
         if (this.isLogged) {
-            out += "<div class=\"menu\">\n";
-            out += "<ul>\n";
-            out += "<li><a href=\"Index.dhtml\">About</a></li>\n";
-            out += "<li><a href=\"Configuration.dhtml\">Configuration</a></li>\n";
-            out += "<li><a href=\"Management.dhtml\">Management</a></li>\n";
-            out += "<li><a href=\"DriveAccess.dhtml\">Drive Access</a></li>\n";
-            out += "<li><a href=\"ServerStats.dhtml\">Statistics</a></li>\n";
-            out += "<li><a href=\"SmsInbox.dhtml\">SMS Inbox</a></li>\n";
-            out += "<li><a href=\"Logout.dhtml\">Logout</a></li>\n";
-            out += "</ul>\n";
+            out += "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n";
+            out += "<div class=\"container\">\n";
+            out += "    <div class=\"navbar-header\">\n";
+            out += "        <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n";
+            out += "            <span class=\"sr-only\">Toggle navigation</span>\n";
+            out += "            <span class=\"icon-bar\"></span>\n";
+            out += "            <span class=\"icon-bar\"></span>\n";
+            out += "            <span class=\"icon-bar\"></span>\n";
+            out += "        </button>\n";
+            out += "        <a class=\"navbar-brand\" href=\"Index.dhtml\">Server</a>\n";
+            out += "    </div>\n";
+            out += "    <div id=\"navbar\" class=\"collapse navbar-collapse\">\n";
+            out += "        <ul class=\"nav navbar-nav\">\n";
+            out += "            <li><a href=\"Index.dhtml\">About</a></li>\n";
+            out += "            <li><a href=\"Configuration.dhtml\">Configuration</a></li>\n";
+            out += "            <li><a href=\"Management.dhtml\">Management</a></li>\n";
+            out += "            <li><a href=\"DriveAccess.dhtml\">Drive Access</a></li>\n";
+            out += "            <li><a href=\"ServerStats.dhtml\">Statistics</a></li>\n";
+            out += "            <li><a href=\"SmsInbox.dhtml\">SMS Inbox</a></li>\n";
+            out += "            <li><a href=\"Logout.dhtml\">Logout</a></li>\n";
+            out += "        </ul>\n";
+            out += "    </div><!--/.nav-collapse -->\n";
             out += "</div>\n";
+            out += "</nav>\n";
         }
-        out += "<div class=\"content\">\n";
+
+        out += "<div class=\"container theme-showcase\" role=\"main\">\n\n";
         out += this.body;
-        out += "</div>\n";
-        out += "<div class=\"clearfooter\">Admin  v0.1</div>\n";
-        out += "</div>\n";
+        out += "\n</div>\n";
+        out += "<script type=\"text/javascript\" src=\"/assets/js/jquery.min.js\" ></script>\n";
+        out += "<script type=\"text/javascript\" src=\"/assets/js/bootstrap.min.js\" ></script>\n";
         out += "</body>\n";
         out += "</html>\n";
 

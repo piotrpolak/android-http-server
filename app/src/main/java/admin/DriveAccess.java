@@ -32,7 +32,7 @@ public class DriveAccess extends Servlet {
             return;
         }
 
-        HTMLDocument doc = new HTMLDocument("JavaLittleServer - Drive Access");
+        HTMLDocument doc = new HTMLDocument("Drive Access");
         doc.writeln("<h2>Drive Access</h2>");
 
         if (!AccessControl.getConfig().get("_managementEnableDriveAccess").equals("On")) {

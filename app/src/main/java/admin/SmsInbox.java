@@ -31,7 +31,7 @@ public class SmsInbox extends Servlet {
             return;
         }
 
-        HTMLDocument doc = new HTMLDocument("JavaLittleServer - SMS inbox");
+        HTMLDocument doc = new HTMLDocument("SMS inbox");
 
 
         String threadIdGet = request._get("thread_id");

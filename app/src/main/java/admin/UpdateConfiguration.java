@@ -22,9 +22,9 @@ public class UpdateConfiguration extends Servlet {
             return;
         }
 
-        HTMLDocument doc = new HTMLDocument("JavaLittleServer - update configuration");
+        HTMLDocument doc = new HTMLDocument("Update configuration");
 
-        doc.writeln("<h2>Management - update configuration</h2>");
+        doc.writeln("<h2>Update configuration</h2>");
         FileUpload fu = request.getFileUpload();
 
         if (fu.getFile("file") == null) {

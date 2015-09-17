@@ -15,7 +15,9 @@ public class Login extends Servlet {
     public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(session);
 
-        HTMLDocument doc = new HTMLDocument("JavaLittleServer", false);
+        HTMLDocument doc = new HTMLDocument("Login", false);
+        doc.writeln("<div class=\"form-login\">");
+
         doc.writeln("<h2>Login</h2>");
 
         if (request._post("dologin") != null) {
@@ -26,7 +28,9 @@ public class Login extends Servlet {
                     response.sendRedirect("Index.dhtml");
                 }
             } else {
-                doc.writeln("<p style=\"color: red;\">Incorrect login or password!</p>");
+                doc.writeln("<div class=\"alert alert-danger\" role=\"alert\">\n" +
+                        "        <strong>Oh snap!</strong> Incorrect login or password!.\n" +
+                        "      </div>");
             }
         }
 
@@ -35,18 +39,20 @@ public class Login extends Servlet {
             location += "?relocate=" + Utilities.URLEncode(request._get("relocate"));
         }
 
+
         String ff = "<form action=\""
                 + location
                 + "\" method=\"post\">\n"
-                + "<input name=\"dologin\" type=\"hidden\" value=\"true\" />\n"
-                + "<label>Login</label>\n"
-                + "<input name=\"login\" type=\"text\" size=\"20\" maxlength=\"20\" class=\"input_i\" />&nbsp;\n"
-                + "<label>Password</label>\n"
-                + "<input name=\"password\" type=\"password\" size=\"20\" maxlength=\"20\" class=\"input_i\"  />&nbsp;\n"
-                + "<input name=\"submit\" type=\"submit\" value=\"Login\" class=\"input_b\"  />\n"
+                + "      <input name=\"dologin\" type=\"hidden\" value=\"true\" />\n"
+                + "      <label for=\"inputLogin\" class=\"sr-only\">Login</label>\n" +
+                "        <input name=\"login\" type=\"text\" id=\"inputLogin\" class=\"form-control\" placeholder=\"Login\" required autofocus>\n" +
+                "        <label for=\"inputPassword\" class=\"sr-only\">Password</label>\n" +
+                "        <input name=\"password\" type=\"password\" id=\"inputPassword\" class=\"form-control\" placeholder=\"Password\" required>"
+                + "<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Sign in</button>\n"
                 + "</form>\n";
 
         doc.write(ff);
+        doc.writeln("</div>");
         response.getPrintWriter().print(doc.toString());
 
     }

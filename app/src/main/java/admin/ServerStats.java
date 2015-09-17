@@ -19,7 +19,7 @@ public class ServerStats extends Servlet {
             return;
         }
 
-        HTMLDocument doc = new HTMLDocument("JavaLittleServer - Statistics");
+        HTMLDocument doc = new HTMLDocument("Statistics");
         doc.writeln("<h2>Statistics</h2>");
         doc.write("<p>Received: " + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.webserver.Statistics.getBytesReceived()) + "</p>");
         doc.write("<p>Sent: " + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.webserver.Statistics.getBytesSend()) + "</p>");

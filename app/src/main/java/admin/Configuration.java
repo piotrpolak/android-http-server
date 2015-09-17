@@ -19,7 +19,7 @@ public class Configuration extends Servlet {
             return;
         }
 
-        HTMLDocument doc = new HTMLDocument("JavaLittleServer Configuration");
+        HTMLDocument doc = new HTMLDocument("Configuration");
         doc.writeln("<h2>Configuration</h2>");
         doc.write("<p>Edit <b>httpd.conf</b> to modify configuration. Click here to <a href=\"BackupConfiguration.dhtml\">make a backup of the config file</a>. Note that not all settings are listed.</p>");
 

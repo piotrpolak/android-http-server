@@ -20,7 +20,7 @@ public class Management extends Servlet {
             return;
         }
 
-        HTMLDocument doc = new HTMLDocument("JavaLittleServer - Management");
+        HTMLDocument doc = new HTMLDocument("Management");
 
         if (request._get("task") == null) {
             doc.writeln("<h2>Management</h2>");

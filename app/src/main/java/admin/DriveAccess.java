@@ -33,7 +33,9 @@ public class DriveAccess extends Servlet {
         }
 
         HTMLDocument doc = new HTMLDocument("Drive Access");
-        doc.writeln("<h2>Drive Access</h2>");
+        doc.setOwnerClass(this.getClass().getSimpleName());
+
+        doc.writeln("<div class=\"page-header\"><h1>Drive Access</h1></div>");
 
         if (!AccessControl.getConfig().get("_managementEnableDriveAccess").equals("On")) {
             doc.writeln("<p>Option disabled in configuration.</p><p>See <b>httpd.conf</b>, parameter <b>_managementEnableDriveAccess</b> must be <b>On</b>.</p>");
@@ -51,22 +53,20 @@ public class DriveAccess extends Servlet {
         if ((p = qs.indexOf('?')) != -1) {
             doc.write("<p>Drive: ");
             for (int i = 0; i < roots.length; i++) {
-                doc.writeln("<a href=\"?" + roots[i].getAbsolutePath()
-                        + "\"><b>" + roots[i].getAbsolutePath().charAt(0)
-                        + "</b></a> ");
+                doc.writeln("<a href=\"?" + roots[i].getAbsolutePath() + "\"><b>" + roots[i].getAbsolutePath().charAt(0) + "</b></a> ");
             }
             doc.writeln("</p>");
 
             path = qs.substring(p + 1);
-            doc.writeln("<p class=\"path\">");
-            StringTokenizer st = new StringTokenizer(path.replace('\\', '/'),
-                    "/");
-            String addr = "";
+
+            doc.writeln("<ol class=\"breadcrumb\">");
+            StringTokenizer st = new StringTokenizer(path.replace('\\', '/'), "/");
+            String currentPath = "";
             String token;
             while (st.hasMoreTokens()) {
                 token = st.nextToken();
-                addr += token + "/";
-                doc.writeln(" <a href=\"?" + addr + "\">" + token + "</a> /");
+                currentPath += token + "/";
+                doc.writeln("<li><a href=\"?" + currentPath + "\">" + token + "</a></li>");
             }
 
             // if( roots.length == 1 && roots[0] != null && path.length() == 0 )
@@ -74,7 +74,7 @@ public class DriveAccess extends Servlet {
             // response.sendRedirect("?"+roots[0].getAbsolutePath());
             // }
 
-            doc.writeln("</p>");
+            doc.writeln("</ol>");
 
             File f = new File(path);
 

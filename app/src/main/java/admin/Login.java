@@ -16,9 +16,11 @@ public class Login extends Servlet {
         AccessControl ac = new AccessControl(session);
 
         HTMLDocument doc = new HTMLDocument("Login", false);
+        doc.setOwnerClass(this.getClass().getSimpleName());
+
         doc.writeln("<div class=\"form-login\">");
 
-        doc.writeln("<h2>Login</h2>");
+        doc.writeln("<h2>HTTP Server Login</h2>");
 
         if (request._post("dologin") != null) {
             if (ac.doLogin(request._post("login"), request._post("password"))) {
@@ -48,7 +50,7 @@ public class Login extends Servlet {
                 "        <input name=\"login\" type=\"text\" id=\"inputLogin\" class=\"form-control\" placeholder=\"Login\" required autofocus>\n" +
                 "        <label for=\"inputPassword\" class=\"sr-only\">Password</label>\n" +
                 "        <input name=\"password\" type=\"password\" id=\"inputPassword\" class=\"form-control\" placeholder=\"Password\" required>"
-                + "<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Sign in</button>\n"
+                + "<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Login</button>\n"
                 + "</form>\n";
 
         doc.write(ff);

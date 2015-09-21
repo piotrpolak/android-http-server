@@ -32,6 +32,7 @@ public class SmsInbox extends Servlet {
         }
 
         HTMLDocument doc = new HTMLDocument("SMS inbox");
+        doc.setOwnerClass(this.getClass().getSimpleName());
 
 
         String threadIdGet = request._get("thread_id");
@@ -112,7 +113,7 @@ public class SmsInbox extends Servlet {
 
         // Main inbox
         if (whereString == null) {
-            doc.writeln("<h2>SMS inbox</h2>");
+            doc.writeln("<div class=\"page-header\"><h1>SMS inbox</h1></div>");
 
             Enumeration<Integer> keys = threads.keys();
             while (keys.hasMoreElements()) {
@@ -135,7 +136,7 @@ public class SmsInbox extends Servlet {
             if (thread != null && thread.size() > 0) {
                 Iterator i = thread.iterator();
 
-                doc.writeln("<h2>SMS inbox " + ((Hashtable) thread.elementAt(0)).get("address") + "</h2>");
+                doc.writeln("<div class=\"page-header\"><h1>SMS inbox <small>" + ((Hashtable) thread.elementAt(0)).get("address") + "</small></h1></div>");
                 doc.write("<p><a href=\"SmsInbox.dhtml\">Back to the inbox</a></p>");
 
                 while (i.hasNext()) {

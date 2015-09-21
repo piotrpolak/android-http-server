@@ -20,7 +20,9 @@ public class Index extends Servlet {
         }
 
         HTMLDocument doc = new HTMLDocument("About");
-        doc.writeln("<h2>About</h2>");
+        doc.setOwnerClass(this.getClass().getSimpleName());
+
+        doc.writeln("<div class=\"page-header\"><h1>About</h1></div>");
         doc.write("<p>" + ro.polak.webserver.WebServer.SERVER_SIGNATURE + " running.</p>");
         doc.write("<p>Small multithread web server written completely in Java SE. ");
         doc.write("Implements most of the HTTP 1.1 specification. Uses JLWS Servlets for handling dynamic pages. ");

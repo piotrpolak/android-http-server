@@ -7,12 +7,17 @@
 
 package admin;
 
+import java.util.LinkedHashMap;
+import java.util.Set;
+
 public class HTMLDocument {
 
     protected String title;
     protected String body;
     protected String headers;
     protected boolean isLogged;
+
+    protected String ownerClass = "";
 
     public HTMLDocument(String title) {
         this.title = title;
@@ -27,6 +32,10 @@ public class HTMLDocument {
 
     public HTMLDocument() {
         this("");
+    }
+
+    public void setOwnerClass(String ownerClass) {
+        this.ownerClass = ownerClass;
     }
 
     public void write(String w) {
@@ -65,6 +74,15 @@ public class HTMLDocument {
         out += "</head>\n";
         out += "<body>\n";
 
+        LinkedHashMap menuElements = new LinkedHashMap<String, String>(10);
+
+        menuElements.put("Index", "About");
+        menuElements.put("Management", "Management");
+        menuElements.put("DriveAccess", "Drive Access");
+        menuElements.put("ServerStats", "Statistics");
+        menuElements.put("SmsInbox", "SMS inbox");
+        menuElements.put("Logout", "Logout");
+
 
         if (this.isLogged) {
             out += "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n";
@@ -80,13 +98,12 @@ public class HTMLDocument {
             out += "    </div>\n";
             out += "    <div id=\"navbar\" class=\"collapse navbar-collapse\">\n";
             out += "        <ul class=\"nav navbar-nav\">\n";
-            out += "            <li><a href=\"Index.dhtml\">About</a></li>\n";
-            out += "            <li><a href=\"Configuration.dhtml\">Configuration</a></li>\n";
-            out += "            <li><a href=\"Management.dhtml\">Management</a></li>\n";
-            out += "            <li><a href=\"DriveAccess.dhtml\">Drive Access</a></li>\n";
-            out += "            <li><a href=\"ServerStats.dhtml\">Statistics</a></li>\n";
-            out += "            <li><a href=\"SmsInbox.dhtml\">SMS Inbox</a></li>\n";
-            out += "            <li><a href=\"Logout.dhtml\">Logout</a></li>\n";
+
+            Set<String> keys = menuElements.keySet();
+            for (String key : keys) {
+                out += "<li" + (ownerClass.equals(key) ? " class=\"active\"" : "") + "><a href=\"" + key + ".dhtml\">" + menuElements.get(key) + "</a></li>\n";
+            }
+
             out += "        </ul>\n";
             out += "    </div><!--/.nav-collapse -->\n";
             out += "</div>\n";

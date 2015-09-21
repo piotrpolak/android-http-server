@@ -20,7 +20,9 @@ public class ServerStats extends Servlet {
         }
 
         HTMLDocument doc = new HTMLDocument("Statistics");
-        doc.writeln("<h2>Statistics</h2>");
+        doc.setOwnerClass(this.getClass().getSimpleName());
+
+        doc.writeln("<div class=\"page-header\"><h1>Statistics</h1></div>");
         doc.write("<p>Received: " + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.webserver.Statistics.getBytesReceived()) + "</p>");
         doc.write("<p>Sent: " + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.webserver.Statistics.getBytesSend()) + "</p>");
         doc.write("<p>Requests: " + ro.polak.webserver.Statistics.getRequests() + "</p>");

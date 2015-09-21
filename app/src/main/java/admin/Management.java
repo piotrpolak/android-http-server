@@ -21,29 +21,17 @@ public class Management extends Servlet {
         }
 
         HTMLDocument doc = new HTMLDocument("Management");
+        doc.setOwnerClass(this.getClass().getSimpleName());
 
         if (request._get("task") == null) {
-            doc.writeln("<h2>Management</h2>");
-            doc.write("<p><a href=\"?task=shutdown\">&raquo; Shutown remote machine (Windows only)</a></p>");
-            doc.write("<p><a href=\"?task=reset\">&raquo; Reset remote machine (Windows only)</a></p>");
-            doc.write("<p><a href=\"BackupConfiguration.dhtml\">&raquo; Backup configuration</a></p>");
-            doc.write("<p><a href=\"?task=updateConfiguration\">&raquo; Update configuration</a></p>");
-        } else if (request._get("task").equals("shutdown")) {
-            doc.writeln("<h2>Management - Shutdown</h2>");
-            doc.write("<p>Good bye! <a href=\"?task=cancel\">Cancel</a>.</p>");
-            Sys.exec("shutdown -s -t 10 -c \"Remote shutdown (JavaLittleWebServer Admin)\"");
-
-        } else if (request._get("task").equals("reset")) {
-            doc.writeln("<h2>Management - Reset</h2>");
-            doc.write("<p>See you soon! <a href=\"?task=cancel\">Cancel.</a></p>");
-            Sys.exec("shutdown -r -t 10 -c \"Remote reset (JavaLittleWebServer Admin)\"");
-        } else if (request._get("task").equals("cancel")) {
-            doc.writeln("<h2>Management - Cancel task</h2>");
-            doc.write("<p>Canceled. Go back to <a href=\"Management.dhtml\">management</a>.</p>");
-            Sys.exec("shutdown -a\"");
-
+            doc.writeln("<div class=\"page-header\"><h1>Management</h1></div>");
+            doc.write("<p>Edit <b>/storage/httpd/httpd.conf</b> to modify the server configuration.</p>");
+            doc.write("<ul>");
+            doc.write("<li><a href=\"BackupConfiguration.dhtml\">Backup the configuration</a></li>");
+            doc.write("<li><a href=\"?task=updateConfiguration\">Update the configuration</a></li>");
+            doc.write("</ul>");
         } else if (request._get("task").equals("updateConfiguration")) {
-            doc.writeln("<h2>Management - update configuration</h2>");
+            doc.writeln("<div class=\"page-header\"><h1>Management - update configuration</h1></div>");
             doc.writeln("<form action=\"UpdateConfiguration.dhtml\" method=\"post\" enctype=\"multipart/form-data\"><input name=\"file\" type=\"file\" size=\"40\" class=\"input_i\" />&nbsp;<input name=\"submit\" type=\"submit\" value=\"Update\"  class=\"input_b\" /></form>");
         }
         response.getPrintWriter().print(doc.toString());

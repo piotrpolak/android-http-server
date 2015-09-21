@@ -23,6 +23,8 @@ import ro.polak.webserver.*;
  */
 public class HTTPRequest {
 
+    // TODO Define METHOD_GET, METHOD_POST ....
+
     private HTTPRequestHeaders headers;
     private boolean isKeepAlive = false;
     private boolean isMultipart = false;

@@ -7,8 +7,6 @@
 
 package ro.polak.webserver.servlet;
 
-import android.util.Log;
-
 public class AndroidServletServiceDriver implements IServletServiceDriver {
 
     private Servlet littleServlet;
@@ -24,18 +22,20 @@ public class AndroidServletServiceDriver implements IServletServiceDriver {
      */
     public boolean loadServlet(String servletPath) throws InstantiationException, IllegalAccessException, ClassCastException {
 
+        // Finding last occurrence of /
         int lastSlashPos = 0;
-
         try {
             lastSlashPos = servletPath.lastIndexOf("/");
         } catch (Exception e) {
         }
 
+        // Detecting servlet name and servlet directory (package)
+        // IMPORTANT! This imposes a constraint that all the servlets must be in a package
         String servletName = servletPath.substring(lastSlashPos + 1);
         String servletDir = servletPath.substring(0, lastSlashPos + 1);
 
-        // Generating package name out of the directory name
         try {
+            // Removing extension if needed
             servletName = servletName.substring(0, servletName.indexOf("."));
         } catch (Exception e) {
         }
@@ -50,7 +50,6 @@ public class AndroidServletServiceDriver implements IServletServiceDriver {
             // Initializing servlet
             littleServlet = (Servlet) Class.forName(servletName).newInstance();
         } catch (Exception e) {
-            Log.i("SERVLET", "Unable to load servlet at " + servletName);
             return false;
         }
 
@@ -75,6 +74,7 @@ public class AndroidServletServiceDriver implements IServletServiceDriver {
             return;
         }
 
+        // Running, then removing the servlet
         littleServlet.run(request, response);
         littleServlet = null;
 

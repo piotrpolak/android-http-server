@@ -38,7 +38,8 @@ public class DriveAccess extends Servlet {
         doc.writeln("<div class=\"page-header\"><h1>Drive Access</h1></div>");
 
         if (!AccessControl.getConfig().get("_managementEnableDriveAccess").equals("On")) {
-            doc.writeln("<p>Option disabled in configuration.</p><p>See <b>httpd.conf</b>, parameter <b>_managementEnableDriveAccess</b> must be <b>On</b>.</p>");
+            doc.writeln("<div class=\"alert alert-warning\" role=\"alert\">Drive Access option has been disabled in configuration.</div>");
+            doc.writeln("<p>See <b>httpd.conf</b>, parameter <b>_managementEnableDriveAccess</b> must be <b>On</b>.</p>");
             response.getPrintWriter().print(doc.toString());
             return;
         }
@@ -84,7 +85,7 @@ public class DriveAccess extends Servlet {
                 String fileNames[] = f.list();
                 File f2;
                 if (fileNames == null) {
-                    files.append("<p>Unable to read files</p>");
+                    doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Unable to read files.</div>");
                 } else {
                     for (int i = 0; i < fileNames.length; i++) {
                         f2 = new File(path + fileNames[i]);
@@ -110,7 +111,7 @@ public class DriveAccess extends Servlet {
                 doc.write(files.toString());
 
             } else {
-                doc.writeln("<p>Path does not exist or drive unmonted.</p>");
+                doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Path does not exist or drive not mounted.</div>");
             }
 
         } else {

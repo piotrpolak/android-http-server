@@ -22,12 +22,25 @@ public class ServerStats extends Servlet {
         HTMLDocument doc = new HTMLDocument("Statistics");
         doc.setOwnerClass(this.getClass().getSimpleName());
 
-        doc.writeln("<div class=\"page-header\"><h1>Statistics</h1></div>");
-        doc.write("<p>Received: " + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.webserver.Statistics.getBytesReceived()) + "</p>");
-        doc.write("<p>Sent: " + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.webserver.Statistics.getBytesSend()) + "</p>");
-        doc.write("<p>Requests: " + ro.polak.webserver.Statistics.getRequests() + "</p>");
-        doc.write("<p>404 errors: " + ro.polak.webserver.Statistics.getError404s() + "</p>");
-        doc.write("<p>500 errors: " + ro.polak.webserver.Statistics.getError500s() + "</p>");
+        doc.writeln("<div class=\"page-header\"><h1>Server statistics</h1></div>");
+
+        doc.writeln("<table class=\"table\">");
+        doc.writeln("<tr>");
+        doc.writeln("   <td>Data received</td><td>" + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.webserver.Statistics.getBytesReceived()) + "</td>");
+        doc.writeln("</tr>");
+        doc.writeln("<tr>");
+        doc.writeln("   <td>Data sent</td><td>" + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.webserver.Statistics.getBytesSend()) + "</td>");
+        doc.writeln("</tr>");
+        doc.writeln("<tr>");
+        doc.writeln("   <td>Requests handled</td><td>" + ro.polak.webserver.Statistics.getRequests() + "</td>");
+        doc.writeln("</tr>");
+        doc.writeln("<tr>");
+        doc.writeln("   <td>404 errors</td><td>" + ro.polak.webserver.Statistics.getError404s() + "</td>");
+        doc.writeln("</tr>");
+        doc.writeln("<tr>");
+        doc.writeln("   <td>500 errors</td><td>" + ro.polak.webserver.Statistics.getError500s() + "</td>");
+        doc.writeln("</tr>");
+        doc.writeln("</table");
 
         response.getPrintWriter().print(doc.toString());
     }

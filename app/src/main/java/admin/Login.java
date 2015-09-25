@@ -30,9 +30,7 @@ public class Login extends Servlet {
                     response.sendRedirect("/admin/Index.dhtml");
                 }
             } else {
-                doc.writeln("<div class=\"alert alert-danger\" role=\"alert\">\n" +
-                        "        <strong>Oh snap!</strong> Incorrect login or password!.\n" +
-                        "      </div>");
+                doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Incorrect login or password!</div>");
             }
         }
 

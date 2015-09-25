@@ -120,13 +120,16 @@ public class SmsInbox extends Servlet {
                 Vector thread = ((Vector) threads.get(keys.nextElement()));
                 Hashtable sms = (Hashtable) thread.elementAt(0);
 
-                doc.write("<hr>");
+                doc.writeln("<div class=\"panel panel-default\">");
                 Date date = new Date();
                 date.setTime(Long.parseLong((String) sms.get("date")));
-                doc.write("<h1>" + sms.get("address") + "</h1>");
-                doc.write("<p><b>" + df.format(date) + "</b></p>");
-                doc.write("<p>" + sms.get("body") + "</p>");
-                doc.write("<p><a href=\"SmsInbox.dhtml?thread_id=" + sms.get("thread_id") + "\">Open thread</a></p>");
+                doc.writeln("<div class=\"panel-heading\">" + sms.get("address") + "</div>");
+                doc.writeln("<div class=\"panel-body\">");
+                doc.writeln("<p><b>" + df.format(date) + "</b></p>");
+                doc.writeln("<p>" + sms.get("body") + "</p>");
+                doc.writeln("<p><a class=\"btn btn-primary\" href=\"/admin/SmsInbox.dhtml?thread_id=" + sms.get("thread_id") + "\">Open thread <span class=\"badge\">" + thread.size() + "</span></a></p>");
+                doc.writeln("</div>");
+                doc.writeln("</div>");
             }
         } else {
 
@@ -136,18 +139,29 @@ public class SmsInbox extends Servlet {
             if (thread != null && thread.size() > 0) {
                 Iterator i = thread.iterator();
 
-                doc.writeln("<div class=\"page-header\"><h1>SMS inbox <small>" + ((Hashtable) thread.elementAt(0)).get("address") + "</small></h1></div>");
-                doc.write("<p><a href=\"/admin/SmsInbox.dhtml\">Back to the inbox</a></p>");
+                doc.writeln("<div class=\"page-header\"><h1>SMS inbox</h1></div>");
+                doc.writeln("<p><a class=\"btn btn-default\" href=\"/admin/SmsInbox.dhtml\"><span class=\"glyphicon glyphicon-arrow-left\" aria-hidden=\"true\"></span> Back to the inbox</a></p>");
 
+                doc.writeln("<div class=\"panel panel-default\">");
+                doc.writeln("<div class=\"panel-heading\">" + ((Hashtable) thread.elementAt(0)).get("address") + "</div>");
+                doc.writeln("<div class=\"panel-body\">");
+
+                boolean useBr = false;
                 while (i.hasNext()) {
                     Hashtable sms = (Hashtable) i.next();
+                    if( useBr )
+                    {
+                        doc.writeln("<hr>");
+                    }
+                    useBr = true;
 
-                    doc.write("<hr>");
                     Date date = new Date();
                     date.setTime(Long.parseLong((String) sms.get("date")));
-                    doc.write("<p><b>" + df.format(date) + "</b></p>");
-                    doc.write("<p>" + sms.get("body") + "</p>");
+                    doc.writeln("<p><b>" + df.format(date) + "</b></p>");
+                    doc.writeln("<p>" + sms.get("body") + "</p>");
                 }
+                doc.writeln("</div>");
+                doc.writeln("</div>");
             }
         }
 

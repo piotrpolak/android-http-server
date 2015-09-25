@@ -63,7 +63,8 @@ public class HTMLDocument {
                 "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
                 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
                 "<meta name=\"description\" content=\"\">\n" +
-                "<meta name=\"author\" content=\"\">\n";
+                "<meta name=\"author\" content=\"\">\n"+
+                "<base href=\"/\">\n";
 
         out += "<title>" + this.title + " - Android HTTP Server</title>\n";
         out += headers;
@@ -94,14 +95,14 @@ public class HTMLDocument {
             out += "            <span class=\"icon-bar\"></span>\n";
             out += "            <span class=\"icon-bar\"></span>\n";
             out += "        </button>\n";
-            out += "        <a class=\"navbar-brand\" href=\"Index.dhtml\">Server</a>\n";
+            out += "        <a class=\"navbar-brand\" href=\"/admin/Index.dhtml\">Server</a>\n";
             out += "    </div>\n";
             out += "    <div id=\"navbar\" class=\"collapse navbar-collapse\">\n";
             out += "        <ul class=\"nav navbar-nav\">\n";
 
             Set<String> keys = menuElements.keySet();
             for (String key : keys) {
-                out += "<li" + (ownerClass.equals(key) ? " class=\"active\"" : "") + "><a href=\"" + key + ".dhtml\">" + menuElements.get(key) + "</a></li>\n";
+                out += "<li" + (ownerClass.equals(key) ? " class=\"active\"" : "") + "><a href=\"/admin/" + key + ".dhtml\">" + menuElements.get(key) + "</a></li>\n";
             }
 
             out += "        </ul>\n";

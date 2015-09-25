@@ -27,7 +27,7 @@ public class SmsInbox extends Servlet {
     public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(session);
         if (!ac.isLogged()) {
-            response.sendRedirect("Login.dhtml?relocate=" + Utilities.URLEncode((request.getHeaders().getQueryString())));
+            response.sendRedirect("/admin/Login.dhtml?relocate=" + Utilities.URLEncode((request.getHeaders().getQueryString())));
             return;
         }
 
@@ -137,7 +137,7 @@ public class SmsInbox extends Servlet {
                 Iterator i = thread.iterator();
 
                 doc.writeln("<div class=\"page-header\"><h1>SMS inbox <small>" + ((Hashtable) thread.elementAt(0)).get("address") + "</small></h1></div>");
-                doc.write("<p><a href=\"SmsInbox.dhtml\">Back to the inbox</a></p>");
+                doc.write("<p><a href=\"/admin/SmsInbox.dhtml\">Back to the inbox</a></p>");
 
                 while (i.hasNext()) {
                     Hashtable sms = (Hashtable) i.next();

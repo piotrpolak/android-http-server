@@ -15,7 +15,7 @@ public class Index extends Servlet {
     public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(session);
         if (!ac.isLogged()) {
-            response.sendRedirect("Login.dhtml?relocate=" + Utilities.URLEncode((request.getHeaders().getQueryString())));
+            response.sendRedirect("/admin/Login.dhtml?relocate=" + Utilities.URLEncode((request.getHeaders().getQueryString())));
             return;
         }
 

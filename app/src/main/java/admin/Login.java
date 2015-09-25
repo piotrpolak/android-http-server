@@ -27,7 +27,7 @@ public class Login extends Servlet {
                 if (request._get("relocate") != null) {
                     response.sendRedirect(request._get("relocate"));
                 } else {
-                    response.sendRedirect("Index.dhtml");
+                    response.sendRedirect("/admin/Index.dhtml");
                 }
             } else {
                 doc.writeln("<div class=\"alert alert-danger\" role=\"alert\">\n" +
@@ -36,7 +36,7 @@ public class Login extends Servlet {
             }
         }
 
-        String location = "Login.dhtml";
+        String location = "/admin/Login.dhtml";
         if (request._get("relocate") != null) {
             location += "?relocate=" + Utilities.URLEncode(request._get("relocate"));
         }

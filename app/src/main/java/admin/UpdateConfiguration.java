@@ -18,7 +18,7 @@ public class UpdateConfiguration extends Servlet {
     public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(session);
         if (!ac.isLogged()) {
-            response.sendRedirect("Login.dhtml?relocate=" + Utilities.URLEncode((request.getHeaders().getQueryString())));
+            response.sendRedirect("/admin/Login.dhtml?relocate=" + Utilities.URLEncode((request.getHeaders().getQueryString())));
             return;
         }
 
@@ -49,7 +49,7 @@ public class UpdateConfiguration extends Servlet {
                     doc.writeln("<p>Unable to move file.</p>");
                 }
             } else {
-                doc.writeln("<p>Uploaded file <b>" + fu.getFile("file").getFileName() + "</b> does not appear to be a valid configuration file. <a href=\"Management.dhtml?task=updateConfiguration\">Back</a></p>");
+                doc.writeln("<p>Uploaded file <b>" + fu.getFile("file").getFileName() + "</b> does not appear to be a valid configuration file. <a href=\"/admin/Management.dhtml?task=updateConfiguration\">Back</a></p>");
             }
         }
 

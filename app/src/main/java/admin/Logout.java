@@ -22,7 +22,7 @@ public class Logout extends Servlet {
 
         doc.writeln("<div class=\"box-logout\">");
         doc.writeln("<h2>Logged out</h2>");
-        doc.writeln("<p><a href=\"Index.dhtml\">Go to main page</a></p>");
+        doc.writeln("<p><a href=\"/admin/Index.dhtml\">Go to main page</a></p>");
         doc.writeln("</div>");
 
         response.getPrintWriter().print(doc.toString());

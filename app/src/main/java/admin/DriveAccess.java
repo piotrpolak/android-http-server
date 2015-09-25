@@ -28,7 +28,7 @@ public class DriveAccess extends Servlet {
     public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(session);
         if (!ac.isLogged()) {
-            response.sendRedirect("Login.dhtml?relocate=" + Utilities.URLEncode((request.getHeaders().getQueryString())));
+            response.sendRedirect("/admin/Login.dhtml?relocate=" + Utilities.URLEncode((request.getHeaders().getQueryString())));
             return;
         }
 
@@ -53,7 +53,7 @@ public class DriveAccess extends Servlet {
         if ((p = qs.indexOf('?')) != -1) {
             doc.write("<p>Drive: ");
             for (int i = 0; i < roots.length; i++) {
-                doc.writeln("<a href=\"?" + roots[i].getAbsolutePath() + "\"><b>" + roots[i].getAbsolutePath().charAt(0) + "</b></a> ");
+                doc.writeln("<a href=\"/admin/DriveAccess.dhtml?" + roots[i].getAbsolutePath() + "\"><b>" + roots[i].getAbsolutePath().charAt(0) + "</b></a> ");
             }
             doc.writeln("</p>");
 
@@ -66,12 +66,12 @@ public class DriveAccess extends Servlet {
             while (st.hasMoreTokens()) {
                 token = st.nextToken();
                 currentPath += token + "/";
-                doc.writeln("<li><a href=\"?" + currentPath + "\">" + token + "</a></li>");
+                doc.writeln("<li><a href=\"/admin/DriveAccess.dhtml?" + currentPath + "\">" + token + "</a></li>");
             }
 
             // if( roots.length == 1 && roots[0] != null && path.length() == 0 )
             // {
-            // response.sendRedirect("?"+roots[0].getAbsolutePath());
+            // response.sendRedirect("/admin/DriveAccess.dhtml?"+roots[0].getAbsolutePath());
             // }
 
             doc.writeln("</ol>");
@@ -90,13 +90,13 @@ public class DriveAccess extends Servlet {
                         f2 = new File(path + fileNames[i]);
                         if (f2.isDirectory()) {
                             directories
-                                    .append("<p class=\"filemanager\"><img src=\"/assets/img/folder.png\" alt=\"folder\" /> <a href=\"?"
+                                    .append("<p class=\"filemanager\"><img src=\"/assets/img/folder.png\" alt=\"folder\" /> <a href=\"/admin/DriveAccess.dhtml?"
                                             + Utilities.URLEncode(path
                                             + fileNames[i])
                                             + "/\">"
                                             + fileNames[i] + "</a></p>");
                         } else {
-                            files.append("<p class=\"filemanager\"><img src=\"/assets/img/file.png\" alt=\"file\" /> <a href=\"GetFile.dhtml?"
+                            files.append("<p class=\"filemanager\"><img src=\"/assets/img/file.png\" alt=\"file\" /> <a href=\"/admin/GetFile.dhtml?"
                                     + Utilities.URLEncode(path + fileNames[i])
                                     + "\">"
                                     + fileNames[i]
@@ -115,7 +115,7 @@ public class DriveAccess extends Servlet {
 
         } else {
             for (int i = 0; i < roots.length; i++) {
-                doc.writeln("<p class=\"filemanager\"><img src=\"/assets/img/drive.png\" alt=\"drive\" /> <a href=\"?"
+                doc.writeln("<p class=\"filemanager\"><img src=\"/assets/img/drive.png\" alt=\"drive\" /> <a href=\"/admin/DriveAccess.dhtml?"
                         + roots[i].getAbsolutePath()
                         + "\"><b>"
                         + roots[i].getAbsolutePath().charAt(0)

@@ -100,12 +100,13 @@ public class SmsInbox extends Servlet {
                 }
             }
 
-            Integer threadId = 0;
+            Integer threadId = -1;
 
-            if( sms.get("thread_id") != null )
-            {
+            if (sms.get("thread_id") != null && !sms.get("thread_id").equals("")) {
                 threadId = (new Integer((String) sms.get("thread_id")));
             }
+
+            //sms.put("thread_id", threadId);
 
             Vector thread = (Vector) threads.get(threadId);
 
@@ -131,9 +132,9 @@ public class SmsInbox extends Servlet {
                 Date date = new Date();
                 date.setTime(Long.parseLong((String) sms.get("date")));
                 doc.writeln("<div class=\"panel-heading\">" + sms.get("address") + "</div>");
-                doc.writeln("<div class=\"panel-body\">");
-                doc.writeln("<p class=\"" + ((sms.get("type").equals("1")) ? "text-left" : "text-right") +"\"><b>" + df.format(date) + "</b></p>");
-                doc.writeln("<p class=\"" + ((sms.get("type").equals("1")) ? "text-left" : "text-right bg-success") +"\">" + sms.get("body") + "</p>");
+                doc.writeln("<div class=\"panel-body " + ((sms.get("type").equals("1")) ? "text-left" : "text-right bg-success") + "\">");
+                doc.writeln("<p><b>" + df.format(date) + "</b></p>");
+                doc.writeln("<p>" + sms.get("body") + "</p>");
                 doc.writeln("<p><a class=\"btn btn-primary\" href=\"/admin/SmsInbox.dhtml?thread_id=" + sms.get("thread_id") + "\">Open thread <span class=\"badge\">" + thread.size() + "</span></a></p>");
                 doc.writeln("</div>");
                 doc.writeln("</div>");
@@ -163,8 +164,10 @@ public class SmsInbox extends Servlet {
 
                     Date date = new Date();
                     date.setTime(Long.parseLong((String) sms.get("date")));
-                    doc.writeln("<p class=\"" + ((sms.get("type").equals("1")) ? "text-left" : "text-right") + "\"><b>" + df.format(date) + "</b></p>");
-                    doc.writeln("<p class=\"" + ((sms.get("type").equals("1")) ? "text-left" : "text-right bg-success") + "\">" + sms.get("body") + "</p>");
+                    doc.writeln("<div class=\"" + ((sms.get("type").equals("1")) ? "text-left" : "text-right bg-success") + "\">");
+                    doc.writeln("<p><b>" + df.format(date) + "</b></p>");
+                    doc.writeln("<p>" + sms.get("body") + "</p>");
+                    doc.writeln("</div>");
                 }
                 doc.writeln("</div>");
                 doc.writeln("</div>");

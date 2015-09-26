@@ -16,13 +16,12 @@ import java.net.Socket;
 
 /**
  * HTTP error
- * <p>
+ * <p/>
  * <a href="http://www.polak.ro/javalittlewebserver/">Java Little Web Server
  * Homepage</a>
  *
  * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
  * @version 1.0/21.02.2008
- *
  */
 public class HTTPError {
 
@@ -48,21 +47,23 @@ public class HTTPError {
         response.setStatus(HTTPResponseHeaders.STATUS_NOT_FOUND);
         response.setContentType("text/html");
 
-        if (MainController.getInstance().getServer().getServerConfig().getErrorDocument404Path() == null) {
+        String errorDocumentPath = MainController.getInstance().getServer().getServerConfig().getErrorDocument404Path();
+
+        if (errorDocumentPath == null || errorDocumentPath.equals("")) {
             doc.title = "Error 404 - File Not Found";
             doc.message = "<p>The server has not found anything matching the Request-URI.</p>";
             response.setContentLength(doc.toString().length());
             response.flushHeaders();
             response.write(doc.toString());
         } else {
-            File file = new File(MainController.getInstance().getServer().getServerConfig().getErrorDocument404Path());
+            File file = new File(errorDocumentPath);
 
             if (file.exists()) {
                 response.setContentLength(file.length());
                 response.flushHeaders();
                 response.serveFile(file);
             } else {
-                this.setReason("404 error occured, specified error handler was not found.");
+                this.setReason("404 error occured, specified error handler ("+errorDocumentPath+") was not found.");
                 this.serve500();
             }
         }
@@ -75,14 +76,17 @@ public class HTTPError {
         response.setStatus(HTTPResponseHeaders.STATUS_ACCESS_DENIED);
         response.setContentType("text/html");
 
-        if (MainController.getInstance().getServer().getServerConfig().getErrorDocument403Path() == null) {
+        String errorDocumentPath = MainController.getInstance().getServer().getServerConfig().getErrorDocument403Path();
+
+        if (errorDocumentPath == null || errorDocumentPath.equals("")) {
             doc.title = "Error 403 - Forbidden";
             doc.message = "<p>Access Denied.</p>";
             response.setContentLength(doc.toString().length());
             response.flushHeaders();
             response.write(doc.toString());
         } else {
-            File file = new File(MainController.getInstance().getServer().getServerConfig().getErrorDocument403Path());
+            File file = new File(errorDocumentPath);
+
             if (file.exists()) {
                 response.setContentLength(file.length());
                 response.flushHeaders();
@@ -144,8 +148,7 @@ public class HTTPError {
     /**
      * Sets the reason and generates error message for 500 HTTP error
      *
-     * @param e
-     *            Exception
+     * @param e Exception
      */
     public void setReason(Exception e) {
 
@@ -169,8 +172,7 @@ public class HTTPError {
     /**
      * Sets the reason and generates error message for 500 HTTP error
      *
-     * @param e
-     *            Error
+     * @param e Error
      */
     public void setReason(Error e) {
         doc.message = "<p style=\"color: red; font-weight: bold;\">";
@@ -193,8 +195,7 @@ public class HTTPError {
     /**
      * Sets the reason and generates error message for 500 HTTP error
      *
-     * @param message
-     *            Description of an error
+     * @param message Description of an error
      */
     public void setReason(String message) {
         doc.message = message;

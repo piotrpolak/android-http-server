@@ -60,8 +60,14 @@ public class ServerConfig extends Config {
             defaultMimeType = this.get("DefaultMimeType");
             maxServerThreads = Integer.parseInt(this.get("MaxThreads"));
             keepAlive = this.get("KeepAlive").toLowerCase().equals("on");
-            errorDocument404Path = basePath + this.get("ErrorDocument404");
-            errorDocument403Path = basePath + this.get("ErrorDocument403");
+
+            if (this.get("ErrorDocument404") != null) {
+                errorDocument404Path = basePath + this.get("ErrorDocument404");
+            }
+            if (this.get("ErrorDocument403") != null) {
+                errorDocument403Path = basePath + this.get("ErrorDocument403");
+            }
+
             servletMappedExtension = this.get("ServletMappedExtension");
 
             // Creating temp directory

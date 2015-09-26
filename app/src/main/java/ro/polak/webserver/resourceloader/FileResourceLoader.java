@@ -32,24 +32,24 @@ public class FileResourceLoader implements IResourceLoader {
         File file = new File(MainController.getInstance().getServer().getServerConfig().getDocumentRootPath() + uri);
 
         // File not found
-        if( !file.exists() )
+        if( file.exists() && file.isFile() )
         {
-            return false;
+            String fileExtension = Utilities.getExtension(file.getName());
+
+            response.setStatus(HTTPResponseHeaders.STATUS_OK);
+            response.setContentType(MainController.getInstance().getServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(fileExtension));
+            response.setContentLength(file.length());
+            response.flushHeaders();
+
+            // Serving file for all the request but for HEAD
+            if (!request.getHeaders().getMethod().equals("HEAD")) {
+                response.serveFile(file);
+
+            }
+
+            return true;
         }
 
-        String fileExtension = Utilities.getExtension(file.getName());
-
-        response.setStatus(HTTPResponseHeaders.STATUS_OK);
-        response.setContentType(MainController.getInstance().getServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(fileExtension));
-        response.setContentLength(file.length());
-        response.flushHeaders();
-
-        // Serving file for all the request but for HEAD
-        if (!request.getHeaders().getMethod().equals("HEAD")) {
-            response.serveFile(file);
-
-        }
-
-        return true;
+        return false;
     }
 }

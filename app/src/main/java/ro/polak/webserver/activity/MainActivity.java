@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
 
         String ip = this.getLocalIpAddress();
         if (ip == null) {
-            ip = "localhost";
+            ip = "127.0.0.1";
         }
         int port = this.mainController.getServer().getServerConfig().getListenPort();
         String portString = "";
@@ -195,13 +195,15 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
      */
     public String getLocalIpAddress() {
 
-        String ipAddress = null;
-
         try {
             WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            InetAddress addr = InetAddress.getByAddress(BigInteger.valueOf(wifiInfo.getIpAddress()).toByteArray());
-            ipAddress = addr.getHostAddress().toString();
+
+            int ipAddress = wifiInfo.getIpAddress();
+            ipAddress = (java.nio.ByteOrder.nativeOrder().equals(java.nio.ByteOrder.LITTLE_ENDIAN)) ? Integer.reverseBytes(ipAddress) : ipAddress;
+            InetAddress inetAddress = InetAddress.getByAddress(BigInteger.valueOf(ipAddress).toByteArray());
+            return inetAddress.getHostAddress().toString();
+
         } catch (Exception e) {
             try {
                 for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
@@ -209,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
                     for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                         InetAddress inetAddress = enumIpAddr.nextElement();
                         if (!inetAddress.isLoopbackAddress()) {
-                            ipAddress = inetAddress.getHostAddress().toString();
+                            return inetAddress.getHostAddress().toString();
                         }
                     }
                 }
@@ -218,6 +220,6 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
             }
         }
 
-        return ipAddress;
+        return null;
     }
 }

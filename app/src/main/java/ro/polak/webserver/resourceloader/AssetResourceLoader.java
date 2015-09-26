@@ -19,7 +19,7 @@ import ro.polak.webserver.servlet.HTTPResponse;
 
 /**
  * APK asset resource loader
- *
+ * <p/>
  * This loader loads the bundled resources from the APK internal structure
  *
  * @author Piotr Polak piotr [at] polak [dot] ro

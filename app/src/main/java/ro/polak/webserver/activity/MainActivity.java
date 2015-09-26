@@ -31,6 +31,9 @@ import ro.polak.webserver.controller.IController;
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.gui.IServerUI;
 
+/**
+ * The main server activity
+ */
 public class MainActivity extends AppCompatActivity implements IServerUI {
 
     private TextView status, ipText, consoleText;
@@ -69,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
         return this.mainController;
     }
 
+    /**
+     * Button listener for the move to background and exit action
+     */
     private class ButtonListener implements View.OnClickListener {
 
         private MainActivity activity;
@@ -87,28 +93,22 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 builder.setMessage("Are you sure you want to exit?")
                         .setCancelable(false)
-                        .setPositiveButton("Yes",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int id) {
-                                        activity.getMainController().stop();
-                                        ((Activity) activity).finish();
-                                    }
-                                })
-                        .setNegativeButton("No",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog,
-                                                        int id) {
-                                        dialog.cancel();
-                                    }
-                                });
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                activity.getMainController().stop();
+                                ((Activity) activity).finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
                 builder.create().show();
 
             } else if (id == actionButton.getId()) {
                 try {
-                    if (this.activity.getMainController().getServer() != null
-                            && this.activity.getMainController().getServer()
-                            .isRunning()) {
+                    if (this.activity.getMainController().getServer() != null && this.activity.getMainController().getServer().isRunning()) {
                         this.activity.getMainController().stop();
                     } else {
                         this.activity.getMainController().start();
@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
             }
 
         }
-
     }
 
     //
@@ -178,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
                 try {
                     consoleText.setText(text + "\n" + consoleText.getText());
                 } catch (Exception e) {

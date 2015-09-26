@@ -17,7 +17,7 @@ import ro.polak.webserver.servlet.HTTPResponse;
 
 /**
  * File system asset resource loader
- *
+ * <p/>
  * This loader loads the resources from the storage
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
@@ -32,8 +32,7 @@ public class FileResourceLoader implements IResourceLoader {
         File file = new File(MainController.getInstance().getServer().getServerConfig().getDocumentRootPath() + uri);
 
         // File not found
-        if( file.exists() && file.isFile() )
-        {
+        if (file.exists() && file.isFile()) {
             String fileExtension = Utilities.getExtension(file.getName());
 
             response.setStatus(HTTPResponseHeaders.STATUS_OK);
@@ -44,7 +43,6 @@ public class FileResourceLoader implements IResourceLoader {
             // Serving file for all the request but for HEAD
             if (!request.getHeaders().getMethod().equals("HEAD")) {
                 response.serveFile(file);
-
             }
 
             return true;

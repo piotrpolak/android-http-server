@@ -16,16 +16,15 @@ import java.net.Socket;
 
 /**
  * HTTP error
- * <p/>
- * <a href="http://www.polak.ro/javalittlewebserver/">Java Little Web Server
- * Homepage</a>
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.0/21.02.2008
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200802
  */
 public class HTTPError {
 
     // TODO Split the error into multiple subclasses
+    // TODO Remove public attributes from HTMLErrorDocument
 
     protected HTTPResponse response;
     protected HTMLErrorDocument doc;
@@ -51,7 +50,7 @@ public class HTTPError {
 
         if (errorDocumentPath == null || errorDocumentPath.equals("")) {
             doc.title = "Error 404 - File Not Found";
-            doc.message = "<p>The server has not found anything matching the Request-URI.</p>";
+            doc.message = "<p>The server has not found anything matching the specified URL.</p>";
             response.setContentLength(doc.toString().length());
             response.flushHeaders();
             response.write(doc.toString());
@@ -63,7 +62,7 @@ public class HTTPError {
                 response.flushHeaders();
                 response.serveFile(file);
             } else {
-                this.setReason("404 error occured, specified error handler ("+errorDocumentPath+") was not found.");
+                this.setReason("404 error occurred, specified error handler (" + errorDocumentPath + ") was not found.");
                 this.serve500();
             }
         }
@@ -92,7 +91,7 @@ public class HTTPError {
                 response.flushHeaders();
                 response.serveFile(file);
             } else {
-                this.setReason("403 error occured, specified error handler was not found.");
+                this.setReason("403 error occurred, specified error handler was not found.");
                 this.serve500();
             }
         }
@@ -115,7 +114,7 @@ public class HTTPError {
      * Serves 500 HTTP error
      */
     public void serve500() {
-        doc.title = "Error 500 - Server made boo boo";
+        doc.title = "Error 500 - The server made a boo boo";
         response.setStatus(HTTPResponseHeaders.STATUS_INTERNAL_SERVER_ERROR);
         response.setContentType("text/html");
         response.setContentLength(doc.toString().length());
@@ -148,48 +147,43 @@ public class HTTPError {
     /**
      * Sets the reason and generates error message for 500 HTTP error
      *
-     * @param e Exception
+     * @param e Throwable
      */
-    public void setReason(Exception e) {
+    public void setReason(Throwable e) {
 
         doc.message = "<p style=\"color: red; font-weight: bold;\">";
 
         if (e.getMessage() != null) {
-            doc.message += e.getMessage() + "<br />";
+            doc.message += e.getMessage() + " ";
         }
 
         doc.message += e.getClass().getName() + "</p>\n";
 
         StackTraceElement[] el = e.getStackTrace();
+
+        doc.message += "<table>\n";
+
+        doc.message += "<thead>\n";
+        doc.message += "<tr>\n";
+        doc.message += "<th>File</th>\n";
+        doc.message += "<th>Class</th>\n";
+        doc.message += "<th>Method</th>\n";
+        doc.message += "<th>Line</th>\n";
+        doc.message += "</tr>\n";
+        doc.message += "</thead>\n";
+
+        doc.message += "<tbody>\n";
         for (int i = 0; i < el.length; i++) {
-            doc.message += "<p style=\"color: red; margin-left: 20px;\">at "
-                    + el[i].getFileName() + ", class " + el[i].getClassName()
-                    + ", method " + el[i].getMethodName() + " at line "
-                    + el[i].getLineNumber() + "</p>\n";
+            doc.message += "<tr>\n";
+            doc.message += "<td>" + el[i].getFileName() + "</td>\n";
+            doc.message += "<td>" + el[i].getClassName() + "</td>\n";
+            doc.message += "<td>" + el[i].getMethodName() + "</td>\n";
+            doc.message += "<td>" + el[i].getLineNumber() + "</td>\n";
+            doc.message += "</tr>\n";
         }
-    }
+        doc.message += "</tbody>\n";
 
-    /**
-     * Sets the reason and generates error message for 500 HTTP error
-     *
-     * @param e Error
-     */
-    public void setReason(Error e) {
-        doc.message = "<p style=\"color: red; font-weight: bold;\">";
-
-        if (e.getMessage() != null) {
-            doc.message += e.getMessage() + "<br />";
-        }
-
-        doc.message += e.getClass().getName() + "</p>\n";
-
-        StackTraceElement[] el = e.getStackTrace();
-        for (int i = 0; i < el.length; i++) {
-            doc.message += "<p style=\"color: red; margin-left: 20px;\">at "
-                    + el[i].getFileName() + ", class " + el[i].getClassName()
-                    + ", method " + el[i].getMethodName() + " at line "
-                    + el[i].getLineNumber() + "</p>\n";
-        }
+        doc.message += "</table>\n";
     }
 
     /**
@@ -221,21 +215,20 @@ public class HTTPError {
                     + "a { color:#2D498C; text-decoration: none; }"
                     + "a:hover { color: #FF6600; }"
                     + "p { padding: 5px; font-size: 14px; padding-right: 20px; padding-left: 20px;	text-align: justify; }"
-                    + "h1 { padding-left: 20px;	padding-bottom: 5px; margin-right: 20px; margin-bottom: 15px; margin-top: 15px; color: #FF3300; font-size: 28px; font-weight: bolder; border-bottom: #E2E2E2 solid 1px; }"
+                    + "h1 { padding-bottom: 5px; margin-bottom: 15px; margin-top: 15px; color: #FF3300; font-size: 28px; font-weight: bolder; border-bottom: #E2E2E2 solid 1px; }"
                     + "h2 { margin: 5px; color: #5585B0; }"
-                    + "#main { width: 768px; padding-bottom: 15px; border-bottom: #E2E2E2 solid 1px; }"
-                    + "#main div.content { width: 700px; float: right; }"
+                    + "#main { max-width: 1000px; min-width: 700px; padding-bottom: 15px; border-bottom: #E2E2E2 solid 1px; }"
+                    + "table { margin-top: 30px; margin-bottom: 30px; width: 100%; }"
+                    + "table td, table th { padding: 4px; border-bottom: 1px solid #EAEAEA; }"
+                    + "table th { font-weight: bold; }"
                     + ".clearfooter { clear: both; }"
                     + "-->"
                     + "</style>"
                     + "</head>"
                     + "<body>"
                     + "<div id=\"main\">"
-                    + "<h1>JavaLittleWebServer!</h1>"
+                    + "<h1>" + this.title + "</h1>"
                     + "<div class=\"content\">"
-                    + "<h2>"
-                    + this.title
-                    + "</h2>"
                     + this.message
                     + "</div>"
                     + "<div class=\"clearfooter\"></div>"

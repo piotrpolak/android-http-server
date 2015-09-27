@@ -19,6 +19,32 @@ It can be used as a standalone web server for static content or as a remote appl
 * Supports buffered file upload (multipart requests)
 * Exposes compact API for handling sessions
 
+## Sample code
+
+Hello World servlet
+
+```java
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2015
+ **************************************************/
+
+package example;
+
+import ro.polak.webserver.servlet.HTTPRequest;
+import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.Servlet;
+
+public class HelloWorld extends Servlet {
+
+    public void service(HTTPRequest request, HTTPResponse response) {
+        response.getPrintWriter().print("Hello World!");
+    }
+}
+```
+
 ## Screens
 
 ![Admin main activity](screens/main.png)

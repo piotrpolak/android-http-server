@@ -23,6 +23,7 @@ public class ServerStats extends Servlet {
         doc.setOwnerClass(this.getClass().getSimpleName());
 
         doc.writeln("<div class=\"page-header\"><h1>Server statistics</h1></div>");
+        doc.writeln("<p class=\"bg-info\">Please refresh the page to update the statistics.");
 
         doc.writeln("<table class=\"table\">");
         doc.writeln("<tr>");

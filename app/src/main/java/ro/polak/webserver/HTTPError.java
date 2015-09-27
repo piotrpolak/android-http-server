@@ -24,7 +24,6 @@ import java.net.Socket;
 public class HTTPError {
 
     // TODO Split the error into multiple subclasses
-    // TODO Remove public attributes from HTMLErrorDocument
 
     protected HTTPResponse response;
     protected HTMLErrorDocument doc;
@@ -52,8 +51,8 @@ public class HTTPError {
         String errorDocumentPath = MainController.getInstance().getServer().getServerConfig().getErrorDocument404Path();
 
         if (errorDocumentPath == null || errorDocumentPath.equals("")) {
-            doc.title = "Error 404 - File Not Found";
-            doc.message = "<p>The server has not found anything matching the specified URL.</p>";
+            doc.setTitle("Error 404 - File Not Found");
+            doc.setMessage("<p>The server has not found anything matching the specified URL.</p>");
             response.setContentLength(doc.toString().length());
             response.flushHeaders();
             response.write(doc.toString());
@@ -81,8 +80,8 @@ public class HTTPError {
         String errorDocumentPath = MainController.getInstance().getServer().getServerConfig().getErrorDocument403Path();
 
         if (errorDocumentPath == null || errorDocumentPath.equals("")) {
-            doc.title = "Error 403 - Forbidden";
-            doc.message = "<p>Access Denied.</p>";
+            doc.setTitle("Error 403 - Forbidden");
+            doc.setMessage("<p>Access Denied.</p>");
             response.setContentLength(doc.toString().length());
             response.flushHeaders();
             response.write(doc.toString());
@@ -104,8 +103,8 @@ public class HTTPError {
      * Serves 405 HTTP error
      */
     public void serve405() {
-        doc.title = "Error 405 - Method Not Allowed";
-        doc.message = "<p>The method specified in the Request-Line is not allowed for the resource identified by the Request-URI.</p>";
+        doc.setTitle("Error 405 - Method Not Allowed");
+        doc.setMessage("<p>The method specified in the Request-Line is not allowed for the resource identified by the Request-URI.</p>");
         response.setStatus(HTTPResponseHeaders.STATUS_METHOD_NOT_ALLOWED);
         response.setContentType("text/html");
         response.setContentLength(doc.toString().length());
@@ -120,7 +119,7 @@ public class HTTPError {
 
         Statistics.addError500();
 
-        doc.title = "Error 500 - The server made a boo boo";
+        doc.setTitle("Error 500 - The server made a boo boo");
         response.setStatus(HTTPResponseHeaders.STATUS_INTERNAL_SERVER_ERROR);
         response.setContentType("text/html");
         response.setContentLength(doc.toString().length());
@@ -198,14 +197,53 @@ public class HTTPError {
      * @param message Description of an error
      */
     public void setReason(String message) {
-        doc.message = message;
+        doc.setMessage(message);
     }
 
-    public class HTMLErrorDocument {
+    /**
+     * HTML Error document representation
+     */
+    class HTMLErrorDocument {
 
-        public String title = "";
-        public String message = "";
+        private String title = "";
+        private String message = "";
 
+        /**
+         * Sets error document title
+         * @return
+         */
+        public String getTitle() {
+            return title;
+        }
+
+        /**
+         * Returns error document title
+         * @param title
+         */
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        /**
+         * Returns error document message
+         * @return
+         */
+        public String getMessage() {
+            return message;
+        }
+
+        /**
+         * Sets error document message
+         * @param message
+         */
+        public void setMessage(String message) {
+            this.message = message;
+        }
+
+        /**
+         * Generates and renders HTML
+         * @return
+         */
         public String toString() {
             String out = "<!DOCTYPE html>\n"
                     + "<html lang=\"en\">\n"

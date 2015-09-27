@@ -134,6 +134,7 @@ public class HTTPError {
     public static void serve503(Socket socket) {
         String message = "Error 503 - Service Unavailable";
 
+        // RAW Writing directly to the socket
         String msg = HTTPResponseHeaders.STATUS_SERVICE_UNAVAILABLE
                 + "Content-Length: " + message.length() + "\r\n"
                 + "Content-Type: text/plain\r\n\r\n" + message;
@@ -156,39 +157,41 @@ public class HTTPError {
      */
     public void setReason(Throwable e) {
 
-        doc.message = "<p style=\"color: red; font-weight: bold;\">";
+        String message = "<p style=\"color: red; font-weight: bold;\">";
 
         if (e.getMessage() != null) {
-            doc.message += e.getMessage() + " ";
+            message += e.getMessage() + " ";
         }
 
-        doc.message += e.getClass().getName() + "</p>\n";
+        message += e.getClass().getName() + "</p>\n";
 
         StackTraceElement[] el = e.getStackTrace();
 
-        doc.message += "<table>\n";
+        message += "<table>\n";
 
-        doc.message += "<thead>\n";
-        doc.message += "<tr>\n";
-        doc.message += "<th>File</th>\n";
-        doc.message += "<th>Class</th>\n";
-        doc.message += "<th>Method</th>\n";
-        doc.message += "<th>Line</th>\n";
-        doc.message += "</tr>\n";
-        doc.message += "</thead>\n";
+        message += "    <thead>\n";
+        message += "        <tr>\n";
+        message += "            <th>File</th>\n";
+        message += "            <th>Class</th>\n";
+        message += "            <th>Method</th>\n";
+        message += "            <th>Line</th>\n";
+        message += "        </tr>\n";
+        message += "    </thead>\n";
 
-        doc.message += "<tbody>\n";
+        message += "    <tbody>\n";
         for (int i = 0; i < el.length; i++) {
-            doc.message += "<tr>\n";
-            doc.message += "<td>" + el[i].getFileName() + "</td>\n";
-            doc.message += "<td>" + el[i].getClassName() + "</td>\n";
-            doc.message += "<td>" + el[i].getMethodName() + "</td>\n";
-            doc.message += "<td>" + el[i].getLineNumber() + "</td>\n";
-            doc.message += "</tr>\n";
+            message += "        <tr>\n";
+            message += "            <td>" + el[i].getFileName() + "</td>\n";
+            message += "            <td>" + el[i].getClassName() + "</td>\n";
+            message += "            <td>" + el[i].getMethodName() + "</td>\n";
+            message += "            <td>" + el[i].getLineNumber() + "</td>\n";
+            message += "        </tr>\n";
         }
-        doc.message += "</tbody>\n";
+        message += "    </tbody>\n";
 
-        doc.message += "</table>\n";
+        message += "</table>\n";
+
+        doc.setMessage(message);
     }
 
     /**

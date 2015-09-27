@@ -19,5 +19,15 @@ It can be used as a standalone web server for static content or as a remote appl
 * Supports buffered file upload (multipart requests)
 * Exposes compact API for handling sessions
 
-![GUI](screens/main.png)
+## Screens
 
+![Admin main activity](screens/main.png)
+![HTTP back-office login](screens/admin-login.png)
+![HTTP back-office menu](screens/admin-menu.png)
+
+![HTTP back-office drive access](screens/admin-drive-access.png)
+![HTTP back-office server statistics](screens/admin-server-statistics.png)
+![HTTP back-office SMS inbox](screens/admin-sms-inbox.png)
+
+### 500 error page trace
+![Servlet error 500](screens/servlet-error-500.png)

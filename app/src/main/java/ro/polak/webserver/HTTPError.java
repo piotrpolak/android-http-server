@@ -201,13 +201,14 @@ public class HTTPError {
         public String message = "";
 
         public String toString() {
-            String out = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">"
-                    + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
-                    + "<head>" + "<title>"
+            String out = "<!DOCTYPE html>\n"
+                    + "<html lang=\"en\">\n"
+                    + "<head>\n"
+                    + "<title>\n"
                     + this.title
-                    + "</title>"
-                    + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
-                    + "<style type=\"text/css\">"
+                    + "</title>\n"
+                    + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n"
+                    + "<style type=\"text/css\">\n"
                     + "<!--"
                     + "* {margin: 0;padding: 0;}"
                     + "body { font-family: \"Trebuchet MS\", Verdana, Arial, Helvetica, sans-serif;	font-size: 14px; color:#000000; text-align: center; background-repeat: repeat-x; }"
@@ -217,23 +218,24 @@ public class HTTPError {
                     + "p { padding: 5px; font-size: 14px; padding-right: 20px; padding-left: 20px;	text-align: justify; }"
                     + "h1 { padding-bottom: 5px; margin-bottom: 15px; margin-top: 15px; color: #FF3300; font-size: 28px; font-weight: bolder; border-bottom: #E2E2E2 solid 1px; }"
                     + "h2 { margin: 5px; color: #5585B0; }"
-                    + "#main { max-width: 1000px; min-width: 700px; padding-bottom: 15px; border-bottom: #E2E2E2 solid 1px; }"
+                    + "#main { max-width: 960px; min-width: 700px; padding: 15px; border-bottom: #E2E2E2 solid 1px; }"
                     + "table { margin-top: 30px; margin-bottom: 30px; width: 100%; }"
                     + "table td, table th { padding: 4px; border-bottom: 1px solid #EAEAEA; }"
                     + "table th { font-weight: bold; }"
-                    + ".clearfooter { clear: both; }"
-                    + "-->"
-                    + "</style>"
-                    + "</head>"
-                    + "<body>"
-                    + "<div id=\"main\">"
-                    + "<h1>" + this.title + "</h1>"
-                    + "<div class=\"content\">"
+                    + "footer { text-align: left; clear: both; font-size: 10px; color: #999; }"
+                    + "-->\n"
+                    + "</style>\n"
+                    + "</head>\n"
+                    + "<body>\n"
+                    + "    <div id=\"main\">\n"
+                    + "        <h1>" + this.title + "</h1>\n"
+                    + "        <div class=\"content\">\n"
                     + this.message
-                    + "</div>"
-                    + "<div class=\"clearfooter\"></div>"
-                    + "</div>"
-                    + "</body>" + "</html>";
+                    + "        </div>\n"
+                    + "        <footer>Android HTTP Server</footer>\n"
+                    + "    </div>\n"
+                    + "</body>\n"
+                    + "</html>";
             return out;
         }
     }

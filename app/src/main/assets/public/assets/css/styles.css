@@ -12,3 +12,6 @@ body {
 .container {
     max-width: 700px;
 }
+.bg-info {
+    padding: 10px;
+}

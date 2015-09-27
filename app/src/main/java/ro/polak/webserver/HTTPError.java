@@ -43,6 +43,9 @@ public class HTTPError {
      * Serves 404 HTTP error
      */
     public void serve404() {
+
+        Statistics.addError404();
+
         response.setStatus(HTTPResponseHeaders.STATUS_NOT_FOUND);
         response.setContentType("text/html");
 
@@ -114,6 +117,9 @@ public class HTTPError {
      * Serves 500 HTTP error
      */
     public void serve500() {
+
+        Statistics.addError500();
+
         doc.title = "Error 500 - The server made a boo boo";
         response.setStatus(HTTPResponseHeaders.STATUS_INTERNAL_SERVER_ERROR);
         response.setContentType("text/html");

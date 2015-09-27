@@ -31,6 +31,8 @@ import android.content.Context;
  */
 public class HTTPResponse {
 
+    // TODO Use http://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletResponse.html as example
+
     private Socket socket;
     private HTTPResponseHeaders headers;
     private OutputStream out;

@@ -25,6 +25,8 @@ public class HTTPRequest {
 
     // TODO Define METHOD_GET, METHOD_POST ....
 
+    // TODO Use http://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletRequest.html as example
+
     private HTTPRequestHeaders headers;
     private boolean isKeepAlive = false;
     private boolean isMultipart = false;

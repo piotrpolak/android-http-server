@@ -13,7 +13,7 @@ import ro.polak.utilities.Utilities;
 public class Login extends Servlet {
 
     public void service(HTTPRequest request, HTTPResponse response) {
-        AccessControl ac = new AccessControl(session);
+        AccessControl ac = new AccessControl(this.getSession());
 
         HTMLDocument doc = new HTMLDocument("Login", false);
         doc.setOwnerClass(this.getClass().getSimpleName());

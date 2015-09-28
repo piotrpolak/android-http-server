@@ -14,7 +14,7 @@ import ro.polak.webserver.servlet.Servlet;
 public class Logout extends Servlet {
 
     public void service(HTTPRequest request, HTTPResponse response) {
-        AccessControl ac = new AccessControl(session);
+        AccessControl ac = new AccessControl(this.getSession());
         ac.logout();
 
         HTMLDocument doc = new HTMLDocument("Logout", false);

@@ -16,10 +16,7 @@ package ro.polak.webserver.servlet;
  */
 public abstract class Servlet implements IServlet {
 
-    // TODO Make private with protected setters
-    protected HTTPSession session;
-    // TODO Make private with protected setters
-    protected String directory;
+    private HTTPSession session;
 
     /**
      * Runs the servlet
@@ -84,12 +81,12 @@ public abstract class Servlet implements IServlet {
     }
 
     /**
-     * Returns servlet directory
+     * Returns HTTP session
      *
-     * @return servlet directory
+     * @return
      */
-    public String getDirectory() {
-        return directory;
+    public HTTPSession getSession() {
+        return session;
     }
 
     /**

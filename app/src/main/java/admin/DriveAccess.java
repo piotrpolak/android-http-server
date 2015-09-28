@@ -26,7 +26,7 @@ public class DriveAccess extends Servlet {
     }
 
     public void service(HTTPRequest request, HTTPResponse response) {
-        AccessControl ac = new AccessControl(session);
+        AccessControl ac = new AccessControl(this.getSession());
         if (!ac.isLogged()) {
             response.sendRedirect("/admin/Login.dhtml?relocate=" + Utilities.URLEncode((request.getHeaders().getQueryString())));
             return;

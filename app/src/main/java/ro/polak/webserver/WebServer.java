@@ -9,6 +9,8 @@ package ro.polak.webserver;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.controller.IController;
+import ro.polak.webserver.error.HTTPError503;
+import ro.polak.webserver.servlet.HTTPResponse;
 
 import java.io.*;
 import java.net.*;
@@ -71,7 +73,7 @@ public class WebServer extends Thread {
                     new ServerThread(socket, this); // Creating new thread
                 } else {
                     // 503 Service Unavailable HERE
-                    HTTPError.serve503(socket);
+                    (new HTTPError503()).serve(new HTTPResponse(socket));
                     socket.close();
                 }
             } catch (IOException e) {

@@ -9,6 +9,8 @@ package ro.polak.webserver;
 
 import java.net.Socket;
 
+import ro.polak.webserver.error.HTTPError404;
+import ro.polak.webserver.error.HTTPError405;
 import ro.polak.webserver.resourceloader.AssetResourceLoader;
 import ro.polak.webserver.resourceloader.FileResourceLoader;
 import ro.polak.webserver.resourceloader.IResourceLoader;
@@ -122,12 +124,12 @@ public class ServerThread extends Thread {
 
             // Serving 404 error
             if (!resourceSuccessfullyLoaded) {
-                (new HTTPError(response)).serve404();
+                (new HTTPError404()).serve(response);
             }
 
         } else {
             // Method not allowed
-            (new HTTPError(response)).serve405();
+            (new HTTPError405()).serve(response);
         }
 
         // Closing socket and closing the response

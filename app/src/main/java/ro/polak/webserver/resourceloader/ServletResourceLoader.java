@@ -8,9 +8,9 @@
 package ro.polak.webserver.resourceloader;
 
 import ro.polak.utilities.Utilities;
-import ro.polak.webserver.HTTPError;
 import ro.polak.webserver.HTTPResponseHeaders;
 import ro.polak.webserver.controller.MainController;
+import ro.polak.webserver.error.HTTPError500;
 import ro.polak.webserver.servlet.AndroidServletServiceDriver;
 import ro.polak.webserver.servlet.HTTPRequest;
 import ro.polak.webserver.servlet.HTTPResponse;
@@ -52,15 +52,15 @@ public class ServletResourceLoader implements IResourceLoader {
                 }
             } catch (Exception e) {
                 // For servlet uncaught exceptions
-                HTTPError error = new HTTPError(response);
-                error.setReason(e);
-                error.serve500();
+                HTTPError500 error500 = new HTTPError500();
+                error500.setReason(e);
+                error500.serve(response);
                 return true;
             } catch (Error e) {
                 // For compilation problems
-                HTTPError error = new HTTPError(response);
-                error.setReason(e);
-                error.serve500();
+                HTTPError500 error500 = new HTTPError500();
+                error500.setReason(e);
+                error500.serve(response);
                 return true;
             }
         }

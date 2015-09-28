@@ -99,16 +99,6 @@ public abstract class Servlet implements IServlet {
     }
 
     /**
-     * Returns servlet path
-     *
-     * @return servlet path
-     */
-    public String getPath() {
-        // TODO This is not valid for the Android paths
-        return this.getDirectory() + java.io.File.separator + this.getName() + ".class";
-    }
-
-    /**
      * Returns a clone
      *
      * @return

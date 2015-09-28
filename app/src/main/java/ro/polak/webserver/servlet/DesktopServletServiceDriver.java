@@ -71,12 +71,6 @@ public class DesktopServletServiceDriver implements IServletServiceDriver {
 
             // Initializing servlet
             littleServlet = (Servlet) DesktopServletServiceDriver.classLoader.loadClass(servletName).newInstance();
-
-            try {
-                littleServlet.directory = (new File(MainController.getInstance().getServer().getServerConfig().getDocumentRootPath())).getCanonicalPath();
-            } catch (java.io.IOException e) {
-                littleServlet.directory = MainController.getInstance().getServer().getServerConfig().getDocumentRootPath();
-            }
         } catch (ClassCastException e) {
             return false;
         } catch (ClassNotFoundException e) {

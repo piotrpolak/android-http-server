@@ -235,9 +235,7 @@ public class HTTPRequest {
 
                 try {
                     String cookieValues[] = cookies[i].split("=");
-                    // System.out.println("Cookie1:" + cookieValues[0] + ":" +
-                    // cookieValues[1] + ":");
-                    _cookies.put(cookieValues[0], cookieValues[1]);
+                    _cookies.put(cookieValues[0].trim(), cookieValues[1]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }

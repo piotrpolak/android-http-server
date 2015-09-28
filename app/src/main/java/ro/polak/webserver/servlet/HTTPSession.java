@@ -48,6 +48,16 @@ public class HTTPSession {
         this.request = request;
     }
 
+    // TODO implement long getCreationTime
+    // TODO implement long getLastAccessedTime
+    // TODO implement void setMaxInactiveInterval
+    // TODO implement int getMaxInactiveInterval in seconds
+    // TODO implement java.util.Enumeration getAttributeNames
+    // TODO implement removeAttribute
+    // TODO implement invalidate
+    // TODO implement boolean isNew()
+    // TODO let session attributes be any serializable object
+
     /**
      * Initializes session, makes the session variables usable.
      * <p/>
@@ -125,9 +135,9 @@ public class HTTPSession {
     }
 
     /**
-     * Destroys session and frees resources
+     * Invalidates session and frees resources
      */
-    public void destroy() {
+    public void invalidate() {
         // For freeze method
         isStarted = false;
 

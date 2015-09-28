@@ -27,8 +27,8 @@ import java.util.Locale;
 public class WebServer extends Thread {
 
     // Some static info
-    public static final String SERVER_NAME = "JavaLittleWebServer";
-    public static final String SERVER_VERSION = "1.5.0";
+    public static final String SERVER_NAME = "AndroidHTTPServer";
+    public static final String SERVER_VERSION = "0.1.5-dev";
     public static final String SERVER_DATE = "12.09.2015";
     public static final String SERVER_SMALL_SIGNATURE = SERVER_NAME + "/" + SERVER_VERSION;
     public static final String SERVER_SIGNATURE = SERVER_NAME + "/" + SERVER_VERSION + " / " + SERVER_DATE;

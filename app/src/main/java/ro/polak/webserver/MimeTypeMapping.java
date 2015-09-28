@@ -31,9 +31,10 @@ public class MimeTypeMapping {
     private Vector<Integer> mimeTypesExtLinks = new Vector<Integer>(0);
     private Vector<String> mimeTypes = new Vector<String>(0);
 
-
+    /**
+     * Default constructor
+     */
     public MimeTypeMapping() {
-
     }
 
     /**
@@ -54,18 +55,10 @@ public class MimeTypeMapping {
      */
     public MimeTypeMapping(String mimeTypeFilePath) {
 
-        String line = null;
-
-        // if (!f.exists())
-        // {
-        // System.out.println("Error: " + mime_type_file +
-        // " file doesn't exist.");
-        // return;
-        // }
-
         try {
             BufferedReader input = new BufferedReader(new FileReader(mimeTypeFilePath));
 
+            String line = null;
             while ((line = input.readLine()) != null) {
                 String mime[] = line.split(" ");
 
@@ -82,7 +75,6 @@ public class MimeTypeMapping {
             // TODO Throw an exception
             System.out.println("Error: Unable to read mime.types.");
         }
-
     }
 
     /**

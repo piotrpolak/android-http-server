@@ -261,12 +261,46 @@ public class HTTPRequest {
     }
 
     /**
+     * Returns the value of specified GET attribute or the default value when no GET attribute
+     *
+     * @param paramName name of the GET attribute
+     * @param defaultValue
+     * @return
+     */
+    public String _get(String paramName, String defaultValue) {
+        String value = this._get(paramName);
+        if( value == null )
+        {
+            value = defaultValue;
+        }
+
+        return value;
+    }
+
+    /**
      * Returns the value of specified POST attribute
      *
-     * @param paramName name of the POSTT attribute
+     * @param paramName name of the POST attribute
      * @return value of the POST attribute
      */
     public String _post(String paramName) {
         return headers._post(paramName);
+    }
+
+    /**
+     * Returns the value of specified POST attribute or the default value when no GET attribute
+     *
+     * @param paramName name of the POST attribute
+     * @param defaultValue
+     * @return value of the POST attribute
+     */
+    public String _post(String paramName, String defaultValue) {
+        String value = this._post(paramName);
+        if( value == null )
+        {
+            value = defaultValue;
+        }
+
+        return value;
     }
 }

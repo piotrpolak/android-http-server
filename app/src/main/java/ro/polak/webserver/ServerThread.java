@@ -33,6 +33,17 @@ public class ServerThread extends Thread {
     private static IResourceLoader[] rl = new IResourceLoader[]{new FileResourceLoader(), new AssetResourceLoader(), new ServletResourceLoader()};
     private static String[] supportedMethods = {HTTPRequest.METHOD_GET, HTTPRequest.METHOD_POST, HTTPRequest.METHOD_HEAD};
 
+    // Dynamically compute the value of Allow header
+    private static String allowHeaderValue = "";
+    static {
+        for (int i = 0; i < supportedMethods.length; i++) {
+            allowHeaderValue += supportedMethods[i];
+            if (i != supportedMethods.length - 1) {
+                allowHeaderValue += ", ";
+            }
+        }
+    }
+
     /**
      * Default constructor
      *
@@ -139,6 +150,7 @@ public class ServerThread extends Thread {
 
             } else {
                 // Method not allowed
+                response.getHeaders().setHeader("Allow", allowHeaderValue);
                 (new HTTPError405()).serve(response);
             }
         } catch (IOException e) {

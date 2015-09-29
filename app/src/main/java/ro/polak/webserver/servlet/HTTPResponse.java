@@ -37,7 +37,12 @@ public class HTTPResponse {
     private PrintWriter printWriter = null;
     private boolean headersFlushed = false;
 
-
+    /**
+     * Creates and returns a response out of the socket
+     *
+     * @param socket
+     * @return
+     */
     public static HTTPResponse createFromSocket(Socket socket) throws IOException {
 
         HTTPResponse response = new HTTPResponse();
@@ -83,7 +88,7 @@ public class HTTPResponse {
     public void setCookie(String cookieName, String cookieValue, int cookieExpiresSeconds, String cookiePath) {
         String cookie = cookieName + "=" + Utilities.URLEncode(cookieValue);
 
-        // Seting optional expiration time
+        // Setting optional expiration time
         if (cookieExpiresSeconds != 0) {
             cookie += "; expires=" + WebServer.sdf.format(new java.util.Date(System.currentTimeMillis() + (cookieExpiresSeconds * 1000)));
         }
@@ -163,7 +168,7 @@ public class HTTPResponse {
      * @throws IOException
      */
     public void flush() throws IOException {
-        this.out.flush();
+        out.flush();
     }
 
     /**
@@ -174,7 +179,7 @@ public class HTTPResponse {
     public void sendRedirect(String location) {
         headers.setStatus(HTTPResponseHeaders.STATUS_MOVED_PERMANENTLY);
         headers.setHeader("Location", location);
-        this.flushHeaders();
+        flushHeaders();
     }
 
     /**
@@ -186,31 +191,28 @@ public class HTTPResponse {
 
         MainController.getInstance().println("Serving file " + file.getPath());
 
-        FileInputStream file_input = null;
-        int buffer_read_n_bytes = 0;
+        int numberOfBufferReadBytes = 0;
         byte[] buffer = new byte[512];
 
         try {
-            file_input = new FileInputStream(file);
-
+            FileInputStream fileInputStream = new FileInputStream(file);
             try {
-
-                while ((buffer_read_n_bytes = file_input.read(buffer)) != -1) { // While
-                    // reading
-                    // from
-                    // file
-                    this.out.write(buffer, 0, buffer_read_n_bytes); // Writing
-                    // to buffer
-                    this.out.flush(); // Flushing the buffer
-                    Statistics.addBytesSend(buffer_read_n_bytes);
+                // Reading and flushing the file chunk by chunk
+                while ((numberOfBufferReadBytes = fileInputStream.read(buffer)) != -1) {
+                    out.write(buffer, 0, numberOfBufferReadBytes);
+                    // Flushing the buffer
+                    out.flush();
+                    // Incrementing statistics
+                    Statistics.addBytesSend(numberOfBufferReadBytes);
                 }
-                this.out.flush(); // Flushing remaining buffer
+                // Flushing remaining buffer, just in case
+                out.flush();
 
             } catch (IOException e) {
             }
 
             try {
-                file_input.close();
+                fileInputStream.close();
             } // Closing file input stream
             catch (IOException e) {
             }
@@ -228,35 +230,33 @@ public class HTTPResponse {
 
         MainController.getInstance().println("Serving asset " + asset);
 
-        int buffer_read_n_bytes = 0;
+        int numberOfBufferReadBytes = 0;
         byte[] buffer = new byte[512];
 
         try {
-            InputStream file_input = ((Context) MainController.getInstance().getContext()).getResources().getAssets().open(asset);
-
+            InputStream assetInputStream = ((Context) MainController.getInstance().getContext()).getResources().getAssets().open(asset);
             try {
-
-                while ((buffer_read_n_bytes = file_input.read(buffer)) != -1) { // While
-                    // reading
-                    // file
-                    this.out.write(buffer, 0, buffer_read_n_bytes); // Writing
-                    // to buffer
-                    this.out.flush(); // Flushing the buffer
-                    Statistics.addBytesSend(buffer_read_n_bytes);
+                // Reading and flushing the file chunk by chunk
+                while ((numberOfBufferReadBytes = assetInputStream.read(buffer)) != -1) {
+                    // Writing to buffer
+                    out.write(buffer, 0, numberOfBufferReadBytes);
+                    // Flushing the buffer
+                    out.flush();
+                    // Incrementing statistics
+                    Statistics.addBytesSend(numberOfBufferReadBytes);
                 }
-                this.out.flush(); // Flushing remaining buffer
+                // Flushing remaining buffer, just in case
+                out.flush();
 
             } catch (IOException e) {
             }
 
             try {
-                file_input.close();
+                assetInputStream.close();
             } // Closing file input stream
             catch (IOException e) {
-                android.util.Log.i("HTTP", e.getMessage());
             }
         } catch (Exception e) {
-            android.util.Log.i("HTTP", e.getMessage());
         }
     }
 
@@ -266,7 +266,7 @@ public class HTTPResponse {
      * @param contentType content type
      */
     public void setContentType(String contentType) {
-        this.headers.setHeader("Content-Type", contentType);
+        headers.setHeader("Content-Type", contentType);
     }
 
     /**
@@ -324,18 +324,18 @@ public class HTTPResponse {
      * @param status status code and message
      */
     public void setStatus(String status) {
-        this.headers.setStatus(status);
+        headers.setStatus(status);
     }
 
     /**
-     * Returns request's print writer
+     * Returns request print writer
      *
-     * @return request's print writer
+     * @return request print writer
      */
     public PrintWriter getPrintWriter() {
         // Creating print writer if it does not exist
-        if (this.printWriter == null) {
-            this.printWriter = new PrintWriter();
+        if (printWriter == null) {
+            printWriter = new PrintWriter();
         }
 
         return printWriter;

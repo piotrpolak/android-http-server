@@ -72,7 +72,7 @@ public class WebServer extends Thread {
                     new ServerThread(socket, this); // Creating new thread
                 } else {
                     // 503 Service Unavailable HERE
-                    (new HTTPError503()).serve(new HTTPResponse(socket));
+                    (new HTTPError503()).serve(HTTPResponse.createFromSocket(socket));
                     socket.close();
                 }
             } catch (IOException e) {

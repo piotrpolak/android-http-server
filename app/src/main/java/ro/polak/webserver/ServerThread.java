@@ -7,6 +7,7 @@
 
 package ro.polak.webserver;
 
+import java.io.IOException;
 import java.net.Socket;
 
 import ro.polak.webserver.error.HTTPError404;
@@ -52,95 +53,96 @@ public class ServerThread extends Thread {
      */
     public void run() {
 
-        // Creating new request and response objects
-        HTTPRequest request = HTTPRequest.createFromSocket(socket);
-        HTTPResponse response = new HTTPResponse(socket);
+        HTTPRequest request;
+        HTTPResponse response;
 
-        // Checking the requested URI, blocking illegal paths
-        if (request.getHeaders().getURI() == null || request.getHeaders().getURI().startsWith("../") || request.getHeaders().getURI().indexOf("/../") != -1) {
-            try {
-                response.close();
-                response.close();
-            } catch (Exception e) {
-            }
-            return;
-        }
+        try {
+            // Creating new request and response objects
+            request = HTTPRequest.createFromSocket(socket);
+            response = HTTPResponse.createFromSocket(socket);
 
-        // Setting keep alive header
-        if (request.isKeepAlive() && webServer.getServerConfig().isKeepAlive()) {
-            response.setKeepAlive(true);
-        } else {
-            response.setKeepAlive(false);
-        }
-
-        // Setting signature header
-        response.setHeader("Server", WebServer.SERVER_SMALL_SIGNATURE);
-
-        // Checking allowed method
-        if (request.getHeaders().getMethod().equals("GET") || request.getHeaders().getMethod().equals("POST") || request.getHeaders().getMethod().equals("HEAD")) {
-
-            // Coping the value
-            String uri = request.getHeaders().getURI();
-
-            // This variable becomes true when one of the resource loaders manage to load a resource
-            boolean resourceSuccessfullyLoaded = false;
-
-            // Trying to load a resource using each of the resource loaders
-            for (int ri = 0; ri < rl.length; ri++) {
-                if (rl[ri].load(uri, request, response)) {
-                    resourceSuccessfullyLoaded = true;
-                    break;
+            // Checking the requested URI, blocking illegal paths
+            if (request.getHeaders().getURI() == null || request.getHeaders().getURI().startsWith("../") || request.getHeaders().getURI().indexOf("/../") != -1) {
+                // Closing the socket
+                try {
+                    this.socket.close();
+                } catch (IOException e) {
                 }
+                return;
             }
 
-            // Trying to load directory index
-            if (!resourceSuccessfullyLoaded) {
-                for (int i = 0; i < webServer.getServerConfig().getDirectoryIndex().size(); i++) {
+            // Setting keep alive header
+            if (request.isKeepAlive() && webServer.getServerConfig().isKeepAlive()) {
+                response.setKeepAlive(true);
+            } else {
+                response.setKeepAlive(false);
+            }
 
-                    // Appending an extra slash
-                    if (uri.length() > 0) {
-                        if (uri.charAt(uri.length() - 1) != '/') {
-                            uri += "/";
-                        }
-                    }
+            // Setting signature header
+            response.setHeader("Server", WebServer.SERVER_SMALL_SIGNATURE);
 
-                    // Getting the current directory index
-                    String directoryIndex = webServer.getServerConfig().getDirectoryIndex().elementAt(i);
+            // Checking allowed method
+            if (request.getHeaders().getMethod().equals("GET") || request.getHeaders().getMethod().equals("POST") || request.getHeaders().getMethod().equals("HEAD")) {
 
-                    // Trying to load a resource using each of the resource loaders
-                    for (int ri = 0; ri < rl.length; ri++) {
-                        if (rl[ri].load(uri + directoryIndex, request, response)) {
-                            resourceSuccessfullyLoaded = true;
-                            break;
-                        }
-                    }
+                // Coping the value
+                String uri = request.getHeaders().getURI();
 
-                    // Breaking the parent loop in case one of the loaders managed to serve a resource
-                    if (resourceSuccessfullyLoaded) {
+                // This variable becomes true when one of the resource loaders manage to load a resource
+                boolean resourceSuccessfullyLoaded = false;
+
+                // Trying to load a resource using each of the resource loaders
+                for (int ri = 0; ri < rl.length; ri++) {
+                    if (rl[ri].load(uri, request, response)) {
+                        resourceSuccessfullyLoaded = true;
                         break;
                     }
                 }
-            }
 
-            // Serving 404 error
-            if (!resourceSuccessfullyLoaded) {
-                (new HTTPError404()).serve(response);
-            }
+                // Trying to load directory index
+                if (!resourceSuccessfullyLoaded) {
+                    for (int i = 0; i < webServer.getServerConfig().getDirectoryIndex().size(); i++) {
 
-        } else {
-            // Method not allowed
-            (new HTTPError405()).serve(response);
+                        // Appending an extra slash
+                        if (uri.length() > 0) {
+                            if (uri.charAt(uri.length() - 1) != '/') {
+                                uri += "/";
+                            }
+                        }
+
+                        // Getting the current directory index
+                        String directoryIndex = webServer.getServerConfig().getDirectoryIndex().elementAt(i);
+
+                        // Trying to load a resource using each of the resource loaders
+                        for (int ri = 0; ri < rl.length; ri++) {
+                            if (rl[ri].load(uri + directoryIndex, request, response)) {
+                                resourceSuccessfullyLoaded = true;
+                                break;
+                            }
+                        }
+
+                        // Breaking the parent loop in case one of the loaders managed to serve a resource
+                        if (resourceSuccessfullyLoaded) {
+                            break;
+                        }
+                    }
+                }
+
+                // Serving 404 error
+                if (!resourceSuccessfullyLoaded) {
+                    (new HTTPError404()).serve(response);
+                }
+
+            } else {
+                // Method not allowed
+                (new HTTPError405()).serve(response);
+            }
+        } catch (IOException e) {
         }
 
-        // Closing socket and closing the response
+        // Closing the socket together with the input and output streams
         try {
-            this.socket.getInputStream().close();
-        } catch (Exception e) {
-        }
-
-        try {
-            response.close();
-        } catch (Exception e) {
+            this.socket.close();
+        } catch (IOException e) {
         }
 
         // Cleanup

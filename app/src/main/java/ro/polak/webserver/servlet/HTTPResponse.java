@@ -26,29 +26,25 @@ import android.content.Context;
 /**
  * Represents HTTP response
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.0.1/13.04.2008
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200802
  */
 public class HTTPResponse {
 
-    private Socket socket;
     private HTTPResponseHeaders headers;
     private OutputStream out;
     private PrintWriter printWriter = null;
     private boolean headersFlushed = false;
 
-    /**
-     * Class constructor
-     *
-     * @param socket - socket to be written
-     */
-    public HTTPResponse(Socket socket) {
-        this.socket = socket;
-        headers = new HTTPResponseHeaders();
-        try {
-            out = socket.getOutputStream();
-        } catch (Exception e) { /* e.printStackTrace(); */
-        }
+
+    public static HTTPResponse createFromSocket(Socket socket) throws IOException {
+
+        HTTPResponse response = new HTTPResponse();
+        response.headers = new HTTPResponseHeaders();
+        response.out = socket.getOutputStream();
+
+        return response;
     }
 
     /**
@@ -139,16 +135,15 @@ public class HTTPResponse {
      *
      * @return true if headers flushed
      */
-    public boolean flushHeaders() {
+    public void flushHeaders() throws IllegalStateException {
 
         // Prevent from flushing headers more than once
         if (headersFlushed) {
-            // TODO Throw an exception
-            return false;
+            throw new IllegalStateException("Headers already committed");
         }
+
         headersFlushed = true;
         write(headers.toString());
-        return true;
     }
 
     /**
@@ -187,7 +182,6 @@ public class HTTPResponse {
      * @param file file to be served
      */
     public void serveFile(File file) {
-        this.flushHeaders();
 
         MainController.getInstance().println("Serving file " + file.getPath());
 
@@ -230,7 +224,6 @@ public class HTTPResponse {
      * @param asset
      */
     public void serveAsset(String asset) {
-        this.flushHeaders();
 
         MainController.getInstance().println("Serving asset " + asset);
 
@@ -328,16 +321,6 @@ public class HTTPResponse {
      */
     public void setStatus(String status) {
         this.headers.setStatus(status);
-    }
-
-    /**
-     * Closes the socket
-     */
-    public void close() throws IOException {
-        this.out.close();
-        this.out = null;
-        this.printWriter = null;
-        this.socket.close();
     }
 
     /**

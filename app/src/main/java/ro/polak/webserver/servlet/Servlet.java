@@ -57,20 +57,23 @@ public abstract class Servlet implements IServlet {
         // Releasing resources
         request.getFileUpload().freeResources();
 
-        // Setting and flushing headers
-        if( response.getHeaders().getContentType() == null )
-        {
-            response.setContentType("text/html");
+        if (!response.isCommitted()) {
+
+            // Setting and flushing headers
+            if (response.getHeaders().getContentType() == null) {
+                response.setContentType("text/html");
+            }
+
+            if (response.getPrintWriter().initialized) {
+                response.setContentLength(response.getPrintWriter().length());
+            }
+
+            response.setHeader("Cache-Control", "no-cache");
+            response.setHeader("Pragma", "no-cache");
+
+            response.flushHeaders();
         }
 
-        if (response.getPrintWriter().initialized) {
-            response.setContentLength(response.getPrintWriter().length());
-        }
-
-        response.setHeader("Cache-Control", "no-cache");
-        response.setHeader("Pragma", "no-cache");
-
-        response.flushHeaders();
 
         // Setting and flushing contents
         response.write(response.getPrintWriter().toString());

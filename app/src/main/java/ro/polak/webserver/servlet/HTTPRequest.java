@@ -41,7 +41,7 @@ public class HTTPRequest {
      * @param socket
      * @return
      */
-    public static HTTPRequest createFromSocket(Socket socket) {
+    public static HTTPRequest createFromSocket(Socket socket) throws IOException {
 
         // The request object
         HTTPRequest request = new HTTPRequest();
@@ -56,111 +56,107 @@ public class HTTPRequest {
         StringBuffer statusLineBuffer = new StringBuffer();
 
         // Reading the input stream
-        try {
-            // Getting the input stream out of the socket
-            InputStream in = socket.getInputStream();
 
-            // Reading the first, status line
-            byte[] buffer = new byte[1];
-            while (in.read(buffer, 0, buffer.length) != -1) {
+        // Getting the input stream out of the socket
+        InputStream in = socket.getInputStream();
 
-                // Appending buffer as long as the last character differs from \n
-                if (buffer[0] == '\n') {
+        // Reading the first, status line
+        byte[] buffer = new byte[1];
+        while (in.read(buffer, 0, buffer.length) != -1) {
+
+            // Appending buffer as long as the last character differs from \n
+            if (buffer[0] == '\n') {
+                break;
+            }
+            statusLineBuffer.append((char) buffer[0]);
+        }
+        // Setting status line, getting method, URI etc
+        headers.setStatus(statusLineBuffer.toString());
+        Statistics.addBytesReceived(statusLineBuffer.length() + 1);
+
+
+        // Resetting buffer and reading the rest of headers until \r\n
+        buffer = new byte[1];
+        while (in.read(buffer, 0, buffer.length) != -1) {
+            // Appending input headers
+            inputHeadersBuffer.append((char) buffer[0]);
+            // Check if the headers length is at least 3 characters long
+            if (inputHeadersBuffer.length() > 3) {
+                // Getting the last 3 characters
+                if (inputHeadersBuffer.substring(inputHeadersBuffer.length() - 3, inputHeadersBuffer.length()).equals("\n\r\n")) {
+                    // Remove the last 3 characters
+                    inputHeadersBuffer.setLength(inputHeadersBuffer.length() - 3);
                     break;
                 }
-                statusLineBuffer.append((char) buffer[0]);
             }
-            // Setting status line, getting method, URI etc
-            headers.setStatus(statusLineBuffer.toString());
-            Statistics.addBytesReceived(statusLineBuffer.length() + 1);
-
-
-            // Resetting buffer and reading the rest of headers until \r\n
-            buffer = new byte[1];
-            while (in.read(buffer, 0, buffer.length) != -1) {
-                // Appending input headers
-                inputHeadersBuffer.append((char) buffer[0]);
-                // Check if the headers length is at least 3 characters long
-                if (inputHeadersBuffer.length() > 3) {
-                    // Getting the last 3 characters
-                    if (inputHeadersBuffer.substring(inputHeadersBuffer.length() - 3, inputHeadersBuffer.length()).equals("\n\r\n")) {
-                        // Remove the last 3 characters
-                        inputHeadersBuffer.setLength(inputHeadersBuffer.length() - 3);
-                        break;
-                    }
-                }
-            }
-            Statistics.addBytesReceived(inputHeadersBuffer.length() + 3);
-
-            // Parsing headers if they are at least 3 characters long
-            if (inputHeadersBuffer.length() > 3) {
-                // Removing the last 3 characters and parsing the buffer
-                headers.parse(inputHeadersBuffer.toString());
-            }
-
-
-            // For post method
-            // TODO Move POST to constant
-            if (headers.getMethod().toUpperCase().equals("POST")) {
-
-                // Getting the postLength
-                int postLength = 0;
-                // Checking whether the header exists
-                if (headers.containsHeader("Content-Length")) {
-                    try {
-                        // Parsing content length
-                        postLength = Integer.parseInt(headers.getHeader("Content-Length"));
-                    } catch (NumberFormatException e) {
-                        // Keep 0 value - makes no sense to parse the data
-                    }
-                }
-
-                // Only if post length is greater than 0
-                if (postLength > 0) {
-                    // For multipart request
-                    if (headers.containsHeader("Content-Type") && headers.getHeader("Content-Type").startsWith("multipart/form-data")) {
-                        // Getting the boundary
-                        String boundary = headers.getHeader("Content-Type");
-
-                        // Getting boundary
-                        String boundaryStartString = "boundary=";
-                        int boundaryPosition = boundary.indexOf(boundaryStartString);
-
-                        // Checking whether boundary= exists
-                        if (boundaryPosition > -1) {
-                            // Protection against illegal indexes
-                            try {
-                                boundary = boundary.substring(boundaryPosition + boundaryStartString.length(), boundary.length());
-                                MultipartRequestHandler mrh = new MultipartRequestHandler(in, postLength, boundary);
-
-                                headers.setPost(mrh.getPost());
-                                request.setFileUpload(new FileUpload(mrh.getUploadedFiles()));
-                            } catch (IndexOutOfBoundsException e) {
-                            }
-                        }
-                    }
-                    // For normal requests
-                    else {
-                        buffer = new byte[1];
-                        StringBuffer postLine = new StringBuffer();
-                        while (in.read(buffer, 0, buffer.length) != -1) {
-                            postLine.append((char) buffer[0]);
-                            if (postLine.length() >= postLength) {
-                                // Forced "the end"
-                                break;
-                            }
-                        }
-                        // Setting the headers post line
-                        headers.setPostLine(postLine.toString());
-
-                        Statistics.addBytesReceived(postLine.length());
-                    } // end else
-                } // end if length
-            } // end if post
-
-
-        } catch (IOException e) {
         }
+        Statistics.addBytesReceived(inputHeadersBuffer.length() + 3);
+
+        // Parsing headers if they are at least 3 characters long
+        if (inputHeadersBuffer.length() > 3) {
+            // Removing the last 3 characters and parsing the buffer
+            headers.parse(inputHeadersBuffer.toString());
+        }
+
+
+        // For post method
+        // TODO Move POST to constant
+        if (headers.getMethod().toUpperCase().equals("POST")) {
+
+            // Getting the postLength
+            int postLength = 0;
+            // Checking whether the header exists
+            if (headers.containsHeader("Content-Length")) {
+                try {
+                    // Parsing content length
+                    postLength = Integer.parseInt(headers.getHeader("Content-Length"));
+                } catch (NumberFormatException e) {
+                    // Keep 0 value - makes no sense to parse the data
+                }
+            }
+
+            // Only if post length is greater than 0
+            if (postLength > 0) {
+                // For multipart request
+                if (headers.containsHeader("Content-Type") && headers.getHeader("Content-Type").startsWith("multipart/form-data")) {
+                    // Getting the boundary
+                    String boundary = headers.getHeader("Content-Type");
+
+                    // Getting boundary
+                    String boundaryStartString = "boundary=";
+                    int boundaryPosition = boundary.indexOf(boundaryStartString);
+
+                    // Checking whether boundary= exists
+                    if (boundaryPosition > -1) {
+                        // Protection against illegal indexes
+                        try {
+                            boundary = boundary.substring(boundaryPosition + boundaryStartString.length(), boundary.length());
+                            MultipartRequestHandler mrh = new MultipartRequestHandler(in, postLength, boundary);
+
+                            headers.setPost(mrh.getPost());
+                            request.setFileUpload(new FileUpload(mrh.getUploadedFiles()));
+                        } catch (IndexOutOfBoundsException e) {
+                        }
+                    }
+                }
+                // For normal requests
+                else {
+                    buffer = new byte[1];
+                    StringBuffer postLine = new StringBuffer();
+                    while (in.read(buffer, 0, buffer.length) != -1) {
+                        postLine.append((char) buffer[0]);
+                        if (postLine.length() >= postLength) {
+                            // Forced "the end"
+                            break;
+                        }
+                    }
+                    // Setting the headers post line
+                    headers.setPostLine(postLine.toString());
+
+                    Statistics.addBytesReceived(postLine.length());
+                } // end else
+            } // end if length
+        } // end if post
 
         // Assigning headers
         request.setHeaders(headers);

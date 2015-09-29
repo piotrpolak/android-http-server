@@ -23,9 +23,18 @@ import ro.polak.webserver.*;
  */
 public class HTTPRequest {
 
-    // TODO Define METHOD_GET, METHOD_POST ....
-
     // TODO Use http://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletRequest.html as example
+
+    public final static String METHOD_CONNECT = "CONNECT";
+    public final static String METHOD_DELETE = "DELETE";
+    public final static String METHOD_GET = "GET";
+    public final static String METHOD_HEAD = "HEAD";
+    public final static String METHOD_OPTIONS = "OPTIONS";
+    public final static String METHOD_PURGE = "PURGE";
+    public final static String METHOD_PATCH = "PATCH";
+    public final static String METHOD_POST = "POST";
+    public final static String METHOD_PUT = "PUT";
+    public final static String METHOD_TRACE = "TRACE";
 
     private HTTPRequestHeaders headers;
     private boolean isKeepAlive = false;
@@ -101,7 +110,7 @@ public class HTTPRequest {
 
         // For post method
         // TODO Move POST to constant
-        if (headers.getMethod().toUpperCase().equals("POST")) {
+        if (headers.getMethod().toUpperCase().equals(HTTPRequest.METHOD_POST)) {
 
             // Getting the postLength
             int postLength = 0;

@@ -30,12 +30,8 @@ public class ServerThread extends Thread {
     private Socket socket;
     private WebServer webServer;
 
-    private static IResourceLoader[] rl;
-
-    static {
-        // The list of all allowed resource loaders
-        rl = new IResourceLoader[]{new FileResourceLoader(), new AssetResourceLoader(), new ServletResourceLoader()};
-    }
+    private static IResourceLoader[] rl = new IResourceLoader[]{new FileResourceLoader(), new AssetResourceLoader(), new ServletResourceLoader()};
+    private static String[] supportedMethods = {HTTPRequest.METHOD_GET, HTTPRequest.METHOD_POST, HTTPRequest.METHOD_OPTIONS};
 
     /**
      * Default constructor
@@ -81,8 +77,17 @@ public class ServerThread extends Thread {
             // Setting signature header
             response.setHeader("Server", WebServer.SERVER_SMALL_SIGNATURE);
 
+            // Determining whether the method is supported
+            boolean isMethodSupported = false;
+            for (int i = 0; i < supportedMethods.length; i++) {
+                if (supportedMethods[i].equals(request.getHeaders().getMethod())) {
+                    isMethodSupported = true;
+                    break;
+                }
+            }
+
             // Checking allowed method
-            if (request.getHeaders().getMethod().equals("GET") || request.getHeaders().getMethod().equals("POST") || request.getHeaders().getMethod().equals("HEAD")) {
+            if (isMethodSupported) {
 
                 // Coping the value
                 String uri = request.getHeaders().getURI();

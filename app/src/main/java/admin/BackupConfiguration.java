@@ -20,7 +20,7 @@ public class BackupConfiguration extends Servlet {
             return;
         }
 
-        response.setHeader("Content-disposition", "attachment; filename=httpd.conf");
+        response.getHeaders().setHeader("Content-disposition", "attachment; filename=httpd.conf");
         response.setContentType("application/octet-stream");
         response.serveFile(new java.io.File(MainController.getInstance().getServer().getServerConfig().getBasePath() + "httpd.conf"));
     }

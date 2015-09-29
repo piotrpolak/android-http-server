@@ -43,6 +43,7 @@ public class HTTPResponse {
         HTTPResponse response = new HTTPResponse();
         response.headers = new HTTPResponseHeaders();
         response.out = socket.getOutputStream();
+        response.setKeepAlive(false);
 
         return response;
     }
@@ -265,17 +266,16 @@ public class HTTPResponse {
      * @param contentType content type
      */
     public void setContentType(String contentType) {
-        this.headers.setContentType(contentType);
+        this.headers.setHeader("Content-Type", contentType);
     }
 
     /**
-     * Sets response header
+     * Returns the content type
      *
-     * @param headerName  name of the header
-     * @param headerValue value of the header
+     * @return
      */
-    public void setHeader(String headerName, String headerValue) {
-        this.headers.setHeader(headerName, headerValue);
+    public String getContentType() {
+        return headers.getHeader("Content-Type");
     }
 
     /**
@@ -284,7 +284,11 @@ public class HTTPResponse {
      * @param keepAlive true for keep alive connection
      */
     public void setKeepAlive(boolean keepAlive) {
-        this.headers.setKeepAlive(keepAlive);
+        if (keepAlive) {
+            headers.setHeader("Connection", "keep-alive");
+        } else {
+            headers.setHeader("Connection", "close");
+        }
     }
 
     /**
@@ -293,7 +297,7 @@ public class HTTPResponse {
      * @param length length of content
      */
     public void setContentLength(int length) {
-        this.headers.setContentLength(length);
+        headers.setHeader("Content-Length", "" + length);
     }
 
     /**
@@ -302,7 +306,7 @@ public class HTTPResponse {
      * @param length length of content
      */
     public void setContentLength(long length) {
-        this.headers.setContentLength(length);
+        headers.setHeader("Content-Length", "" + length);
     }
 
     /**

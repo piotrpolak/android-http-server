@@ -37,7 +37,7 @@ public class GetFile extends Servlet {
             File f = new File(path);
             if (f.exists() && f.isFile()) {
                 response.setContentType(MainController.getInstance().getServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(Utilities.getExtension(f.getName())));
-                response.setHeader("Content-disposition", "attachment; filename=" + Utilities.URLEncode(f.getName()));
+                response.getHeaders().setHeader("Content-disposition", "attachment; filename=" + Utilities.URLEncode(f.getName()));
                 response.serveFile(f);
             } else {
                 response.getPrintWriter().print("File does not exist.");

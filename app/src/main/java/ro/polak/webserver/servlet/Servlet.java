@@ -60,7 +60,7 @@ public abstract class Servlet implements IServlet {
         if (!response.isCommitted()) {
 
             // Setting and flushing headers
-            if (response.getHeaders().getContentType() == null) {
+            if (response.getContentType() == null) {
                 response.setContentType("text/html");
             }
 
@@ -68,8 +68,8 @@ public abstract class Servlet implements IServlet {
                 response.setContentLength(response.getPrintWriter().length());
             }
 
-            response.setHeader("Cache-Control", "no-cache");
-            response.setHeader("Pragma", "no-cache");
+            response.getHeaders().setHeader("Cache-Control", "no-cache");
+            response.getHeaders().setHeader("Pragma", "no-cache");
 
             response.flushHeaders();
         }

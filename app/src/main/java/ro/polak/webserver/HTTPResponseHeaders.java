@@ -34,78 +34,6 @@ public class HTTPResponseHeaders extends Headers {
     // "HTTP/1.1 304 Not Modified\r\n";
     // public static final String STATUS_NOT_IMPLEMENTED =
     // "HTTP/1.1 501 Not Implemented\r\n";
-    protected boolean keepAlive = false;
-    protected String contentType;
-
-    /**
-     * Sets status
-     *
-     * @param status status line
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    /**
-     * Returns the status
-     *
-     * @return
-     */
-    public String getStatus() {
-        return status;
-    }
-
-    /**
-     * Sets keepAlive
-     *
-     * @param keepAlive true for keep alive connection
-     */
-    public void setKeepAlive(boolean keepAlive) {
-        // TODO Move helper up to the response
-        this.keepAlive = keepAlive;
-    }
-
-    /**
-     * Returns content type
-     *
-     * @return
-     */
-    public String getContentType() {
-        // TODO Move helper up to the response
-        return this.contentType;
-    }
-
-    /**
-     * Sets content type
-     *
-     * @param contentType content type
-     */
-    public void setContentType(String contentType) {
-        // TODO Move helper up to the response
-        this.contentType = contentType;
-    }
-
-    /**
-     * Sets content length in bytes
-     *
-     * @param length content length in bytes
-     */
-    public void setContentLength(long length) {
-        // TODO Move helper up to the response
-        this.setHeader("Accept-Ranges", "bytes");
-        this.setHeader("Content-Length", "" + length);
-    }
-
-    /**
-     * Sets content length in bytes
-     *
-     * @param length content length in bytes
-     */
-    public void setContentLength(int length) {
-        // TODO Move helper up to the response
-        this.setHeader("Accept-Ranges", "bytes");
-        this.setHeader("Content-Length", "" + length);
-    }
 
     /**
      * String representation of headers
@@ -114,24 +42,12 @@ public class HTTPResponseHeaders extends Headers {
      */
     public String toString() {
 
-        // TODO Move helper up to the response, keep the basic functionality
-
         String headersStr = status;
         Enumeration<String> keys = vars.keys();
 
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();
             headersStr += key + ": " + vars.get(key) + "\r\n";
-        }
-
-        if (keepAlive) {
-            headersStr += "Connection: keep-alive\r\n";
-        } else {
-            headersStr += "Connection: close\r\n";
-        }
-
-        if (contentType != null) {
-            headersStr += "Content-Type: " + contentType + "\r\n";
         }
 
         return headersStr + "\r\n"; // Adding one extra empty line

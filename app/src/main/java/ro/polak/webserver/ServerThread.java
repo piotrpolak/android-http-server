@@ -75,7 +75,7 @@ public class ServerThread extends Thread {
             }
 
             // Setting signature header
-            response.setHeader("Server", WebServer.SERVER_SMALL_SIGNATURE);
+            response.getHeaders().setHeader("Server", WebServer.SERVER_SMALL_SIGNATURE);
 
             // Determining whether the method is supported
             boolean isMethodSupported = false;

@@ -18,6 +18,7 @@ import android.util.Log;
  */
 public class PrintWriter {
 
+    // TODO Make it private
     public boolean initialized = false;
     public StringBuffer out = new StringBuffer();
 

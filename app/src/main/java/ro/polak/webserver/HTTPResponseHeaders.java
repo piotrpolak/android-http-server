@@ -21,6 +21,7 @@ import java.util.Enumeration;
 public class HTTPResponseHeaders extends Headers {
 
     /* Constants */
+    // TODO Remove trailing \r\n
     public static final String STATUS_OK = "HTTP/1.1 200 OK\r\n";
     public static final String STATUS_NOT_FOUND = "HTTP/1.1 404 Not Found\r\n";
     public static final String STATUS_SERVICE_UNAVAILABLE = "HTTP/1.1 503 Service Unavailable\r\n";
@@ -46,12 +47,32 @@ public class HTTPResponseHeaders extends Headers {
     }
 
     /**
+     * Returns the status
+     *
+     * @return
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
      * Sets keepAlive
      *
      * @param keepAlive true for keep alive connection
      */
     public void setKeepAlive(boolean keepAlive) {
+        // TODO Move helper up to the response
         this.keepAlive = keepAlive;
+    }
+
+    /**
+     * Returns content type
+     *
+     * @return
+     */
+    public String getContentType() {
+        // TODO Move helper up to the response
+        return this.contentType;
     }
 
     /**
@@ -60,6 +81,7 @@ public class HTTPResponseHeaders extends Headers {
      * @param contentType content type
      */
     public void setContentType(String contentType) {
+        // TODO Move helper up to the response
         this.contentType = contentType;
     }
 
@@ -69,6 +91,7 @@ public class HTTPResponseHeaders extends Headers {
      * @param length content length in bytes
      */
     public void setContentLength(long length) {
+        // TODO Move helper up to the response
         this.setHeader("Accept-Ranges", "bytes");
         this.setHeader("Content-Length", "" + length);
     }
@@ -79,6 +102,7 @@ public class HTTPResponseHeaders extends Headers {
      * @param length content length in bytes
      */
     public void setContentLength(int length) {
+        // TODO Move helper up to the response
         this.setHeader("Accept-Ranges", "bytes");
         this.setHeader("Content-Length", "" + length);
     }
@@ -89,6 +113,9 @@ public class HTTPResponseHeaders extends Headers {
      * @return
      */
     public String toString() {
+
+        // TODO Move helper up to the response, keep the basic functionality
+
         String headersStr = status;
         Enumeration<String> keys = vars.keys();
 

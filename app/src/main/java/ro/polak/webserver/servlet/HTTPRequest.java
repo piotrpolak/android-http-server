@@ -40,7 +40,7 @@ public class HTTPRequest {
     private boolean isKeepAlive = false;
     private boolean isMultipart = false;
     private String remoteAddress = null;
-    private Hashtable cookie = null;
+    private Hashtable cookies = null;
     private FileUpload fileUpload = new FileUpload();
 
 
@@ -267,9 +267,9 @@ public class HTTPRequest {
      */
     public String getCookie(String cookieName) {
         // Parses cookies upon request
-        if (cookie == null) {
+        if (cookies == null) {
             // now parsing only for a new cookies
-            cookie = new Hashtable<String, String>();
+            cookies = new Hashtable<String, String>();
 
             // Return null when there is no cookie headers
             if (!headers.containsHeader("Cookie")) {
@@ -282,7 +282,7 @@ public class HTTPRequest {
                 // Splitting cookie name=value pair
                 try {
                     String cookieValues[] = cookiesStr[i].split("=");
-                    cookie.put(cookieValues[0].trim(), cookieValues[1]);
+                    cookies.put(cookieValues[0].trim(), cookieValues[1]);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     // No value or no = character
                     return null;
@@ -291,7 +291,7 @@ public class HTTPRequest {
         }
 
         try {
-            return Utilities.URLDecode((String) cookie.get(cookieName));
+            return Utilities.URLDecode((String) cookies.get(cookieName));
         } catch (Exception e) {
             return null;
         }

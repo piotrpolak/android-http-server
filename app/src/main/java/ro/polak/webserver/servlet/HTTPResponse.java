@@ -31,8 +31,6 @@ import android.content.Context;
  */
 public class HTTPResponse {
 
-    // TODO Use http://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletResponse.html as example
-
     private Socket socket;
     private HTTPResponseHeaders headers;
     private OutputStream out;
@@ -189,10 +187,6 @@ public class HTTPResponse {
      * @param file file to be served
      */
     public void serveFile(File file) {
-
-        // IMPORTANT
-        // TODO Implement chainloader (strategy): File, Asset, Servlet | Maybe a directory | Foreach directory indexes: File, Asset, Servlet | show 404
-
         this.flushHeaders();
 
         MainController.getInstance().println("Serving file " + file.getPath());

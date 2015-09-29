@@ -31,7 +31,7 @@ public class ServerThread extends Thread {
     private WebServer webServer;
 
     private static IResourceLoader[] rl = new IResourceLoader[]{new FileResourceLoader(), new AssetResourceLoader(), new ServletResourceLoader()};
-    private static String[] supportedMethods = {HTTPRequest.METHOD_GET, HTTPRequest.METHOD_POST, HTTPRequest.METHOD_OPTIONS};
+    private static String[] supportedMethods = {HTTPRequest.METHOD_GET, HTTPRequest.METHOD_POST, HTTPRequest.METHOD_HEAD};
 
     /**
      * Default constructor

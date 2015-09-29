@@ -58,7 +58,10 @@ public abstract class Servlet implements IServlet {
         request.getFileUpload().freeResources();
 
         // Setting and flushing headers
-        response.setContentType("text/html");
+        if( response.getHeaders().getContentType() == null )
+        {
+            response.setContentType("text/html");
+        }
 
         if (response.getPrintWriter().initialized) {
             response.setContentLength(response.getPrintWriter().length());

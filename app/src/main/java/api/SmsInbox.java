@@ -16,56 +16,60 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONArray;
+
 public class SmsInbox extends Servlet {
 
     public void service(HTTPRequest request, HTTPResponse response) {
 
-        Cursor cursor = ((Activity) MainController.getInstance().getContext()).getContentResolver().query(Uri.parse("content://sms/inbox"), null, null, null, null);
+        // Setting appropriate response type
+        response.setContentType("text/json");
+
+        // Setting max results out of the maxResults query parameter or default value
+        int maxResults = Integer.parseInt(request._get("maxResults", "10"));
+
+        // Querying
+        String[] projection = {"address", "body", "date", "date_sent"};
+        Cursor cursor = ((Activity) MainController.getInstance().getContext()).getContentResolver().query(Uri.parse("content://sms/inbox"), projection, null, null, "date DESC");
         cursor.moveToFirst();
 
-        int max = 50;
-        int i = 0;
+        // The output object
+        JSONArray result = new JSONArray();
 
-        String json = "";
+        // Counter needed to implement maxResults, at the same time we need to keep the original value of maxResults
+        int counterRemaining = maxResults;
 
-        json += "{\n";
-        json += "\t\"messages\" : [\n";
+        // Looping
         do {
-            json += "\t\t{\n";
-            int cc = cursor.getColumnCount();
-            int ccm1 = cc - 1;
-            for (int idx = 0; idx < cc; idx++) {
-                json += "\t\t\t\"" + cursor.getColumnName(idx) + "\":\"";
-                if (cursor.getString(idx) != null) {
-                    json += cursor.getString(idx).toString().replace("\"", "\\\"");
-                }
 
-                json += "\"";
-
-                if (idx != ccm1) {
-                    json += ",\n";
-                } else {
-                    json += "\n";
+            // Building message
+            JSONObject message = new JSONObject();
+            for (int idx = 0; idx < cursor.getColumnCount(); idx++) {
+                try {
+                    message.put(cursor.getColumnName(idx), cursor.getString(idx));
+                } catch (JSONException e) {
+                    message = null;
                 }
             }
-            json += "\t\t}";
 
-            if (i++ == max) {
-                json += "\n";
-                break;
+            // Inserting message into the queue
+            if (message != null) {
+                result.put(message);
+
+                // Breaking the loop if the limit of requested messages has been reached
+                if (maxResults > 0 && --counterRemaining == 0) {
+                    break;
+                }
             }
-
-            if (!cursor.isLast()) {
-                json += ",\n";
-            } else {
-                json += "\n";
-            }
-
         } while (cursor.moveToNext());
 
-        json += "\t]\n";
-        json += "}";
-
-        response.getPrintWriter().print(json);
+        try {
+            String jsonResponse = new APIResponse(APIResponse.CODE_OK, "OK", result).toString();
+            response.getPrintWriter().print(jsonResponse);
+        } catch (JSONException e) {
+            // TODO Throw servlet response
+        }
     }
 }

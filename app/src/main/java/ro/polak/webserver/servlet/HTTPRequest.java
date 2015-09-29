@@ -31,150 +31,153 @@ public class HTTPRequest {
     private boolean isKeepAlive = false;
     private boolean isMultipart = false;
     private String remoteAddress = null;
-    private Hashtable _cookies = null;
-    private MultipartRequestHandler mrh = null;
+    private Hashtable cookie = null;
+    private FileUpload fileUpload = new FileUpload();
+
 
     /**
-     * Class constructor
+     * Creates and returns a request out of the socket
      *
-     * @param socket - socket to be read
+     * @param socket
+     * @return
      */
-    public HTTPRequest(Socket socket) {
+    public static HTTPRequest createFromSocket(Socket socket) {
 
-        // TODO add a static builder
+        // The request object
+        HTTPRequest request = new HTTPRequest();
+        // The headers object
+        HTTPRequestHeaders headers = new HTTPRequestHeaders();
 
-        Statistics.addRequest();
+        // Setting remote IP
+        request.setRemoteAddr(socket.getInetAddress().getHostAddress().toString());
 
-        // StringBuilder is more efficient when the string will be accessed from
-        // a single thread
-        StringBuffer inputHeaders = new StringBuffer();
-        StringBuffer statusLine = new StringBuffer();
+        // StringBuilder is more efficient when the string will be accessed from a single thread
+        StringBuffer inputHeadersBuffer = new StringBuffer();
+        StringBuffer statusLineBuffer = new StringBuffer();
 
-        headers = new HTTPRequestHeaders();
-
+        // Reading the input stream
         try {
+            // Getting the input stream out of the socket
             InputStream in = socket.getInputStream();
 
-			/*
-             * Reading the first, status line
-			 */
+            // Reading the first, status line
             byte[] buffer = new byte[1];
-
             while (in.read(buffer, 0, buffer.length) != -1) {
-                statusLine.append((char) buffer[0]);
-                if (buffer[0] != '\n') {
-                    continue;
+
+                // Appending buffer as long as the last character differs from \n
+                if (buffer[0] == '\n') {
+                    break;
                 }
-                break;
+                statusLineBuffer.append((char) buffer[0]);
             }
+            // Setting status line, getting method, URI etc
+            headers.setStatus(statusLineBuffer.toString());
+            Statistics.addBytesReceived(statusLineBuffer.length() + 1);
 
 
-            /* Seting status line, getting method, URI etc */
-            headers.setStatus(statusLine.toString());
-            Statistics.addBytesReceived(statusLine.length());
-
-			/*
-             * Reading the rest of headers until \r\n
-			 */
+            // Resetting buffer and reading the rest of headers until \r\n
             buffer = new byte[1];
-
             while (in.read(buffer, 0, buffer.length) != -1) {
-
-                inputHeaders.append((char) buffer[0]);
-
-                if (inputHeaders.length() > 3) {
-                    if (inputHeaders.substring(inputHeaders.length() - 3,
-                            inputHeaders.length()).equals("\n\r\n")) {
+                // Appending input headers
+                inputHeadersBuffer.append((char) buffer[0]);
+                // Check if the headers length is at least 3 characters long
+                if (inputHeadersBuffer.length() > 3) {
+                    // Getting the last 3 characters
+                    if (inputHeadersBuffer.substring(inputHeadersBuffer.length() - 3, inputHeadersBuffer.length()).equals("\n\r\n")) {
+                        // Remove the last 3 characters
+                        inputHeadersBuffer.setLength(inputHeadersBuffer.length() - 3);
                         break;
                     }
                 }
             }
+            Statistics.addBytesReceived(inputHeadersBuffer.length() + 3);
 
-            Statistics.addBytesReceived(inputHeaders.length());
-
-			/*
-			 * Setting headers removing last 3 chars
-			 */
-            if (inputHeaders.length() >= 3) {
-                headers.parse(inputHeaders.substring(0, inputHeaders.length() - 3));
-            } else {
-                headers = new HTTPRequestHeaders();
+            // Parsing headers if they are at least 3 characters long
+            if (inputHeadersBuffer.length() > 3) {
+                // Removing the last 3 characters and parsing the buffer
+                headers.parse(inputHeadersBuffer.toString());
             }
 
 
+            // For post method
+            // TODO Move POST to constant
+            if (headers.getMethod().toUpperCase().equals("POST")) {
 
-			/*
-			 * For post method
-			 */
-            try {
-                if (headers.getMethod().toUpperCase().equals("POST")) {
-
-                    int postLength = 0;
-                    StringBuffer postLine = new StringBuffer();
-
+                // Getting the postLength
+                int postLength = 0;
+                // Checking whether the header exists
+                if (headers.containsHeader("Content-Length")) {
                     try {
-                        postLength = new Integer(headers.getHeader("Content-Length")).intValue();
-                    } catch (Exception e) {
+                        // Parsing content length
+                        postLength = Integer.parseInt(headers.getHeader("Content-Length"));
+                    } catch (NumberFormatException e) {
+                        // Keep 0 value - makes no sense to parse the data
                     }
-
-					/* Only if post lenght is greater than 0 */
-                    if (postLength > 0) {
-
-						/* For multipart request */
-                        if (headers.getHeader("Content-Type").startsWith("multipart/form-data")) {
-							/* Getting the boundary */
-                            String boundary = headers.getHeader("Content-Type");
-                            boundary = boundary.substring(boundary.indexOf("boundary=") + 9, boundary.length());
-                            mrh = new MultipartRequestHandler(in, postLength, boundary);
-
-                            this.headers.setPost(mrh.getPost());
-                        }
-						/* For normal */
-                        else {
-                            buffer = new byte[1];
-                            while (in.read(buffer, 0, buffer.length) != -1) {
-                                postLine.append((char) buffer[0]);
-                                if (postLine.length() >= postLength) {
-                                    break; // The end
-                                }
-                            }
-                            headers.setPostLine(postLine.toString());
-
-                            Statistics.addBytesReceived(postLine.length());
-                        } // end else
-                    } // end if lenght
-                } // end if post
-            } catch (NullPointerException ee) {
-                try {
-                    socket.close();
-                } catch (Exception e2) {
                 }
-                return;
-            }
+
+                // Only if post length is greater than 0
+                if (postLength > 0) {
+                    // For multipart request
+                    if (headers.containsHeader("Content-Type") && headers.getHeader("Content-Type").startsWith("multipart/form-data")) {
+                        // Getting the boundary
+                        String boundary = headers.getHeader("Content-Type");
+
+                        // Getting boundary
+                        String boundaryStartString = "boundary=";
+                        int boundaryPosition = boundary.indexOf(boundaryStartString);
+
+                        // Checking whether boundary= exists
+                        if (boundaryPosition > -1) {
+                            // Protection against illegal indexes
+                            try {
+                                boundary = boundary.substring(boundaryPosition + boundaryStartString.length(), boundary.length());
+                                MultipartRequestHandler mrh = new MultipartRequestHandler(in, postLength, boundary);
+
+                                headers.setPost(mrh.getPost());
+                                request.setFileUpload(new FileUpload(mrh.getUploadedFiles()));
+                            } catch (IndexOutOfBoundsException e) {
+                            }
+                        }
+                    }
+                    // For normal requests
+                    else {
+                        buffer = new byte[1];
+                        StringBuffer postLine = new StringBuffer();
+                        while (in.read(buffer, 0, buffer.length) != -1) {
+                            postLine.append((char) buffer[0]);
+                            if (postLine.length() >= postLength) {
+                                // Forced "the end"
+                                break;
+                            }
+                        }
+                        // Setting the headers post line
+                        headers.setPostLine(postLine.toString());
+
+                        Statistics.addBytesReceived(postLine.length());
+                    } // end else
+                } // end if length
+            } // end if post
+
 
         } catch (IOException e) {
-            // Destroy current thread?
-
-            try {
-                socket.close();
-            } catch (Exception e2) {
-            }
-            return;
         }
 
-		/* Setting keep alive */
-        try {
-            if (headers != null && headers.getHeader("Connection").substring(0, 4).equals("keep")) {
-                isKeepAlive = true;
-            }
-        } catch (Exception e) {
-        }
-
-		/* Setting remote IP */
-        remoteAddress = socket.getInetAddress().getHostAddress().toString();
+        // Assigning headers
+        request.setHeaders(headers);
+        // Returns the created request
+        return request;
     }
 
     /**
+     * Default constructor
+     */
+    private HTTPRequest() {
+        Statistics.addRequest();
+    }
+
+    /**
+     * Returns the remove address
+     *
      * @return string representation of remote IP
      */
     public String getRemoteAddr() {
@@ -182,6 +185,17 @@ public class HTTPRequest {
     }
 
     /**
+     * Sets the remote address
+     *
+     * @param remoteAddress
+     */
+    private void setRemoteAddr(String remoteAddress) {
+        this.remoteAddress = remoteAddress;
+    }
+
+    /**
+     * Returns whether the request is keep-alive
+     *
      * @return true for keep-alive connections
      */
     public boolean isKeepAlive() {
@@ -189,6 +203,17 @@ public class HTTPRequest {
     }
 
     /**
+     * Sets keep alive
+     *
+     * @param isKeepAlive
+     */
+    public void setKeepAlive(boolean isKeepAlive) {
+        this.isKeepAlive = isKeepAlive;
+    }
+
+    /**
+     * Tells whether the request is of type MultiPart
+     *
      * @return true for multipart requests
      */
     public boolean isMultipart() {
@@ -205,13 +230,28 @@ public class HTTPRequest {
     }
 
     /**
+     * Sets the request headers
+     *
+     * @param headers
+     */
+    private void setHeaders(HTTPRequestHeaders headers) {
+        this.headers = headers;
+    }
+
+    /**
      * @return FileUpload for multipart request
      */
     public FileUpload getFileUpload() {
-        if (mrh == null) {
-            return new FileUpload();
-        }
-        return new FileUpload(mrh.getUploadedFiles());
+        return this.fileUpload;
+    }
+
+    /**
+     * Sets the file upload associated with the request
+     *
+     * @param fileUpload
+     */
+    private void setFileUpload(FileUpload fileUpload) {
+        this.fileUpload = fileUpload;
     }
 
     /**
@@ -221,31 +261,33 @@ public class HTTPRequest {
      * @return String value of cookie
      */
     public String getCookie(String cookieName) {
-        if (_cookies == null) {
+        // Parses cookies upon request
+        if (cookie == null) {
             // now parsing only for a new cookies
-            _cookies = new Hashtable<String, String>();
+            cookie = new Hashtable<String, String>();
 
-            String cookieStr = headers.getHeader("Cookie");
-            if (cookieStr == null) {
+            // Return null when there is no cookie headers
+            if (!headers.containsHeader("Cookie")) {
                 return null;
             }
 
-            String cookies[] = cookieStr.split(";");
-            for (int i = 0; i < cookies.length; i++) {
-
+            // Splitting separate cookies array
+            String cookiesStr[] = headers.getHeader("Cookie").split(";");
+            for (int i = 0; i < cookiesStr.length; i++) {
+                // Splitting cookie name=value pair
                 try {
-                    String cookieValues[] = cookies[i].split("=");
-                    _cookies.put(cookieValues[0].trim(), cookieValues[1]);
+                    String cookieValues[] = cookiesStr[i].split("=");
+                    cookie.put(cookieValues[0].trim(), cookieValues[1]);
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    e.printStackTrace();
+                    // No value or no = character
+                    return null;
                 }
             }
-
         }
+
         try {
-            return Utilities.URLDecode((String) _cookies.get(cookieName));
+            return Utilities.URLDecode((String) cookie.get(cookieName));
         } catch (Exception e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -263,14 +305,13 @@ public class HTTPRequest {
     /**
      * Returns the value of specified GET attribute or the default value when no GET attribute
      *
-     * @param paramName name of the GET attribute
+     * @param paramName    name of the GET attribute
      * @param defaultValue
      * @return
      */
     public String _get(String paramName, String defaultValue) {
         String value = this._get(paramName);
-        if( value == null )
-        {
+        if (value == null) {
             value = defaultValue;
         }
 
@@ -290,14 +331,13 @@ public class HTTPRequest {
     /**
      * Returns the value of specified POST attribute or the default value when no GET attribute
      *
-     * @param paramName name of the POST attribute
+     * @param paramName    name of the POST attribute
      * @param defaultValue
      * @return value of the POST attribute
      */
     public String _post(String paramName, String defaultValue) {
         String value = this._post(paramName);
-        if( value == null )
-        {
+        if (value == null) {
             value = defaultValue;
         }
 

@@ -27,7 +27,6 @@ public class Headers {
      * @param headersString raw headers
      */
     public void parse(String headersString) {
-
         String headerLines[] = headersString.split("\n");
         for (int i = 0; i < headerLines.length; i++) {
             try {
@@ -57,6 +56,16 @@ public class Headers {
      */
     public String getHeader(String headerName) {
         return (String) vars.get(headerName);
+    }
+
+    /**
+     * Tells whether a header of specified name exists
+     *
+     * @param headerName
+     * @return
+     */
+    public boolean containsHeader(String headerName) {
+        return vars.containsKey(headerName);
     }
 
     /**

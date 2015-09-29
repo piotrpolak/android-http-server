@@ -53,7 +53,7 @@ public class ServerThread extends Thread {
     public void run() {
 
         // Creating new request and response objects
-        HTTPRequest request = new HTTPRequest(socket);
+        HTTPRequest request = HTTPRequest.createFromSocket(socket);
         HTTPResponse response = new HTTPResponse(socket);
 
         // Checking the requested URI, blocking illegal paths

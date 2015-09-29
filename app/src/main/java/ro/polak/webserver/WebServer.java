@@ -52,7 +52,7 @@ public class WebServer extends Thread {
      */
     public WebServer(IController controller) {
         this.controller = controller;
-        this.controller.println("Initializing WebServer.");
+        this.controller.println("Initializing WebServer");
     }
 
     /**
@@ -78,7 +78,7 @@ public class WebServer extends Thread {
                 }
             } catch (IOException e) {
                 if (this.listen) {
-                    this.controller.println("ERROR: IO exception while accepting socket.");
+                    this.controller.println("ERROR: IO exception while accepting socket");
                 }
             }
         }

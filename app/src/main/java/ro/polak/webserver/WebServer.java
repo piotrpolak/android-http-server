@@ -32,7 +32,6 @@ public class WebServer extends Thread {
     public static final String SERVER_DATE = "12.09.2015";
     public static final String SERVER_SMALL_SIGNATURE = SERVER_NAME + "/" + SERVER_VERSION;
     public static final String SERVER_SIGNATURE = SERVER_NAME + "/" + SERVER_VERSION + " / " + SERVER_DATE;
-    public static final String REQUEST_ALLOWED_METHODS = "GET PUT HEAD";
     public static SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US);
 
     static {

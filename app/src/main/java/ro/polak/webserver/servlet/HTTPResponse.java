@@ -191,34 +191,14 @@ public class HTTPResponse {
 
         MainController.getInstance().println("Serving file " + file.getPath());
 
-        int numberOfBufferReadBytes = 0;
-        byte[] buffer = new byte[512];
-
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            try {
-                // Reading and flushing the file chunk by chunk
-                while ((numberOfBufferReadBytes = fileInputStream.read(buffer)) != -1) {
-                    out.write(buffer, 0, numberOfBufferReadBytes);
-                    // Flushing the buffer
-                    out.flush();
-                    // Incrementing statistics
-                    Statistics.addBytesSend(numberOfBufferReadBytes);
-                }
-                // Flushing remaining buffer, just in case
-                out.flush();
-
-            } catch (IOException e) {
-            }
-
-            try {
-                fileInputStream.close();
-            } // Closing file input stream
-            catch (IOException e) {
-            }
+            setContentLength(file.length());
+            FileInputStream inputStream = new FileInputStream(file);
+            serveStream(inputStream);
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            // Suppose this was verified and prevented before
         }
-
     }
 
     /**
@@ -230,33 +210,49 @@ public class HTTPResponse {
 
         MainController.getInstance().println("Serving asset " + asset);
 
+        try {
+            InputStream inputStream = ((Context) MainController.getInstance().getContext()).getResources().getAssets().open(asset);
+            serveStream(inputStream);
+        } catch (IOException e) {
+            // Suppose this was verified and prevented before
+        }
+    }
+
+    /**
+     * Server an asset
+     *
+     * @param inputStream
+     */
+    public void serveStream(InputStream inputStream) {
+
+        // Make sure headers are served before the file content
+        // If this throws an IllegalStateException, it means you have tried (incorrectly) to flush headers before
+        flushHeaders();
+
         int numberOfBufferReadBytes = 0;
         byte[] buffer = new byte[512];
 
         try {
-            InputStream assetInputStream = ((Context) MainController.getInstance().getContext()).getResources().getAssets().open(asset);
-            try {
-                // Reading and flushing the file chunk by chunk
-                while ((numberOfBufferReadBytes = assetInputStream.read(buffer)) != -1) {
-                    // Writing to buffer
-                    out.write(buffer, 0, numberOfBufferReadBytes);
-                    // Flushing the buffer
-                    out.flush();
-                    // Incrementing statistics
-                    Statistics.addBytesSend(numberOfBufferReadBytes);
-                }
-                // Flushing remaining buffer, just in case
+            // Reading and flushing the file chunk by chunk
+            while ((numberOfBufferReadBytes = inputStream.read(buffer)) != -1) {
+                // Writing to buffer
+                out.write(buffer, 0, numberOfBufferReadBytes);
+                // Flushing the buffer
                 out.flush();
-
-            } catch (IOException e) {
+                // Incrementing statistics
+                Statistics.addBytesSend(numberOfBufferReadBytes);
             }
+            // Flushing remaining buffer, just in case
+            out.flush();
 
-            try {
-                assetInputStream.close();
-            } // Closing file input stream
-            catch (IOException e) {
-            }
-        } catch (Exception e) {
+        } catch (IOException e) {
+
+        }
+
+        try {
+            inputStream.close();
+        } // Closing file input stream
+        catch (IOException e) {
         }
     }
 

@@ -59,7 +59,6 @@ public class AssetResourceLoader implements IResourceLoader {
             response.setStatus(HTTPResponseHeaders.STATUS_OK);
             //response.setContentType(JLWSConfig.MimeTypeMapping.getMimeTypeByExtension(fileExt));
 
-            response.flushHeaders();
             response.serveAsset(assetPath);
 
             return true;

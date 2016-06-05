@@ -18,9 +18,21 @@ import android.util.Log;
  */
 public class PrintWriter {
 
-    // TODO Make it private
-    public boolean initialized = false;
     public StringBuffer out = new StringBuffer();
+
+    /**
+     * Tells whether the print writer was initialized before.
+     * <p/>
+     * The print writes is initialized
+     *
+     * @return
+     */
+    public boolean isInitialized() {
+        if (out.length() > 0) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Print a string
@@ -28,7 +40,6 @@ public class PrintWriter {
      * @param s
      */
     public void print(String s) {
-        initialized = true;
         out.append(s);
     }
 

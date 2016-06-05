@@ -18,13 +18,98 @@ import ro.polak.webserver.controller.MainController;
 /**
  * Servlet pool Used for resource reusing
  *
- * @author Piotr Polak
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201607
+ * @since 200902
  */
 public class ServletPool {
 
     private HashMap<String, ServletPoolItem> map = null;
     private Timer pingerTimer = null;
     private boolean locked = false;
+
+
+    /**
+     * Servlet Pool Item representation
+     *
+     * @author Piotr Polak piotr [at] polak [dot] ro
+     * @version 201509
+     * @since 200902
+     */
+    class ServletPoolItem {
+
+        private Servlet servlet = null;
+        private long timestamp = 0;
+
+        /**
+         * Default constructor
+         *
+         * @param servlet
+         */
+        public ServletPoolItem(Servlet servlet) {
+            this.servlet = servlet;
+            this.update();
+        }
+
+        /**
+         * Updates timestamp
+         */
+        public void update() {
+            this.timestamp = (new Date()).getTime();
+        }
+
+        /**
+         * Returns updated timepstamp
+         *
+         * @return
+         */
+        public long getTimestamp() {
+            return this.timestamp;
+        }
+
+        /**
+         * Returns the contained servlet
+         *
+         * @return
+         */
+        public Servlet getServlet() {
+            return this.servlet;
+        }
+
+        /**
+         * Cleanup method that should be called when the item is about to expire
+         */
+        public void finalize() {
+            this.servlet.destroy();
+            this.servlet = null;
+        }
+    }
+
+    /**
+     * Revalidator tak runs periodically to cleanup servlet pool from outdated servlets
+     *
+     * @author Piotr Polak piotr [at] polak [dot] ro
+     * @version 201509
+     * @since 200902
+     */
+    class RevalidatorTask extends TimerTask {
+
+        private ServletPool sp = null;
+
+        /**
+         * Default constructor
+         *
+         * @param sp
+         */
+        public RevalidatorTask(ServletPool sp) {
+            this.sp = sp;
+        }
+
+        @Override
+        public void run() {
+            sp.revalidate();
+        }
+    }
 
     /**
      * Default constructor
@@ -42,11 +127,9 @@ public class ServletPool {
      * @param servlet
      */
     public void add(String servletName, Servlet servlet) {
-        while (this.locked) {
+        synchronized (this.map) {
+            this.map.put(servletName, new ServletPoolItem(servlet));
         }
-        this.locked = true;
-        this.map.put(servletName, new ServletPoolItem(servlet));
-        this.locked = false;
     }
 
     /**
@@ -56,26 +139,20 @@ public class ServletPool {
      * @return
      */
     public Servlet getServlet(String name) {
-        // TODO use synchronized?
-        while (this.locked) {
-        }
-        this.locked = true;
         ServletPoolItem spi;
-
-        try {
-            spi = this.map.get(name);
-            this.locked = false;
-            spi.update();
-            return spi.getServlet().getClone();
-        } catch (NullPointerException e) {
-            this.locked = false;
-            return null;
+        synchronized (this.map) {
+            try {
+                spi = this.map.get(name);
+                spi.update();
+                return spi.getServlet().getClone();
+            } catch (NullPointerException e) {
+                return null;
+            }
         }
-
     }
 
     /**
-     * Revalidates the pool and removes out dated items
+     * Retaliates the pool and removes out dated items
      */
     protected void revalidate() {
         if (this.map.size() == 0) {
@@ -84,66 +161,17 @@ public class ServletPool {
 
         long expireTimestamp = new Date().getTime() - MainController.getInstance().getServer().getServerConfig().getServletServicePoolServletExpires();
 
-        while (this.locked) {
-        }
-        this.locked = true;
+        synchronized (this.map) {
+            Iterator<ServletPoolItem> it = this.map.values().iterator();
+            while (it.hasNext()) {
+                ServletPoolItem spi = it.next();
 
-        Iterator<ServletPoolItem> it = this.map.values().iterator();
-        while (it.hasNext()) {
-            ServletPoolItem spi = it.next();
-
-            if (spi.getTimestamp() < expireTimestamp) {
-                spi.getServlet().destroy();
-                spi.finalize();
-                it.remove();
+                if (spi.getTimestamp() < expireTimestamp) {
+                    spi.getServlet().destroy();
+                    spi.finalize();
+                    it.remove();
+                }
             }
         }
-        this.locked = false;
-    }
-}
-
-/**
- * Servlet Pool Item representation
- *
- * @author Piotr Polak
- */
-class ServletPoolItem {
-
-    private Servlet servlet = null;
-    private long timestamp = 0;
-
-    public ServletPoolItem(Servlet servlet) {
-        this.servlet = servlet;
-        this.update();
-    }
-
-    public void update() {
-        this.timestamp = (new Date()).getTime();
-    }
-
-    public Servlet getServlet() {
-        return this.servlet;
-    }
-
-    public long getTimestamp() {
-        return this.timestamp;
-    }
-
-    public void finalize() {
-        this.servlet.destroy();
-        this.servlet = null;
-    }
-}
-
-class RevalidatorTask extends TimerTask {
-
-    private ServletPool sp = null;
-
-    public RevalidatorTask(ServletPool sp) {
-        this.sp = sp;
-    }
-
-    public void run() {
-        sp.revalidate();
     }
 }

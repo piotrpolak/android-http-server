@@ -10,6 +10,9 @@ package admin;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
+/**
+ * HTML document builder
+ */
 public class HTMLDocument {
 
     protected String title;
@@ -46,14 +49,30 @@ public class HTMLDocument {
         write(w + "\n");
     }
 
+    /**
+     * Attaches CSS style path
+     *
+     * @param style
+     */
     public void attachStyle(String style) {
         headers += "<link href=\"" + style + "\" rel=\"stylesheet\" type=\"text/css\" />\n";
     }
 
+    /**
+     * Sets favicon path
+     *
+     * @param favicon
+     */
     public void setFavicon(String favicon) {
         headers += "<link href=\"" + favicon + "\" rel=\"shortcut icon\" />\n";
     }
 
+    /**
+     * Returns HTML representation of the document
+     *
+     * @return
+     */
+    @Override
     public String toString() {
         String out = "\n" +
                 "<!DOCTYPE html>\n" +
@@ -120,6 +139,5 @@ public class HTMLDocument {
         out += "</html>\n";
 
         return out;
-
     }
 }

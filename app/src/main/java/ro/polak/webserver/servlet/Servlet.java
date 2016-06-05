@@ -31,17 +31,11 @@ public abstract class Servlet implements IServlet {
         this.terminate(request, response);
     }
 
-    /**
-     * The servlet initialization method. The reusable resources should be
-     * initialized in the init method
-     */
+    @Override
     public void init() {
     }
 
-    /**
-     * The servlet destroy method. The reusable resources should be destoroyed
-     * in the destroy method
-     */
+    @Override
     public void destroy() {
     }
 
@@ -64,7 +58,7 @@ public abstract class Servlet implements IServlet {
                 response.setContentType("text/html");
             }
 
-            if (response.getPrintWriter().initialized) {
+            if (response.getPrintWriter().isInitialized()) {
                 response.setContentLength(response.getPrintWriter().length());
             }
 

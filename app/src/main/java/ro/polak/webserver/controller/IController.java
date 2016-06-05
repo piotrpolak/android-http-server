@@ -12,7 +12,7 @@ import ro.polak.webserver.WebServer;
 import java.lang.Object;
 
 /**
- * Controller Interface
+ * Defines methods that must be implemented by the server controller
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @version 201509

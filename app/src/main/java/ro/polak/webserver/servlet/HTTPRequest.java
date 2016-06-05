@@ -72,7 +72,6 @@ public class HTTPRequest {
         // Reading the first, status line
         byte[] buffer = new byte[1];
         while (in.read(buffer, 0, buffer.length) != -1) {
-
             // Appending buffer as long as the last character differs from \n
             if (buffer[0] == '\n') {
                 break;
@@ -109,7 +108,6 @@ public class HTTPRequest {
 
 
         // For post method
-        // TODO Move POST to constant
         if (headers.getMethod().toUpperCase().equals(HTTPRequest.METHOD_POST)) {
 
             // Getting the postLength

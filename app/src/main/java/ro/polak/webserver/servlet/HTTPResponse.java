@@ -196,6 +196,7 @@ public class HTTPResponse {
             FileInputStream inputStream = new FileInputStream(file);
             serveStream(inputStream);
         } catch (FileNotFoundException e) {
+            // TODO Throw exception instead of printing the stack trace
             e.printStackTrace();
             // Suppose this was verified and prevented before
         }

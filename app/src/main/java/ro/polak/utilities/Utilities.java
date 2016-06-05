@@ -15,10 +15,12 @@ import java.text.DecimalFormat;
 /**
  * Utilities
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.0.1/13.04.2008
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 200804
  */
 public class Utilities {
+
+    // TODO This class should be split into dedicated ones
 
     /**
      * Returns the extension sting for a given file path

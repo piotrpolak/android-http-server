@@ -19,8 +19,12 @@ import android.telephony.SmsManager;
 
 import org.json.JSONException;
 
+/**
+ * SMS Send method API endpoint
+ */
 public class SmsSend extends Servlet {
 
+    @Override
     public void service(HTTPRequest request, HTTPResponse response) {
 
         // Setting appropriate response type

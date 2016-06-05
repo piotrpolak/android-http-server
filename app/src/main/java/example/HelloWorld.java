@@ -11,8 +11,12 @@ import ro.polak.webserver.servlet.HTTPRequest;
 import ro.polak.webserver.servlet.HTTPResponse;
 import ro.polak.webserver.servlet.Servlet;
 
+/**
+ * Hello page example page
+ */
 public class HelloWorld extends Servlet {
 
+    @Override
     public void service(HTTPRequest request, HTTPResponse response) {
         response.getPrintWriter().print("Hello World!");
     }

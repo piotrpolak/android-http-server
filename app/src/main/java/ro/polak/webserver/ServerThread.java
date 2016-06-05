@@ -99,7 +99,6 @@ public class ServerThread extends Thread {
 
             // Checking allowed method
             if (isMethodSupported) {
-
                 // Coping the value
                 String uri = request.getHeaders().getURI();
 
@@ -163,8 +162,6 @@ public class ServerThread extends Thread {
         }
 
         // Cleanup
-        response = null;
-        request = null;
         this.socket = null;
     }
 }

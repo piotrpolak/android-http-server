@@ -15,16 +15,7 @@ import java.util.StringTokenizer;
 
 public class DriveAccess extends Servlet {
 
-    private File[] roots = null;
-
-    public File[] listRoots() {
-        if (this.roots == null) {
-            this.roots = File.listRoots();
-        }
-
-        return this.roots;
-    }
-
+    @Override
     public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(this.getSession());
         if (!ac.isLogged()) {
@@ -46,7 +37,7 @@ public class DriveAccess extends Servlet {
 
         int p;
         String path;
-        File[] roots = this.listRoots();
+        File[] roots = File.listRoots();
 
         String qs = request.getHeaders().getQueryString();
 

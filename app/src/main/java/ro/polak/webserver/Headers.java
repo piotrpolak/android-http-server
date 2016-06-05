@@ -33,6 +33,7 @@ public class Headers {
                 String headerLineValues[] = headerLines[i].split(": ");
                 this.setHeader(headerLineValues[0], headerLineValues[1].substring(0, headerLineValues[1].length() - 1)); // Avoid \n\r
             } catch (ArrayIndexOutOfBoundsException e) {
+                // TODO Throw an exception
                 //e.printStackTrace();
             }
         }

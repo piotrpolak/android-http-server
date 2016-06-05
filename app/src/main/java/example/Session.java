@@ -11,8 +11,12 @@ import ro.polak.webserver.servlet.HTTPRequest;
 import ro.polak.webserver.servlet.HTTPResponse;
 import ro.polak.webserver.servlet.Servlet;
 
+/**
+ * Session usage example page
+ */
 public class Session extends Servlet {
 
+    @Override
     public void service(HTTPRequest request, HTTPResponse response) {
 
         // Saving session attribute name in a variable for convenience

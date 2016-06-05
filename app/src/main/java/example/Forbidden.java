@@ -12,8 +12,12 @@ import ro.polak.webserver.servlet.HTTPRequest;
 import ro.polak.webserver.servlet.HTTPResponse;
 import ro.polak.webserver.servlet.Servlet;
 
+/**
+ * Forbidden page example
+ */
 public class Forbidden extends Servlet {
 
+    @Override
     public void service(HTTPRequest request, HTTPResponse response) {
         // Displays 403 Forbidden page
         new HTTPError403().serve(response);

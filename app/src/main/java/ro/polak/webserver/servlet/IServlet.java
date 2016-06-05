@@ -18,13 +18,13 @@ public interface IServlet {
 
     /**
      * The servlet initialization method. The reusable resources should be
-     * initialized in the init method
+     * initialized in the init method.
      */
     void init();
 
     /**
      * The servlet destroy method. The reusable resources should be destoroyed
-     * in the destroy method
+     * in the destroy method.
      */
     void destroy();
 

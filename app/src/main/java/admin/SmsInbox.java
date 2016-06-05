@@ -24,6 +24,7 @@ import java.util.Vector;
 
 public class SmsInbox extends Servlet {
 
+    @Override
     public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(this.getSession());
         if (!ac.isLogged()) {

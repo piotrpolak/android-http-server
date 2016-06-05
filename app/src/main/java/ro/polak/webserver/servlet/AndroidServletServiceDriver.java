@@ -11,15 +11,7 @@ public class AndroidServletServiceDriver implements IServletServiceDriver {
 
     private Servlet littleServlet;
 
-    /**
-     * Loads requested little servlet
-     *
-     * @param servletPath the path of the little servlet (requested URI)
-     * @return true if little servlet found and loaded
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws ClassCastException
-     */
+    @Override
     public boolean loadServlet(String servletPath) throws InstantiationException, IllegalAccessException, ClassCastException {
 
         // Finding last occurrence of /
@@ -61,15 +53,10 @@ public class AndroidServletServiceDriver implements IServletServiceDriver {
         return true;
     }
 
-    /**
-     * Runs (starts) servlet
-     *
-     * @param request  http request
-     * @param response http response
-     */
+    @Override
     public void rollServlet(HTTPRequest request, HTTPResponse response) {
 
-        // Make suer it was initialized before
+        // Make sure it was initialized before
         if (littleServlet == null) {
             return;
         }

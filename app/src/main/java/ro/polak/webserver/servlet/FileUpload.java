@@ -12,8 +12,9 @@ import java.util.Vector;
 /**
  * Handles file upload
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.0/22.02.2008
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 200802
  */
 public class FileUpload {
 

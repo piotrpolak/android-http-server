@@ -14,10 +14,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * System access class, experimental
+ * Helper for executing native commands
  *
- * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.0/21.02.2008
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 200802
  */
 public class Sys {
 

@@ -54,7 +54,6 @@ public class MimeTypeMapping {
      * @param mimeTypeFilePath path to mime type file
      */
     public MimeTypeMapping(String mimeTypeFilePath) {
-
         try {
             BufferedReader input = new BufferedReader(new FileReader(mimeTypeFilePath));
 

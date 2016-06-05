@@ -13,6 +13,7 @@ import ro.polak.utilities.Utilities;
 
 public class Management extends Servlet {
 
+    @Override
     public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(this.getSession());
         if (!ac.isLogged()) {

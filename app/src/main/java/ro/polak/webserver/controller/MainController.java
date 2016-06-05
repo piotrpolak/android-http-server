@@ -11,7 +11,7 @@ import ro.polak.webserver.WebServer;
 import ro.polak.webserver.gui.*;
 
 /**
- * The main controller of the server
+ * The main controller of the server, can only be initialized as a singleton
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @version 201509
@@ -25,14 +25,14 @@ public class MainController implements IController {
     private static MainController instance;
 
     /**
-     * Controller made invisible
+     * Making the controller constructor private for singleton
      */
     private MainController() {
 
     }
 
     /**
-     * Singletone method
+     * Singleton method
      *
      * @return
      */

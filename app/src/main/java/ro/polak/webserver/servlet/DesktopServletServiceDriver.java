@@ -27,15 +27,7 @@ public class DesktopServletServiceDriver implements IServletServiceDriver {
         }
     }
 
-    /**
-     * Loads requested little servlet
-     *
-     * @param servletPath the path of the little servlet (requested URI)
-     * @return true if little servlet found and loaded
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws ClassCastException
-     */
+    @Override
     public boolean loadServlet(String servletPath) throws InstantiationException, IllegalAccessException, ClassCastException {
 
         // Finding last occurrence of /
@@ -68,7 +60,6 @@ public class DesktopServletServiceDriver implements IServletServiceDriver {
         // }
 
         try {
-
             // Initializing servlet
             littleServlet = (Servlet) DesktopServletServiceDriver.classLoader.loadClass(servletName).newInstance();
         } catch (ClassCastException e) {
@@ -83,15 +74,10 @@ public class DesktopServletServiceDriver implements IServletServiceDriver {
         return true;
     }
 
-    /**
-     * Runs (starts) servlet
-     *
-     * @param request  http request
-     * @param response http response
-     */
+    @Override
     public void rollServlet(HTTPRequest request, HTTPResponse response) {
 
-        // Make suer it was initialized before
+        // Make sure it was initialized before
         if (littleServlet == null) {
             return;
         }

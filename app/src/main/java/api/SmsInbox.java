@@ -20,8 +20,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+/**
+ * SMS Inbox method API endpoint
+ */
 public class SmsInbox extends Servlet {
 
+    @Override
     public void service(HTTPRequest request, HTTPResponse response) {
 
         // Setting appropriate response type
@@ -43,7 +47,6 @@ public class SmsInbox extends Servlet {
 
         // Looping
         do {
-
             // Building message
             JSONObject message = new JSONObject();
             for (int idx = 0; idx < cursor.getColumnCount(); idx++) {

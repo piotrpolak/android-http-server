@@ -9,6 +9,9 @@ package ro.polak.webserver.gui;
 
 import ro.polak.webserver.controller.IController;
 
+/**
+ * Defines methods that should be implemented by the server runner GUI (CLI, Swing, Android..)
+ */
 public interface IServerUI {
 
     /**

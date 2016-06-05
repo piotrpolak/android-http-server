@@ -26,25 +26,12 @@ public class ServletService implements IServletServiceDriver {
         this.driver = driver;
     }
 
-    /**
-     * Loads requested little servlet
-     *
-     * @param servletPath the path of the little servlet (requested URI)
-     * @return true if little servlet found and loaded
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws ClassCastException
-     */
+    @Override
     public boolean loadServlet(String servletPath) throws InstantiationException, IllegalAccessException, ClassCastException {
         return driver.loadServlet(servletPath);
     }
 
-    /**
-     * Runs (starts) servlet
-     *
-     * @param request  http request
-     * @param response http response
-     */
+    @Override
     public void rollServlet(HTTPRequest request, HTTPResponse response) {
         driver.rollServlet(request, response);
     }

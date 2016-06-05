@@ -9,6 +9,10 @@ package ro.polak.webserver.error;
 
 /**
  * HTML Error document representation
+ *
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @version 201509
+ * @since 201509
  */
 class HTMLErrorDocument {
 

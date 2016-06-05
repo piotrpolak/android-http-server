@@ -149,6 +149,10 @@ public class WebServer extends Thread {
         return this.listen;
     }
 
+    /**
+     * Returns server config
+     * @return
+     */
     public ServerConfig getServerConfig() {
         return serverConfig;
     }

@@ -11,9 +11,9 @@ package ro.polak.webserver;
  * Multipart request headers (for each multipart)
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @link http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
  * @since 200802
+ * @version 201509
  */
 public class MultipartHeaders extends Headers {
 

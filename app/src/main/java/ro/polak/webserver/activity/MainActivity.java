@@ -32,7 +32,7 @@ import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.gui.IServerUI;
 
 /**
- * The main server activity
+ * The main server Android activity
  */
 public class MainActivity extends AppCompatActivity implements IServerUI {
 
@@ -192,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
      * @return String
      */
     public String getLocalIpAddress() {
-
         try {
             WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();

@@ -135,7 +135,7 @@ public class HTTPSession {
     }
 
     /**
-     * Invalidates session and frees resources
+     * Invalidates (removes) session and frees resources
      */
     public void invalidate() {
         // For freeze method
@@ -166,6 +166,7 @@ public class HTTPSession {
             file.createNewFile();
         } catch (Exception e) {
             // Unable to create session file
+            // TODO Handle/throw exception
         }
 
         // Writing session object to the file

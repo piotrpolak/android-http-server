@@ -24,13 +24,6 @@ It can be used as a standalone web server for static content or as a remote appl
 Hello World servlet
 
 ```java
-/**************************************************
- * Android Web Server
- * Based on JavaLittleWebServer (2008)
- * <p/>
- * Copyright (c) Piotr Polak 2008-2015
- **************************************************/
-
 package example;
 
 import ro.polak.webserver.servlet.HTTPRequest;
@@ -39,6 +32,7 @@ import ro.polak.webserver.servlet.Servlet;
 
 public class HelloWorld extends Servlet {
 
+    @Override
     public void service(HTTPRequest request, HTTPResponse response) {
         response.getPrintWriter().print("Hello World!");
     }
@@ -57,3 +51,11 @@ public class HelloWorld extends Servlet {
 
 ### 500 error page trace
 ![Servlet error 500](screens/servlet-error-500.png)
+
+## Sample script to send SMS using wget
+
+If you want to send a real SMS please remove "&test=1" from the POST params.
+
+```bash
+SERVER_IP=192.168.1.1; SERVER_PORT=8080; echo "Phone number:"; read TO; echo "Message:"; read MESSAGE; wget -qO- --post-data "to=$TO&message=$MESSAGE&test=1" http://$SERVER_IP:$SERVER_PORT/api/SmsSend.dhtml
+```

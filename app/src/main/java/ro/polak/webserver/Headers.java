@@ -1,42 +1,84 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p/>
+ * <p>
  * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
 
 package ro.polak.webserver;
 
 import java.util.Hashtable;
+import java.util.StringTokenizer;
 
 /**
  * HTTP headers representation
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
+ * @version 201606
+ * @url https://tools.ietf.org/html/rfc2616#section-4.2
  * @since 200802
  */
 public class Headers {
+
+    // TODO Make Headers to extend HashTable or another (best suited) collection class
+    // TODO Refactor to MessageHeaders
 
     protected String status = "";
     protected Hashtable vars = new Hashtable<String, String>();
 
     /**
-     * Parses headers
+     * Parses message headers
      *
      * @param headersString raw headers
      */
     public void parse(String headersString) {
-        String headerLines[] = headersString.split("\n");
-        for (int i = 0; i < headerLines.length; i++) {
-            try {
-                String headerLineValues[] = headerLines[i].split(": ");
-                this.setHeader(headerLineValues[0], headerLineValues[1].substring(0, headerLineValues[1].length() - 1)); // Avoid \n\r
-            } catch (ArrayIndexOutOfBoundsException e) {
-                // TODO Throw an exception
-                //e.printStackTrace();
+
+        // TODO refactor to public Headers parse(String headersString)
+
+        // Removing \r to make parsing easier
+        StringTokenizer st = new StringTokenizer(headersString.replace("\r", ""), "\n");
+        String lastHeaderName = null;
+        StringBuffer lastHeaderValue = new StringBuffer();
+
+        while (st.hasMoreElements()) {
+
+            String line = st.nextToken();
+            char firstChar = line.charAt(0);
+
+            // Multiline headers start with a space or a tab
+            if (firstChar == ' ' || firstChar == '\t') {
+                // Protection against header string starting with the space or tab character
+                if (null != lastHeaderName) {
+                    lastHeaderValue.append(" ");
+                    lastHeaderValue.append(ltrim(line));
+                    this.setHeader(lastHeaderName, ltrim(lastHeaderValue.toString())); // Overwrite the previous value
+                }
+            } else {
+                // Cleans up the previous value
+                lastHeaderValue.setLength(0);
+
+                String headerLineValues[] = line.split(":", 2);
+
+                if (headerLineValues.length < 2) {
+                    continue;
+                }
+
+                lastHeaderName = headerLineValues[0];
+
+                lastHeaderValue.append(headerLineValues[1].substring(0, headerLineValues[1].length()));
+                this.setHeader(lastHeaderName, ltrim(lastHeaderValue.toString()));
             }
         }
+    }
+
+    /**
+     * Left trims the given string.
+     *
+     * @param text
+     * @return
+     */
+    private String ltrim(String text) {
+        return text.replaceAll("^\\s+", "");
     }
 
     /**
@@ -46,7 +88,7 @@ public class Headers {
      * @param headerValue header value
      */
     public void setHeader(String headerName, String headerValue) {
-        vars.put(headerName, headerValue);
+        vars.put(headerName.toLowerCase(), headerValue);
     }
 
     /**
@@ -56,7 +98,7 @@ public class Headers {
      * @return header's value
      */
     public String getHeader(String headerName) {
-        return (String) vars.get(headerName);
+        return (String) vars.get(headerName.toLowerCase());
     }
 
     /**
@@ -66,7 +108,7 @@ public class Headers {
      * @return
      */
     public boolean containsHeader(String headerName) {
-        return vars.containsKey(headerName);
+        return vars.containsKey(headerName.toLowerCase());
     }
 
     /**

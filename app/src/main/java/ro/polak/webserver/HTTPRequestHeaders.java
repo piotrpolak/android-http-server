@@ -137,16 +137,6 @@ public class HTTPRequestHeaders extends Headers {
     }
 
     /**
-     * Sets a single POST atribute
-     *
-     * @param attributeName
-     * @param attributeValue
-     */
-    public void setPostAttribute(String attributeName, String attributeValue) {
-        _post.put(attributeName, attributeValue);
-    }
-
-    /**
      * Returns the method of the request
      *
      * @return method of the request
@@ -180,15 +170,6 @@ public class HTTPRequestHeaders extends Headers {
      */
     public String getProtocol() {
         return this.protocol;
-    }
-
-    /**
-     * Returns request referer
-     *
-     * @return request referer
-     */
-    public String getReferer() {
-        return this.getHeader("Referer");
     }
 
     /**

@@ -3,7 +3,7 @@
 Small but powerful multithread web server written completely in Java SE and then ported to Android.
 
 The server implements most of the HTTP 1.1 specification and ses its own specification of Servlets for handling dynamic pages.
-Servlets supports cookies, sessions, file uploads and anything else to build a common web application.
+Servlets support cookies, sessions, file uploads and anything else to build a common web application.
 
 It can be used as a standalone web server for static content or as a remote application back-office engine that can be accessed from web.
 

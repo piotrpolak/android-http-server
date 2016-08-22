@@ -46,7 +46,7 @@ public class MultipartRequestHandler {
     private String beginBoundary;
     private String headersDeliminator = "\r\n\r\n";
     private String currentDeliminator;
-    private MultipartHeaders mHeaders;
+    private MultipartHeadersPart mHeaders;
     private Vector<UploadedFile> uploadedFiles = new Vector<UploadedFile>();
     private Hashtable _post = new Hashtable<String, String>();
 
@@ -58,7 +58,7 @@ public class MultipartRequestHandler {
      * @param boundary   endBoundary string
      */
     public MultipartRequestHandler(InputStream in, int postLength, String boundary) {
-        mHeaders = new MultipartHeaders();
+        mHeaders = new MultipartHeadersPart();
 
         this.postLength = postLength;
         endBoundary = "\r\n--" + boundary;

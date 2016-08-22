@@ -9,7 +9,7 @@ package ro.polak.webserver.servlet;
 
 import java.io.File;
 
-import ro.polak.webserver.MultipartHeaders;
+import ro.polak.webserver.MultipartHeadersPart;
 
 /**
  * Uploaded file representation
@@ -31,7 +31,7 @@ public class UploadedFile {
      * @param h    multipart headers
      * @param file uploaded file (temp)
      */
-    public UploadedFile(MultipartHeaders h, File file) {
+    public UploadedFile(MultipartHeadersPart h, File file) {
         this.name = h.getPostFieldName();
         this.fileName = h.getFileName();
         this.file = file;

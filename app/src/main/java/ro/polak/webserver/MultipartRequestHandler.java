@@ -358,7 +358,7 @@ public class MultipartRequestHandler {
             }
 
             // Creating headers
-            multipartHeadersPart.parse(headersStringBuffered.toString() + "\r");
+            multipartHeadersPart.parse(headersStringBuffered.toString());
 
             if (multipartHeadersPart.getContentType() != null) {
                 // For files

@@ -26,7 +26,7 @@ public class HeadersTest {
     @Test
     public void testParseDefault() {
         Headers headers = new Headers();
-        headers.parse("Cookie: ABCD\nTest: XYZ\nServer: 1");
+        headers.parse("Cookie: ABCD\r\nTest: XYZ\r\nServer: 1");
 
         assertTrue(headers.containsHeader("Cookie"));
         assertTrue(headers.containsHeader("Test"));
@@ -52,7 +52,7 @@ public class HeadersTest {
     @Test
     public void testParseMissingValue() {
         Headers headers = new Headers();
-        headers.parse("Cookie\nTest\nServer: Pepis");
+        headers.parse("Cookie\r\nTest\r\nServer: Pepis");
 
         assertFalse(headers.containsHeader("Cookie"));
         assertTrue(headers.containsHeader("Server"));
@@ -64,7 +64,7 @@ public class HeadersTest {
     @Test
     public void testParseDefaultMultipleNewlines() {
         Headers headers = new Headers();
-        headers.parse("Cookie: ABCD\n\n\nTest: XYZ\nServer: 1\n\n\n\n");
+        headers.parse("Cookie: ABCD\r\n\r\n\r\nTest: XYZ\r\nServer: 1\r\n\r\n\r\n\r\n");
 
         assertTrue(headers.containsHeader("Cookie"));
         assertTrue(headers.containsHeader("Test"));
@@ -79,7 +79,7 @@ public class HeadersTest {
     @Test
     public void testParseCaseInsensitivity() {
         Headers headers = new Headers();
-        headers.parse("COOKIE: ABCD\nTEST: XYZ\nSERVER: 1");
+        headers.parse("COOKIE: ABCD\r\nTEST: XYZ\r\nSERVER: 1");
 
         assertTrue(headers.containsHeader("Cookie"));
         assertTrue(headers.containsHeader("Test"));
@@ -94,7 +94,7 @@ public class HeadersTest {
     @Test
     public void testParseNoLeadingSpace() {
         Headers headers = new Headers();
-        headers.parse("COOKIE:ABCD\nTEST:XYZ\nSERVER:1");
+        headers.parse("COOKIE:ABCD\r\nTEST:XYZ\r\nSERVER:1");
 
         assertTrue(headers.containsHeader("Cookie"));
         assertTrue(headers.containsHeader("Test"));
@@ -109,7 +109,7 @@ public class HeadersTest {
     @Test
     public void testParseMultilineHeaderWithSingleLeadingSpace() {
         Headers headers = new Headers();
-        headers.parse("Word-Of-The-Day: The Fox Jumps Over\n the\n brown dog.\nCookie: ABCD");
+        headers.parse("Word-Of-The-Day: The Fox Jumps Over\r\n the\r\n brown dog.\r\nCookie: ABCD");
 
         assertEquals("The Fox Jumps Over the brown dog.", headers.getHeader("Word-Of-The-Day"));
 
@@ -121,7 +121,7 @@ public class HeadersTest {
     @Test
     public void testParseWrongMultilineHeaderWithSingleLeadingSpace() {
         Headers headers = new Headers();
-        headers.parse(" Word-Of-The-Day: The Fox Jumps Over\n the\n brown dog.\nCookie: ABCD");
+        headers.parse(" Word-Of-The-Day: The Fox Jumps Over\r\n the\r\n brown dog.\r\nCookie: ABCD");
 
         assertEquals(null, headers.getHeader("Word-Of-The-Day"));
 
@@ -133,7 +133,7 @@ public class HeadersTest {
     @Test
     public void testParseMultilineHeaderWithSingleLeadingTab() {
         Headers headers = new Headers();
-        headers.parse("Word-Of-The-Day: The Fox Jumps Over\n\tthe\n\t brown dog.\nCookie: ABCD");
+        headers.parse("Word-Of-The-Day: The Fox Jumps Over\r\n\tthe\r\n\t brown dog.\r\nCookie: ABCD");
 
         assertEquals("The Fox Jumps Over the brown dog.", headers.getHeader("Word-Of-The-Day"));
 
@@ -145,7 +145,7 @@ public class HeadersTest {
     @Test
     public void testParseMultilineHeaderWithLeadingSpaces() {
         Headers headers = new Headers();
-        headers.parse("Word-Of-The-Day: The Fox Jumps Over\n        the\n        brown dog.\nCookie: ABCD");
+        headers.parse("Word-Of-The-Day: The Fox Jumps Over\r\n        the\r\n        brown dog.\r\nCookie: ABCD");
 
         assertEquals("The Fox Jumps Over the brown dog.", headers.getHeader("Word-Of-The-Day"));
 
@@ -158,7 +158,7 @@ public class HeadersTest {
     @Test
     public void testParseExtraReturns() {
         Headers headers = new Headers();
-        headers.parse("Cookie: ABCD\r\n\rTest: XYZ\r\nServer: 1\n");
+        headers.parse("Cookie: ABCD\r\r\n\rTest: XYZ\r\r\nServer: 1\r\n");
 
         assertTrue(headers.containsHeader("Cookie"));
         assertTrue(headers.containsHeader("Test"));

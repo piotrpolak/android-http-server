@@ -19,7 +19,7 @@ public class DriveAccess extends Servlet {
     public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(this.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getQueryString());
+            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());
             return;
         }
 
@@ -39,7 +39,7 @@ public class DriveAccess extends Servlet {
         String path;
         File[] roots = File.listRoots();
 
-        String qs = request.getHeaders().getQueryString();
+        String qs = request.getHeaders().getURI();
 
 		/* checking if ? in string */
         if ((p = qs.indexOf('?')) != -1) {

@@ -68,8 +68,10 @@ public class ServerThread extends Thread {
             request = HTTPRequest.createFromSocket(socket);
             response = HTTPResponse.createFromSocket(socket);
 
+            String path = request.getHeaders().getPath();
+
             // Checking the requested URI, blocking illegal paths
-            if (request.getHeaders().getURI() == null || request.getHeaders().getURI().startsWith("../") || request.getHeaders().getURI().indexOf("/../") != -1) {
+            if (path == null || path.startsWith("../") || path.indexOf("/../") != -1) {
                 // Closing the socket
                 try {
                     this.socket.close();
@@ -99,15 +101,12 @@ public class ServerThread extends Thread {
 
             // Checking allowed method
             if (isMethodSupported) {
-                // Coping the value
-                String uri = request.getHeaders().getURI();
-
                 // This variable becomes true when one of the resource loaders manage to load a resource
                 boolean resourceSuccessfullyLoaded = false;
 
                 // Trying to load a resource using each of the resource loaders
                 for (int ri = 0; ri < rl.length; ri++) {
-                    if (rl[ri].load(uri, request, response)) {
+                    if (rl[ri].load(path, request, response)) {
                         resourceSuccessfullyLoaded = true;
                         break;
                     }
@@ -118,9 +117,9 @@ public class ServerThread extends Thread {
                     for (int i = 0; i < webServer.getServerConfig().getDirectoryIndex().size(); i++) {
 
                         // Appending an extra slash
-                        if (uri.length() > 0) {
-                            if (uri.charAt(uri.length() - 1) != '/') {
-                                uri += "/";
+                        if (path.length() > 0) {
+                            if (path.charAt(path.length() - 1) != '/') {
+                                path += "/";
                             }
                         }
 
@@ -129,7 +128,7 @@ public class ServerThread extends Thread {
 
                         // Trying to load a resource using each of the resource loaders
                         for (int ri = 0; ri < rl.length; ri++) {
-                            if (rl[ri].load(uri + directoryIndex, request, response)) {
+                            if (rl[ri].load(path + directoryIndex, request, response)) {
                                 resourceSuccessfullyLoaded = true;
                                 break;
                             }

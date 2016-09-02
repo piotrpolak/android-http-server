@@ -21,6 +21,7 @@ public class HTTPRequestHeaders extends Headers {
     private String queryString;
     private String protocol;
     private String uri;
+    private String path;
     private Hashtable _post = new Hashtable<String, String>();
     private Hashtable _get = new Hashtable<String, String>();
     private QueryStringParser queryStringParser = new QueryStringParser();
@@ -42,20 +43,19 @@ public class HTTPRequestHeaders extends Headers {
         // First element of the array is the HTTP method
         method = statusArray[0].toUpperCase();
         // Second element of the array is the HTTP queryString
-        queryString = statusArray[1];
+        uri = path = statusArray[1];
 
         // Protocol is the thrid part of the status line
         if (statusArray.length > 2) {
             protocol = statusArray[2];
         }
 
-        int questionMarkPosition = queryString.indexOf("?");
+        int questionMarkPosition = uri.indexOf("?");
 
-        if (questionMarkPosition == -1) {
-            uri = queryString;
-        } else {
-            uri = queryString.substring(0, questionMarkPosition);
-            _get = queryStringParser.parse(queryString.substring(questionMarkPosition + 1));
+        if (questionMarkPosition > -1) {
+            path = uri.substring(0, questionMarkPosition);
+            queryString = uri.substring(questionMarkPosition + 1);
+            _get = queryStringParser.parse(queryString);
         }
     }
 
@@ -96,9 +96,18 @@ public class HTTPRequestHeaders extends Headers {
     }
 
     /**
-     * Returns decoded query string
+     * Returns request path
      *
-     * @return decoded query string
+     * @return
+     */
+    public String getPath() {
+        return path;
+    }
+
+    /**
+     * Returns query string
+     *
+     * @return
      */
     public String getQueryString() {
         return queryString;

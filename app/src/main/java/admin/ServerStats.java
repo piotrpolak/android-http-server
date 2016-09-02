@@ -16,7 +16,7 @@ public class ServerStats extends Servlet {
     public void service(HTTPRequest request, HTTPResponse response) {
         AccessControl ac = new AccessControl(this.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getQueryString());
+            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());
             return;
         }
 

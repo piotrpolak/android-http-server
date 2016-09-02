@@ -29,18 +29,20 @@ public class UpdateConfiguration extends Servlet {
         doc.writeln("<div class=\"page-header\"><h1>Update configuration</h1></div>");
         FileUpload fu = request.getFileUpload();
 
-        if (fu.getFile("file") == null) {
+        if (fu.get("file") == null) {
             doc.writeln("<p>Error: no file uploaded (" + fu.size() + ")</p>");
         } else {
 
             String basePath = MainController.getInstance().getServer().getServerConfig().getBasePath();
 
-            if (Utilities.getExtension(fu.getFile("file").getFileName()).equals("conf")) {
-                if (fu.getFile("file").moveTo(basePath + "httpd_test.conf")) {
+            if (Utilities.getExtension(fu.get("file").getFileName()).equals("conf")) {
 
+                File file = fu.get("file").getFile();
+                File dest = new File(basePath + "httpd_test.conf");
+                if (file.renameTo(dest)) {
                     (new File(basePath + "bakup_httpd.conf")).delete();
                     (new File(basePath + "httpd.conf")).renameTo(new File(basePath + "bakup_httpd.conf"));
-                    if ((new File(basePath + "httpd_test.conf")).renameTo((new File(basePath + "httpd.conf")))) {
+                    if (dest.renameTo((new File(basePath + "httpd.conf")))) {
                         doc.writeln("<p>New configuration will be applied after server restart.</p>");
                     } else {
                         doc.writeln("<p>Unable to apply new configuration file.</p>");
@@ -50,7 +52,7 @@ public class UpdateConfiguration extends Servlet {
                     doc.writeln("<p>Unable to move file.</p>");
                 }
             } else {
-                doc.writeln("<p>Uploaded file <b>" + fu.getFile("file").getFileName() + "</b> does not appear to be a valid configuration file. <a href=\"/admin/Management.dhtml?task=updateConfiguration\">Back</a></p>");
+                doc.writeln("<p>Uploaded file <b>" + fu.get("file").getFileName() + "</b> does not appear to be a valid configuration file. <a href=\"/admin/Management.dhtml?task=updateConfiguration\">Back</a></p>");
             }
         }
 

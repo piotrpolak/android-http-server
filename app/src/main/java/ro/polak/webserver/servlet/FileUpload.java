@@ -43,12 +43,12 @@ public class FileUpload {
      * @param fileFormName HTTP field name for the file
      * @return specified UploadedFile
      */
-    public UploadedFile getFile(String fileFormName) {
+    public UploadedFile get(String fileFormName) {
         if (uploadedFiles == null || uploadedFiles.size() == 0) {
             return null;
         }
         for (int i = 0; i < uploadedFiles.size(); i++) {
-            if (((UploadedFile) uploadedFiles.elementAt(i)).getName().equals(fileFormName)) {
+            if (((UploadedFile) uploadedFiles.elementAt(i)).getPostFieldName().equals(fileFormName)) {
                 return (UploadedFile) uploadedFiles.elementAt(i);
             }
         }

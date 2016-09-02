@@ -2,100 +2,77 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver.servlet;
 
 import java.io.File;
 
-import ro.polak.webserver.MultipartHeadersPart;
-
 /**
  * Uploaded file representation
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 200802
  */
 public class UploadedFile {
 
-    private String name;
+    private String postFieldName;
     private String fileName;
     private File file;
     private boolean isMoved = false;
+    private String initialPath;
 
     /**
-     * Constructs uploaded file
+     * Constructor
      *
-     * @param h    multipart headers
-     * @param file uploaded file (temp)
+     * @param postFieldName
+     * @param fileName
+     * @param file
      */
-    public UploadedFile(MultipartHeadersPart h, File file) {
-        this.name = h.getPostFieldName();
-        this.fileName = h.getFileName();
+    public UploadedFile(String postFieldName, String fileName, File file) {
+        this.postFieldName = postFieldName;
+        this.fileName = fileName;
         this.file = file;
+        this.initialPath = file.getAbsolutePath();
     }
 
     /**
-     * Moves the uploaded file to the specified destination
-     *
-     * @param path file destination
-     * @return true if file moved
-     */
-    public boolean moveTo(String path) {
-        File dest = new File(path);
-        isMoved = file.renameTo(dest);
-        return isMoved;
-    }
-
-    /**
-     * Moves the uploaded file to the specified destination
-     *
-     * @param dest file destination
-     * @return true if file moved
-     */
-    public boolean moveTo(File dest) {
-        isMoved = file.renameTo(dest);
-        return isMoved;
-    }
-
-    /**
-     * Deletes temporary file if unused
+     * Deletes temporary file if the file has not been moved to another location
      *
      * @return true if deleted
      */
     public boolean destroy() {
-        if (isMoved) {
+        if (!file.exists() || !initialPath.equals(file.getAbsolutePath())) {
             return false;
         }
         return file.delete();
     }
 
     /**
-     * Returns the HTML form name
+     * Returns the HTML form postFieldName
      *
-     * @return the HTML form name
+     * @return the HTML form postFieldName
      */
-    public String getName() {
-        return this.name;
+    public String getPostFieldName() {
+        return this.postFieldName;
     }
 
     /**
-     * Returns the name of uploaded file
+     * Returns the postFieldName of uploaded file
      *
-     * @return the name of uploaded file
+     * @return the postFieldName of uploaded file
      */
     public String getFileName() {
         return this.fileName;
     }
 
     /**
-     * Returns the size (length) of uploaded file in bytes
+     * Returns uploaded file
      *
-     * @return the size (length) of uploaded file in bytes
+     * @return
      */
-    public long size() {
-        return file.length();
+    public File getFile() {
+        return file;
     }
 }

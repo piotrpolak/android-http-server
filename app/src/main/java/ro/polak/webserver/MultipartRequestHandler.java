@@ -16,58 +16,84 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import ro.polak.utilities.RandomStringGenerator;
-import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.UploadedFile;
 
 /**
  * Multipart request handler
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
+ * @version 201609
  * @link http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
  * @since 200802
  */
 public class MultipartRequestHandler {
 
     private InputStream in;
-    private File file;
+    private File currentFile;
     private FileOutputStream fos;
-    private int bytesRead = 0;
     private int charPosition = 0;
     private int tempBufferCharPosition = 0;
     private int allBytesRead = 0;
-    private int postLength = 0;
+    private int expectedPostLength = 0;
     private boolean headerReadingState = true;
     private byte[] tempBuffer;
-    private byte[] buffer = new byte[2048];
+    private byte[] buffer;
+    private int bufferLength = 2048;
     private StringBuffer headersStringBuffered = new StringBuffer();
     private StringBuffer valueStringBuffered;
     private String endBoundary;
     private String beginBoundary;
     private String headersDeliminator = "\r\n\r\n";
     private String currentDeliminator;
-    private MultipartHeadersPart mHeaders;
+    private String temporaryUploadsDirectory;
+    private MultipartHeadersPart multipartHeadersPart;
     private Vector<UploadedFile> uploadedFiles = new Vector<UploadedFile>();
-    private Hashtable _post = new Hashtable<String, String>();
+    private Hashtable post = new Hashtable<String, String>();
+    private boolean wasHandledBefore = false;
 
     /**
-     * Creates MultipartRequestHandler
+     * Constructor
      *
-     * @param in         the input stream
-     * @param postLength expected length
-     * @param boundary   endBoundary string
+     * @param in
+     * @param expectedPostLength
+     * @param boundary
+     * @param temporaryUploadsDirectory
      */
-    public MultipartRequestHandler(InputStream in, int postLength, String boundary) {
-        mHeaders = new MultipartHeadersPart();
-
-        this.postLength = postLength;
+    public MultipartRequestHandler(InputStream in, int expectedPostLength, String boundary, String temporaryUploadsDirectory) {
+        this.in = in;
+        this.expectedPostLength = expectedPostLength;
         endBoundary = "\r\n--" + boundary;
         beginBoundary = "--" + boundary;
-
-        tempBuffer = new byte[endBoundary.length()];
-        this.in = in;
+        this.temporaryUploadsDirectory = temporaryUploadsDirectory;
         allBytesRead = 0;
-        begin();
+
+    }
+
+    /**
+     * Handles file upload
+     */
+    public void handle() {
+        if (wasHandledBefore) {
+            throw new IllegalStateException("Handle method was not expected to be called more than once");
+        }
+        wasHandledBefore = true;
+        multipartHeadersPart = new MultipartHeadersPart();
+        tempBuffer = new byte[endBoundary.length()];
+        buffer = new byte[bufferLength];
+        handleBoundary();
+    }
+
+    /**
+     * Constructor
+     *
+     * @param in
+     * @param expectedPostLength
+     * @param boundary
+     * @param temporaryUploadsDirectory
+     */
+    public MultipartRequestHandler(InputStream in, int expectedPostLength, String boundary, String temporaryUploadsDirectory, int bufferLength) {
+        this(in, expectedPostLength, boundary, temporaryUploadsDirectory);
+        this.bufferLength = bufferLength;
     }
 
     /**
@@ -76,7 +102,7 @@ public class MultipartRequestHandler {
      * @return AttributeList representation of POST attributes
      */
     public Hashtable<String, String> getPost() {
-        return this._post;
+        return this.post;
     }
 
     /**
@@ -88,7 +114,7 @@ public class MultipartRequestHandler {
         return this.uploadedFiles;
     }
 
-    private void begin() {
+    private void handleBoundary() {
         // Whether the boundary was completely read
         boolean isBeginBoundaryCompletelyRead = false;
         // Used for reading the input stream character by character
@@ -100,7 +126,7 @@ public class MultipartRequestHandler {
                  *  The boundary, that is small enough, should be read character by character
                  *  This is required, so that we do not need to trim/manipulate the remaining buffer
                  */
-                bytesRead = in.read(smallBuffer);
+                int bytesRead = in.read(smallBuffer);
 
                 // Unexpected end of buffer
                 if (bytesRead == -1) {
@@ -116,10 +142,10 @@ public class MultipartRequestHandler {
                  *
                  * If the currently read character matches the character at the current index
                  *      then increment the index
-                 *      and check whether the begin boundary was completely read
+                 *      and check whether the handleBoundary boundary was completely read
                  *      otherwise reset the boundary character index=0
                  *
-                 * Then follow to the read body procedure
+                 * Then follow to the read handleBody procedure
                  *
                  */
                 if (beginBoundary.charAt(charPosition) == smallBuffer[0]) {
@@ -127,7 +153,7 @@ public class MultipartRequestHandler {
                     // Incrementing the boundary character index
                     ++charPosition;
 
-                    // Check whether the begin boundary was completely read
+                    // Check whether the handleBoundary boundary was completely read
                     if (charPosition == beginBoundary.length()) {
                         isBeginBoundaryCompletelyRead = true;
                         break;
@@ -141,23 +167,24 @@ public class MultipartRequestHandler {
             }
         }
 
-        // Follow to the read body procedure
-        body();
+        // Follow to the read handleBody procedure
+        handleBody();
     }
 
-    private void body() {
+    private void handleBody() {
         int begin;
         boolean wasPreviousBuffered = false;
 
         currentDeliminator = headersDeliminator;
-        bytesRead = charPosition = 0;
+        int bytesRead = 0;
+        charPosition = 0;
 
         try {
             // Reading bytes into buffer Returning when out of new bytes
             while (true) {
 
                 // Escaping when the real contents length is greater than the declared length
-                if (allBytesRead >= postLength) {
+                if (allBytesRead >= expectedPostLength) {
                     Statistics.addBytesReceived(allBytesRead);
                     break;
                 }
@@ -254,7 +281,6 @@ public class MultipartRequestHandler {
     }
 
     private void releaseTempBuffer() {
-
         if (tempBufferCharPosition == 0) {
             return; // Nothing new - exiting
         }
@@ -266,9 +292,9 @@ public class MultipartRequestHandler {
                 headersStringBuffered.append((char) tempBuffer[i]);
             }
         }
-        // Else, releasing variable/file contents
+        // Else, releasing variable/currentFile contents
         else {
-            if (file != null) {
+            if (currentFile != null) {
                 // This code is executed for the files
                 try {
                     fos.write(tempBuffer, 0, tempBufferCharPosition);
@@ -301,9 +327,9 @@ public class MultipartRequestHandler {
                 headersStringBuffered.append((char) buffer[i]);
             }
         }
-        // Else, releasing variable/file contents
+        // Else, releasing variable/currentFile contents
         else {
-            if (file != null) {
+            if (currentFile != null) {
                 // This code is executed for the files
                 try {
                     fos.write(buffer, begin, end - begin);
@@ -332,13 +358,13 @@ public class MultipartRequestHandler {
             }
 
             // Creating headers
-            mHeaders.parse(headersStringBuffered.toString() + "\r");
+            multipartHeadersPart.parse(headersStringBuffered.toString() + "\r");
 
-            if (mHeaders.getContentType() != null) {
+            if (multipartHeadersPart.getContentType() != null) {
                 // For files
                 try {
-                    file = new File(MainController.getInstance().getServer().getServerConfig().getTempPath() + RandomStringGenerator.generate());
-                    fos = new FileOutputStream(file);
+                    currentFile = new File(temporaryUploadsDirectory + RandomStringGenerator.generate());
+                    fos = new FileOutputStream(currentFile);
                 } catch (FileNotFoundException e) {
                     // TODO Throw exception instead of printing it
                     //e.printStackTrace();
@@ -364,8 +390,8 @@ public class MultipartRequestHandler {
             headerReadingState = true;
             currentDeliminator = headersDeliminator;
 
-            if (file != null) {
-                // Write to file if any content exists Closing file stream
+            if (currentFile != null) {
+                // Write to currentFile if any content exists Closing currentFile stream
 
                 if (len > 0) {
                     try {
@@ -376,9 +402,9 @@ public class MultipartRequestHandler {
                     }
                 }
 
-                uploadedFiles.add(new UploadedFile(mHeaders, file));
+                uploadedFiles.add(new UploadedFile(multipartHeadersPart.getPostFieldName(), multipartHeadersPart.getFileName(), currentFile));
                 // Resetting
-                file = null;
+                currentFile = null;
                 try {
                     fos.close();
                 } catch (Exception e) {
@@ -388,11 +414,11 @@ public class MultipartRequestHandler {
             } else {
                 // For variables
                 if (len > 0) {
-                    for (int i = begin; i < end; i++) {
-                        valueStringBuffered.append(buffer[i]);
+                    for (int i = begin; i <= end; i++) {
+                        valueStringBuffered.append((char) buffer[i]);
                     }
                 }
-                this._post.put(mHeaders.getPostFieldName(), valueStringBuffered.toString());
+                this.post.put(multipartHeadersPart.getPostFieldName(), valueStringBuffered.toString());
             }
         }
     }

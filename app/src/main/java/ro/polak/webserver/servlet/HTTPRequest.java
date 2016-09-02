@@ -13,6 +13,7 @@ import java.util.Hashtable;
 
 import ro.polak.utilities.*;
 import ro.polak.webserver.*;
+import ro.polak.webserver.controller.MainController;
 
 /**
  * HTTP request wrapper
@@ -138,7 +139,8 @@ public class HTTPRequest {
                         // Protection against illegal indexes
                         try {
                             boundary = boundary.substring(boundaryPosition + boundaryStartString.length(), boundary.length());
-                            MultipartRequestHandler mrh = new MultipartRequestHandler(in, postLength, boundary);
+                            MultipartRequestHandler mrh = new MultipartRequestHandler(in, postLength, boundary, MainController.getInstance().getServer().getServerConfig().getTempPath());
+                            mrh.handle();
 
                             headers.setPost(mrh.getPost());
                             request.setFileUpload(new FileUpload(mrh.getUploadedFiles()));

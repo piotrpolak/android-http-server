@@ -21,9 +21,9 @@ public class HTTPRequestHeaders extends Headers {
     private String queryString;
     private String protocol;
     private String uri;
-    private String queryParameters;
     private Hashtable _post = new Hashtable<String, String>();
     private Hashtable _get = new Hashtable<String, String>();
+    private QueryStringParser queryStringParser = new QueryStringParser();
 
     /**
      * Sets the status line
@@ -33,9 +33,7 @@ public class HTTPRequestHeaders extends Headers {
     public void setStatus(String status) {
         this.status = status;
 
-        String statusArray[] = status.split(" ");
-
-        String variableName, variableValue;
+        String statusArray[] = status.split(" ", 3);
 
         if (statusArray.length < 2) {
             return;
@@ -46,46 +44,18 @@ public class HTTPRequestHeaders extends Headers {
         // Second element of the array is the HTTP queryString
         queryString = statusArray[1];
 
-        // The last part is the protocol
-        try {
+        // Protocol is the thrid part of the status line
+        if (statusArray.length > 2) {
             protocol = statusArray[2];
-        } catch (Exception e) {
         }
 
-        int pos = queryString.indexOf("?");
+        int questionMarkPosition = queryString.indexOf("?");
 
-        if (pos == -1) {
+        if (questionMarkPosition == -1) {
             uri = queryString;
         } else {
-            uri = queryString.substring(0, pos);
-            queryParameters = queryString.substring(pos + 1);
-        }
-
-        // If there are any query parameters
-        if (queryParameters != null) {
-
-            // TODO Implement query parameters parser
-
-            String queryParametersArray[] = queryParameters.split("&");
-            if (queryParametersArray.length == 0) {
-                return;
-            }
-
-            for (int i = 0; i < queryParametersArray.length; i++) {
-                String parameterPair[] = queryParametersArray[i].split("=");
-                try {
-                    variableName = parameterPair[0];
-                    try {
-                        variableValue = parameterPair[1];
-                        _get.put(variableName, variableValue);
-                    } catch (Exception e) {
-                        _get.put(variableName, "");
-                    }
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            uri = queryString.substring(0, questionMarkPosition);
+            _get = queryStringParser.parse(queryString.substring(questionMarkPosition + 1));
         }
     }
 
@@ -95,35 +65,7 @@ public class HTTPRequestHeaders extends Headers {
      * @param rawPostLine POST parameters line
      */
     public void setPostLine(String rawPostLine) {
-        String variableName, variableValue;
-
-        // TODO Implement query parameters parser
-
-        // Extracting the name=value parameters
-        String queryParametersArray[] = rawPostLine.split("&");
-        if (queryParametersArray.length == 0) {
-            return;
-        }
-
-        // Parsing each pair
-        for (int i = 0; i < queryParametersArray.length; i++) {
-            // Extracting the name=value pair
-            String parameterPair[] = queryParametersArray[i].split("=");
-            try {
-                variableName = parameterPair[0];
-                try {
-                    variableValue = parameterPair[1];
-                    _post.put(variableName, variableValue);
-                    _get.put(variableName, variableValue);
-                } catch (Exception e) {
-                    // TODO Catch out of bound exception instead of Exception
-                    _post.put(variableName, "");
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        _post = queryStringParser.parse(rawPostLine);
     }
 
     /**
@@ -159,7 +101,7 @@ public class HTTPRequestHeaders extends Headers {
      * @return decoded query string
      */
     public String getQueryString() {
-        return ro.polak.utilities.Utilities.URLDecode(queryString);
+        return queryString;
     }
 
     /**
@@ -178,7 +120,7 @@ public class HTTPRequestHeaders extends Headers {
      * @return specified GET attribute
      */
     public String _get(String attributeName) {
-        return ro.polak.utilities.Utilities.URLDecode((String) _get.get(attributeName));
+        return (String) _get.get(attributeName);
     }
 
     /**
@@ -188,6 +130,6 @@ public class HTTPRequestHeaders extends Headers {
      * @return specified POST attribute
      */
     public String _post(String attributeName) {
-        return ro.polak.utilities.Utilities.URLDecode((String) _post.get(attributeName));
+        return (String) _post.get(attributeName);
     }
 }

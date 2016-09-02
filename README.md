@@ -21,8 +21,10 @@ It can be used as a standalone web server for static content or as a remote appl
 
 ## Building application
 
+Provided Gradle wrapper should be used to build the application:
+
 ```
-gradlew -b app/build.gradle build
+./gradlew build
 ```
 
 ## Sample code

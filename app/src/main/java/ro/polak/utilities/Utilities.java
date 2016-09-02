@@ -16,7 +16,7 @@ import java.text.DecimalFormat;
  * Utilities
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 200804
+ * @since 200804
  */
 public class Utilities {
 

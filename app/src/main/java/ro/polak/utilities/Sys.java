@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
  * Helper for executing native commands
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 200802
+ * @since 200802
  */
 public class Sys {
 

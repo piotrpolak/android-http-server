@@ -1,7 +1,7 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p>
+ * <p/>
  * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
 
@@ -14,7 +14,6 @@ import java.util.StringTokenizer;
  * HTTP headers representation
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201606
  * @url https://tools.ietf.org/html/rfc2616#section-4.2
  * @since 200802
  */

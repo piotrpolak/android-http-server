@@ -23,7 +23,6 @@ import ro.polak.webserver.servlet.HTTPResponse;
  * This loader loads the bundled resources from the APK internal structure
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 201509
  */
 public class AssetResourceLoader implements IResourceLoader {

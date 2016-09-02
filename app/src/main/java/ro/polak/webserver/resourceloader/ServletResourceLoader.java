@@ -22,7 +22,6 @@ import ro.polak.webserver.servlet.ServletService;
  * This loader enables the URLs to be interpreted by servlets
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 201509
  */
 public class ServletResourceLoader implements IResourceLoader {

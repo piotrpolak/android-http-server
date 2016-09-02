@@ -11,7 +11,6 @@ package ro.polak.webserver.servlet;
  * Little servlet service for loading and rolling servlets
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 200802
  */
 public class ServletService implements IServletServiceDriver {
@@ -20,6 +19,7 @@ public class ServletService implements IServletServiceDriver {
 
     /**
      * Default constructor
+     *
      * @param driver
      */
     public ServletService(IServletServiceDriver driver) {

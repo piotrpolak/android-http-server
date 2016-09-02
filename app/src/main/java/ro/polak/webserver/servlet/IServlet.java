@@ -11,7 +11,6 @@ package ro.polak.webserver.servlet;
  * Servlet v3 interface, declares service() method
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 200902
  */
 public interface IServlet {

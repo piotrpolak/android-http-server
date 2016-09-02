@@ -16,7 +16,7 @@ import java.util.Enumeration;
  * Homepage</a>
  *
  * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
- * @version 1.0/22.12.2010
+ * @since 201012
  */
 public class HTTPResponseHeaders extends Headers {
 

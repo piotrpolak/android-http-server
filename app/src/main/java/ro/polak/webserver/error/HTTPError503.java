@@ -14,7 +14,6 @@ import ro.polak.webserver.servlet.HTTPResponse;
  * 503 Service Unavailable HTTP error handler
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 201509
  */
 public class HTTPError503 implements IHTTPError {

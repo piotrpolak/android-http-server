@@ -17,7 +17,6 @@ import java.util.Hashtable;
  * Server configuration
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 200802
  */
 public class Config extends Hashtable<String, String> {

@@ -13,7 +13,7 @@ package ro.polak.utilities;
  * Random string generator
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 200802
+ * @since 200802
  */
 public class RandomStringGenerator {
 

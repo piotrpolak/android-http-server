@@ -22,7 +22,6 @@ import ro.polak.webserver.servlet.UploadedFile;
  * Multipart request handler
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201609
  * @link http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
  * @since 200802
  */

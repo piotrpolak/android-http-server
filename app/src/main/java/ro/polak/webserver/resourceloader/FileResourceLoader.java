@@ -21,7 +21,6 @@ import ro.polak.webserver.servlet.HTTPResponse;
  * This loader loads the resources from the storage
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 201509
  */
 public class FileResourceLoader implements IResourceLoader {

@@ -21,7 +21,6 @@ import java.util.Locale;
  * Web server main class
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 200802
  */
 public class WebServer extends Thread {
@@ -151,6 +150,7 @@ public class WebServer extends Thread {
 
     /**
      * Returns server config
+     *
      * @return
      */
     public ServerConfig getServerConfig() {

@@ -13,7 +13,6 @@ import android.util.Log;
  * Print writer used by servlets
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 200802
  */
 public class PrintWriter {

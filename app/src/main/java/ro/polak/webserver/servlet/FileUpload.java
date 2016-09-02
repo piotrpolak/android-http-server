@@ -13,7 +13,6 @@ import java.util.Vector;
  * Handles file upload
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 200802
  */
 public class FileUpload {

@@ -19,7 +19,6 @@ import ro.polak.webserver.controller.MainController;
  * Servlet pool Used for resource reusing
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201607
  * @since 200902
  */
 public class ServletPool {
@@ -33,7 +32,6 @@ public class ServletPool {
      * Servlet Pool Item representation
      *
      * @author Piotr Polak piotr [at] polak [dot] ro
-     * @version 201509
      * @since 200902
      */
     class ServletPoolItem {
@@ -89,7 +87,7 @@ public class ServletPool {
      * Revalidator tak runs periodically to cleanup servlet pool from outdated servlets
      *
      * @author Piotr Polak piotr [at] polak [dot] ro
-     * @version 201509
+
      * @since 200902
      */
     class RevalidatorTask extends TimerTask {

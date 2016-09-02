@@ -16,7 +16,6 @@ import java.util.Vector;
  * Mime type mapping
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 200802
  */
 public class MimeTypeMapping {
@@ -40,8 +39,8 @@ public class MimeTypeMapping {
     /**
      * Creates mime type list
      *
-     * @param mimeTypeFilePath    path to mime type file
-     * @param defaultMimeType default mime type
+     * @param mimeTypeFilePath path to mime type file
+     * @param defaultMimeType  default mime type
      */
     public MimeTypeMapping(String mimeTypeFilePath, String defaultMimeType) {
         this(mimeTypeFilePath);

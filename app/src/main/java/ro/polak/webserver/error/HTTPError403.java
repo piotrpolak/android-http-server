@@ -17,7 +17,6 @@ import ro.polak.webserver.servlet.HTTPResponse;
  * 403 Forbidden HTTP error handler
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
  * @since 201509
  */
 public class HTTPError403 implements IHTTPError {

@@ -22,8 +22,7 @@ import ro.polak.webserver.servlet.*;
  * Server thread
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @version 201509
- * @since 201802
+ * @since 200802
  */
 public class ServerThread extends Thread {
 
@@ -35,6 +34,7 @@ public class ServerThread extends Thread {
 
     // Dynamically compute the value of Allow header
     private static String allowHeaderValue = "";
+
     static {
         for (int i = 0; i < supportedMethods.length; i++) {
             allowHeaderValue += supportedMethods[i];

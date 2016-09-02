@@ -1,0 +1,49 @@
+# Based on https://github.com/Danimoth/gitattributes/blob/master/Web.gitattributes
+# See https://help.github.com/articles/dealing-with-line-endings/
+
+* text=auto
+
+# Convert crlf => lf for the specified files
+
+# source code
+*.java text eol=lf
+*.css text eol=lf
+*.sass text eol=lf
+*.scss text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.htm text eol=lf
+*.html text eol=lf
+*.xml text eol=lf
+*.iml text eol=lf
+*.svg text eol=lf
+*.txt text eol=lf
+*.ini text eol=lf
+*.inc text eol=lf
+*.pl text eol=lf
+*.rb text eol=lf
+*.scm text eol=lf
+*.sql text eol=lf
+*.sh text eol=lf
+*.bat text eol=lf
+
+# git config
+.gitattributes text eol=lf
+.gitignore text eol=lf
+.gitconfig text eol=lf
+
+# misc config
+*.yaml text eol=lf
+*.yml text eol=lf
+*.gradle text eol=lf
+*.properties text eol=lf
+
+# Documentation
+*.md text eol=lf
+LICENSE text eol=lf
+AUTHORS text eol=lf
+
+# (binary is a macro for -text -diff), leave them unouched
+*.png binary
+*.jpg binary
+*.jar

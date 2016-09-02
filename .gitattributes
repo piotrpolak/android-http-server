@@ -25,7 +25,6 @@
 *.scm text eol=lf
 *.sql text eol=lf
 *.sh text eol=lf
-*.bat text eol=lf
 
 # git config
 .gitattributes text eol=lf

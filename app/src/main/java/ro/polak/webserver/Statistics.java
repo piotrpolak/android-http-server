@@ -15,6 +15,7 @@ package ro.polak.webserver;
 public class Statistics {
 
     // TODO Add comments
+    // TODO Remove static calls
 
     private static long bytesSend = 0;
     private static long bytesReceived = 0;

@@ -19,6 +19,12 @@ It can be used as a standalone web server for static content or as a remote appl
 * Supports buffered file upload (multipart requests)
 * Exposes compact API for handling sessions
 
+## Building application
+
+```
+gradlew -b app/build.gradle build
+```
+
 ## Sample code
 
 Hello World servlet

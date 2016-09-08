@@ -8,8 +8,6 @@
 package admin;
 
 import ro.polak.webserver.servlet.*;
-import ro.polak.utilities.Sys;
-import ro.polak.utilities.Utilities;
 
 public class Management extends Servlet {
 

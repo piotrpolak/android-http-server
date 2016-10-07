@@ -7,15 +7,23 @@
 
 package ro.polak.webserver;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.controller.IController;
 import ro.polak.webserver.error.HTTPError503;
+import ro.polak.webserver.resourceloader.AssetResourceLoader;
+import ro.polak.webserver.resourceloader.FileResourceLoader;
+import ro.polak.webserver.resourceloader.IResourceLoader;
+import ro.polak.webserver.resourceloader.ServletResourceLoader;
+import ro.polak.webserver.servlet.HTTPRequest;
 import ro.polak.webserver.servlet.HTTPResponse;
-
-import java.io.*;
-import java.net.*;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
 /**
  * Web server main class
@@ -30,6 +38,7 @@ public class WebServer extends Thread {
     public static final String VERSION = "0.1.5-dev";
     public static final String SIGNATURE = NAME + "/" + VERSION;
     public static SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US);
+    private String[] supportedMethods;
 
     static {
         WebServer.sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
@@ -50,6 +59,7 @@ public class WebServer extends Thread {
         this.controller = controller;
         this.serverSocket = serverSocket;
         this.serverConfig = serverConfig;
+        supportedMethods = new String[]{HTTPRequest.METHOD_GET, HTTPRequest.METHOD_POST, HTTPRequest.METHOD_HEAD};
     }
 
     @Override
@@ -78,6 +88,24 @@ public class WebServer extends Thread {
             serverSocket.close();
         } catch (IOException e) {
         }
+    }
+
+    /**
+     * Returns available resource loaders
+     *
+     * @return
+     */
+    public IResourceLoader[] getResourceLoaders() {
+        return new IResourceLoader[]{new FileResourceLoader(), new AssetResourceLoader(), new ServletResourceLoader()};
+    }
+
+    /**
+     * Returns an array of supported HTTP methods
+     *
+     * @return
+     */
+    public String[] getSupportedMethods() {
+        return supportedMethods;
     }
 
     /**

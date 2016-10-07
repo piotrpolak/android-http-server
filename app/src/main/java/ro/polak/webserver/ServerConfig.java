@@ -223,7 +223,7 @@ public class ServerConfig extends Config {
      *
      * @return
      */
-    public ArrayList getDirectoryIndex() {
+    public ArrayList<String> getDirectoryIndex() {
         return directoryIndex;
     }
 

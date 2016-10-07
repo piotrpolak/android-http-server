@@ -8,7 +8,6 @@
 package ro.polak.webserver;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +27,7 @@ import ro.polak.webserver.servlet.UploadedFile;
  * @since 200802
  */
 public class MultipartRequestHandler {
-
+    private final String headersDeliminator = "\r\n\r\n";
     private InputStream in;
     private File currentFile;
     private FileOutputStream fos;
@@ -36,21 +35,20 @@ public class MultipartRequestHandler {
     private int tempBufferCharPosition = 0;
     private int allBytesRead = 0;
     private int expectedPostLength = 0;
+    private int bufferLength = 2048;
     private boolean headerReadingState = true;
     private byte[] tempBuffer;
     private byte[] buffer;
-    private int bufferLength = 2048;
-    private StringBuffer headersStringBuffered = new StringBuffer();
+    private StringBuffer headersStringBuffered;
     private StringBuffer valueStringBuffered;
     private String endBoundary;
     private String beginBoundary;
-    private String headersDeliminator = "\r\n\r\n";
     private String currentDeliminator;
     private String temporaryUploadsDirectory;
     private MultipartHeadersPart multipartHeadersPart;
-    private List<UploadedFile> uploadedFiles = new ArrayList<>();
-    private Map<String, String> post = new HashMap<>();
-    private boolean wasHandledBefore = false;
+    private List<UploadedFile> uploadedFiles;
+    private Map<String, String> post;
+    private boolean wasHandledBefore;
 
     /**
      * Constructor
@@ -63,11 +61,15 @@ public class MultipartRequestHandler {
     public MultipartRequestHandler(InputStream in, int expectedPostLength, String boundary, String temporaryUploadsDirectory) {
         this.in = in;
         this.expectedPostLength = expectedPostLength;
+        this.temporaryUploadsDirectory = temporaryUploadsDirectory;
+
         endBoundary = "\r\n--" + boundary;
         beginBoundary = "--" + boundary;
-        this.temporaryUploadsDirectory = temporaryUploadsDirectory;
         allBytesRead = 0;
-
+        wasHandledBefore = false;
+        headersStringBuffered = new StringBuffer();
+        uploadedFiles = new ArrayList<>();
+        post = new HashMap<>();
     }
 
     /**
@@ -150,13 +152,11 @@ public class MultipartRequestHandler {
              *
              */
             if (beginBoundary.charAt(charPosition) == smallBuffer[0]) {
-
                 // Incrementing the boundary character index
                 ++charPosition;
 
                 // Check whether the handleBoundary boundary was completely read
                 if (charPosition == beginBoundary.length()) {
-                    isBeginBoundaryCompletelyRead = true;
                     break;
                 }
             } else {
@@ -169,16 +169,14 @@ public class MultipartRequestHandler {
     }
 
     private void handleBody() throws IOException {
-        int begin;
+        int begin, bytesRead;
         boolean wasPreviousBuffered = false;
 
         currentDeliminator = headersDeliminator;
-        int bytesRead = 0;
         charPosition = 0;
 
         // Reading bytes into buffer Returning when out of new bytes
         while (true) {
-
             // Escaping when the real contents length is greater than the declared length
             if (allBytesRead >= expectedPostLength) {
                 Statistics.addBytesReceived(allBytesRead);
@@ -327,7 +325,7 @@ public class MultipartRequestHandler {
         }
     }
 
-    private void switchStates(int begin, int end) throws FileNotFoundException, IOException {
+    private void switchStates(int begin, int end) throws IOException {
         int len = end - begin + 1;
 
         if (headerReadingState) {

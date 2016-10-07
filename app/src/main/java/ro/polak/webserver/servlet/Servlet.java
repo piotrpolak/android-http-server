@@ -2,10 +2,12 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver.servlet;
+
+import ro.polak.webserver.Headers;
 
 /**
  * Servlet
@@ -61,8 +63,8 @@ public abstract class Servlet implements IServlet {
                 response.setContentLength(response.getPrintWriter().length());
             }
 
-            response.getHeaders().setHeader("Cache-Control", "no-cache");
-            response.getHeaders().setHeader("Pragma", "no-cache");
+            response.getHeaders().setHeader(Headers.HEADER_CACHE_CONTROL, "no-cache");
+            response.getHeaders().setHeader(Headers.HEADER_PRAGMA, "no-cache");
 
             response.flushHeaders();
         }

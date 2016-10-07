@@ -7,12 +7,16 @@
 
 package ro.polak.webserver.servlet;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.util.Hashtable;
 
-import ro.polak.utilities.*;
-import ro.polak.webserver.*;
+import ro.polak.utilities.Utilities;
+import ro.polak.webserver.HTTPRequestHeaders;
+import ro.polak.webserver.Headers;
+import ro.polak.webserver.MultipartRequestHandler;
+import ro.polak.webserver.Statistics;
 import ro.polak.webserver.controller.MainController;
 
 /**
@@ -116,7 +120,7 @@ public class HTTPRequest {
             if (headers.containsHeader("Content-Length")) {
                 try {
                     // Parsing content length
-                    postLength = Integer.parseInt(headers.getHeader("Content-Length"));
+                    postLength = Integer.parseInt(headers.getHeader(Headers.HEADER_CONTENT_LENGTH));
                 } catch (NumberFormatException e) {
                     // Keep 0 value - makes no sense to parse the data
                 }
@@ -125,9 +129,9 @@ public class HTTPRequest {
             // Only if post length is greater than 0
             if (postLength > 0) {
                 // For multipart request
-                if (headers.containsHeader("Content-Type") && headers.getHeader("Content-Type").startsWith("multipart/form-data")) {
+                if (headers.containsHeader(Headers.HEADER_CONTENT_TYPE) && headers.getHeader(Headers.HEADER_CONTENT_TYPE).startsWith("multipart/form-data")) {
                     // Getting the boundary
-                    String boundary = headers.getHeader("Content-Type");
+                    String boundary = headers.getHeader(Headers.HEADER_CONTENT_TYPE);
 
                     // Getting boundary
                     String boundaryStartString = "boundary=";
@@ -276,7 +280,7 @@ public class HTTPRequest {
             }
 
             // Splitting separate cookies array
-            String cookiesStr[] = headers.getHeader("Cookie").split(";");
+            String cookiesStr[] = headers.getHeader(Headers.HEADER_COOKIE).split(";");
             for (int i = 0; i < cookiesStr.length; i++) {
                 // Splitting cookie name=value pair
                 try {

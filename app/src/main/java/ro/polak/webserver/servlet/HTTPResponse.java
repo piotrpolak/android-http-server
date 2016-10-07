@@ -2,26 +2,27 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver.servlet;
+
+import android.content.Context;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.io.InputStream;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.HTTPResponseHeaders;
+import ro.polak.webserver.Headers;
 import ro.polak.webserver.Statistics;
 import ro.polak.webserver.WebServer;
 import ro.polak.webserver.controller.MainController;
-
-import android.content.Context;
 
 /**
  * Represents HTTP response
@@ -98,7 +99,7 @@ public class HTTPResponse {
         }
 
         // Setting the built cookie
-        headers.setHeader("Set-Cookie", cookie);
+        headers.setHeader(Headers.HEADER_SET_COOKIE, cookie);
     }
 
     /**
@@ -177,7 +178,7 @@ public class HTTPResponse {
      */
     public void sendRedirect(String location) {
         headers.setStatus(HTTPResponseHeaders.STATUS_MOVED_PERMANENTLY);
-        headers.setHeader("Location", location);
+        headers.setHeader(Headers.HEADER_LOCATION, location);
         flushHeaders();
     }
 
@@ -262,7 +263,7 @@ public class HTTPResponse {
      * @param contentType content type
      */
     public void setContentType(String contentType) {
-        headers.setHeader("Content-Type", contentType);
+        headers.setHeader(Headers.HEADER_CONTENT_TYPE, contentType);
     }
 
     /**
@@ -271,7 +272,7 @@ public class HTTPResponse {
      * @return
      */
     public String getContentType() {
-        return headers.getHeader("Content-Type");
+        return headers.getHeader(Headers.HEADER_CONTENT_TYPE);
     }
 
     /**
@@ -280,11 +281,7 @@ public class HTTPResponse {
      * @param keepAlive true for keep alive connection
      */
     public void setKeepAlive(boolean keepAlive) {
-        if (keepAlive) {
-            headers.setHeader("Connection", "keep-alive");
-        } else {
-            headers.setHeader("Connection", "close");
-        }
+        headers.setHeader(Headers.HEADER_CONNECTION, keepAlive ? "keep-alive" : "close");
     }
 
     /**
@@ -293,7 +290,7 @@ public class HTTPResponse {
      * @param length length of content
      */
     public void setContentLength(int length) {
-        headers.setHeader("Content-Length", "" + length);
+        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, "" + length);
     }
 
     /**
@@ -302,7 +299,7 @@ public class HTTPResponse {
      * @param length length of content
      */
     public void setContentLength(long length) {
-        headers.setHeader("Content-Length", "" + length);
+        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, "" + length);
     }
 
     /**

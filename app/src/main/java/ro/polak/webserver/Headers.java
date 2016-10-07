@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver;
@@ -22,8 +22,20 @@ public class Headers {
     // TODO Make Headers to extend HashTable or another (best suited) collection class
     // TODO Refactor to MessageHeaders
 
+    public static final String HEADER_ALLOW = "Allow";
+    public static final String HEADER_SERVER = "Server";
+    public static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
+    public static final String HEADER_LOCATION = "Location";
+    public static final String HEADER_CONTENT_LENGTH = "Content-Length";
+    public static final String HEADER_CONTENT_TYPE = "Content-Type";
+    public static final String HEADER_CONNECTION = "Connection";
+    public static final String HEADER_SET_COOKIE = "Set-Cookie";
+    public static final String HEADER_CACHE_CONTROL = "Cache-Control";
+    public static final String HEADER_PRAGMA = "Pragma";
+    public static final String HEADER_COOKIE = "Cookie";
+
     protected String status = "";
-    protected Hashtable vars = new Hashtable<String, String>();
+    protected Hashtable<String, String> vars = new Hashtable<>();
 
     /**
      * Parses message headers
@@ -97,7 +109,7 @@ public class Headers {
      * @return header's value
      */
     public String getHeader(String headerName) {
-        return (String) vars.get(headerName.toLowerCase());
+        return vars.get(headerName.toLowerCase());
     }
 
     /**

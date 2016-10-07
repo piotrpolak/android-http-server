@@ -7,8 +7,11 @@
 
 package admin;
 
+import ro.polak.webserver.Headers;
 import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.*;
+import ro.polak.webserver.servlet.HTTPRequest;
+import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.Servlet;
 
 public class BackupConfiguration extends Servlet {
 
@@ -20,7 +23,7 @@ public class BackupConfiguration extends Servlet {
             return;
         }
 
-        response.getHeaders().setHeader("Content-disposition", "attachment; filename=httpd.conf");
+        response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename=httpd.conf");
         response.setContentType("application/octet-stream");
         response.serveFile(new java.io.File(MainController.getInstance().getWebServer().getServerConfig().getBasePath() + "httpd.conf"));
     }

@@ -76,7 +76,7 @@ public class ServerThread extends Thread {
             }
 
             response.setKeepAlive(request.isKeepAlive() && webServer.getServerConfig().isKeepAlive());
-            response.getHeaders().setHeader("Server", WebServer.SIGNATURE);
+            response.getHeaders().setHeader(Headers.HEADER_SERVER, WebServer.SIGNATURE);
 
             if (isMethodSupported(request.getHeaders().getMethod())) {
                 // This variable becomes true when one of the resource loaders manage to load a resource
@@ -103,7 +103,7 @@ public class ServerThread extends Thread {
 
             } else {
                 // Method not allowed
-                response.getHeaders().setHeader("Allow", allowHeaderValue);
+                response.getHeaders().setHeader(Headers.HEADER_ALLOW, allowHeaderValue);
                 (new HTTPError405()).serve(response);
             }
         } catch (IOException e) {

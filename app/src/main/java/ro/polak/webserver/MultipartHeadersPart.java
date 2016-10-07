@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver;
@@ -16,9 +16,9 @@ package ro.polak.webserver;
  */
 public class MultipartHeadersPart extends Headers {
 
-    private String fileName = null;
-    private String contentType = null;
-    private String postFieldName = null;
+    private String fileName;
+    private String contentType;
+    private String postFieldName;
 
     /**
      * Parses multipart headers
@@ -31,7 +31,7 @@ public class MultipartHeadersPart extends Headers {
         super.parse(headersString);
 
         // Reading uploaded file name
-        String contentDisposition = this.getHeader("Content-Disposition");
+        String contentDisposition = this.getHeader(Headers.HEADER_CONTENT_DISPOSITION);
         String name = contentDisposition.substring(contentDisposition.indexOf("name=\"") + 6);
         try {
             name = name.substring(0, name.indexOf("\""));
@@ -41,7 +41,7 @@ public class MultipartHeadersPart extends Headers {
         }
 
         // Getting file type
-        String contentType = this.getHeader("Content-Type");
+        String contentType = this.getHeader(Headers.HEADER_CONTENT_TYPE);
 
         // Getting file name
         String fileName = null;

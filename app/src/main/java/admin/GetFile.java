@@ -2,16 +2,19 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package admin;
 
 import java.io.File;
 
-import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.*;
 import ro.polak.utilities.Utilities;
+import ro.polak.webserver.Headers;
+import ro.polak.webserver.controller.MainController;
+import ro.polak.webserver.servlet.HTTPRequest;
+import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.Servlet;
 
 public class GetFile extends Servlet {
 
@@ -38,7 +41,7 @@ public class GetFile extends Servlet {
             File f = new File(path);
             if (f.exists() && f.isFile()) {
                 response.setContentType(MainController.getInstance().getWebServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(Utilities.getExtension(f.getName())));
-                response.getHeaders().setHeader("Content-disposition", "attachment; filename=" + Utilities.URLEncode(f.getName()));
+                response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename=" + Utilities.URLEncode(f.getName()));
                 response.serveFile(f);
             } else {
                 response.getPrintWriter().print("File does not exist.");

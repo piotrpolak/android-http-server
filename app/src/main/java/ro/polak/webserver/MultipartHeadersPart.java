@@ -33,11 +33,10 @@ public class MultipartHeadersPart extends Headers {
         // Reading uploaded file name
         String contentDisposition = this.getHeader(Headers.HEADER_CONTENT_DISPOSITION);
         String name = contentDisposition.substring(contentDisposition.indexOf("name=\"") + 6);
-        try {
-            name = name.substring(0, name.indexOf("\""));
-        } catch (Exception e) {
-            // Do nothing
-            //e.printStackTrace();
+
+        int quotationMarkPosition = name.indexOf("\"");
+        if (quotationMarkPosition > -1) {
+            name = name.substring(0, quotationMarkPosition);
         }
 
         // Getting file type

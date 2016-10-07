@@ -26,7 +26,7 @@ public class HTTPError403 implements IHTTPError {
         response.setStatus(HTTPResponseHeaders.STATUS_ACCESS_DENIED);
         response.setContentType("text/html");
 
-        String errorDocumentPath = MainController.getInstance().getServer().getServerConfig().getErrorDocument403Path();
+        String errorDocumentPath = MainController.getInstance().getWebServer().getServerConfig().getErrorDocument403Path();
 
         if (errorDocumentPath == null || errorDocumentPath.equals("")) {
             HTMLErrorDocument doc = new HTMLErrorDocument();

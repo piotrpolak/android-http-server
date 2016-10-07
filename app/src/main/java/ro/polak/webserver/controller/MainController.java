@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver.controller;
@@ -22,7 +22,7 @@ import ro.polak.webserver.gui.*;
  */
 public class MainController implements IController {
 
-    private WebServer httpServer;
+    private WebServer webServer;
     private IServerUI gui;
     private Object context;
     private static MainController instance;
@@ -62,20 +62,21 @@ public class MainController implements IController {
      * @param text
      */
     public void println(String text) {
-        this.gui.println(WebServer.sdf.format(new java.util.Date()) + "  -  " + text);
+        // TODO Remove static call
+        gui.println(WebServer.sdf.format(new java.util.Date()) + "  -  " + text);
     }
 
     /**
      * Starts the server logic
      */
     public void start() {
-        this.gui.initialize(this);
+        gui.initialize(this);
         try {
-            this.httpServer = new WebServer(this, new ServerSocket(), new ServerConfig());
-            this.httpServer.startServer();
-            this.gui.start();
+            webServer = new WebServer(this, new ServerSocket(), new ServerConfig());
+            webServer.startServer();
+            gui.start();
         } catch (IOException e) {
-            this.gui.stop();
+            gui.stop();
         }
     }
 
@@ -83,11 +84,11 @@ public class MainController implements IController {
      * Stops the server logic
      */
     public void stop() {
-        if (this.httpServer != null) {
-            this.httpServer.stopServer();
-            this.httpServer = null;
+        if (webServer != null) {
+            webServer.stopServer();
+            webServer = null;
         }
-        this.gui.stop();
+        gui.stop();
     }
 
     /**
@@ -95,8 +96,8 @@ public class MainController implements IController {
      *
      * @return
      */
-    public WebServer getServer() {
-        return this.httpServer;
+    public WebServer getWebServer() {
+        return webServer;
     }
 
     /**

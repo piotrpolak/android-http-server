@@ -29,7 +29,7 @@ public class HTTPError404 implements IHTTPError {
         response.setStatus(HTTPResponseHeaders.STATUS_NOT_FOUND);
         response.setContentType("text/html");
 
-        String errorDocumentPath = MainController.getInstance().getServer().getServerConfig().getErrorDocument404Path();
+        String errorDocumentPath = MainController.getInstance().getWebServer().getServerConfig().getErrorDocument404Path();
 
         if (errorDocumentPath == null || errorDocumentPath.equals("")) {
             HTMLErrorDocument doc = new HTMLErrorDocument();

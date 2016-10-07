@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
 
             } else if (id == actionButton.getId()) {
                 try {
-                    if (this.activity.getMainController().getServer() != null && this.activity.getMainController().getServer().isRunning()) {
+                    if (this.activity.getMainController().getWebServer() != null && this.activity.getMainController().getWebServer().isRunning()) {
                         this.activity.getMainController().stop();
                     } else {
                         this.activity.getMainController().start();
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
         if (ip == null) {
             ip = "127.0.0.1";
         }
-        int port = this.mainController.getServer().getServerConfig().getListenPort();
+        int port = this.mainController.getWebServer().getServerConfig().getListenPort();
         String portString = "";
         if (port != 80) {
             portString = ":" + port;

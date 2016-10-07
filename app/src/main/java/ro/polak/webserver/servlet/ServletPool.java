@@ -115,7 +115,7 @@ public class ServletPool {
     public ServletPool() {
         this.map = new HashMap<String, ServletPoolItem>();
         this.pingerTimer = new Timer();
-        this.pingerTimer.schedule(new RevalidatorTask(this), 1000, MainController.getInstance().getServer().getServerConfig().getServletServicePoolPingerInterval());
+        this.pingerTimer.schedule(new RevalidatorTask(this), 1000, MainController.getInstance().getWebServer().getServerConfig().getServletServicePoolPingerInterval());
     }
 
     /**
@@ -157,7 +157,7 @@ public class ServletPool {
             return;
         }
 
-        long expireTimestamp = new Date().getTime() - MainController.getInstance().getServer().getServerConfig().getServletServicePoolServletExpires();
+        long expireTimestamp = new Date().getTime() - MainController.getInstance().getWebServer().getServerConfig().getServletServicePoolServletExpires();
 
         synchronized (this.map) {
             Iterator<ServletPoolItem> it = this.map.values().iterator();

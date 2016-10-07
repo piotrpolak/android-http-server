@@ -39,7 +39,7 @@ public class ServletResourceLoader implements IResourceLoader {
         String fileExtension = Utilities.getExtension(uri);
 
         // Check whether the extension is of Servlet type
-        if (fileExtension.equals(MainController.getInstance().getServer().getServerConfig().getServletMappedExtension())) {
+        if (fileExtension.equals(MainController.getInstance().getWebServer().getServerConfig().getServletMappedExtension())) {
 
             // Checking for a class
             try {

@@ -2,10 +2,12 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver;
+
+import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -16,7 +18,8 @@ import ro.polak.webserver.resourceloader.AssetResourceLoader;
 import ro.polak.webserver.resourceloader.FileResourceLoader;
 import ro.polak.webserver.resourceloader.IResourceLoader;
 import ro.polak.webserver.resourceloader.ServletResourceLoader;
-import ro.polak.webserver.servlet.*;
+import ro.polak.webserver.servlet.HTTPRequest;
+import ro.polak.webserver.servlet.HTTPResponse;
 
 /**
  * Server thread
@@ -52,97 +55,49 @@ public class ServerThread extends Thread {
     public ServerThread(Socket socket, WebServer webServer) {
         this.socket = socket;
         this.webServer = webServer;
-        this.start();
     }
 
-    /**
-     * This method is called to handle request in a new thread
-     */
+    @Override
     public void run() {
-
-        HTTPRequest request;
-        HTTPResponse response;
-
         try {
             // Creating new request and response objects
-            request = HTTPRequest.createFromSocket(socket);
-            response = HTTPResponse.createFromSocket(socket);
+            HTTPRequest request = HTTPRequest.createFromSocket(socket);
+            HTTPResponse response = HTTPResponse.createFromSocket(socket);
 
             String path = request.getHeaders().getPath();
 
             // Checking the requested URI, blocking illegal paths
-            if (path == null || path.startsWith("../") || path.indexOf("/../") != -1) {
-                // Closing the socket
+            if (isIllegalPath(path)) {
                 try {
-                    this.socket.close();
+                    socket.close();
                 } catch (IOException e) {
                 }
                 return;
             }
 
-            // Setting keep alive header
-            if (request.isKeepAlive() && webServer.getServerConfig().isKeepAlive()) {
-                response.setKeepAlive(true);
-            } else {
-                response.setKeepAlive(false);
-            }
+            response.setKeepAlive(request.isKeepAlive() && webServer.getServerConfig().isKeepAlive());
+            response.getHeaders().setHeader("Server", WebServer.SIGNATURE);
 
-            // Setting signature header
-            response.getHeaders().setHeader("Server", WebServer.SERVER_SMALL_SIGNATURE);
-
-            // Determining whether the method is supported
-            boolean isMethodSupported = false;
-            for (int i = 0; i < supportedMethods.length; i++) {
-                if (supportedMethods[i].equals(request.getHeaders().getMethod())) {
-                    isMethodSupported = true;
-                    break;
-                }
-            }
-
-            // Checking allowed method
-            if (isMethodSupported) {
+            if (isMethodSupported(request.getHeaders().getMethod())) {
                 // This variable becomes true when one of the resource loaders manage to load a resource
-                boolean resourceSuccessfullyLoaded = false;
-
-                // Trying to load a resource using each of the resource loaders
-                for (int ri = 0; ri < rl.length; ri++) {
-                    if (rl[ri].load(path, request, response)) {
-                        resourceSuccessfullyLoaded = true;
-                        break;
-                    }
-                }
+                boolean isLoaded = loadResourceByPath(request, response, path);
 
                 // Trying to load directory index
-                if (!resourceSuccessfullyLoaded) {
+                if (!isLoaded) {
+                    path = getNormalizedDirectoryPath(path);
                     for (int i = 0; i < webServer.getServerConfig().getDirectoryIndex().size(); i++) {
-
-                        // Appending an extra slash
-                        if (path.length() > 0) {
-                            if (path.charAt(path.length() - 1) != '/') {
-                                path += "/";
-                            }
-                        }
-
-                        // Getting the current directory index
-                        String directoryIndex = webServer.getServerConfig().getDirectoryIndex().elementAt(i);
-
-                        // Trying to load a resource using each of the resource loaders
-                        for (int ri = 0; ri < rl.length; ri++) {
-                            if (rl[ri].load(path + directoryIndex, request, response)) {
-                                resourceSuccessfullyLoaded = true;
-                                break;
-                            }
-                        }
+                        String directoryIndex = (String) webServer.getServerConfig().getDirectoryIndex().get(i);
+                        isLoaded = loadResourceByPath(request, response, path + directoryIndex);
 
                         // Breaking the parent loop in case one of the loaders managed to serve a resource
-                        if (resourceSuccessfullyLoaded) {
+                        if (isLoaded) {
                             break;
                         }
                     }
                 }
 
                 // Serving 404 error
-                if (!resourceSuccessfullyLoaded) {
+                if (!isLoaded) {
                     (new HTTPError404()).serve(response);
                 }
 
@@ -154,13 +109,47 @@ public class ServerThread extends Thread {
         } catch (IOException e) {
         }
 
-        // Closing the socket together with the input and output streams
         try {
-            this.socket.close();
+            socket.close();
         } catch (IOException e) {
         }
+    }
 
-        // Cleanup
-        this.socket = null;
+    private boolean loadResourceByPath(HTTPRequest request, HTTPResponse response, String path) {
+        for (int ri = 0; ri < rl.length; ri++) {
+            if (rl[ri].load(path, request, response)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isIllegalPath(String path) {
+        return path == null || path.startsWith("../") || path.indexOf("/../") != -1;
+    }
+
+    /**
+     * Makes sure the last character is a slash
+     *
+     * @param path
+     * @return
+     */
+    @NonNull
+    private String getNormalizedDirectoryPath(String path) {
+        if (path.length() > 0) {
+            if (path.charAt(path.length() - 1) != '/') {
+                path += "/";
+            }
+        }
+        return path;
+    }
+
+    private boolean isMethodSupported(String method) {
+        for (int i = 0; i < supportedMethods.length; i++) {
+            if (supportedMethods[i].equals(method)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

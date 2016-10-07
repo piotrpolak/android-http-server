@@ -81,7 +81,7 @@ public class AccessControl {
         // Initializes config only once
         if (config == null) {
             config = new Config();
-            config.read(MainController.getInstance().getServer().getServerConfig().getBasePath() + "admin.conf");
+            config.read(MainController.getInstance().getWebServer().getServerConfig().getBasePath() + "admin.conf");
         }
 
         return config;

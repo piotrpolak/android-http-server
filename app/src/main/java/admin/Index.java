@@ -8,7 +8,6 @@
 package admin;
 
 import ro.polak.webserver.servlet.*;
-import ro.polak.utilities.Utilities;
 
 public class Index extends Servlet {
 
@@ -23,7 +22,7 @@ public class Index extends Servlet {
         doc.setOwnerClass(this.getClass().getSimpleName());
 
         doc.writeln("<div class=\"page-header\"><h1>About</h1></div>");
-        doc.write("<p>" + ro.polak.webserver.WebServer.SERVER_SIGNATURE + " running.</p>");
+        doc.write("<p>" + ro.polak.webserver.WebServer.SIGNATURE + " running.</p>");
         doc.write("<p>Small multithread web server written completely in Java SE. ");
         doc.write("Implements most of the HTTP 1.1 specification. Uses JLWS Servlets for handling dynamic pages. ");
         doc.write("Supports cookies, sessions, file uploads.</p>");

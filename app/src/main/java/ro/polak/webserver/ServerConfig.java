@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver;
@@ -11,6 +11,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import ro.polak.utilities.Config;
@@ -36,7 +37,7 @@ public class ServerConfig extends Config {
     private String errorDocument403Path = null;
     private long servletServicePoolPingerInterval = 10000;
     private long servletServicePoolServletExpires = 30000;
-    public static Vector<String> directoryIndex = new Vector<String>(5);
+    public ArrayList directoryIndex = new ArrayList(5);
 
     /**
      * Default constructor
@@ -84,7 +85,7 @@ public class ServerConfig extends Config {
             // Generating index files
             String directoryIndexLine[] = this.get("DirectoryIndex").split(" ");
             for (int i = 0; i < directoryIndexLine.length; i++) {
-                directoryIndex.addElement(directoryIndexLine[i]);
+                directoryIndex.add(directoryIndexLine[i]);
             }
         } else {
             // Initializing an empty mime type mapping to prevent null pointer exceptions
@@ -215,7 +216,7 @@ public class ServerConfig extends Config {
      *
      * @return
      */
-    public static Vector<String> getDirectoryIndex() {
+    public ArrayList getDirectoryIndex() {
         return directoryIndex;
     }
 

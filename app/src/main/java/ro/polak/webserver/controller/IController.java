@@ -41,7 +41,7 @@ public interface IController {
      *
      * @return
      */
-    WebServer getServer();
+    WebServer getWebServer();
 
     /**
      * Returns application context, this is mostly used for android applications

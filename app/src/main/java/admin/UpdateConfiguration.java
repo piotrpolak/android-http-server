@@ -33,7 +33,7 @@ public class UpdateConfiguration extends Servlet {
             doc.writeln("<p>Error: no file uploaded (" + fu.size() + ")</p>");
         } else {
 
-            String basePath = MainController.getInstance().getServer().getServerConfig().getBasePath();
+            String basePath = MainController.getInstance().getWebServer().getServerConfig().getBasePath();
 
             if (Utilities.getExtension(fu.get("file").getFileName()).equals("conf")) {
 

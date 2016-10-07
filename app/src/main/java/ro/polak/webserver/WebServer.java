@@ -26,11 +26,9 @@ import java.util.Locale;
 public class WebServer extends Thread {
 
     // Some static info
-    public static final String SERVER_NAME = "AndroidHTTPServer";
-    public static final String SERVER_VERSION = "0.1.5-dev";
-    public static final String SERVER_DATE = "03.09.2016";
-    public static final String SERVER_SMALL_SIGNATURE = SERVER_NAME + "/" + SERVER_VERSION;
-    public static final String SERVER_SIGNATURE = SERVER_NAME + "/" + SERVER_VERSION + " / " + SERVER_DATE;
+    public static final String NAME = "AndroidHTTPServer";
+    public static final String VERSION = "0.1.5-dev";
+    public static final String SIGNATURE = NAME + "/" + VERSION;
     public static SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US);
 
     static {
@@ -63,7 +61,7 @@ public class WebServer extends Thread {
 
                 if (serverConfig.getMaxServerThreads() >= ServerThread.activeCount()) {
                     // If there are threads allowed to start
-                    new ServerThread(socket, this); // Creating new thread
+                    new ServerThread(socket, this).start();
                 } else {
                     // 503 Service Unavailable HERE
                     (new HTTPError503()).serve(HTTPResponse.createFromSocket(socket));

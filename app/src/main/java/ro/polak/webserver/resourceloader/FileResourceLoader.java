@@ -28,14 +28,14 @@ public class FileResourceLoader implements IResourceLoader {
     @Override
     public boolean load(String uri, HTTPRequest request, HTTPResponse response) {
 
-        File file = new File(MainController.getInstance().getServer().getServerConfig().getDocumentRootPath() + uri);
+        File file = new File(MainController.getInstance().getWebServer().getServerConfig().getDocumentRootPath() + uri);
 
         // File not found
         if (file.exists() && file.isFile()) {
             String fileExtension = Utilities.getExtension(file.getName());
 
             response.setStatus(HTTPResponseHeaders.STATUS_OK);
-            response.setContentType(MainController.getInstance().getServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(fileExtension));
+            response.setContentType(MainController.getInstance().getWebServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(fileExtension));
             response.setContentLength(file.length());
 
             // Serving file for all the request but for HEAD

@@ -31,7 +31,7 @@ public class HTTPSession {
     private transient HTTPRequest request;
     private transient HTTPResponse response;
     private String sid;
-    private String directoryPath = MainController.getInstance().getServer().getServerConfig().getTempPath();
+    private String directoryPath = MainController.getInstance().getWebServer().getServerConfig().getTempPath();
     private String cookieName = "JSSSESSIONID";
     private Hashtable vars;
     private boolean isStarted = false;

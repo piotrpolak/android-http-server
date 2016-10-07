@@ -138,7 +138,7 @@ public class HTTPRequest {
                         // Protection against illegal indexes
                         try {
                             boundary = boundary.substring(boundaryPosition + boundaryStartString.length(), boundary.length());
-                            MultipartRequestHandler mrh = new MultipartRequestHandler(in, postLength, boundary, MainController.getInstance().getServer().getServerConfig().getTempPath());
+                            MultipartRequestHandler mrh = new MultipartRequestHandler(in, postLength, boundary, MainController.getInstance().getWebServer().getServerConfig().getTempPath());
                             mrh.handle();
 
                             headers.setPost(mrh.getPost());

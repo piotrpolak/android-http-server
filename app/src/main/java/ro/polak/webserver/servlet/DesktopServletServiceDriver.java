@@ -21,7 +21,7 @@ public class DesktopServletServiceDriver implements IServletServiceDriver {
 
     static {
         try {
-            DesktopServletServiceDriver.classLoader = new URLClassLoader((new URL[]{new URL("file", "", new File(MainController.getInstance().getServer().getServerConfig().getDocumentRootPath()).getCanonicalPath().replace('\\', '/') + "/")}));
+            DesktopServletServiceDriver.classLoader = new URLClassLoader((new URL[]{new URL("file", "", new File(MainController.getInstance().getWebServer().getServerConfig().getDocumentRootPath()).getCanonicalPath().replace('\\', '/') + "/")}));
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }

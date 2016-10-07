@@ -11,8 +11,9 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import ro.polak.utilities.Config;
 
@@ -29,12 +30,12 @@ public class ServerConfig extends Config {
     private String tempPath = basePath + "temp/";
     private int listenPort = 8080;
     private String servletMappedExtension = "dhtml";
-    private MimeTypeMapping mimeTypeMapping = null;
+    private MimeTypeMapping mimeTypeMapping;
     private String defaultMimeType = "text/plain";
     private int maxServerThreads = 50;
-    private boolean keepAlive = false;
-    private String errorDocument404Path = null;
-    private String errorDocument403Path = null;
+    private boolean keepAlive;
+    private String errorDocument404Path;
+    private String errorDocument403Path;
     private long servletServicePoolPingerInterval = 10000;
     private long servletServicePoolServletExpires = 30000;
     public ArrayList directoryIndex = new ArrayList(5);
@@ -80,14 +81,20 @@ public class ServerConfig extends Config {
             }
 
             // Initializing mime mapping
-            mimeTypeMapping = new MimeTypeMapping(basePath + this.get("MimeTypeMapping"), this.get("DefaultMimeType"));
+            try {
+                mimeTypeMapping = new MimeTypeMapping(new FileInputStream(basePath + this.get("MimeTypeMapping")), this.get("DefaultMimeType"));
+            } catch (IOException e) {
+            }
+
 
             // Generating index files
             String directoryIndexLine[] = this.get("DirectoryIndex").split(" ");
             for (int i = 0; i < directoryIndexLine.length; i++) {
                 directoryIndex.add(directoryIndexLine[i]);
             }
-        } else {
+        }
+
+        if (mimeTypeMapping == null) {
             // Initializing an empty mime type mapping to prevent null pointer exceptions
             mimeTypeMapping = new MimeTypeMapping();
         }

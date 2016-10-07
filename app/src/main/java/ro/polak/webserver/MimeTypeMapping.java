@@ -2,15 +2,17 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.Vector;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Mime type mapping
@@ -24,78 +26,54 @@ public class MimeTypeMapping {
      * Default mime type
      */
     public String defaultMimeType = "text/html";
-
-    // These are needed for one-to-many reverse search without duplicating mimeTypes
-    private Vector<String> mimeTypesExt = new Vector<String>(0);
-    private Vector<Integer> mimeTypesExtLinks = new Vector<Integer>(0);
-    private Vector<String> mimeTypes = new Vector<String>(0);
+    private Map<String, String> mapping;
 
     /**
      * Default constructor
      */
     public MimeTypeMapping() {
+        mapping = new HashMap<>();
     }
 
     /**
-     * Creates mime type list
-     *
-     * @param mimeTypeFilePath path to mime type file
-     * @param defaultMimeType  default mime type
+     * @param configInputStream
+     * @param defaultMimeType
      */
-    public MimeTypeMapping(String mimeTypeFilePath, String defaultMimeType) {
-        this(mimeTypeFilePath);
+    public MimeTypeMapping(InputStream configInputStream, String defaultMimeType) throws IOException {
+        this(configInputStream);
         this.defaultMimeType = defaultMimeType;
     }
 
     /**
-     * Creates mime type list out of the file
-     *
-     * @param mimeTypeFilePath path to mime type file
+     * @param configInputStream
      */
-    public MimeTypeMapping(String mimeTypeFilePath) {
-        try {
-            BufferedReader input = new BufferedReader(new FileReader(mimeTypeFilePath));
-
-            String line = null;
-            while ((line = input.readLine()) != null) {
-                String mime[] = line.split(" ");
-
-                mimeTypes.addElement(mime[0]);
-                try {
-                    mimeTypesExt.addElement(mime[1]);
-                    mimeTypesExtLinks.addElement(new Integer(mimeTypes.size() - 1));
-                } catch (Exception e) {
-                }
+    public MimeTypeMapping(InputStream configInputStream) throws IOException {
+        this();
+        BufferedReader input = new BufferedReader(new InputStreamReader(configInputStream));
+        String line;
+        while ((line = input.readLine()) != null) {
+            String mime[] = line.split(" ");
+            for (int i = 1; i < mime.length; i++) {
+                mapping.put(mime[i].toLowerCase(), mime[0]);
             }
-            input.close();
-
-        } catch (IOException e) {
-            // TODO Throw an exception
-            System.out.println("Error: Unable to read mime.types.");
         }
+        input.close();
     }
 
     /**
-     * Returns mimetype for specified extension
+     * Returns mime type for specified extension
      *
-     * @param ext extension
-     * @return mimetype for specified extension
+     * @param extension extension
+     * @return mime type for specified extension
      */
-    public String getMimeTypeByExtension(String ext) {
-
-        if (ext == null) {
-            return defaultMimeType;
+    public String getMimeTypeByExtension(String extension) {
+        if (extension != null) {
+            extension = extension.toLowerCase();
+            if (mapping.containsKey(extension)) {
+                return mapping.get(extension.toLowerCase());
+            }
         }
 
-        int index = mimeTypesExt.indexOf(ext);
-
-        if (index == -1) {
-            return defaultMimeType;
-        }
-
-        Integer i = (Integer) mimeTypesExtLinks.elementAt(index);
-
-        String mimeType = (String) mimeTypes.elementAt(i.intValue());
-        return mimeType == null ? defaultMimeType : mimeType;
+        return defaultMimeType;
     }
 }

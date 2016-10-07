@@ -7,32 +7,29 @@
 
 package ro.polak.webserver.servlet;
 
+import java.io.IOException;
+
 /**
  * Little servlet service for loading and rolling servlets
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class ServletService implements IServletServiceDriver {
+public class ServletLoader implements ro.polak.webserver.servlet.loader.ServletLoader {
 
-    private IServletServiceDriver driver;
+    private ro.polak.webserver.servlet.loader.ServletLoader driver;
 
     /**
      * Default constructor
      *
      * @param driver
      */
-    public ServletService(IServletServiceDriver driver) {
+    public ServletLoader(ro.polak.webserver.servlet.loader.ServletLoader driver) {
         this.driver = driver;
     }
 
     @Override
-    public boolean loadServlet(String servletPath) throws InstantiationException, IllegalAccessException, ClassCastException {
+    public Servlet loadServlet(String servletPath) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
         return driver.loadServlet(servletPath);
-    }
-
-    @Override
-    public void rollServlet(HTTPRequest request, HTTPResponse response) {
-        driver.rollServlet(request, response);
     }
 }

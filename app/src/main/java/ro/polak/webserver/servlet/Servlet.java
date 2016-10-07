@@ -25,7 +25,7 @@ public abstract class Servlet implements IServlet {
      * @param request  request
      * @param response response
      */
-    protected void run(HTTPRequest request, HTTPResponse response) {
+    public void run(HTTPRequest request, HTTPResponse response) {
         this.session = new HTTPSession(request, response);
 
         this.service(request, response);

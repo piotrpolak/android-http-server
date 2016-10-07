@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver;
@@ -37,79 +37,68 @@ public class WebServer extends Thread {
         WebServer.sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
     }
 
-    private boolean listen = false;
-    private ServerSocket serverSocket = null;
-    private IController controller = null;
+    private boolean listen;
+    private ServerSocket serverSocket;
+    private IController controller;
 
     private ServerConfig serverConfig;
 
     /**
-     * Default constructor
-     *
      * @param controller
+     * @param serverSocket
+     * @param serverConfig
      */
-    public WebServer(IController controller) {
+    public WebServer(IController controller, ServerSocket serverSocket, ServerConfig serverConfig) {
         this.controller = controller;
-        this.controller.println("Initializing WebServer");
+        this.serverSocket = serverSocket;
+        this.serverConfig = serverConfig;
     }
 
-    /**
-     * The listen method
-     */
+    @Override
     public void run() {
-        // Listening
-        try {
-            while (this.listen) {
-                try {
-                    Socket socket = serverSocket.accept();
-                    // this.controller.println("Accepting connection from "+socket.getInetAddress().getHostAddress().toString());
+        while (this.listen) {
+            try {
+                Socket socket = serverSocket.accept();
+                // this.controller.println("Accepting connection from "+socket.getInetAddress().getHostAddress().toString());
 
-                    if (serverConfig.getMaxServerThreads() >= ServerThread.activeCount()) {
-                        // If there are threads allowed to start
-                        new ServerThread(socket, this); // Creating new thread
-                    } else {
-                        // 503 Service Unavailable HERE
-                        (new HTTPError503()).serve(HTTPResponse.createFromSocket(socket));
-                        socket.close();
-                    }
-                } catch (IOException e) {
-                    if (this.listen) {
-                        this.controller.println("ERROR: IO exception while accepting socket: " + e.getMessage());
-                    }
+                if (serverConfig.getMaxServerThreads() >= ServerThread.activeCount()) {
+                    // If there are threads allowed to start
+                    new ServerThread(socket, this); // Creating new thread
+                } else {
+                    // 503 Service Unavailable HERE
+                    (new HTTPError503()).serve(HTTPResponse.createFromSocket(socket));
+                    socket.close();
+                }
+            } catch (IOException e) {
+                if (listen) {
+                    controller.println("Exception: " + e.getClass().getName() + " " + e.getMessage());
                 }
             }
-
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-            }
-        } catch (Exception e) {
-            this.controller.println("Exception: " + e.getClass().getName() + " " + e.getMessage());
         }
 
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+        }
     }
 
     /**
      * Starts the web server
      */
     public boolean startServer() {
-        this.listen = true;
+        listen = true;
 
-        serverConfig = new ServerConfig();
-
-        // Checking document root
         if (!(new File(serverConfig.getDocumentRootPath()).isDirectory())) {
-            this.controller.println("WARNING: DocumentRoot does not exist! PATH: " + serverConfig.getDocumentRootPath());
+            controller.println("WARNING: DocumentRoot does not exist! PATH: " + serverConfig.getDocumentRootPath());
         }
 
-        // Verify the maximum number of threads
         if (serverConfig.getMaxServerThreads() < 1) {
-            this.controller.println("ERROR: MaxThreads should be greater or equal to 1! " + serverConfig.getMaxServerThreads() + " is given.");
+            controller.println("ERROR: MaxThreads should be greater or equal to 1! " + serverConfig.getMaxServerThreads() + " is given.");
             return false;
         }
 
         try {
-            serverSocket = new ServerSocket(serverConfig.getListenPort());
+            serverSocket.bind(new InetSocketAddress(serverConfig.getListenPort()));
         } catch (IOException e) {
             this.controller.println("ERROR: Unable to start server: unable to listen on port " + serverConfig.getListenPort() + "/" + e.getMessage());
             return false;
@@ -126,7 +115,7 @@ public class WebServer extends Thread {
      * Stops the web server
      */
     public void stopServer() {
-        this.listen = false;
+        listen = false;
         if (serverSocket != null) {
             try {
                 serverSocket.close();
@@ -142,7 +131,7 @@ public class WebServer extends Thread {
      * @return
      */
     public boolean isRunning() {
-        return this.listen;
+        return listen;
     }
 
     /**

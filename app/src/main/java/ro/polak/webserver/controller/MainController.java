@@ -7,6 +7,10 @@
 
 package ro.polak.webserver.controller;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+
+import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.WebServer;
 import ro.polak.webserver.gui.*;
 
@@ -66,11 +70,11 @@ public class MainController implements IController {
      */
     public void start() {
         this.gui.initialize(this);
-        this.httpServer = new WebServer(this);
-
-        if (this.httpServer.startServer()) {
+        try {
+            this.httpServer = new WebServer(this, new ServerSocket(), new ServerConfig());
+            this.httpServer.startServer();
             this.gui.start();
-        } else {
+        } catch (IOException e) {
             this.gui.stop();
         }
     }

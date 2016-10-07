@@ -18,10 +18,10 @@ import java.util.Locale;
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.controller.IController;
 import ro.polak.webserver.error.HTTPError503;
-import ro.polak.webserver.resourceloader.AssetResourceLoader;
-import ro.polak.webserver.resourceloader.FileResourceLoader;
-import ro.polak.webserver.resourceloader.IResourceLoader;
-import ro.polak.webserver.resourceloader.ServletResourceLoader;
+import ro.polak.webserver.resource.provider.AssetResourceProvider;
+import ro.polak.webserver.resource.provider.FileResourceProvider;
+import ro.polak.webserver.resource.provider.ResourceProvider;
+import ro.polak.webserver.resource.provider.ServletResourceProvider;
 import ro.polak.webserver.servlet.HTTPRequest;
 import ro.polak.webserver.servlet.HTTPResponse;
 
@@ -91,12 +91,12 @@ public class WebServer extends Thread {
     }
 
     /**
-     * Returns available resource loaders
+     * Returns available resource providers
      *
      * @return
      */
-    public IResourceLoader[] getResourceLoaders() {
-        return new IResourceLoader[]{new FileResourceLoader(), new AssetResourceLoader(), new ServletResourceLoader()};
+    public ResourceProvider[] getResourceProviders() {
+        return new ResourceProvider[]{new FileResourceProvider(), new AssetResourceProvider(), new ServletResourceProvider()};
     }
 
     /**

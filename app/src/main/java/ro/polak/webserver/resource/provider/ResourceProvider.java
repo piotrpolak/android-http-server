@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
 
-package ro.polak.webserver.resourceloader;
+package ro.polak.webserver.resource.provider;
 
 import ro.polak.webserver.servlet.HTTPRequest;
 import ro.polak.webserver.servlet.HTTPResponse;
@@ -13,7 +13,7 @@ import ro.polak.webserver.servlet.HTTPResponse;
 /**
  * Interface used for loading certain types of HTTP resources
  */
-public interface IResourceLoader {
+public interface ResourceProvider {
 
     /**
      * Loads the resource by URI, returns true if the resource was found or an error was served

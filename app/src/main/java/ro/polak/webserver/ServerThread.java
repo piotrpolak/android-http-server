@@ -15,7 +15,7 @@ import java.net.Socket;
 import ro.polak.webserver.error.HTTPError403;
 import ro.polak.webserver.error.HTTPError404;
 import ro.polak.webserver.error.HTTPError405;
-import ro.polak.webserver.resourceloader.IResourceLoader;
+import ro.polak.webserver.resource.provider.ResourceProvider;
 import ro.polak.webserver.servlet.HTTPRequest;
 import ro.polak.webserver.servlet.HTTPResponse;
 
@@ -131,7 +131,7 @@ public class ServerThread extends Thread {
      * @return
      */
     private boolean loadResourceByPath(HTTPRequest request, HTTPResponse response, String path) {
-        IResourceLoader[] rl = webServer.getResourceLoaders();
+        ResourceProvider[] rl = webServer.getResourceProviders();
         for (int i = 0; i < rl.length; i++) {
             if (rl[i].load(path, request, response)) {
                 return true;

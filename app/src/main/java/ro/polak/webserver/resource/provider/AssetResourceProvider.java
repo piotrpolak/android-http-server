@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
 
-package ro.polak.webserver.resourceloader;
+package ro.polak.webserver.resource.provider;
 
 import android.content.Context;
 
@@ -18,14 +18,14 @@ import ro.polak.webserver.servlet.HTTPRequest;
 import ro.polak.webserver.servlet.HTTPResponse;
 
 /**
- * APK asset resource loader
+ * APK asset resource provider
  * <p/>
- * This loader loads the bundled resources from the APK internal structure
+ * This provider loads the bundled resources from the APK internal structure
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
  */
-public class AssetResourceLoader implements IResourceLoader {
+public class AssetResourceProvider implements ResourceProvider {
 
     @Override
     public boolean load(String uri, HTTPRequest request, HTTPResponse response) {

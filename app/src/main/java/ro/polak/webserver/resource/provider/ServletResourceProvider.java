@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.webserver.resourceloader;
+package ro.polak.webserver.resource.provider;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.HTTPResponseHeaders;
@@ -18,14 +18,14 @@ import ro.polak.webserver.servlet.loader.ClassPathServletLoader;
 import ro.polak.webserver.servlet.loader.ServletLoader;
 
 /**
- * Servlet resource loader
+ * Servlet resource provider
  * <p/>
- * This loader enables the URLs to be interpreted by servlets
+ * This provider enables the URLs to be interpreted by servlets
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
  */
-public class ServletResourceLoader implements IResourceLoader {
+public class ServletResourceProvider implements ResourceProvider {
 
     // Initialize servlet service in a static way
     private static ServletLoader servletService;

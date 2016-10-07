@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
 
-package ro.polak.webserver.resourceloader;
+package ro.polak.webserver.resource.provider;
 
 import java.io.File;
 
@@ -16,14 +16,14 @@ import ro.polak.webserver.servlet.HTTPRequest;
 import ro.polak.webserver.servlet.HTTPResponse;
 
 /**
- * File system asset resource loader
+ * File system asset resource provider
  * <p/>
- * This loader loads the resources from the storage
+ * This provider loads the resources from the storage
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
  */
-public class FileResourceLoader implements IResourceLoader {
+public class FileResourceProvider implements ResourceProvider {
 
     @Override
     public boolean load(String uri, HTTPRequest request, HTTPResponse response) {
@@ -39,7 +39,7 @@ public class FileResourceLoader implements IResourceLoader {
             response.setContentLength(file.length());
 
             // Serving file for all the request but for HEAD
-            if (!request.getHeaders().getMethod().equals("HEAD")) {
+            if (!request.getHeaders().getMethod().equals(HTTPRequest.METHOD_HEAD)) {
                 response.serveFile(file);
             }
 

@@ -2,9 +2,9 @@ package ro.polak.webserver;
 
 import org.junit.Test;
 
-import java.util.Hashtable;
+import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class QueryStringParserTest {
 
@@ -17,7 +17,7 @@ public class QueryStringParserTest {
                 + "&param4=A%20B%20%3D%20%25%20*";
 
         QueryStringParser parser = new QueryStringParser();
-        Hashtable<String, String> parameters = parser.parse(data);
+        Map<String, String> parameters = parser.parse(data);
 
         assertEquals(4, parameters.size());
 

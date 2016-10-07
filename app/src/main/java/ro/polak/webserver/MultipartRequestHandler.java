@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver;
@@ -13,7 +13,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import ro.polak.utilities.RandomStringGenerator;
 import ro.polak.webserver.servlet.UploadedFile;
@@ -46,8 +48,8 @@ public class MultipartRequestHandler {
     private String currentDeliminator;
     private String temporaryUploadsDirectory;
     private MultipartHeadersPart multipartHeadersPart;
-    private ArrayList<UploadedFile> uploadedFiles = new ArrayList<UploadedFile>();
-    private Hashtable post = new Hashtable<String, String>();
+    private List<UploadedFile> uploadedFiles = new ArrayList<>();
+    private Map<String, String> post = new HashMap<>();
     private boolean wasHandledBefore = false;
 
     /**
@@ -100,7 +102,7 @@ public class MultipartRequestHandler {
      *
      * @return AttributeList representation of POST attributes
      */
-    public Hashtable<String, String> getPost() {
+    public Map<String, String> getPost() {
         return this.post;
     }
 
@@ -109,7 +111,7 @@ public class MultipartRequestHandler {
      *
      * @return
      */
-    public ArrayList<UploadedFile> getUploadedFiles() {
+    public List<UploadedFile> getUploadedFiles() {
         return this.uploadedFiles;
     }
 

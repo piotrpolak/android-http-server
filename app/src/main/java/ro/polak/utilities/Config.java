@@ -1,17 +1,15 @@
 /**************************************************
- *
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- *
- * Copyright (c) Piotr Polak 2008-2015
- *
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.utilities;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  * Server configuration
@@ -19,7 +17,7 @@ import java.util.Hashtable;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class Config extends Hashtable<String, String> {
+public class Config extends HashMap<String, String> {
 
     /**
      * Reads the config file
@@ -39,7 +37,7 @@ public class Config extends Hashtable<String, String> {
 
             while ((line = input.readLine()) != null) {
 
-				// Ignoring any line that is shorter than 3 characters
+                // Ignoring any line that is shorter than 3 characters
                 if (line.length() < 3) {
                     continue;
                 }
@@ -50,8 +48,7 @@ public class Config extends Hashtable<String, String> {
 
                 // Protection against empty parameter name
                 int firstSpacePosition = line.indexOf(" ");
-                if( firstSpacePosition < 1 )
-                {
+                if (firstSpacePosition < 1) {
                     continue;
                 }
 

@@ -7,7 +7,8 @@
 
 package ro.polak.webserver;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * HTTP request headers wrapper
@@ -23,8 +24,8 @@ public class QueryStringParser {
      * @param queryString
      * @return
      */
-    public Hashtable<String, String> parse(String queryString) {
-        Hashtable<String, String> parameters = new Hashtable();
+    public Map<String, String> parse(String queryString) {
+        Map<String, String> parameters = new HashMap<>();
         String queryParametersArray[] = queryString.split("&");
         if (queryParametersArray.length > 0) {
             for (int i = 0; i < queryParametersArray.length; i++) {

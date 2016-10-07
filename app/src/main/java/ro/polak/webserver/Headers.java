@@ -7,7 +7,8 @@
 
 package ro.polak.webserver;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
@@ -35,7 +36,7 @@ public class Headers {
     public static final String HEADER_COOKIE = "Cookie";
 
     protected String status = "";
-    protected Hashtable<String, String> vars = new Hashtable<>();
+    protected Map<String, String> vars = new HashMap<>();
 
     /**
      * Parses message headers

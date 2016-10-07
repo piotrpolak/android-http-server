@@ -2,12 +2,12 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver;
 
-import java.util.Enumeration;
+import java.util.Set;
 
 /**
  * HTTP response headers representation
@@ -43,10 +43,9 @@ public class HTTPResponseHeaders extends Headers {
     public String toString() {
 
         String headersStr = status;
-        Enumeration<String> keys = vars.keys();
+        Set<String> keys = vars.keySet();
 
-        while (keys.hasMoreElements()) {
-            String key = keys.nextElement();
+        for (String key : keys) {
             headersStr += key + ": " + vars.get(key) + "\r\n";
         }
 

@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver.servlet;
@@ -10,7 +10,8 @@ package ro.polak.webserver.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.HTTPRequestHeaders;
@@ -43,9 +44,9 @@ public class HTTPRequest {
     private HTTPRequestHeaders headers;
     private boolean isKeepAlive = false;
     private boolean isMultipart = false;
-    private String remoteAddress = null;
-    private Hashtable cookies = null;
-    private FileUpload fileUpload = new FileUpload();
+    private String remoteAddress;
+    private Map cookies;
+    private FileUpload fileUpload;
 
 
     /**
@@ -181,6 +182,7 @@ public class HTTPRequest {
      */
     private HTTPRequest() {
         Statistics.addRequest();
+        fileUpload = new FileUpload();
     }
 
     /**
@@ -272,7 +274,7 @@ public class HTTPRequest {
         // Parses cookies upon request
         if (cookies == null) {
             // now parsing only for a new cookies
-            cookies = new Hashtable<String, String>();
+            cookies = new HashMap();
 
             // Return null when there is no cookie headers
             if (!headers.containsHeader("Cookie")) {

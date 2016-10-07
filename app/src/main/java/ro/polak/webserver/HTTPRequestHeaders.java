@@ -7,7 +7,8 @@
 
 package ro.polak.webserver;
 
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * HTTP request headers wrapper
@@ -22,8 +23,8 @@ public class HTTPRequestHeaders extends Headers {
     private String protocol;
     private String uri;
     private String path;
-    private Hashtable _post = new Hashtable<String, String>();
-    private Hashtable _get = new Hashtable<String, String>();
+    private Map<String, String> _post = new HashMap<>();
+    private Map<String, String> _get = new HashMap<>();
     private QueryStringParser queryStringParser = new QueryStringParser();
 
     /**
@@ -73,7 +74,7 @@ public class HTTPRequestHeaders extends Headers {
      *
      * @param _post POST AttributeList
      */
-    public void setPost(Hashtable<String, String> _post) {
+    public void setPost(Map<String, String> _post) {
         this._post = _post;
     }
 
@@ -129,7 +130,7 @@ public class HTTPRequestHeaders extends Headers {
      * @return specified GET attribute
      */
     public String _get(String attributeName) {
-        return (String) _get.get(attributeName);
+        return _get.get(attributeName);
     }
 
     /**
@@ -139,6 +140,6 @@ public class HTTPRequestHeaders extends Headers {
      * @return specified POST attribute
      */
     public String _post(String attributeName) {
-        return (String) _post.get(attributeName);
+        return _post.get(attributeName);
     }
 }

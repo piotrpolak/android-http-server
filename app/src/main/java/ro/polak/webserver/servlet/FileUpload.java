@@ -2,12 +2,12 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver.servlet;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles file upload
@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class FileUpload {
 
-    private ArrayList<UploadedFile> uploadedFiles;
+    private List<UploadedFile> uploadedFiles;
     private int popCounter = -1;
 
     /**
@@ -25,8 +25,7 @@ public class FileUpload {
      *
      * @param uploadedFiles ArrayList of uploaded files
      */
-    public FileUpload(ArrayList<UploadedFile> uploadedFiles)// <UploadedFile>
-    {
+    public FileUpload(List<UploadedFile> uploadedFiles) {
         this.uploadedFiles = uploadedFiles;
     }
 
@@ -47,8 +46,8 @@ public class FileUpload {
             return null;
         }
         for (int i = 0; i < uploadedFiles.size(); i++) {
-            if (((UploadedFile) uploadedFiles.get(i)).getPostFieldName().equals(fileFormName)) {
-                return (UploadedFile) uploadedFiles.get(i);
+            if (uploadedFiles.get(i).getPostFieldName().equals(fileFormName)) {
+                return uploadedFiles.get(i);
             }
         }
         return null;
@@ -61,7 +60,7 @@ public class FileUpload {
      */
     public UploadedFile pop() {
         if (++popCounter < uploadedFiles.size()) {
-            return (UploadedFile) uploadedFiles.get(popCounter);
+            return uploadedFiles.get(popCounter);
         }
         return null;
     }
@@ -94,7 +93,7 @@ public class FileUpload {
         }
 
         for (int i = 0; i < uploadedFiles.size(); i++) {
-            ((UploadedFile) uploadedFiles.get(i)).destroy();
+            uploadedFiles.get(i).destroy();
         }
 
         uploadedFiles = null;

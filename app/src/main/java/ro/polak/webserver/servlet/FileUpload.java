@@ -7,7 +7,7 @@
 
 package ro.polak.webserver.servlet;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Handles file upload
@@ -17,15 +17,15 @@ import java.util.Vector;
  */
 public class FileUpload {
 
-    private Vector<UploadedFile> uploadedFiles;
+    private ArrayList<UploadedFile> uploadedFiles;
     private int popCounter = -1;
 
     /**
      * Default constructor
      *
-     * @param uploadedFiles Vector of uploaded files
+     * @param uploadedFiles ArrayList of uploaded files
      */
-    public FileUpload(Vector<UploadedFile> uploadedFiles)// <UploadedFile>
+    public FileUpload(ArrayList<UploadedFile> uploadedFiles)// <UploadedFile>
     {
         this.uploadedFiles = uploadedFiles;
     }
@@ -47,8 +47,8 @@ public class FileUpload {
             return null;
         }
         for (int i = 0; i < uploadedFiles.size(); i++) {
-            if (((UploadedFile) uploadedFiles.elementAt(i)).getPostFieldName().equals(fileFormName)) {
-                return (UploadedFile) uploadedFiles.elementAt(i);
+            if (((UploadedFile) uploadedFiles.get(i)).getPostFieldName().equals(fileFormName)) {
+                return (UploadedFile) uploadedFiles.get(i);
             }
         }
         return null;
@@ -61,7 +61,7 @@ public class FileUpload {
      */
     public UploadedFile pop() {
         if (++popCounter < uploadedFiles.size()) {
-            return (UploadedFile) uploadedFiles.elementAt(popCounter);
+            return (UploadedFile) uploadedFiles.get(popCounter);
         }
         return null;
     }
@@ -94,7 +94,7 @@ public class FileUpload {
         }
 
         for (int i = 0; i < uploadedFiles.size(); i++) {
-            ((UploadedFile) uploadedFiles.elementAt(i)).destroy();
+            ((UploadedFile) uploadedFiles.get(i)).destroy();
         }
 
         uploadedFiles = null;

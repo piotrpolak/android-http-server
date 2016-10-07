@@ -58,30 +58,35 @@ public class WebServer extends Thread {
      */
     public void run() {
         // Listening
-        while (this.listen) {
-            try {
-                Socket socket = serverSocket.accept();
-                // this.controller.println("Accepting connection from "+socket.getInetAddress().getHostAddress().toString());
+        try {
+            while (this.listen) {
+                try {
+                    Socket socket = serverSocket.accept();
+                    // this.controller.println("Accepting connection from "+socket.getInetAddress().getHostAddress().toString());
 
-                if (serverConfig.getMaxServerThreads() >= ServerThread.activeCount()) {
-                    // If there are threads allowed to start
-                    new ServerThread(socket, this); // Creating new thread
-                } else {
-                    // 503 Service Unavailable HERE
-                    (new HTTPError503()).serve(HTTPResponse.createFromSocket(socket));
-                    socket.close();
-                }
-            } catch (IOException e) {
-                if (this.listen) {
-                    this.controller.println("ERROR: IO exception while accepting socket: " + e.getMessage());
+                    if (serverConfig.getMaxServerThreads() >= ServerThread.activeCount()) {
+                        // If there are threads allowed to start
+                        new ServerThread(socket, this); // Creating new thread
+                    } else {
+                        // 503 Service Unavailable HERE
+                        (new HTTPError503()).serve(HTTPResponse.createFromSocket(socket));
+                        socket.close();
+                    }
+                } catch (IOException e) {
+                    if (this.listen) {
+                        this.controller.println("ERROR: IO exception while accepting socket: " + e.getMessage());
+                    }
                 }
             }
+
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+            }
+        } catch (Exception e) {
+            this.controller.println("Exception: " + e.getClass().getName() + " " + e.getMessage());
         }
 
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-        }
     }
 
     /**

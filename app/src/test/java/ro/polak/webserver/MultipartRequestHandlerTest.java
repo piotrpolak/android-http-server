@@ -4,10 +4,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class MultipartRequestHandlerTest {
 
@@ -39,7 +41,12 @@ public class MultipartRequestHandlerTest {
                         "--" + boundary + nl + nl;
 
         MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data), data.length(), boundary, temporaryUploadsDirectory);
-        mrh.handle();
+
+        try {
+            mrh.handle();
+        } catch (IOException e) {
+            fail("Should not throw IOException");
+        }
 
         assertEquals(3, mrh.getPost().size());
 
@@ -66,7 +73,13 @@ public class MultipartRequestHandlerTest {
                         "--" + boundary + nl + nl;
 
         MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data), data.length(), boundary, temporaryUploadsDirectory);
-        mrh.handle();
+
+        try {
+            mrh.handle();
+        } catch (IOException e) {
+            fail("Should not throw IOException");
+        }
+
 
         assertEquals(3, mrh.getPost().size());
 
@@ -90,13 +103,17 @@ public class MultipartRequestHandlerTest {
                         "--" + boundary + nl + nl;
 
         MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data), data.length(), boundary, temporaryUploadsDirectory);
-        mrh.handle();
+        try {
+            mrh.handle();
+        } catch (IOException e) {
+            fail("Should not throw IOException");
+        }
 
         assertEquals(1, mrh.getPost().size());
 
         assertEquals("A123", mrh.getPost().get("field_1"));
         assertEquals(1, mrh.getUploadedFiles().size());
-        assertEquals(4, mrh.getUploadedFiles().firstElement().getFile().length());
+        assertEquals(4, mrh.getUploadedFiles().get(0).getFile().length());
         // TODO Check file content
     }
 
@@ -152,7 +169,11 @@ public class MultipartRequestHandlerTest {
                         "--" + boundary + nl + nl;
 
         MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data), data.length(), boundary, temporaryUploadsDirectory, 1);
-        mrh.handle();
+        try {
+            mrh.handle();
+        } catch (IOException e) {
+            fail("Should not throw IOException");
+        }
 
         assertEquals("A", mrh.getPost().get("field_01"));
         assertEquals("BB", mrh.getPost().get("field_02"));

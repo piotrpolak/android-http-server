@@ -154,7 +154,6 @@ public class HeadersTest {
         assertNull(headers.getHeader("Non-existent"));
     }
 
-
     @Test
     public void testParseExtraReturns() {
         Headers headers = new Headers();

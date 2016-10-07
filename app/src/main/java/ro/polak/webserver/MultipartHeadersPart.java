@@ -28,7 +28,7 @@ public class MultipartHeadersPart extends Headers {
     public void parse(String headersString) {
 
         // Parsing header pairs
-        super.parse(headersString);
+        super.parse(headersString, false);
 
         // Reading uploaded file name
         String contentDisposition = this.getHeader(Headers.HEADER_CONTENT_DISPOSITION);
@@ -44,8 +44,7 @@ public class MultipartHeadersPart extends Headers {
         String contentType = this.getHeader(Headers.HEADER_CONTENT_TYPE);
 
         // Getting file name
-        String fileName = null;
-        fileName = contentDisposition.substring(contentDisposition.indexOf("filename=\"") + 10);
+        String fileName = contentDisposition.substring(contentDisposition.indexOf("filename=\"") + 10);
         fileName = fileName.substring(0, fileName.indexOf("\""));
 
         // Assigning values

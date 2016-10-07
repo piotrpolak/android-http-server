@@ -20,20 +20,15 @@ import java.util.Set;
  */
 public class HTTPResponseHeaders extends Headers {
 
-    /* Constants */
-    // TODO Remove trailing \r\n
-    public static final String STATUS_OK = "HTTP/1.1 200 OK\r\n";
-    public static final String STATUS_NOT_FOUND = "HTTP/1.1 404 Not Found\r\n";
-    public static final String STATUS_SERVICE_UNAVAILABLE = "HTTP/1.1 503 Service Unavailable\r\n";
-    public static final String STATUS_METHOD_NOT_ALLOWED = "HTTP/1.1 405 Method Not Allowed\r\n";
-    public static final String STATUS_INTERNAL_SERVER_ERROR = "HTTP/1.1 500 Internal Server Error\r\n";
-    public static final String STATUS_ACCESS_DENIED = "HTTP/1.1 403 Forbidden\r\n";
-    public static final String STATUS_MOVED_PERMANENTLY = "HTTP/1.1 301 Moved Permanently\r\n";
-    // FUTURE
-    // public static final String STATUS_NOT_MODIFIED =
-    // "HTTP/1.1 304 Not Modified\r\n";
-    // public static final String STATUS_NOT_IMPLEMENTED =
-    // "HTTP/1.1 501 Not Implemented\r\n";
+    public static final String STATUS_OK = "HTTP/1.1 200 OK";
+    public static final String STATUS_NOT_FOUND = "HTTP/1.1 404 Not Found";
+    public static final String STATUS_SERVICE_UNAVAILABLE = "HTTP/1.1 503 Service Unavailable";
+    public static final String STATUS_METHOD_NOT_ALLOWED = "HTTP/1.1 405 Method Not Allowed";
+    public static final String STATUS_INTERNAL_SERVER_ERROR = "HTTP/1.1 500 Internal Server Error";
+    public static final String STATUS_ACCESS_DENIED = "HTTP/1.1 403 Forbidden";
+    public static final String STATUS_MOVED_PERMANENTLY = "HTTP/1.1 301 Moved Permanently";
+    public static final String STATUS_NOT_MODIFIED = "HTTP/1.1 304 Not Modified";
+    public static final String STATUS_NOT_IMPLEMENTED = "HTTP/1.1 501 Not Implemented";
 
     /**
      * String representation of headers
@@ -41,14 +36,14 @@ public class HTTPResponseHeaders extends Headers {
      * @return
      */
     public String toString() {
-
-        String headersStr = status;
-        Set<String> keys = vars.keySet();
-
-        for (String key : keys) {
-            headersStr += key + ": " + vars.get(key) + "\r\n";
+        Set<String> names = headers.keySet();
+        StringBuilder sb = new StringBuilder();
+        sb.append(status).append("\r\n");
+        for (String name : names) {
+            sb.append(name).append(": ").append(headers.get(name)).append("\r\n");
         }
+        sb.append("\r\n");
 
-        return headersStr + "\r\n"; // Adding one extra empty line
+        return sb.toString();
     }
 }

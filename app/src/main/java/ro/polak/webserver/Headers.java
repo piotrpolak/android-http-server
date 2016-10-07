@@ -20,7 +20,6 @@ import java.util.StringTokenizer;
  */
 public class Headers {
 
-    // TODO Make Headers to extend HashTable or another (best suited) collection class
     // TODO Refactor to MessageHeaders
 
     public static final String HEADER_ALLOW = "Allow";
@@ -36,24 +35,31 @@ public class Headers {
     public static final String HEADER_COOKIE = "Cookie";
 
     protected String status = "";
-    protected Map<String, String> vars = new HashMap<>();
+    protected Map<String, String> headers = new HashMap<>();
+    protected Map<String, String> namesMap = new HashMap<>();
 
     /**
-     * Parses message headers
+     * Parses message headers.
      *
      * @param headersString raw headers
      */
     public void parse(String headersString) {
+        parse(headersString, true);
+    }
 
-        // TODO refactor to public Headers parse(String headersString)
-
+    /**
+     * Parses message headers.
+     *
+     * @param headersString
+     * @param joinRepeatingHeaders
+     */
+    public void parse(String headersString, boolean joinRepeatingHeaders) {
         // Mandatory \r https://www.w3.org/Protocols/rfc2616/rfc2616-sec2.html#sec2.2
         StringTokenizer st = new StringTokenizer(headersString, "\r\n");
         String lastHeaderName = null;
         StringBuffer lastHeaderValue = new StringBuffer();
 
         while (st.hasMoreElements()) {
-
             String line = st.nextToken();
             char firstChar = line.charAt(0);
 
@@ -63,7 +69,7 @@ public class Headers {
                 if (null != lastHeaderName) {
                     lastHeaderValue.append(" ");
                     lastHeaderValue.append(ltrim(line));
-                    this.setHeader(lastHeaderName, ltrim(lastHeaderValue.toString())); // Overwrite the previous value
+                    setHeader(lastHeaderName, lastHeaderValue.toString()); // Overwrite the previous value
                 }
             } else {
                 // Cleans up the previous value
@@ -77,8 +83,14 @@ public class Headers {
 
                 lastHeaderName = headerLineValues[0];
 
-                lastHeaderValue.append(headerLineValues[1].substring(0, headerLineValues[1].length()));
-                this.setHeader(lastHeaderName, ltrim(lastHeaderValue.toString()));
+                if (joinRepeatingHeaders) {
+                    if (containsHeader(lastHeaderName)) {
+                        lastHeaderValue.append(getHeader(lastHeaderName)).append(',');
+                    }
+                }
+
+                lastHeaderValue.append(ltrim(headerLineValues[1].substring(0, headerLineValues[1].length())));
+                setHeader(lastHeaderName, lastHeaderValue.toString());
             }
         }
     }
@@ -96,31 +108,32 @@ public class Headers {
     /**
      * Sets a header
      *
-     * @param headerName  header name
-     * @param headerValue header value
+     * @param name  header name
+     * @param value header value
      */
-    public void setHeader(String headerName, String headerValue) {
-        vars.put(headerName.toLowerCase(), headerValue);
+    public void setHeader(String name, String value) {
+        namesMap.put(name.toLowerCase(), name);
+        headers.put(name, value);
     }
 
     /**
      * Returns header's value
      *
-     * @param headerName name of the header
+     * @param name name of the header
      * @return header's value
      */
-    public String getHeader(String headerName) {
-        return vars.get(headerName.toLowerCase());
+    public String getHeader(String name) {
+        return headers.get(namesMap.get(name.toLowerCase()));
     }
 
     /**
      * Tells whether a header of specified name exists
      *
-     * @param headerName
+     * @param name
      * @return
      */
-    public boolean containsHeader(String headerName) {
-        return vars.containsKey(headerName.toLowerCase());
+    public boolean containsHeader(String name) {
+        return namesMap.containsKey(name.toLowerCase());
     }
 
     /**

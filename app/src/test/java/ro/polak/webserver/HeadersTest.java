@@ -2,7 +2,10 @@ package ro.polak.webserver;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class HeadersTest {
 
@@ -109,9 +112,13 @@ public class HeadersTest {
     @Test
     public void testParseMultilineHeaderWithSingleLeadingSpace() {
         Headers headers = new Headers();
-        headers.parse("Word-Of-The-Day: The Fox Jumps Over\r\n the\r\n brown dog.\r\nCookie: ABCD");
+        headers.parse("Word-Of-The-Day: The Fox Jumps Over\r\n the\r\n brown dog.\r\nAnother: Another\r\n multiline\r\n header\r\nCookie: ABCD");
+
+        assertTrue(headers.containsHeader("Word-Of-The-Day"));
+        assertTrue(headers.containsHeader("Another"));
 
         assertEquals("The Fox Jumps Over the brown dog.", headers.getHeader("Word-Of-The-Day"));
+        assertEquals("Another multiline header", headers.getHeader("Another"));
 
         assertTrue(headers.containsHeader("Cookie"));
         assertEquals("ABCD", headers.getHeader("Cookie"));
@@ -135,6 +142,7 @@ public class HeadersTest {
         Headers headers = new Headers();
         headers.parse("Word-Of-The-Day: The Fox Jumps Over\r\n\tthe\r\n\t brown dog.\r\nCookie: ABCD");
 
+        assertTrue(headers.containsHeader("Word-Of-The-Day"));
         assertEquals("The Fox Jumps Over the brown dog.", headers.getHeader("Word-Of-The-Day"));
 
         assertTrue(headers.containsHeader("Cookie"));
@@ -147,6 +155,7 @@ public class HeadersTest {
         Headers headers = new Headers();
         headers.parse("Word-Of-The-Day: The Fox Jumps Over\r\n        the\r\n        brown dog.\r\nCookie: ABCD");
 
+        assertTrue(headers.containsHeader("Word-Of-The-Day"));
         assertEquals("The Fox Jumps Over the brown dog.", headers.getHeader("Word-Of-The-Day"));
 
         assertTrue(headers.containsHeader("Cookie"));
@@ -167,5 +176,13 @@ public class HeadersTest {
         assertEquals("XYZ", headers.getHeader("Test"));
         assertEquals("1", headers.getHeader("Server"));
         assertNull(headers.getHeader("Non-existent"));
+    }
+
+    @Test
+    public void testParseMultiValues() {
+        Headers headers = new Headers();
+        headers.parse("Accept: application/xml\r\nAccept: application/json\r\n");
+        assertTrue(headers.containsHeader("Accept"));
+        assertEquals("application/xml,application/json", headers.getHeader("Accept"));
     }
 }

@@ -27,14 +27,14 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 import ro.polak.webserver.R;
-import ro.polak.webserver.controller.IController;
+import ro.polak.webserver.controller.Controller;
 import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.gui.IServerUI;
+import ro.polak.webserver.gui.ServerGui;
 
 /**
  * The main server Android activity
  */
-public class MainActivity extends AppCompatActivity implements IServerUI {
+public class MainActivity extends AppCompatActivity implements ServerGui {
 
     private TextView status, ipText, consoleText;
     private Button actionButton, backgroundButton, quitButton;
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements IServerUI {
      *
      * @param controller
      */
-    public void initialize(IController controller) {
+    public void initialize(Controller controller) {
         // This is ignored as GUI is the starter
     }
 

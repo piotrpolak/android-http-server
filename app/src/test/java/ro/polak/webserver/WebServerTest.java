@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import ro.polak.webserver.controller.IController;
+import ro.polak.webserver.controller.Controller;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -17,7 +17,7 @@ public class WebServerTest {
     public void shouldCaptureIOException() throws IOException {
         ServerSocket serverSocket = mock(ServerSocket.class);
         when(serverSocket.accept()).thenThrow(new IOException());
-        WebServer webServer = new WebServer(mock(IController.class), serverSocket, mock(ServerConfig.class));
+        WebServer webServer = new WebServer(mock(Controller.class), serverSocket, mock(ServerConfig.class));
         try {
             webServer.run();
         } catch (Exception e) {

@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import ro.polak.utilities.Utilities;
-import ro.polak.webserver.controller.IController;
+import ro.polak.webserver.controller.Controller;
 import ro.polak.webserver.error.HTTPError503;
 import ro.polak.webserver.resource.provider.AssetResourceProvider;
 import ro.polak.webserver.resource.provider.FileResourceProvider;
@@ -46,7 +46,7 @@ public class WebServer extends Thread {
 
     private boolean listen;
     private ServerSocket serverSocket;
-    private IController controller;
+    private Controller controller;
 
     private ServerConfig serverConfig;
 
@@ -55,7 +55,7 @@ public class WebServer extends Thread {
      * @param serverSocket
      * @param serverConfig
      */
-    public WebServer(IController controller, ServerSocket serverSocket, ServerConfig serverConfig) {
+    public WebServer(Controller controller, ServerSocket serverSocket, ServerConfig serverConfig) {
         this.controller = controller;
         this.serverSocket = serverSocket;
         this.serverConfig = serverConfig;

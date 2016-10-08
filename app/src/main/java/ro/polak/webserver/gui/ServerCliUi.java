@@ -7,15 +7,15 @@
 
 package ro.polak.webserver.gui;
 
-import ro.polak.webserver.controller.IController;
+import ro.polak.webserver.controller.Controller;
 
 /**
  * Server CLI interface
  */
-public class ServerCLI implements IServerUI {
+public class ServerCliUi implements ServerGui {
 
     @Override
-    public void initialize(IController controller) {
+    public void initialize(Controller controller) {
 
     }
 

@@ -7,19 +7,19 @@
 
 package ro.polak.webserver.gui;
 
-import ro.polak.webserver.controller.IController;
+import ro.polak.webserver.controller.Controller;
 
 /**
  * Defines methods that should be implemented by the server runner GUI (CLI, Swing, Android..)
  */
-public interface IServerUI {
+public interface ServerGui {
 
     /**
      * GUI initialization method
      *
      * @param controller
      */
-    void initialize(IController controller);
+    void initialize(Controller controller);
 
     /**
      * GUI print debug method

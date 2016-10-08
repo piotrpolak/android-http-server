@@ -17,7 +17,7 @@ import java.lang.Object;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201012
  */
-public interface IController {
+public interface Controller {
 
     /**
      * Prints the log line into the specific output

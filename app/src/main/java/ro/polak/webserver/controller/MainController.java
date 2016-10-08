@@ -20,10 +20,10 @@ import ro.polak.webserver.gui.*;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 2001012
  */
-public class MainController implements IController {
+public class MainController implements Controller {
 
     private WebServer webServer;
-    private IServerUI gui;
+    private ServerGui gui;
     private Object context;
     private static MainController instance;
 
@@ -52,7 +52,7 @@ public class MainController implements IController {
      *
      * @param gui
      */
-    public void setGui(IServerUI gui) {
+    public void setGui(ServerGui gui) {
         this.gui = gui;
     }
 

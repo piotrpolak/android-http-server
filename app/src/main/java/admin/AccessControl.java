@@ -9,11 +9,11 @@ package admin;
 
 import ro.polak.utilities.Config;
 import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.HTTPSession;
+import ro.polak.webserver.servlet.HttpSession;
 
 public class AccessControl {
 
-    protected HTTPSession session;
+    protected HttpSession session;
     private static Config config;
 
     /**
@@ -21,7 +21,7 @@ public class AccessControl {
      *
      * @param session
      */
-    public AccessControl(HTTPSession session) {
+    public AccessControl(HttpSession session) {
         this.session = session;
     }
 

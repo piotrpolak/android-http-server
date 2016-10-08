@@ -13,7 +13,7 @@ package ro.polak.webserver.servlet;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200902
  */
-public interface IServlet {
+public interface HttpServlet {
 
     /**
      * The servlet initialization method. The reusable resources should be
@@ -31,5 +31,5 @@ public interface IServlet {
      * The main method of the servlet. Must be overridden, contains the servlet
      * body.
      */
-    void service(HTTPRequest request, HTTPResponse response);
+    void service(HttpRequest request, HttpResponse response);
 }

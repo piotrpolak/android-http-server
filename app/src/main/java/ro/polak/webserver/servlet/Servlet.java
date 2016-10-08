@@ -15,9 +15,9 @@ import ro.polak.webserver.Headers;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public abstract class Servlet implements IServlet {
+public abstract class Servlet implements HttpServlet {
 
-    private HTTPSession session;
+    private HttpSession session;
 
     /**
      * Runs the servlet
@@ -25,8 +25,8 @@ public abstract class Servlet implements IServlet {
      * @param request  request
      * @param response response
      */
-    public void run(HTTPRequest request, HTTPResponse response) {
-        this.session = new HTTPSession(request, response);
+    public void run(HttpRequest request, HttpResponse response) {
+        this.session = new HttpSession(request, response);
 
         this.service(request, response);
         this.terminate(request, response);
@@ -45,7 +45,7 @@ public abstract class Servlet implements IServlet {
      * <p/>
      * Sets all necessary headers, flushes content
      */
-    private void terminate(HTTPRequest request, HTTPResponse response) {
+    private void terminate(HttpRequest request, HttpResponse response) {
         // Freezing session
         session.freeze();
 
@@ -86,7 +86,7 @@ public abstract class Servlet implements IServlet {
      *
      * @return
      */
-    public HTTPSession getSession() {
+    public HttpSession getSession() {
         return session;
     }
 

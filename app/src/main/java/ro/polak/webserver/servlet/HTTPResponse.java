@@ -18,7 +18,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import ro.polak.utilities.Utilities;
-import ro.polak.webserver.HTTPResponseHeaders;
+import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.Headers;
 import ro.polak.webserver.Statistics;
 import ro.polak.webserver.WebServer;
@@ -30,9 +30,9 @@ import ro.polak.webserver.controller.MainController;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class HTTPResponse {
+public class HttpResponse {
 
-    private HTTPResponseHeaders headers;
+    private HttpResponseHeaders headers;
     private OutputStream out;
     private PrintWriter printWriter = null;
     private boolean headersFlushed = false;
@@ -43,10 +43,10 @@ public class HTTPResponse {
      * @param socket
      * @return
      */
-    public static HTTPResponse createFromSocket(Socket socket) throws IOException {
+    public static HttpResponse createFromSocket(Socket socket) throws IOException {
 
-        HTTPResponse response = new HTTPResponse();
-        response.headers = new HTTPResponseHeaders();
+        HttpResponse response = new HttpResponse();
+        response.headers = new HttpResponseHeaders();
         response.out = socket.getOutputStream();
         response.setKeepAlive(false);
 
@@ -177,7 +177,7 @@ public class HTTPResponse {
      * @param location - relative or absolute path (URL)
      */
     public void sendRedirect(String location) {
-        headers.setStatus(HTTPResponseHeaders.STATUS_MOVED_PERMANENTLY);
+        headers.setStatus(HttpResponseHeaders.STATUS_MOVED_PERMANENTLY);
         headers.setHeader(Headers.HEADER_LOCATION, location);
         flushHeaders();
     }
@@ -307,7 +307,7 @@ public class HTTPResponse {
      *
      * @return
      */
-    public HTTPResponseHeaders getHeaders() {
+    public HttpResponseHeaders getHeaders() {
         return headers;
     }
 

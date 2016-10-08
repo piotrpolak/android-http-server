@@ -10,10 +10,10 @@ package ro.polak.webserver.resource.provider;
 import java.io.File;
 
 import ro.polak.utilities.Utilities;
-import ro.polak.webserver.HTTPResponseHeaders;
+import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.HTTPRequest;
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
 
 /**
  * File system asset resource provider
@@ -26,7 +26,7 @@ import ro.polak.webserver.servlet.HTTPResponse;
 public class FileResourceProvider implements ResourceProvider {
 
     @Override
-    public boolean load(String uri, HTTPRequest request, HTTPResponse response) {
+    public boolean load(String uri, HttpRequest request, HttpResponse response) {
 
         File file = new File(MainController.getInstance().getWebServer().getServerConfig().getDocumentRootPath() + uri);
 
@@ -34,12 +34,12 @@ public class FileResourceProvider implements ResourceProvider {
         if (file.exists() && file.isFile()) {
             String fileExtension = Utilities.getExtension(file.getName());
 
-            response.setStatus(HTTPResponseHeaders.STATUS_OK);
+            response.setStatus(HttpResponseHeaders.STATUS_OK);
             response.setContentType(MainController.getInstance().getWebServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(fileExtension));
             response.setContentLength(file.length());
 
             // Serving file for all the request but for HEAD
-            if (!request.getHeaders().getMethod().equals(HTTPRequest.METHOD_HEAD)) {
+            if (!request.getHeaders().getMethod().equals(HttpRequest.METHOD_HEAD)) {
                 response.serveFile(file);
             }
 

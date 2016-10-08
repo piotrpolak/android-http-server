@@ -12,14 +12,14 @@ import java.io.File;
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.Headers;
 import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.HTTPRequest;
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.Servlet;
 
 public class GetFile extends Servlet {
 
     @Override
-    public void service(HTTPRequest request, HTTPResponse response) {
+    public void service(HttpRequest request, HttpResponse response) {
         AccessControl ac = new AccessControl(this.getSession());
         if (!ac.isLogged()) {
             response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());

@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ro.polak.utilities.Utilities;
-import ro.polak.webserver.HTTPRequestHeaders;
+import ro.polak.webserver.HttpRequestHeaders;
 import ro.polak.webserver.Headers;
 import ro.polak.webserver.MultipartRequestHandler;
 import ro.polak.webserver.Statistics;
@@ -26,7 +26,7 @@ import ro.polak.webserver.controller.MainController;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class HTTPRequest {
+public class HttpRequest {
 
     // TODO Use http://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletRequest.html as example
 
@@ -41,7 +41,7 @@ public class HTTPRequest {
     public final static String METHOD_PUT = "PUT";
     public final static String METHOD_TRACE = "TRACE";
 
-    private HTTPRequestHeaders headers;
+    private HttpRequestHeaders headers;
     private boolean isKeepAlive = false;
     private boolean isMultipart = false;
     private String remoteAddress;
@@ -55,12 +55,12 @@ public class HTTPRequest {
      * @param socket
      * @return
      */
-    public static HTTPRequest createFromSocket(Socket socket) throws IOException {
+    public static HttpRequest createFromSocket(Socket socket) throws IOException {
 
         // The request object
-        HTTPRequest request = new HTTPRequest();
+        HttpRequest request = new HttpRequest();
         // The headers object
-        HTTPRequestHeaders headers = new HTTPRequestHeaders();
+        HttpRequestHeaders headers = new HttpRequestHeaders();
 
         // Setting remote IP
         request.setRemoteAddr(socket.getInetAddress().getHostAddress().toString());
@@ -113,7 +113,7 @@ public class HTTPRequest {
 
 
         // For post method
-        if (headers.getMethod().toUpperCase().equals(HTTPRequest.METHOD_POST)) {
+        if (headers.getMethod().toUpperCase().equals(HttpRequest.METHOD_POST)) {
 
             // Getting the postLength
             int postLength = 0;
@@ -180,7 +180,7 @@ public class HTTPRequest {
     /**
      * Default constructor
      */
-    private HTTPRequest() {
+    private HttpRequest() {
         Statistics.addRequest();
         fileUpload = new FileUpload();
     }
@@ -235,7 +235,7 @@ public class HTTPRequest {
      *
      * @return headers of the request
      */
-    public HTTPRequestHeaders getHeaders() {
+    public HttpRequestHeaders getHeaders() {
         return headers;
     }
 
@@ -244,7 +244,7 @@ public class HTTPRequest {
      *
      * @param headers
      */
-    private void setHeaders(HTTPRequestHeaders headers) {
+    private void setHeaders(HttpRequestHeaders headers) {
         this.headers = headers;
     }
 

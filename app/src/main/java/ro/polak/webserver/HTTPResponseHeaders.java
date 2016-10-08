@@ -18,7 +18,7 @@ import java.util.Set;
  * @author Piotr Polak <a href="http://www.polak.ro/">www.polak.ro</a>
  * @since 201012
  */
-public class HTTPResponseHeaders extends Headers {
+public class HttpResponseHeaders extends Headers {
 
     public static final String STATUS_OK = "HTTP/1.1 200 OK";
     public static final String STATUS_NOT_FOUND = "HTTP/1.1 404 Not Found";

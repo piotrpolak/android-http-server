@@ -118,7 +118,7 @@ public class PrintWriter {
      *
      * @param response
      */
-    public void writeToResponse(HTTPResponse response) {
+    public void writeToResponse(HttpResponse response) {
         int bSize = 1024;
 
         int length = out.length(); // Total number of characters

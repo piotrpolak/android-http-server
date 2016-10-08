@@ -16,7 +16,7 @@ import java.util.Map;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class HTTPRequestHeaders extends Headers {
+public class HttpRequestHeaders extends Headers {
 
     private String method;
     private String queryString;

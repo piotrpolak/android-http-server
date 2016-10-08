@@ -22,8 +22,8 @@ import ro.polak.webserver.resource.provider.AssetResourceProvider;
 import ro.polak.webserver.resource.provider.FileResourceProvider;
 import ro.polak.webserver.resource.provider.ResourceProvider;
 import ro.polak.webserver.resource.provider.ServletResourceProvider;
-import ro.polak.webserver.servlet.HTTPRequest;
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
 
 /**
  * Web server main class
@@ -59,7 +59,7 @@ public class WebServer extends Thread {
         this.controller = controller;
         this.serverSocket = serverSocket;
         this.serverConfig = serverConfig;
-        supportedMethods = new String[]{HTTPRequest.METHOD_GET, HTTPRequest.METHOD_POST, HTTPRequest.METHOD_HEAD};
+        supportedMethods = new String[]{HttpRequest.METHOD_GET, HttpRequest.METHOD_POST, HttpRequest.METHOD_HEAD};
     }
 
     @Override
@@ -74,7 +74,7 @@ public class WebServer extends Thread {
                     new ServerThread(socket, this).start();
                 } else {
                     // 503 Service Unavailable HERE
-                    (new HTTPError503()).serve(HTTPResponse.createFromSocket(socket));
+                    (new HTTPError503()).serve(HttpResponse.createFromSocket(socket));
                     socket.close();
                 }
             } catch (IOException e) {

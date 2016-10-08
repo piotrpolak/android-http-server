@@ -16,8 +16,8 @@ import ro.polak.webserver.error.HTTPError403;
 import ro.polak.webserver.error.HTTPError404;
 import ro.polak.webserver.error.HTTPError405;
 import ro.polak.webserver.resource.provider.ResourceProvider;
-import ro.polak.webserver.servlet.HTTPRequest;
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
 
 /**
  * Server thread
@@ -43,8 +43,8 @@ public class ServerThread extends Thread {
     @Override
     public void run() {
         try {
-            HTTPRequest request = HTTPRequest.createFromSocket(socket);
-            HTTPResponse response = HTTPResponse.createFromSocket(socket);
+            HttpRequest request = HttpRequest.createFromSocket(socket);
+            HttpResponse response = HttpResponse.createFromSocket(socket);
             String path = request.getHeaders().getPath();
 
             if (isPathIllegal(path)) {
@@ -80,7 +80,7 @@ public class ServerThread extends Thread {
      * @param request
      * @param response
      */
-    private void setDefaultResponseHeaders(HTTPRequest request, HTTPResponse response) {
+    private void setDefaultResponseHeaders(HttpRequest request, HttpResponse response) {
         response.setKeepAlive(request.isKeepAlive() && webServer.getServerConfig().isKeepAlive());
         response.getHeaders().setHeader(Headers.HEADER_SERVER, WebServer.SIGNATURE);
     }
@@ -93,7 +93,7 @@ public class ServerThread extends Thread {
      * @param path
      * @return
      */
-    private boolean loadDirectoryIndexResource(HTTPRequest request, HTTPResponse response, String path) {
+    private boolean loadDirectoryIndexResource(HttpRequest request, HttpResponse response, String path) {
         path = getNormalizedDirectoryPath(path);
         for (String index : webServer.getServerConfig().getDirectoryIndex()) {
             if (loadResourceByPath(request, response, path + index)) {
@@ -108,7 +108,7 @@ public class ServerThread extends Thread {
      *
      * @param response
      */
-    private void serveMethodNotAllowed(HTTPResponse response) {
+    private void serveMethodNotAllowed(HttpResponse response) {
         StringBuilder sb = new StringBuilder();
         String[] supportedMethods = webServer.getSupportedMethods();
         for (int i = 0; i < supportedMethods.length; i++) {
@@ -130,7 +130,7 @@ public class ServerThread extends Thread {
      * @param path
      * @return
      */
-    private boolean loadResourceByPath(HTTPRequest request, HTTPResponse response, String path) {
+    private boolean loadResourceByPath(HttpRequest request, HttpResponse response, String path) {
         ResourceProvider[] rl = webServer.getResourceProviders();
         for (int i = 0; i < rl.length; i++) {
             if (rl[i].load(path, request, response)) {

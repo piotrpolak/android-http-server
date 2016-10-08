@@ -16,7 +16,7 @@ import java.io.File;
 public class UpdateConfiguration extends Servlet {
 
     @Override
-    public void service(HTTPRequest request, HTTPResponse response) {
+    public void service(HttpRequest request, HttpResponse response) {
         AccessControl ac = new AccessControl(this.getSession());
         if (!ac.isLogged()) {
             response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());

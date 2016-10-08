@@ -12,10 +12,10 @@ import android.content.Context;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ro.polak.webserver.HTTPResponseHeaders;
+import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.HTTPRequest;
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
 
 /**
  * APK asset resource provider
@@ -28,7 +28,7 @@ import ro.polak.webserver.servlet.HTTPResponse;
 public class AssetResourceProvider implements ResourceProvider {
 
     @Override
-    public boolean load(String uri, HTTPRequest request, HTTPResponse response) {
+    public boolean load(String uri, HttpRequest request, HttpResponse response) {
 
         // Assets should be located withing the "public" directory
         String assetPath = "public" + uri;
@@ -55,7 +55,7 @@ public class AssetResourceProvider implements ResourceProvider {
         }
 
         if (assetExists) {
-            response.setStatus(HTTPResponseHeaders.STATUS_OK);
+            response.setStatus(HttpResponseHeaders.STATUS_OK);
             //response.setContentType(JLWSConfig.MimeTypeMapping.getMimeTypeByExtension(fileExt));
 
             response.serveAsset(assetPath);

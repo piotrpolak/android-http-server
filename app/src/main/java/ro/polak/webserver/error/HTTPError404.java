@@ -9,10 +9,10 @@ package ro.polak.webserver.error;
 
 import java.io.File;
 
-import ro.polak.webserver.HTTPResponseHeaders;
+import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.Statistics;
 import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpResponse;
 
 /**
  * 404 File Not Found HTTP error handler
@@ -23,10 +23,10 @@ import ro.polak.webserver.servlet.HTTPResponse;
 public class HTTPError404 implements IHTTPError {
 
     @Override
-    public void serve(HTTPResponse response) {
+    public void serve(HttpResponse response) {
         Statistics.addError404();
 
-        response.setStatus(HTTPResponseHeaders.STATUS_NOT_FOUND);
+        response.setStatus(HttpResponseHeaders.STATUS_NOT_FOUND);
         response.setContentType("text/html");
 
         String errorDocumentPath = MainController.getInstance().getWebServer().getServerConfig().getErrorDocument404Path();

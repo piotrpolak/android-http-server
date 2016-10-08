@@ -25,11 +25,11 @@ import ro.polak.webserver.controller.MainController;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class HTTPSession {
+public class HttpSession {
 
     public static final Pattern pattern = Pattern.compile("[a-z]+");
-    private transient HTTPRequest request;
-    private transient HTTPResponse response;
+    private transient HttpRequest request;
+    private transient HttpResponse response;
     private String sid;
     private String directoryPath = MainController.getInstance().getWebServer().getServerConfig().getTempPath();
     private String cookieName = "JSSSESSIONID";
@@ -42,7 +42,7 @@ public class HTTPSession {
      * @param request  http request
      * @param response http response
      */
-    public HTTPSession(HTTPRequest request, HTTPResponse response) {
+    public HttpSession(HttpRequest request, HttpResponse response) {
         this.response = response;
         this.request = request;
     }

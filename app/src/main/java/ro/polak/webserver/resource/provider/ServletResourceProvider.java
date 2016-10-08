@@ -8,11 +8,11 @@
 package ro.polak.webserver.resource.provider;
 
 import ro.polak.utilities.Utilities;
-import ro.polak.webserver.HTTPResponseHeaders;
+import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.error.HTTPError500;
-import ro.polak.webserver.servlet.HTTPRequest;
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.Servlet;
 import ro.polak.webserver.servlet.loader.ClassPathServletLoader;
 import ro.polak.webserver.servlet.loader.ServletLoader;
@@ -35,7 +35,7 @@ public class ServletResourceProvider implements ResourceProvider {
     }
 
     @Override
-    public boolean load(String uri, HTTPRequest request, HTTPResponse response) {
+    public boolean load(String uri, HttpRequest request, HttpResponse response) {
         // Detect the extension
         String fileExtension = Utilities.getExtension(uri);
 
@@ -43,7 +43,7 @@ public class ServletResourceProvider implements ResourceProvider {
         if (fileExtension.equals(MainController.getInstance().getWebServer().getServerConfig().getServletMappedExtension())) {
             try {
                 Servlet servlet = servletService.loadServlet(uri);
-                response.setStatus(HTTPResponseHeaders.STATUS_OK);
+                response.setStatus(HttpResponseHeaders.STATUS_OK);
                 servlet.run(request, response);
             } catch (Exception e) {
                 HTTPError500 error500 = new HTTPError500();

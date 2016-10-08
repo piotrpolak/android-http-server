@@ -4,11 +4,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class HTTPRequestHeadersTest {
+public class HttpRequestHeadersTest {
 
     @Test
     public void testDefault() {
-        HTTPRequestHeaders headers = new HTTPRequestHeaders();
+        HttpRequestHeaders headers = new HttpRequestHeaders();
         headers.setStatus("GET /home?param1=ABC&param2=123 HTTP/1.1");
         assertEquals("GET", headers.getMethod());
         assertEquals("param1=ABC&param2=123", headers.getQueryString());

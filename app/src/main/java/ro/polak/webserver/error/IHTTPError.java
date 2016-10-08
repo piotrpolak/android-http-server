@@ -7,7 +7,7 @@
 
 package ro.polak.webserver.error;
 
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpResponse;
 
 /**
  * IHTTPError interface defining serve method
@@ -21,5 +21,5 @@ public interface IHTTPError {
      * Serves the error page
      * @param response
      */
-    void serve(HTTPResponse response);
+    void serve(HttpResponse response);
 }

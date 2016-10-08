@@ -7,8 +7,8 @@
 
 package example;
 
-import ro.polak.webserver.servlet.HTTPRequest;
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.Servlet;
 
 /**
@@ -17,7 +17,7 @@ import ro.polak.webserver.servlet.Servlet;
 public class Cookie extends Servlet {
 
     @Override
-    public void service(HTTPRequest request, HTTPResponse response) {
+    public void service(HttpRequest request, HttpResponse response) {
 
         // Saving session attribute name in a variable for convenience
         String attributeName = "pageHits";

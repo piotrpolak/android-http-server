@@ -9,9 +9,9 @@ package ro.polak.webserver.error;
 
 import java.io.File;
 
-import ro.polak.webserver.HTTPResponseHeaders;
+import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpResponse;
 
 /**
  * 403 Forbidden HTTP error handler
@@ -22,8 +22,8 @@ import ro.polak.webserver.servlet.HTTPResponse;
 public class HTTPError403 implements IHTTPError {
 
     @Override
-    public void serve(HTTPResponse response) {
-        response.setStatus(HTTPResponseHeaders.STATUS_ACCESS_DENIED);
+    public void serve(HttpResponse response) {
+        response.setStatus(HttpResponseHeaders.STATUS_ACCESS_DENIED);
         response.setContentType("text/html");
 
         String errorDocumentPath = MainController.getInstance().getWebServer().getServerConfig().getErrorDocument403Path();

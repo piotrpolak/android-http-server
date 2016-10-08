@@ -7,9 +7,9 @@
 
 package ro.polak.webserver.error;
 
-import ro.polak.webserver.HTTPResponseHeaders;
+import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.Statistics;
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpResponse;
 
 /**
  * 500 Internal Server Error HTTP error handler
@@ -79,11 +79,11 @@ public class HTTPError500 implements IHTTPError {
     }
 
     @Override
-    public void serve(HTTPResponse response) {
+    public void serve(HttpResponse response) {
         Statistics.addError500();
 
         doc.setTitle("Error 500 - The server made a boo boo");
-        response.setStatus(HTTPResponseHeaders.STATUS_INTERNAL_SERVER_ERROR);
+        response.setStatus(HttpResponseHeaders.STATUS_INTERNAL_SERVER_ERROR);
         response.setContentType("text/html");
         response.setContentLength(doc.toString().length());
         response.flushHeaders();

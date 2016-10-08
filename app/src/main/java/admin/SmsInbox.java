@@ -9,7 +9,6 @@ package admin;
 
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.*;
-import ro.polak.utilities.Utilities;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -25,7 +24,7 @@ import java.util.Vector;
 public class SmsInbox extends Servlet {
 
     @Override
-    public void service(HTTPRequest request, HTTPResponse response) {
+    public void service(HttpRequest request, HttpResponse response) {
         AccessControl ac = new AccessControl(this.getSession());
         if (!ac.isLogged()) {
             response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());

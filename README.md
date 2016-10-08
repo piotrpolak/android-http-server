@@ -1,6 +1,6 @@
 # Android HTTP Server
 
-Small but powerful multithread web server written completely in Java SE and then ported to Android.
+Small but powerful multithreaded web server written completely in Java SE and then ported to Android.
 
 The server implements most of the HTTP 1.1 specification and ses its own specification of Servlets for handling dynamic pages.
 Servlets support cookies, sessions, file uploads and anything else to build a common web application.
@@ -34,14 +34,14 @@ Hello World servlet
 ```java
 package example;
 
-import ro.polak.webserver.servlet.HTTPRequest;
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.Servlet;
 
 public class HelloWorld extends Servlet {
 
     @Override
-    public void service(HTTPRequest request, HTTPResponse response) {
+    public void service(HttpRequest request, HttpResponse response) {
         response.getPrintWriter().print("Hello World!");
     }
 }

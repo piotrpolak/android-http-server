@@ -7,8 +7,8 @@
 
 package ro.polak.webserver.resource.provider;
 
-import ro.polak.webserver.servlet.HTTPRequest;
-import ro.polak.webserver.servlet.HTTPResponse;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
 
 /**
  * Interface used for loading certain types of HTTP resources
@@ -23,5 +23,5 @@ public interface ResourceProvider {
      * @param response
      * @return
      */
-    boolean load(String uri, HTTPRequest request, HTTPResponse response);
+    boolean load(String uri, HttpRequest request, HttpResponse response);
 }

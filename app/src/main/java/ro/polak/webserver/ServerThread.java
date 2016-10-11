@@ -7,20 +7,18 @@
 
 package ro.polak.webserver;
 
-import android.support.annotation.NonNull;
-
 import java.io.IOException;
 import java.net.Socket;
 
-import ro.polak.webserver.error.HTTPError403;
-import ro.polak.webserver.error.HTTPError404;
-import ro.polak.webserver.error.HTTPError405;
+import ro.polak.webserver.error.HttpError403;
+import ro.polak.webserver.error.HttpError404;
+import ro.polak.webserver.error.HttpError405;
 import ro.polak.webserver.resource.provider.ResourceProvider;
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.servlet.HttpRequestWrapper;
+import ro.polak.webserver.servlet.HttpResponseWrapper;
 
 /**
- * Server thread
+ * Server thread.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
@@ -43,12 +41,12 @@ public class ServerThread extends Thread {
     @Override
     public void run() {
         try {
-            HttpRequest request = HttpRequest.createFromSocket(socket);
-            HttpResponse response = HttpResponse.createFromSocket(socket);
+            HttpRequestWrapper request = HttpRequestWrapper.createFromSocket(socket);
+            HttpResponseWrapper response = HttpResponseWrapper.createFromSocket(socket);
             String path = request.getHeaders().getPath();
 
             if (isPathIllegal(path)) {
-                (new HTTPError403()).serve(response);
+                (new HttpError403()).serve(response);
                 return;
             }
 
@@ -56,15 +54,12 @@ public class ServerThread extends Thread {
 
             if (isMethodSupported(request.getHeaders().getMethod())) {
                 boolean isResourceLoaded = loadResourceByPath(request, response, path);
-
                 if (!isResourceLoaded) {
                     isResourceLoaded = loadDirectoryIndexResource(request, response, path);
                 }
-
                 if (!isResourceLoaded) {
-                    (new HTTPError404()).serve(response);
+                    (new HttpError404()).serve(response);
                 }
-
             } else {
                 serveMethodNotAllowed(response);
             }
@@ -80,7 +75,7 @@ public class ServerThread extends Thread {
      * @param request
      * @param response
      */
-    private void setDefaultResponseHeaders(HttpRequest request, HttpResponse response) {
+    private void setDefaultResponseHeaders(HttpRequestWrapper request, HttpResponseWrapper response) {
         response.setKeepAlive(request.isKeepAlive() && webServer.getServerConfig().isKeepAlive());
         response.getHeaders().setHeader(Headers.HEADER_SERVER, WebServer.SIGNATURE);
     }
@@ -93,7 +88,7 @@ public class ServerThread extends Thread {
      * @param path
      * @return
      */
-    private boolean loadDirectoryIndexResource(HttpRequest request, HttpResponse response, String path) {
+    private boolean loadDirectoryIndexResource(HttpRequestWrapper request, HttpResponseWrapper response, String path) {
         path = getNormalizedDirectoryPath(path);
         for (String index : webServer.getServerConfig().getDirectoryIndex()) {
             if (loadResourceByPath(request, response, path + index)) {
@@ -108,7 +103,7 @@ public class ServerThread extends Thread {
      *
      * @param response
      */
-    private void serveMethodNotAllowed(HttpResponse response) {
+    private void serveMethodNotAllowed(HttpResponseWrapper response) {
         StringBuilder sb = new StringBuilder();
         String[] supportedMethods = webServer.getSupportedMethods();
         for (int i = 0; i < supportedMethods.length; i++) {
@@ -119,7 +114,7 @@ public class ServerThread extends Thread {
         }
 
         response.getHeaders().setHeader(Headers.HEADER_ALLOW, sb.toString());
-        (new HTTPError405()).serve(response);
+        (new HttpError405()).serve(response);
     }
 
     /**
@@ -130,7 +125,7 @@ public class ServerThread extends Thread {
      * @param path
      * @return
      */
-    private boolean loadResourceByPath(HttpRequest request, HttpResponse response, String path) {
+    private boolean loadResourceByPath(HttpRequestWrapper request, HttpResponseWrapper response, String path) {
         ResourceProvider[] rl = webServer.getResourceProviders();
         for (int i = 0; i < rl.length; i++) {
             if (rl[i].load(path, request, response)) {
@@ -156,7 +151,6 @@ public class ServerThread extends Thread {
      * @param path
      * @return
      */
-    @NonNull
     private String getNormalizedDirectoryPath(String path) {
         if (path.length() > 0) {
             if (path.charAt(path.length() - 1) != '/') {

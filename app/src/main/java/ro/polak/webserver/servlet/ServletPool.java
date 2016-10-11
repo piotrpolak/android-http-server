@@ -87,7 +87,6 @@ public class ServletPool {
      * Revalidator tak runs periodically to cleanup servlet pool from outdated servlets
      *
      * @author Piotr Polak piotr [at] polak [dot] ro
-
      * @since 200902
      */
     class RevalidatorTask extends TimerTask {
@@ -142,7 +141,7 @@ public class ServletPool {
             try {
                 spi = this.map.get(name);
                 spi.update();
-                return spi.getServlet().getClone();
+                return spi.getServlet();
             } catch (NullPointerException e) {
                 return null;
             }

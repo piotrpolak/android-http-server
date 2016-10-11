@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package example;
@@ -26,18 +26,22 @@ public class Session extends Servlet {
         int pageHits = 0;
 
         // Getting the page hits from session if exists
-        if (this.getSession().getAttribute(attributeName) != null) {
+        if (request.getSession().getAttribute(attributeName) != null) {
             // Please note the session attribute is of String type
-            pageHits = Integer.parseInt(this.getSession().getAttribute(attributeName));
+            pageHits = Integer.parseInt(request.getSession().getAttribute(attributeName));
         }
 
         // Incrementing hits counter
         ++pageHits;
 
         // Persisting incremented value in session
-        this.getSession().setAttribute(attributeName, Integer.toString(pageHits));
+        request.getSession().setAttribute(attributeName, Integer.toString(pageHits));
 
         // Printing out the result
-        response.getPrintWriter().print("Session page hits: " + pageHits);
+        response.getPrintWriter().println("<p>Session page hits: " + pageHits + "</p>");
+        response.getPrintWriter().println("<p>Session is new: " + request.getSession().isNew() + "</p>");
+        response.getPrintWriter().println("<p>Session creation time: " + request.getSession().getCreationTime() + "</p>");
+        response.getPrintWriter().println("<p>Session last accessed time: " + request.getSession().getLastAccessedTime() + "</p>");
+        response.getPrintWriter().println("<p>Session max inactive interval in seconds: " + request.getSession().getMaxInactiveInterval() + "</p>");
     }
 }

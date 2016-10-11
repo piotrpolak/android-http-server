@@ -17,16 +17,17 @@ import java.util.Locale;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.controller.Controller;
-import ro.polak.webserver.error.HTTPError503;
+import ro.polak.webserver.controller.MainController;
+import ro.polak.webserver.error.HttpError503;
 import ro.polak.webserver.resource.provider.AssetResourceProvider;
 import ro.polak.webserver.resource.provider.FileResourceProvider;
 import ro.polak.webserver.resource.provider.ResourceProvider;
 import ro.polak.webserver.resource.provider.ServletResourceProvider;
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.servlet.HttpRequestWrapper;
+import ro.polak.webserver.servlet.HttpResponseWrapper;
 
 /**
- * Web server main class
+ * Web server main class.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
@@ -47,8 +48,8 @@ public class WebServer extends Thread {
     private boolean listen;
     private ServerSocket serverSocket;
     private Controller controller;
-
     private ServerConfig serverConfig;
+    private ResourceProvider[] resourceProviders;
 
     /**
      * @param controller
@@ -59,11 +60,14 @@ public class WebServer extends Thread {
         this.controller = controller;
         this.serverSocket = serverSocket;
         this.serverConfig = serverConfig;
-        supportedMethods = new String[]{HttpRequest.METHOD_GET, HttpRequest.METHOD_POST, HttpRequest.METHOD_HEAD};
+        supportedMethods = new String[]{HttpRequestWrapper.METHOD_GET, HttpRequestWrapper.METHOD_POST, HttpRequestWrapper.METHOD_HEAD};
     }
 
     @Override
     public void run() {
+
+        selectActiveResourceProviders();
+
         while (this.listen) {
             try {
                 Socket socket = serverSocket.accept();
@@ -74,12 +78,12 @@ public class WebServer extends Thread {
                     new ServerThread(socket, this).start();
                 } else {
                     // 503 Service Unavailable HERE
-                    (new HTTPError503()).serve(HttpResponse.createFromSocket(socket));
+                    (new HttpError503()).serve(HttpResponseWrapper.createFromSocket(socket));
                     socket.close();
                 }
             } catch (IOException e) {
                 if (listen) {
-                    controller.println("Exception: " + e.getClass().getName() + " " + e.getMessage());
+                    controller.println(this.getClass(), "Exception: " + e.getClass().getName() + " " + e.getMessage());
                 }
             }
         }
@@ -90,13 +94,29 @@ public class WebServer extends Thread {
         }
     }
 
+    private void selectActiveResourceProviders() {
+        if (controller.getContext() != null) {
+            resourceProviders = new ResourceProvider[]{
+                    new FileResourceProvider(MainController.getInstance().getWebServer().getServerConfig().getDocumentRootPath()),
+                    new AssetResourceProvider(),
+                    new ServletResourceProvider()
+            };
+        } else {
+            resourceProviders = new ResourceProvider[]{
+                    new FileResourceProvider(MainController.getInstance().getWebServer().getServerConfig().getDocumentRootPath()),
+                    new FileResourceProvider("./app/src/main/assets/public/"),
+                    new ServletResourceProvider()
+            };
+        }
+    }
+
     /**
      * Returns available resource providers
      *
      * @return
      */
     public ResourceProvider[] getResourceProviders() {
-        return new ResourceProvider[]{new FileResourceProvider(), new AssetResourceProvider(), new ServletResourceProvider()};
+        return resourceProviders;
     }
 
     /**
@@ -115,24 +135,24 @@ public class WebServer extends Thread {
         listen = true;
 
         if (!(new File(serverConfig.getDocumentRootPath()).isDirectory())) {
-            controller.println("WARNING: DocumentRoot does not exist! PATH: " + serverConfig.getDocumentRootPath());
+            controller.println(this.getClass(), "WARNING: DocumentRoot does not exist! PATH: " + serverConfig.getDocumentRootPath());
         }
 
         if (serverConfig.getMaxServerThreads() < 1) {
-            controller.println("ERROR: MaxThreads should be greater or equal to 1! " + serverConfig.getMaxServerThreads() + " is given.");
+            controller.println(this.getClass(), "ERROR: MaxThreads should be greater or equal to 1! " + serverConfig.getMaxServerThreads() + " is given.");
             return false;
         }
 
         try {
             serverSocket.bind(new InetSocketAddress(serverConfig.getListenPort()));
         } catch (IOException e) {
-            this.controller.println("ERROR: Unable to start server: unable to listen on port " + serverConfig.getListenPort() + "/" + e.getMessage());
+            this.controller.println(this.getClass(), "ERROR: Unable to start server: unable to listen on port " + serverConfig.getListenPort() + " - " + e.getMessage());
             return false;
         }
 
         Utilities.clearDirectory(serverConfig.getTempPath());
 
-        this.controller.println("Server has been started. Listening on port " + serverConfig.getListenPort());
+        this.controller.println(this.getClass(), "Server has been started. Listening on port " + serverConfig.getListenPort());
         this.start();
         return true;
     }
@@ -148,7 +168,7 @@ public class WebServer extends Thread {
             } catch (IOException e) {
             }
         }
-        this.controller.println("Server has been stopped");
+        this.controller.println(this.getClass(), "Server has been stopped");
     }
 
     /**

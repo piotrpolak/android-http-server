@@ -20,7 +20,6 @@ public class UploadedFile {
     private String postFieldName;
     private String fileName;
     private File file;
-    private boolean isMoved = false;
     private String initialPath;
 
     /**

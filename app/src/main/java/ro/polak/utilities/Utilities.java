@@ -1,10 +1,8 @@
 /**************************************************
- *
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- *
+ * <p/>
  * Copyright (c) Piotr Polak 2008-2015
- *
  **************************************************/
 
 package ro.polak.utilities;
@@ -21,6 +19,9 @@ import java.text.DecimalFormat;
 public class Utilities {
 
     // TODO This class should be split into dedicated ones
+
+    private static boolean isAndroid = false;
+    private static boolean isAndroidDetectedAlready = false;
 
     /**
      * Returns the extension sting for a given file path

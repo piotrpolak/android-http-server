@@ -18,6 +18,9 @@ import ro.polak.webserver.servlet.Servlet;
 /**
  * Loads and rolls servlets on Desktop.
  * The servlet classes are loaded from disk space.
+ *
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @since 200802
  */
 public class FileSystemServletLoader extends AbstractServletLoader {
 

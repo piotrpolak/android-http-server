@@ -13,6 +13,9 @@ import ro.polak.webserver.servlet.Servlet;
 
 /**
  * Provides common methods for servlet service drivers.
+ *
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @since 201610
  */
 abstract public class AbstractServletLoader implements ServletLoader {
 

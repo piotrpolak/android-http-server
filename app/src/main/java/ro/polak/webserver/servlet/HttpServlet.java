@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver.servlet;
@@ -18,8 +18,10 @@ public interface HttpServlet {
     /**
      * The servlet initialization method. The reusable resources should be
      * initialized in the init method.
+     *
+     * @param servletConfig
      */
-    void init();
+    void init(ServletConfig servletConfig);
 
     /**
      * The servlet destroy method. The reusable resources should be destoroyed

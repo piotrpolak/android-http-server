@@ -118,7 +118,7 @@ public class PrintWriter {
      *
      * @param response
      */
-    public void writeToResponse(HttpResponse response) {
+    public void writeToResponse(HttpResponseWrapper response) {
         int bSize = 1024;
 
         int length = out.length(); // Total number of characters
@@ -142,6 +142,7 @@ public class PrintWriter {
         }
 
         if (stat_n_chunks_real != stat_n_chunks) {
+            // INSPECT
             Log.e("PRINTWRITER", "Number of chunks is different stat_n_chunks_real=" + stat_n_chunks_real + ", stat_n_chunks=" + stat_n_chunks);
         }
 

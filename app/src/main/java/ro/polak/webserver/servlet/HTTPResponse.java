@@ -2,80 +2,20 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
 package ro.polak.webserver.servlet;
 
-import android.content.Context;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-
-import ro.polak.utilities.Utilities;
 import ro.polak.webserver.HttpResponseHeaders;
-import ro.polak.webserver.Headers;
-import ro.polak.webserver.Statistics;
-import ro.polak.webserver.WebServer;
-import ro.polak.webserver.controller.MainController;
 
 /**
  * Represents HTTP response
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @since 200802
+ * @since 201610
  */
-public class HttpResponse {
-
-    private HttpResponseHeaders headers;
-    private OutputStream out;
-    private PrintWriter printWriter = null;
-    private boolean headersFlushed = false;
-
-    /**
-     * Creates and returns a response out of the socket
-     *
-     * @param socket
-     * @return
-     */
-    public static HttpResponse createFromSocket(Socket socket) throws IOException {
-
-        HttpResponse response = new HttpResponse();
-        response.headers = new HttpResponseHeaders();
-        response.out = socket.getOutputStream();
-        response.setKeepAlive(false);
-
-        return response;
-    }
-
-    /**
-     * Writes byte array to the output
-     *
-     * @param byteArray byte array
-     */
-    public void write(byte[] byteArray) {
-        try {
-            Statistics.addBytesSend(byteArray.length);
-            out.write(byteArray);
-            out.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Writes string to the output
-     *
-     * @param s String to be written
-     */
-    public void write(String s) {
-        write(s.getBytes());
-    }
+public interface HttpResponse {
 
     /**
      * Sets cookie
@@ -85,22 +25,7 @@ public class HttpResponse {
      * @param cookieExpiresSeconds expire time in seconds
      * @param cookiePath           path for the cookie
      */
-    public void setCookie(String cookieName, String cookieValue, int cookieExpiresSeconds, String cookiePath) {
-        String cookie = cookieName + "=" + Utilities.URLEncode(cookieValue);
-
-        // Setting optional expiration time
-        if (cookieExpiresSeconds != 0) {
-            cookie += "; expires=" + WebServer.sdf.format(new java.util.Date(System.currentTimeMillis() + (cookieExpiresSeconds * 1000)));
-        }
-
-        // Setting optional path
-        if (cookiePath != null) {
-            cookie += "; path=" + cookiePath;
-        }
-
-        // Setting the built cookie
-        headers.setHeader(Headers.HEADER_SET_COOKIE, cookie);
-    }
+    void setCookie(String cookieName, String cookieValue, int cookieExpiresSeconds, String cookiePath);
 
     /**
      * Sets cookie, expires when browser closed
@@ -108,9 +33,7 @@ public class HttpResponse {
      * @param cookieName  name of the cookie
      * @param cookieValue String value of the cookie
      */
-    public void setCookie(String cookieName, String cookieValue) {
-        setCookie(cookieName, cookieValue, 0, null);
-    }
+    void setCookie(String cookieName, String cookieValue);
 
     /**
      * Sets cookie
@@ -121,36 +44,14 @@ public class HttpResponse {
      * @param cookieValue       String value of the cookie
      * @param timeToLiveSeconds time to live in seconds
      */
-    public void setCookie(String cookieName, String cookieValue, int timeToLiveSeconds) {
-        setCookie(cookieName, cookieValue, timeToLiveSeconds, null);
-    }
+    void setCookie(String cookieName, String cookieValue, int timeToLiveSeconds);
 
     /**
      * Removes cookie
      *
      * @param cookieName name of the cookie
      */
-    public void removeCookie(String cookieName) {
-        setCookie(cookieName, "", -1, null);
-    }
-
-    /**
-     * Flushes headers, returns false when headers already flushed.
-     * <p/>
-     * Can be called once per responce, after the fisrt call it "locks"
-     *
-     * @return true if headers flushed
-     */
-    public void flushHeaders() throws IllegalStateException {
-
-        // Prevent from flushing headers more than once
-        if (headersFlushed) {
-            throw new IllegalStateException("Headers already committed");
-        }
-
-        headersFlushed = true;
-        write(headers.toString());
-    }
+    void removeCookie(String cookieName);
 
     /**
      * Returns a boolean indicating if the response has been committed. A
@@ -158,179 +59,68 @@ public class HttpResponse {
      *
      * @return a boolean indicating if the response has been committed
      */
-    public boolean isCommitted() {
-        return headersFlushed;
-    }
-
-    /**
-     * Flushes the output
-     *
-     * @throws IOException
-     */
-    public void flush() throws IOException {
-        out.flush();
-    }
+    boolean isCommitted();
 
     /**
      * Redirects the request to the specified location.
      *
      * @param location - relative or absolute path (URL)
      */
-    public void sendRedirect(String location) {
-        headers.setStatus(HttpResponseHeaders.STATUS_MOVED_PERMANENTLY);
-        headers.setHeader(Headers.HEADER_LOCATION, location);
-        flushHeaders();
-    }
-
-    /**
-     * Flushes headers and serves the specified file
-     *
-     * @param file file to be served
-     */
-    public void serveFile(File file) {
-
-        MainController.getInstance().println("Serving file " + file.getPath());
-
-        try {
-            setContentLength(file.length());
-            FileInputStream inputStream = new FileInputStream(file);
-            serveStream(inputStream);
-        } catch (FileNotFoundException e) {
-            // TODO Throw exception instead of printing the stack trace
-            e.printStackTrace();
-            // Suppose this was verified and prevented before
-        }
-    }
-
-    /**
-     * Serves asset file
-     *
-     * @param asset
-     */
-    public void serveAsset(String asset) {
-
-        MainController.getInstance().println("Serving asset " + asset);
-
-        try {
-            InputStream inputStream = ((Context) MainController.getInstance().getContext()).getResources().getAssets().open(asset);
-            serveStream(inputStream);
-        } catch (IOException e) {
-            // Suppose this was verified and prevented before
-        }
-    }
-
-    /**
-     * Server an asset
-     *
-     * @param inputStream
-     */
-    public void serveStream(InputStream inputStream) {
-
-        // Make sure headers are served before the file content
-        // If this throws an IllegalStateException, it means you have tried (incorrectly) to flush headers before
-        flushHeaders();
-
-        int numberOfBufferReadBytes = 0;
-        byte[] buffer = new byte[512];
-
-        try {
-            // Reading and flushing the file chunk by chunk
-            while ((numberOfBufferReadBytes = inputStream.read(buffer)) != -1) {
-                // Writing to buffer
-                out.write(buffer, 0, numberOfBufferReadBytes);
-                // Flushing the buffer
-                out.flush();
-                // Incrementing statistics
-                Statistics.addBytesSend(numberOfBufferReadBytes);
-            }
-            // Flushing remaining buffer, just in case
-            out.flush();
-
-        } catch (IOException e) {
-
-        }
-
-        try {
-            inputStream.close();
-        } // Closing file input stream
-        catch (IOException e) {
-        }
-    }
+    void sendRedirect(String location);
 
     /**
      * Sets content type
      *
      * @param contentType content type
      */
-    public void setContentType(String contentType) {
-        headers.setHeader(Headers.HEADER_CONTENT_TYPE, contentType);
-    }
+    void setContentType(String contentType);
 
     /**
      * Returns the content type
      *
      * @return
      */
-    public String getContentType() {
-        return headers.getHeader(Headers.HEADER_CONTENT_TYPE);
-    }
+    String getContentType();
 
     /**
      * Sets keepAlive
      *
      * @param keepAlive true for keep alive connection
      */
-    public void setKeepAlive(boolean keepAlive) {
-        headers.setHeader(Headers.HEADER_CONNECTION, keepAlive ? "keep-alive" : "close");
-    }
+    void setKeepAlive(boolean keepAlive);
 
     /**
      * Sets content length
      *
      * @param length length of content
      */
-    public void setContentLength(int length) {
-        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, "" + length);
-    }
+    void setContentLength(int length);
 
     /**
      * Sets content length
      *
      * @param length length of content
      */
-    public void setContentLength(long length) {
-        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, "" + length);
-    }
+    void setContentLength(long length);
 
     /**
      * Returns the response headers
      *
      * @return
      */
-    public HttpResponseHeaders getHeaders() {
-        return headers;
-    }
+    HttpResponseHeaders getHeaders();
 
     /**
      * Sets status of response
      *
      * @param status status code and message
      */
-    public void setStatus(String status) {
-        headers.setStatus(status);
-    }
+    void setStatus(String status);
 
     /**
      * Returns request print writer
      *
      * @return request print writer
      */
-    public PrintWriter getPrintWriter() {
-        // Creating print writer if it does not exist
-        if (printWriter == null) {
-            printWriter = new PrintWriter();
-        }
-
-        return printWriter;
-    }
+    PrintWriter getPrintWriter();
 }

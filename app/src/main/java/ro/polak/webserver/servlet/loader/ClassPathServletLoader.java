@@ -14,6 +14,9 @@ import ro.polak.webserver.servlet.Servlet;
 /**
  * Loads and rolls servlets on Android.
  * The servlet classes are loaded from the current package or classpath.
+ *
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @since 201002
  */
 public class ClassPathServletLoader extends AbstractServletLoader {
 

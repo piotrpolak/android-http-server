@@ -7,11 +7,14 @@
 
 package ro.polak.webserver.resource.provider;
 
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.servlet.HttpRequestWrapper;
+import ro.polak.webserver.servlet.HttpResponseWrapper;
 
 /**
  * Interface used for loading certain types of HTTP resources
+ *
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @since 201610
  */
 public interface ResourceProvider {
 
@@ -23,5 +26,5 @@ public interface ResourceProvider {
      * @param response
      * @return
      */
-    boolean load(String uri, HttpRequest request, HttpResponse response);
+    boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response);
 }

@@ -2,13 +2,14 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver.error;
 
 import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.servlet.HttpResponseWrapper;
 
 /**
  * 503 Service Unavailable HTTP error handler
@@ -16,7 +17,7 @@ import ro.polak.webserver.servlet.HttpResponse;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
  */
-public class HTTPError503 implements IHTTPError {
+public class HttpError503 implements HttpError {
 
     @Override
     public void serve(HttpResponse response) {
@@ -30,7 +31,7 @@ public class HTTPError503 implements IHTTPError {
         response.setStatus(HttpResponseHeaders.STATUS_INTERNAL_SERVER_ERROR);
         response.setContentType("text/html");
         response.setContentLength(msg.length());
-        response.flushHeaders();
-        response.write(msg);
+        ((HttpResponseWrapper) response).flushHeaders();
+        response.getPrintWriter().print(msg);
     }
 }

@@ -2,18 +2,20 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package admin;
 
-import ro.polak.webserver.servlet.*;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.servlet.Servlet;
 
 public class Management extends Servlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        AccessControl ac = new AccessControl(this.getSession());
+        AccessControl ac = new AccessControl(request.getSession());
         if (!ac.isLogged()) {
             response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());
             return;

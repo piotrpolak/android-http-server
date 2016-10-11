@@ -2,211 +2,110 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
 package ro.polak.webserver.servlet;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.util.regex.Pattern;
-import java.util.Hashtable;
-
-import ro.polak.utilities.RandomStringGenerator;
-import ro.polak.webserver.controller.MainController;
+import java.util.Enumeration;
 
 /**
- * Session mechanism for little servlets
+ * Http session
  *
- * @author Piotr Polak piotr [at] polak [dot] ro
- * @since 200802
+ * @url https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/http/HttpSession.html
  */
-public class HttpSession {
-
-    public static final Pattern pattern = Pattern.compile("[a-z]+");
-    private transient HttpRequest request;
-    private transient HttpResponse response;
-    private String sid;
-    private String directoryPath = MainController.getInstance().getWebServer().getServerConfig().getTempPath();
-    private String cookieName = "JSSSESSIONID";
-    private Hashtable vars;
-    private boolean isStarted = false;
+interface HttpSession {
 
     /**
-     * Session constructor
+     * Gets session attribute of the specified name.
      *
-     * @param request  http request
-     * @param response http response
+     * @param name Attribute name
+     * @return
+     * @throws IllegalStateException
      */
-    public HttpSession(HttpRequest request, HttpResponse response) {
-        this.response = response;
-        this.request = request;
-    }
-
-    // TODO implement long getCreationTime
-    // TODO implement long getLastAccessedTime
-    // TODO implement void setMaxInactiveInterval
-    // TODO implement int getMaxInactiveInterval in seconds
-    // TODO implement java.util.Enumeration getAttributeNames
-    // TODO implement removeAttribute
-    // TODO implement invalidate
-    // TODO implement boolean isNew()
-    // TODO let session attributes be any serializable object
+    String getAttribute(String name) throws IllegalStateException;
 
     /**
-     * Initializes session, makes the session variables usable.
-     * <p/>
-     * Unfreezes or starts a new session
-     */
-    private void start() {
-        if (isStarted == true) {
-            return;
-        }
-
-        // Checks for cookie
-        sid = request.getCookie(cookieName);
-        boolean sessionUnfreezed = false;
-
-        // Adds protection
-        if (sid != null && sid.length() == 32 && pattern.matcher(sid).matches()) {
-            sessionUnfreezed = unfreeze();
-        }
-
-        if (!sessionUnfreezed) {
-            sid = RandomStringGenerator.generate();
-            response.setCookie(cookieName, sid);
-            vars = new Hashtable<String, String>();
-        }
-
-        isStarted = true;
-    }
-
-    /**
-     * Sets session attribute
+     * Returns enumeration representing attribute names.
      *
-     * @param varName  attribute name
-     * @param varValue attribute value
+     * @return
+     * @throws IllegalStateException
      */
-    public void setAttribute(String varName, String varValue) {
-        // Lazy load
-        if (!isStarted) {
-            this.start();
-        }
-
-        if (varValue == null) {
-            // Removing the attribute when the value is null
-            vars.remove(varName);
-        } else {
-            vars.put(varName, varValue);
-        }
-    }
+    Enumeration getAttributeNames() throws IllegalStateException;
 
     /**
-     * Gets session attribute of the specified name
+     * Returns session creation time in milliseconds.
      *
-     * @param varName Attribute name
-     * @return Attribute value
+     * @return
+     * @throws IllegalStateException
      */
-    public String getAttribute(String varName) {
-        // Lazy load
-        if (!isStarted) {
-            this.start();
-        }
-
-        try {
-            return (String) vars.get(varName);
-        } catch (NullPointerException e) {
-            return null;
-        }
-    }
+    long getCreationTime() throws IllegalStateException;
 
     /**
-     * Returns session's id
-     *
-     * @return session's id
-     */
-    public String getId() {
-        return this.sid;
-    }
-
-    /**
-     * Invalidates (removes) session and frees resources
-     */
-    public void invalidate() {
-        // For freeze method
-        isStarted = false;
-
-        // Remove cookie
-        response.setCookie(cookieName, "", -100);
-
-        // Delete file
-        File file = new File(directoryPath + sid);
-        try {
-            file.delete();
-        } catch (Exception e) {
-        }
-    }
-
-    /**
-     * Persists the session to the storage
-     */
-    protected void freeze() {
-        // Prevent from saving an empty session
-        if (isStarted == false) {
-            return;
-        }
-
-        File file = new File(directoryPath + sid);
-        try {
-            file.createNewFile();
-        } catch (Exception e) {
-            // Unable to create session file
-            // TODO Handle/throw exception
-        }
-
-        // Writing session object to the file
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            ObjectOutputStream out = new ObjectOutputStream(fos);
-            out.writeObject(vars);
-            out.close();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    /**
-     * Restores session from the storage
+     * Returns session id.
      *
      * @return
      */
-    protected boolean unfreeze() {
-        // Prevent from reading an empty session
-        if (isStarted == true) {
-            return false;
-        }
+    String getId() /*throws IllegalStateException*/;
 
-        // Reading session object to the file
-        try {
-            // TODO Check if the file exists
-            FileInputStream fis = new FileInputStream(new File(directoryPath + sid));
-            ObjectInputStream in = new ObjectInputStream(fis);
-            vars = (Hashtable) in.readObject();
-            in.close();
-            return true;
-        } catch (IOException e) {
-            // TODO Check if the file exists, generate session only if the file is missing
-            sid = RandomStringGenerator.generate();
-            response.setCookie(cookieName, sid);
-            vars = new Hashtable<String, String>();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    /**
+     * Returns session last access time in milliseconds.
+     *
+     * @return
+     * @throws IllegalStateException
+     */
+    long getLastAccessedTime() throws IllegalStateException;
 
-        return false;
-    }
+    /**
+     * Returns max inactive interval in seconds.
+     *
+     * @return
+     */
+    int getMaxInactiveInterval();
+
+    /**
+     * Returns servlet context.
+     *
+     * @return
+     */
+    ServletContext getServletContext();
+
+    /**
+     * Sets maximum inactive interval in seconds.
+     *
+     * @param maxInactiveInterval
+     */
+    void setMaxInactiveInterval(int maxInactiveInterval);
+
+    /**
+     * Invalidates session (marks for removal).
+     *
+     * @throws IllegalStateException
+     */
+    void invalidate() throws IllegalStateException;
+
+    /**
+     * Removes an attribute.
+     *
+     * @param name
+     * @throws IllegalStateException
+     */
+    void removeAttribute(String name) throws IllegalStateException;
+
+    /**
+     * Tells whether the session has just been created.
+     *
+     * @return
+     * @throws IllegalStateException
+     */
+    boolean isNew() throws IllegalStateException;
+
+    /**
+     * Sets session attribute.
+     *
+     * @param name
+     * @param value
+     * @throws IllegalStateException
+     */
+    void setAttribute(String name, String value) throws IllegalStateException;
 }

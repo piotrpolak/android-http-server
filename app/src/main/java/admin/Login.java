@@ -2,19 +2,22 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package admin;
 
-import ro.polak.webserver.servlet.*;
 import ro.polak.utilities.Utilities;
+import ro.polak.webserver.controller.MainController;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.servlet.Servlet;
 
 public class Login extends Servlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        AccessControl ac = new AccessControl(this.getSession());
+        AccessControl ac = new AccessControl(request.getSession());
 
         HTMLDocument doc = new HTMLDocument("Login", false);
         doc.setOwnerClass(this.getClass().getSimpleName());
@@ -25,12 +28,16 @@ public class Login extends Servlet {
 
         if (request._post("dologin") != null) {
             if (ac.doLogin(request._post("login"), request._post("password"))) {
+
+                MainController.getInstance().println(this.getClass(), "Successfully logged in");
+
                 if (request._get("relocate") != null) {
                     response.sendRedirect(request._get("relocate"));
                 } else {
                     response.sendRedirect("/admin/Index.dhtml");
                 }
             } else {
+                MainController.getInstance().println(this.getClass(), "Unable to login");
                 doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Incorrect login or password!</div>");
             }
         }

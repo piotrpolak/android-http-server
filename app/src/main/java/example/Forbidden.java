@@ -7,7 +7,7 @@
 
 package example;
 
-import ro.polak.webserver.error.HTTPError403;
+import ro.polak.webserver.error.HttpError403;
 import ro.polak.webserver.servlet.HttpRequest;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.Servlet;
@@ -20,6 +20,6 @@ public class Forbidden extends Servlet {
     @Override
     public void service(HttpRequest request, HttpResponse response) {
         // Displays 403 Forbidden page
-        new HTTPError403().serve(response);
+        new HttpError403().serve(response);
     }
 }

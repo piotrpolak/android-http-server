@@ -7,17 +7,19 @@
 
 package admin;
 
-import ro.polak.webserver.servlet.*;
-import ro.polak.utilities.Utilities;
-
 import java.io.File;
 import java.util.StringTokenizer;
+
+import ro.polak.utilities.Utilities;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.servlet.Servlet;
 
 public class DriveAccess extends Servlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        AccessControl ac = new AccessControl(this.getSession());
+        AccessControl ac = new AccessControl(request.getSession());
         if (!ac.isLogged()) {
             response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());
             return;

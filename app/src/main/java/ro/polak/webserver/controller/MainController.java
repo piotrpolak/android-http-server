@@ -7,18 +7,20 @@
 
 package ro.polak.webserver.controller;
 
+import android.os.Environment;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 
 import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.WebServer;
-import ro.polak.webserver.gui.*;
+import ro.polak.webserver.gui.ServerGui;
 
 /**
  * The main controller of the server, can only be initialized as a singleton
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @since 2001012
+ * @since 201012
  */
 public class MainController implements Controller {
 
@@ -62,8 +64,13 @@ public class MainController implements Controller {
      * @param text
      */
     public void println(String text) {
-        // TODO Remove static call
-        gui.println(WebServer.sdf.format(new java.util.Date()) + "  -  " + text);
+        if (gui != null) {
+            gui.println(WebServer.sdf.format(new java.util.Date()) + "  -  " + text);
+        }
+    }
+
+    public void println(Class c, String text) {
+        this.println(String.format("%1$-" + 50 + "s", c.getCanonicalName()) + "  -  " + text);
     }
 
     /**
@@ -72,11 +79,22 @@ public class MainController implements Controller {
     public void start() {
         gui.initialize(this);
         try {
-            webServer = new WebServer(this, new ServerSocket(), new ServerConfig());
-            webServer.startServer();
-            gui.start();
+            String baseConfigPath;
+            if (this.getContext() != null) {
+                baseConfigPath = Environment.getExternalStorageDirectory() + "/httpd/";
+            } else {
+                baseConfigPath = "./app/src/main/assets/conf/";
+            }
+
+            String tempPath = System.getProperty("java.io.tmpdir");
+
+            this.println(this.getClass(), "Temp directory: " + tempPath);
+
+            webServer = new WebServer(this, new ServerSocket(), new ServerConfig(baseConfigPath, tempPath));
+            if (webServer.startServer()) {
+                gui.start();
+            }
         } catch (IOException e) {
-            gui.stop();
         }
     }
 

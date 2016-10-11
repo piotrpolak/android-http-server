@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package admin;
@@ -15,7 +15,7 @@ public class Logout extends Servlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        AccessControl ac = new AccessControl(this.getSession());
+        AccessControl ac = new AccessControl(request.getSession());
         ac.logout();
 
         HTMLDocument doc = new HTMLDocument("Logout", false);

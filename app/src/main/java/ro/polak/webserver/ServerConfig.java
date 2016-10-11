@@ -7,15 +7,12 @@
 
 package ro.polak.webserver;
 
-import android.os.Environment;
-import android.util.Log;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import ro.polak.utilities.Config;
+import ro.polak.webserver.controller.MainController;
 
 /**
  * Server configuration
@@ -25,25 +22,32 @@ import ro.polak.utilities.Config;
  */
 public class ServerConfig extends Config {
 
-    private String basePath = Environment.getExternalStorageDirectory() + "/httpd/";
-    private String documentRootPath = basePath + "www/";
-    private String tempPath = basePath + "temp/";
-    private int listenPort = 8080;
-    private String servletMappedExtension = "dhtml";
+    private String basePath;
+    private String documentRootPath;
+    private String tempPath;
+    private int listenPort;
+    private String servletMappedExtension;
     private MimeTypeMapping mimeTypeMapping;
-    private String defaultMimeType = "text/plain";
-    private int maxServerThreads = 50;
+    private String defaultMimeType;
+    private int maxServerThreads;
     private boolean keepAlive;
     private String errorDocument404Path;
     private String errorDocument403Path;
-    private long servletServicePoolPingerInterval = 10000;
-    private long servletServicePoolServletExpires = 30000;
-    public ArrayList directoryIndex = new ArrayList(5);
+    private long servletServicePoolPingerInterval;
+    private long servletServicePoolServletExpires;
+    public ArrayList directoryIndex = new ArrayList();
 
-    /**
-     * Default constructor
-     */
-    public ServerConfig() {
+    public ServerConfig(String basePath, String tempPath) {
+        this.basePath = basePath;
+        documentRootPath = basePath + "www/";
+        this.tempPath = tempPath;
+        listenPort = 8080;
+        servletMappedExtension = "dhtml";
+        defaultMimeType = "text/plain";
+        maxServerThreads = 50;
+        servletServicePoolPingerInterval = 10000;
+        servletServicePoolServletExpires = 30000;
+
         this.read();
     }
 
@@ -52,12 +56,9 @@ public class ServerConfig extends Config {
      */
     public void read() {
         if (super.read(basePath + "httpd.conf")) {
-            Log.i("HTTP", "Config file read");
-
             // Assigning values
             listenPort = Integer.parseInt(this.get("Listen"));
             documentRootPath = basePath + this.get("DocumentRoot");
-            tempPath = basePath + this.get("TempDir");
             defaultMimeType = this.get("DefaultMimeType");
             maxServerThreads = Integer.parseInt(this.get("MaxThreads"));
             keepAlive = this.get("KeepAlive").toLowerCase().equals("on");
@@ -71,19 +72,12 @@ public class ServerConfig extends Config {
 
             servletMappedExtension = this.get("ServletMappedExtension");
 
-            // Creating temp directory
-            try {
-                File tmp_dir = new File(tempPath);
-                if (!tmp_dir.exists()) {
-                    tmp_dir.mkdir();
-                }
-            } catch (Exception e) {
-            }
-
             // Initializing mime mapping
             try {
-                mimeTypeMapping = new MimeTypeMapping(new FileInputStream(basePath + this.get("MimeTypeMapping")), this.get("DefaultMimeType"));
+                mimeTypeMapping = new MimeTypeMapping(new FileInputStream(basePath + this.get("MimeType")), this.get("DefaultMimeType"));
+                MainController.getInstance().println(this.getClass(), "Read mime type config: " + basePath + this.get("MimeType"));
             } catch (IOException e) {
+                MainController.getInstance().println(this.getClass(), "Unable to read mime type config: " + basePath + this.get("MimeType"));
             }
 
 

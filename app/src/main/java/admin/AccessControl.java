@@ -2,18 +2,18 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package admin;
 
 import ro.polak.utilities.Config;
 import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.HttpSession;
+import ro.polak.webserver.servlet.HttpSessionWrapper;
 
 public class AccessControl {
 
-    protected HttpSession session;
+    protected HttpSessionWrapper session;
     private static Config config;
 
     /**
@@ -21,7 +21,7 @@ public class AccessControl {
      *
      * @param session
      */
-    public AccessControl(HttpSession session) {
+    public AccessControl(HttpSessionWrapper session) {
         this.session = session;
     }
 
@@ -33,13 +33,21 @@ public class AccessControl {
     public boolean isLogged() {
         // There is no session active
         if (session == null) {
+            MainController.getInstance().println(this.getClass(), "No session, not logged in");
             return false;
         }
 
-        // There must be an attribute loggedin and it must be equal 1
-        if (session.getAttribute("loggedin") != null && session.getAttribute("loggedin").equals("1")) {
-            return true;
+        if (session.getAttribute("loggedin") != null) {
+            // There must be an attribute loggedin and it must be equal 1
+            if (session.getAttribute("loggedin").equals("1")) {
+                return true;
+            } else {
+                MainController.getInstance().println(this.getClass(), "Not logging in - session attribute is NOT null");
+            }
+        } else {
+            MainController.getInstance().println(this.getClass(), "Not logging in - session attribute is null");
         }
+
 
         return false;
     }

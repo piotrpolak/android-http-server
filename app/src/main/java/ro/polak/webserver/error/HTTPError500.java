@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver.error;
@@ -10,6 +10,7 @@ package ro.polak.webserver.error;
 import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.Statistics;
 import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.servlet.HttpResponseWrapper;
 
 /**
  * 500 Internal Server Error HTTP error handler
@@ -17,12 +18,12 @@ import ro.polak.webserver.servlet.HttpResponse;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
  */
-public class HTTPError500 implements IHTTPError {
+public class HttpError500 implements HttpError {
 
-    HTMLErrorDocument doc;
+    HtmlErrorDocument doc;
 
-    public HTTPError500() {
-        doc = new HTMLErrorDocument();
+    public HttpError500() {
+        doc = new HtmlErrorDocument();
     }
 
     /**
@@ -86,7 +87,7 @@ public class HTTPError500 implements IHTTPError {
         response.setStatus(HttpResponseHeaders.STATUS_INTERNAL_SERVER_ERROR);
         response.setContentType("text/html");
         response.setContentLength(doc.toString().length());
-        response.flushHeaders();
-        response.write(doc.toString());
+        ((HttpResponseWrapper) response).flushHeaders();
+        response.getPrintWriter().print(doc.toString());
     }
 }

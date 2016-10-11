@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashMap;
 
+import ro.polak.webserver.controller.MainController;
+
 /**
  * Server configuration
  *
@@ -32,6 +34,8 @@ public class Config extends HashMap<String, String> {
         String parameterValue;
 
         try {
+            MainController.getInstance().println(this.getClass(), "Reading config file: " + configFilePath);
+
             // TODO Read from assets
             BufferedReader input = new BufferedReader(new FileReader(configFilePath));
 
@@ -59,7 +63,7 @@ public class Config extends HashMap<String, String> {
 
             input.close();
         } catch (Exception e) {
-            // TODO Throw exception
+            MainController.getInstance().println(this.getClass(), "Unable to read config file: " + configFilePath);
             return false;
         }
 

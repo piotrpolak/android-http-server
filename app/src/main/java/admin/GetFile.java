@@ -14,13 +14,14 @@ import ro.polak.webserver.Headers;
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HttpRequest;
 import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.servlet.HttpResponseWrapper;
 import ro.polak.webserver.servlet.Servlet;
 
 public class GetFile extends Servlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        AccessControl ac = new AccessControl(this.getSession());
+        AccessControl ac = new AccessControl(request.getSession());
         if (!ac.isLogged()) {
             response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());
             return;
@@ -42,13 +43,12 @@ public class GetFile extends Servlet {
             if (f.exists() && f.isFile()) {
                 response.setContentType(MainController.getInstance().getWebServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(Utilities.getExtension(f.getName())));
                 response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename=" + Utilities.URLEncode(f.getName()));
-                response.serveFile(f);
+                ((HttpResponseWrapper) response).serveFile(f); // TODO remove this ugly hack
             } else {
                 response.getPrintWriter().print("File does not exist.");
             }
         } else {
             response.getPrintWriter().print("File does not exist.");
         }
-
     }
 }

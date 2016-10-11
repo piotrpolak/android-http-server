@@ -82,7 +82,7 @@ public class HTMLDocument {
                 "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
                 "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
                 "<meta name=\"description\" content=\"\">\n" +
-                "<meta name=\"author\" content=\"\">\n"+
+                "<meta name=\"author\" content=\"\">\n" +
                 "<base href=\"/\">\n";
 
         out += "<title>" + this.title + " - Android HTTP Server</title>\n";

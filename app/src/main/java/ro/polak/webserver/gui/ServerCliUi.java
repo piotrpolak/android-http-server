@@ -8,15 +8,25 @@
 package ro.polak.webserver.gui;
 
 import ro.polak.webserver.controller.Controller;
+import ro.polak.webserver.controller.MainController;
 
 /**
  * Server CLI interface
  */
 public class ServerCliUi implements ServerGui {
 
+    public static void main(String[] args) {
+        MainController mainController = MainController.getInstance();
+        mainController.setGui(new ServerCliUi());
+        mainController.setContext(null);
+        mainController.start();
+    }
+
+    Controller controller;
+
     @Override
     public void initialize(Controller controller) {
-
+        this.controller = controller;
     }
 
     @Override
@@ -26,11 +36,11 @@ public class ServerCliUi implements ServerGui {
 
     @Override
     public void stop() {
-        this.println("The server has stopped.");
+        this.controller.println(this.getClass(), "The server has stopped.");
     }
 
     @Override
     public void start() {
-        this.println("The server has started.");
+        this.controller.println(this.getClass(), "The server has started.");
     }
 }

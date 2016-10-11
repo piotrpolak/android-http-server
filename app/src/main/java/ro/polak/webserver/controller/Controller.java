@@ -9,8 +9,6 @@ package ro.polak.webserver.controller;
 
 import ro.polak.webserver.WebServer;
 
-import java.lang.Object;
-
 /**
  * Defines methods that must be implemented by the server controller
  *
@@ -25,6 +23,13 @@ public interface Controller {
      * @param text
      */
     void println(String text);
+
+    /**
+     * Prints the log line into the specific output
+     *
+     * @param text
+     */
+    void println(Class c, String text);
 
     /**
      * Starts the server logic

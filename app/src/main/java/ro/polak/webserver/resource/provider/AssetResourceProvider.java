@@ -8,14 +8,15 @@
 package ro.polak.webserver.resource.provider;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.servlet.HttpRequestWrapper;
+import ro.polak.webserver.servlet.HttpResponseWrapper;
 
 /**
  * APK asset resource provider
@@ -28,14 +29,14 @@ import ro.polak.webserver.servlet.HttpResponse;
 public class AssetResourceProvider implements ResourceProvider {
 
     @Override
-    public boolean load(String uri, HttpRequest request, HttpResponse response) {
+    public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) {
 
         // Assets should be located withing the "public" directory
         String assetPath = "public" + uri;
 
         boolean assetExists = false;
         try {
-            android.content.res.AssetFileDescriptor afd = ((Context) MainController.getInstance().getContext()).getResources().getAssets().openFd(assetPath);
+            AssetFileDescriptor afd = ((Context) MainController.getInstance().getContext()).getResources().getAssets().openFd(assetPath);
             response.setContentLength(afd.getLength());
             assetExists = true;
         } catch (IOException e) {

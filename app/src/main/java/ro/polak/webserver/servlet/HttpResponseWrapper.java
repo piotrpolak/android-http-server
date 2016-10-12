@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.Headers;
@@ -36,6 +38,7 @@ public class HttpResponseWrapper implements HttpResponse {
     private OutputStream out;
     private PrintWriter printWriter = null;
     private boolean headersFlushed = false;
+    private List<Cookie> cookies = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -97,7 +100,43 @@ public class HttpResponseWrapper implements HttpResponse {
         }
 
         headersFlushed = true;
+
+        for (Cookie cookie : cookies) {
+            headers.setHeader(Headers.HEADER_SET_COOKIE, getCookieHeaderValue(cookie));
+        }
+
         write(headers.toString());
+    }
+
+    /**
+     * Returns serialized cookie header value.
+     *
+     * @param cookie
+     * @return
+     */
+    private String getCookieHeaderValue(Cookie cookie) {
+
+        // TODO test encoding cookie values
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(cookie.getName()).append("=").append(Utilities.URLEncode(cookie.getValue()));
+        if (cookie.getMaxAge() != -1) {
+            String expires = WebServer.sdf.format(new java.util.Date(System.currentTimeMillis() + (cookie.getMaxAge() * 1000)));
+            sb.append("; Expires=").append(expires);
+        }
+        if (cookie.getPath() != null) {
+            sb.append("; Path=").append(cookie.getPath());
+        }
+        if (cookie.getDomain() != null) {
+            sb.append("; Domain=").append(cookie.getDomain());
+        }
+        if (cookie.isHttpOnly()) {
+            sb.append("; HttpOnly");
+        }
+        if (cookie.isSecure()) {
+            sb.append("; Secure");
+        }
+        return sb.toString();
     }
 
     /**
@@ -176,36 +215,13 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     @Override
-    public void setCookie(String cookieName, String cookieValue, int cookieExpiresSeconds, String cookiePath) {
-        String cookie = cookieName + "=" + Utilities.URLEncode(cookieValue);
-
-        // Setting optional expiration time
-        if (cookieExpiresSeconds != 0) {
-            cookie += "; expires=" + WebServer.sdf.format(new java.util.Date(System.currentTimeMillis() + (cookieExpiresSeconds * 1000)));
-        }
-
-        // Setting optional path
-        if (cookiePath != null) {
-            cookie += "; path=" + cookiePath;
-        }
-
-        // Setting the built cookie
-        headers.setHeader(Headers.HEADER_SET_COOKIE, cookie);
+    public void addCookie(Cookie cookie) {
+        cookies.add(cookie);
     }
 
     @Override
-    public void setCookie(String cookieName, String cookieValue) {
-        setCookie(cookieName, cookieValue, 0, null);
-    }
-
-    @Override
-    public void setCookie(String cookieName, String cookieValue, int timeToLiveSeconds) {
-        setCookie(cookieName, cookieValue, timeToLiveSeconds, null);
-    }
-
-    @Override
-    public void removeCookie(String cookieName) {
-        setCookie(cookieName, "", -1, null);
+    public List<Cookie> getCookies() {
+        return cookies;
     }
 
     @Override

@@ -1,11 +1,13 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p/>
+ * <p>
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
 package ro.polak.webserver.servlet;
+
+import java.util.List;
 
 import ro.polak.webserver.HttpResponseHeaders;
 
@@ -18,40 +20,18 @@ import ro.polak.webserver.HttpResponseHeaders;
 public interface HttpResponse {
 
     /**
-     * Sets cookie
+     * Adds a cookie.
      *
-     * @param cookieName           name of the cookie
-     * @param cookieValue          String value of the cookie
-     * @param cookieExpiresSeconds expire time in seconds
-     * @param cookiePath           path for the cookie
+     * @param cookie
      */
-    void setCookie(String cookieName, String cookieValue, int cookieExpiresSeconds, String cookiePath);
+    void addCookie(Cookie cookie);
 
     /**
-     * Sets cookie, expires when browser closed
+     * Returns the list of cookies.
      *
-     * @param cookieName  name of the cookie
-     * @param cookieValue String value of the cookie
+     * @return
      */
-    void setCookie(String cookieName, String cookieValue);
-
-    /**
-     * Sets cookie
-     * <p/>
-     * Use negative time to remove cookie
-     *
-     * @param cookieName        name of the cookie
-     * @param cookieValue       String value of the cookie
-     * @param timeToLiveSeconds time to live in seconds
-     */
-    void setCookie(String cookieName, String cookieValue, int timeToLiveSeconds);
-
-    /**
-     * Removes cookie
-     *
-     * @param cookieName name of the cookie
-     */
-    void removeCookie(String cookieName);
+    List<Cookie> getCookies();
 
     /**
      * Returns a boolean indicating if the response has been committed. A

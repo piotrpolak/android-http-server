@@ -9,24 +9,27 @@ import ro.polak.webserver.session.storage.SessionStorage;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
 public class ServletContextWrapperTest {
 
     @Test
     public void shouldSetCookieForValidSession() throws IOException {
+        SessionStorage sessionStorage = mock(SessionStorage.class);
+        ServletContextWrapper servletContext = new ServletContextWrapper(sessionStorage);
+        HttpResponseWrapper response = new HttpResponseWrapper();
+        HttpSessionWrapper session = new HttpSessionWrapper("123");
+        servletContext.handleSession(session, response);
 
-        // TODO This will be implemented when Cookie (class) is implemented
+        for (Cookie cookie : response.getCookies()) {
+            if (cookie.getName().equals(HttpSessionWrapper.COOKIE_NAME)) {
+                assertThat(null, is(not(cookie.getValue())));
+                return;
+            }
+        }
 
-//        SessionStorage sessionStorage = mock(SessionStorage.class);
-//        ServletContextWrapper servletContext = new ServletContextWrapper(sessionStorage);
-//        HttpResponseWrapper response = new HttpResponseWrapper();
-//        HttpSessionWrapper session = new HttpSessionWrapper("123");
-//        servletContext.handleSession(session, response);
-//
-//        String cookieHeader = response.getHeaders().getHeader("Set-Cookie");
-//
-//        assertThat(null, is(not(cookieHeader)));
+        fail("Session cookie was not set.");
     }
 
     @Test

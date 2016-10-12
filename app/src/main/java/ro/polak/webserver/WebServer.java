@@ -1,7 +1,7 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p/>
+ * <p>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
@@ -38,7 +38,7 @@ public class WebServer extends Thread {
     public static final String NAME = "AndroidHTTPServer";
     public static final String VERSION = "0.1.5-dev";
     public static final String SIGNATURE = NAME + "/" + VERSION;
-    public static SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US);
+    public static final SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US);
     private String[] supportedMethods;
 
     static {

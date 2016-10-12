@@ -1,7 +1,7 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p/>
+ * <p>
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
@@ -64,7 +64,6 @@ public class ServletContextWrapper implements ServletContext {
      *
      * @return
      */
-
     public HttpSessionWrapper createNewSession() {
         HttpSessionWrapper session = new HttpSessionWrapper(RandomStringGenerator.generate());
         session.setServletContext(this);
@@ -80,14 +79,18 @@ public class ServletContextWrapper implements ServletContext {
      * @throws IOException
      */
     public void handleSession(HttpSessionWrapper session, HttpResponseWrapper response) throws IOException {
+        Cookie cookie = new Cookie(HttpSessionWrapper.COOKIE_NAME, "");
         if (session.isInvalidated()) {
-            response.setCookie(HttpSessionWrapper.COOKIE_NAME, "", -100);
+            cookie.setMaxAge(-100);
+
             sessionStorage.removeSession(session);
             MainController.getInstance().println(this.getClass(), "Invalidated session: " + session.getId());
         } else {
-            response.setCookie(HttpSessionWrapper.COOKIE_NAME, session.getId());
+            cookie.setValue(session.getId());
             sessionStorage.persistSession(session);
         }
+
+        response.addCookie(cookie);
     }
 
     private boolean isSessionExpired(HttpSessionWrapper session) {

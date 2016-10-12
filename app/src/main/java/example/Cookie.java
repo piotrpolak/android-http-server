@@ -1,7 +1,7 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p/>
+ * <p>
  * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
 
@@ -35,7 +35,7 @@ public class Cookie extends Servlet {
         ++pageHits;
 
         // Persisting incremented value in session
-        response.setCookie(attributeName, Integer.toString(pageHits));
+        response.addCookie(new ro.polak.webserver.servlet.Cookie(attributeName, Integer.toString(pageHits)));
 
         // Printing out the result
         response.getPrintWriter().print("Cookie page hits: " + pageHits + " " + request.getCookie(attributeName));

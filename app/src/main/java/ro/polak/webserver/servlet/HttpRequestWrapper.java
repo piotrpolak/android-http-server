@@ -57,6 +57,8 @@ public class HttpRequestWrapper implements HttpRequest {
      */
     public static HttpRequestWrapper createFromSocket(Socket socket) throws IOException {
 
+        // FIXME Move to HttpRequestWrapperFactory
+
         // The request object
         HttpRequestWrapper request = new HttpRequestWrapper();
         // The headers object
@@ -118,7 +120,7 @@ public class HttpRequestWrapper implements HttpRequest {
             // Getting the postLength
             int postLength = 0;
             // Checking whether the header exists
-            if (headers.containsHeader("Content-Length")) {
+            if (headers.containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
                 try {
                     // Parsing content length
                     postLength = Integer.parseInt(headers.getHeader(Headers.HEADER_CONTENT_LENGTH));
@@ -232,7 +234,7 @@ public class HttpRequestWrapper implements HttpRequest {
             cookies = new HashMap();
 
             // Return null when there is no cookie headers
-            if (!headers.containsHeader("Cookie")) {
+            if (!headers.containsHeader(Headers.HEADER_COOKIE)) {
                 return null;
             }
 

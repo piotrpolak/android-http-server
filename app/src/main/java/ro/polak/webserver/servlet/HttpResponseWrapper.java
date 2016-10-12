@@ -160,23 +160,6 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     /**
-     * Serves asset file
-     *
-     * @param asset
-     */
-    public void serveAsset(String asset) {
-
-        MainController.getInstance().println(this.getClass(), "Serving asset " + asset);
-
-        try {
-            InputStream inputStream = ((Context) MainController.getInstance().getContext()).getResources().getAssets().open(asset);
-            serveStream(inputStream);
-        } catch (IOException e) {
-            // Suppose this was verified and prevented before
-        }
-    }
-
-    /**
      * Server an asset
      *
      * @param inputStream

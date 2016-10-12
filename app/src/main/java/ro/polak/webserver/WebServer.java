@@ -1,11 +1,13 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p>
+ * <p/>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver;
+
+import android.content.Context;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,16 +97,18 @@ public class WebServer extends Thread {
     }
 
     private void selectActiveResourceProviders() {
+        String assetBasePath = "public";
         if (controller.getContext() != null) {
             resourceProviders = new ResourceProvider[]{
                     new FileResourceProvider(MainController.getInstance().getWebServer().getServerConfig().getDocumentRootPath()),
-                    new AssetResourceProvider(),
+                    new AssetResourceProvider(((Context) MainController.getInstance().getContext()).getResources().getAssets(),
+                            assetBasePath),
                     new ServletResourceProvider()
             };
         } else {
             resourceProviders = new ResourceProvider[]{
                     new FileResourceProvider(MainController.getInstance().getWebServer().getServerConfig().getDocumentRootPath()),
-                    new FileResourceProvider("./app/src/main/assets/public/"),
+                    new FileResourceProvider("./app/src/main/assets/" + assetBasePath),
                     new ServletResourceProvider()
             };
         }

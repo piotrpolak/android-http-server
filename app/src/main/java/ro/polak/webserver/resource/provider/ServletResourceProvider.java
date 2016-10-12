@@ -60,7 +60,7 @@ public class ServletResourceProvider implements ResourceProvider {
                 servlet.init(servletConfig);
                 response.setStatus(HttpResponseHeaders.STATUS_OK);
                 servlet.service(request, response);
-                this.terminate(request, response);
+                terminate(request, response);
             } catch (Exception e) {
                 HttpError500 error500 = new HttpError500();
                 error500.setReason(e);
@@ -80,12 +80,23 @@ public class ServletResourceProvider implements ResourceProvider {
     }
 
     /**
-     * Terminates servlet
-     * <p/>
-     * Sets all necessary headers, flushes content
+     * Terminates servlet. Sets all necessary headers, flushes content.
+     *
+     * @param request
+     * @param response
+     * @throws IOException
      */
     private void terminate(HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
         request.getFileUpload().freeResources();
+
+        HttpSessionWrapper session = request.getSession(false);
+        if (session != null) {
+            try {
+                servletContext.handleSession(session, response);
+            } catch (IOException e) {
+                MainController.getInstance().println(this.getClass(), "Unable to persist session: " + e.getMessage());
+            }
+        }
 
         if (!response.isCommitted()) {
             if (response.getContentType() == null) {
@@ -93,26 +104,20 @@ public class ServletResourceProvider implements ResourceProvider {
             }
 
             if (response.getPrintWriter().isInitialized()) {
-                response.setContentLength(response.getPrintWriter().length());
+                if (!response.getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
+                    response.setContentLength(response.getPrintWriter().length());
+                }
             }
 
             response.getHeaders().setHeader(Headers.HEADER_CACHE_CONTROL, "no-cache");
             response.getHeaders().setHeader(Headers.HEADER_PRAGMA, "no-cache");
 
-            HttpSessionWrapper session = request.getSession(false);
-            if (session != null) {
-                try {
-                    servletContext.handleSession(session, response);
-                } catch (IOException e) {
-                    MainController.getInstance().println(this.getClass(), "Unable to persist session: " + e.getMessage());
-                }
-            }
-
-
             response.flushHeaders();
         }
 
-        response.write(response.getPrintWriter().toString());
+        if (response.getPrintWriter().length() > 0) {
+            response.write(response.getPrintWriter().toString());
+        }
 
         try {
             response.flush();

@@ -2,12 +2,10 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver.servlet;
-
-import android.util.Log;
 
 /**
  * Print writer used by servlets
@@ -17,20 +15,17 @@ import android.util.Log;
  */
 public class PrintWriter {
 
-    public StringBuffer out = new StringBuffer();
+    private boolean isInitialized = false;
+    private StringBuilder out = new StringBuilder();
 
     /**
-     * Tells whether the print writer was initialized before.
-     * <p/>
-     * The print writes is initialized
+     * Tells whether this print buffer was initialized before. It might be important to distinguish
+     * between an empty PrintWriter or uninitialized one when serving binary data.
      *
      * @return
      */
     public boolean isInitialized() {
-        if (out.length() > 0) {
-            return true;
-        }
-        return false;
+        return isInitialized;
     }
 
     /**
@@ -39,6 +34,7 @@ public class PrintWriter {
      * @param s
      */
     public void print(String s) {
+        isInitialized = true;
         out.append(s);
     }
 
@@ -48,6 +44,7 @@ public class PrintWriter {
      * @param b
      */
     public void print(boolean b) {
+        isInitialized = true;
         out.append(b);
     }
 
@@ -57,6 +54,7 @@ public class PrintWriter {
      * @param i
      */
     public void print(int i) {
+        isInitialized = true;
         out.append(i);
     }
 
@@ -66,6 +64,7 @@ public class PrintWriter {
      * @param f
      */
     public void print(float f) {
+        isInitialized = true;
         out.append(f);
     }
 
@@ -75,6 +74,7 @@ public class PrintWriter {
      * @param c
      */
     public void print(char c) {
+        isInitialized = true;
         out.append(c);
     }
 
@@ -82,6 +82,7 @@ public class PrintWriter {
      * Prints an empty newline
      */
     public void println() {
+        isInitialized = true;
         out.append("\n");
     }
 
@@ -91,6 +92,7 @@ public class PrintWriter {
      * @param s
      */
     public void println(String s) {
+        isInitialized = true;
         out.append(s);
         println();
     }
@@ -111,44 +113,5 @@ public class PrintWriter {
      */
     public String toString() {
         return out.toString();
-    }
-
-    /**
-     * Writes the buffer into the response
-     *
-     * @param response
-     */
-    public void writeToResponse(HttpResponseWrapper response) {
-        int bSize = 1024;
-
-        int length = out.length(); // Total number of characters
-        int current = 0; // Index of the current character
-
-        int stat_n_chunks = (int) Math.ceil(length / bSize);
-        int stat_n_chunks_real = 0;
-        while (current < length) { // As long as the current element is not the
-            // last element
-            int end = current + bSize;
-            if (end > length) {
-                end = length;
-            }
-
-            // .getChars(end, end, dst, end)
-            response.write(out.substring(current, end));
-
-            current = end;
-
-            stat_n_chunks_real++;
-        }
-
-        if (stat_n_chunks_real != stat_n_chunks) {
-            // INSPECT
-            Log.e("PRINTWRITER", "Number of chunks is different stat_n_chunks_real=" + stat_n_chunks_real + ", stat_n_chunks=" + stat_n_chunks);
-        }
-
-        try {
-            response.flush();
-        } catch (Exception e) {
-        }
     }
 }

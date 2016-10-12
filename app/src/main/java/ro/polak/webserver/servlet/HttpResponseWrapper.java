@@ -7,8 +7,6 @@
 
 package ro.polak.webserver.servlet;
 
-import android.content.Context;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import ro.polak.webserver.Headers;
 import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.Statistics;
 import ro.polak.webserver.WebServer;
-import ro.polak.webserver.controller.MainController;
 
 /**
  * Represents HTTP response
@@ -36,9 +34,14 @@ public class HttpResponseWrapper implements HttpResponse {
 
     private HttpResponseHeaders headers;
     private OutputStream out;
-    private PrintWriter printWriter = null;
-    private boolean headersFlushed = false;
-    private List<Cookie> cookies = new ArrayList<>();
+    private PrintWriter printWriter;
+    private boolean headersFlushed;
+    private List<Cookie> cookies;
+    private static Charset charset;
+
+    static {
+        charset = Charset.forName("UTF-8");
+    }
 
     /**
      * Default constructor.
@@ -46,6 +49,8 @@ public class HttpResponseWrapper implements HttpResponse {
     public HttpResponseWrapper() {
         headers = new HttpResponseHeaders();
         setKeepAlive(false);
+        headersFlushed = false;
+        cookies = new ArrayList<>();
     }
 
     /**
@@ -55,7 +60,6 @@ public class HttpResponseWrapper implements HttpResponse {
      * @return
      */
     public static HttpResponseWrapper createFromSocket(Socket socket) throws IOException {
-
         HttpResponseWrapper response = new HttpResponseWrapper();
         response.out = socket.getOutputStream();
         return response;
@@ -82,7 +86,7 @@ public class HttpResponseWrapper implements HttpResponse {
      * @param s String to be written
      */
     public void write(String s) {
-        write(s.getBytes());
+        write(s.getBytes(charset));
     }
 
     /**
@@ -91,6 +95,7 @@ public class HttpResponseWrapper implements HttpResponse {
      * Can be called once per responce, after the fisrt call it "locks"
      *
      * @return true if headers flushed
+     * @throws IllegalStateException when headers have been previously flushed.
      */
     public void flushHeaders() throws IllegalStateException {
 
@@ -116,6 +121,7 @@ public class HttpResponseWrapper implements HttpResponse {
      */
     private String getCookieHeaderValue(Cookie cookie) {
 
+        // TODO delegate it to a specialized class
         // TODO test encoding cookie values
 
         StringBuilder sb = new StringBuilder();
@@ -145,9 +151,6 @@ public class HttpResponseWrapper implements HttpResponse {
      * @param file file to be served
      */
     public void serveFile(File file) {
-
-        MainController.getInstance().println(this.getClass(), "Serving file " + file.getPath());
-
         try {
             setContentLength(file.length());
             FileInputStream inputStream = new FileInputStream(file);
@@ -170,17 +173,14 @@ public class HttpResponseWrapper implements HttpResponse {
         // If this throws an IllegalStateException, it means you have tried (incorrectly) to flush headers before
         flushHeaders();
 
-        int numberOfBufferReadBytes = 0;
+        int numberOfBufferReadBytes;
         byte[] buffer = new byte[512];
 
         try {
-            // Reading and flushing the file chunk by chunk
             while ((numberOfBufferReadBytes = inputStream.read(buffer)) != -1) {
-                // Writing to buffer
                 out.write(buffer, 0, numberOfBufferReadBytes);
-                // Flushing the buffer
                 out.flush();
-                // Incrementing statistics
+
                 Statistics.addBytesSend(numberOfBufferReadBytes);
             }
             // Flushing remaining buffer, just in case

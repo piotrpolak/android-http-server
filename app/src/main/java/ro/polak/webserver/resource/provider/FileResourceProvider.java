@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver.resource.provider;
@@ -25,18 +25,22 @@ import ro.polak.webserver.servlet.HttpResponseWrapper;
  */
 public class FileResourceProvider implements ResourceProvider {
 
-    String documentRootPath;
+    private String basePath;
 
-    public FileResourceProvider(String documentRootPath) {
-        this.documentRootPath = documentRootPath;
+    /**
+     * Default constructor.
+     *
+     * @param basePath
+     */
+    public FileResourceProvider(String basePath) {
+        this.basePath = basePath;
     }
 
     @Override
     public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) {
 
-        File file = new File(this.documentRootPath + uri);
+        File file = new File(this.basePath + uri);
 
-        // File not found
         if (file.exists() && file.isFile()) {
             String fileExtension = Utilities.getExtension(file.getName());
 
@@ -45,6 +49,7 @@ public class FileResourceProvider implements ResourceProvider {
             response.setContentLength(file.length());
 
             // Serving file for all the request but for HEAD
+            // TODO This should be moved out into the parent class
             if (!request.getHeaders().getMethod().equals(HttpRequestWrapper.METHOD_HEAD)) {
                 response.serveFile(file);
             }

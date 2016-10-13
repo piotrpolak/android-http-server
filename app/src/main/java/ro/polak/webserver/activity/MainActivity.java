@@ -62,14 +62,14 @@ public class MainActivity extends AppCompatActivity implements ServerGui {
 
         status.setText("Initializing");
 
-        this.mainController = MainController.getInstance();
-        this.mainController.setGui(this);
-        this.mainController.setContext(this);
-        this.mainController.start();
+        mainController = MainController.getInstance();
+        mainController.setGui(this);
+        mainController.setContext(this);
+        mainController.start();
     }
 
     public MainController getMainController() {
-        return this.mainController;
+        return mainController;
     }
 
     /**
@@ -108,13 +108,13 @@ public class MainActivity extends AppCompatActivity implements ServerGui {
 
             } else if (id == actionButton.getId()) {
                 try {
-                    if (this.activity.getMainController().getWebServer() != null && this.activity.getMainController().getWebServer().isRunning()) {
-                        this.activity.getMainController().stop();
+                    if (activity.getMainController().getWebServer() != null && activity.getMainController().getWebServer().isRunning()) {
+                        activity.getMainController().stop();
                     } else {
-                        this.activity.getMainController().start();
+                        activity.getMainController().start();
                     }
                 } catch (Exception e) {
-                    this.activity.getMainController().start();
+                    activity.getMainController().start();
                 }
             }
 
@@ -137,14 +137,14 @@ public class MainActivity extends AppCompatActivity implements ServerGui {
      * GUI method called by controller on start
      */
     public void start() {
-        this.println("Starging HTTPD");
+        println("Starging HTTPD");
         status.setText("Starting...");
 
-        String ip = this.getLocalIpAddress();
+        String ip = getLocalIpAddress();
         if (ip == null) {
             ip = "127.0.0.1";
         }
-        int port = this.mainController.getWebServer().getServerConfig().getListenPort();
+        int port = mainController.getWebServer().getServerConfig().getListenPort();
         String portString = "";
         if (port != 80) {
             portString = ":" + port;
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements ServerGui {
      * GUI method called by controller on stop
      */
     public void stop() {
-        this.println("Stopping HTTPD");
+        println("Stopping HTTPD");
         imgView.setImageResource(R.drawable.offline);
         status.setText("Server offline");
         actionButton.setVisibility(View.VISIBLE);

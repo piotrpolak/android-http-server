@@ -33,7 +33,7 @@ public class AccessControl {
     public boolean isLogged() {
         // There is no session active
         if (session == null) {
-            MainController.getInstance().println(this.getClass(), "No session, not logged in");
+            MainController.getInstance().println(getClass(), "No session, not logged in");
             return false;
         }
 
@@ -42,10 +42,10 @@ public class AccessControl {
             if (session.getAttribute("loggedin").equals("1")) {
                 return true;
             } else {
-                MainController.getInstance().println(this.getClass(), "Not logging in - session attribute is NOT null");
+                MainController.getInstance().println(getClass(), "Not logging in - session attribute is NOT null");
             }
         } else {
-            MainController.getInstance().println(this.getClass(), "Not logging in - session attribute is null");
+            MainController.getInstance().println(getClass(), "Not logging in - session attribute is null");
         }
 
 

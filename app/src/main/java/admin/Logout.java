@@ -19,7 +19,7 @@ public class Logout extends Servlet {
         ac.logout();
 
         HTMLDocument doc = new HTMLDocument("Logout", false);
-        doc.setOwnerClass(this.getClass().getSimpleName());
+        doc.setOwnerClass(getClass().getSimpleName());
 
         doc.writeln("<div class=\"box-logout\">");
         doc.writeln("<h2>Logged out</h2>");

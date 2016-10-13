@@ -70,10 +70,10 @@ public class WebServer extends Thread {
 
         selectActiveResourceProviders();
 
-        while (this.listen) {
+        while (listen) {
             try {
                 Socket socket = serverSocket.accept();
-                // this.controller.println("Accepting connection from "+socket.getInetAddress().getHostAddress().toString());
+                // controller.println("Accepting connection from "+socket.getInetAddress().getHostAddress().toString());
 
                 if (serverConfig.getMaxServerThreads() >= ServerThread.activeCount()) {
                     // If there are threads allowed to start
@@ -85,7 +85,7 @@ public class WebServer extends Thread {
                 }
             } catch (IOException e) {
                 if (listen) {
-                    controller.println(this.getClass(), "Exception: " + e.getClass().getName() + " " + e.getMessage());
+                    controller.println(getClass(), "Exception: " + e.getClass().getName() + " " + e.getMessage());
                 }
             }
         }
@@ -139,25 +139,25 @@ public class WebServer extends Thread {
         listen = true;
 
         if (!(new File(serverConfig.getDocumentRootPath()).isDirectory())) {
-            controller.println(this.getClass(), "WARNING: DocumentRoot does not exist! PATH: " + serverConfig.getDocumentRootPath());
+            controller.println(getClass(), "WARNING: DocumentRoot does not exist! PATH: " + serverConfig.getDocumentRootPath());
         }
 
         if (serverConfig.getMaxServerThreads() < 1) {
-            controller.println(this.getClass(), "ERROR: MaxThreads should be greater or equal to 1! " + serverConfig.getMaxServerThreads() + " is given.");
+            controller.println(getClass(), "ERROR: MaxThreads should be greater or equal to 1! " + serverConfig.getMaxServerThreads() + " is given.");
             return false;
         }
 
         try {
             serverSocket.bind(new InetSocketAddress(serverConfig.getListenPort()));
         } catch (IOException e) {
-            this.controller.println(this.getClass(), "ERROR: Unable to start server: unable to listen on port " + serverConfig.getListenPort() + " - " + e.getMessage());
+            controller.println(getClass(), "ERROR: Unable to start server: unable to listen on port " + serverConfig.getListenPort() + " - " + e.getMessage());
             return false;
         }
 
         Utilities.clearDirectory(serverConfig.getTempPath());
 
-        this.controller.println(this.getClass(), "Server has been started. Listening on port " + serverConfig.getListenPort());
-        this.start();
+        controller.println(getClass(), "Server has been started. Listening on port " + serverConfig.getListenPort());
+        start();
         return true;
     }
 
@@ -172,7 +172,7 @@ public class WebServer extends Thread {
             } catch (IOException e) {
             }
         }
-        this.controller.println(this.getClass(), "Server has been stopped");
+        controller.println(getClass(), "Server has been stopped");
     }
 
     /**

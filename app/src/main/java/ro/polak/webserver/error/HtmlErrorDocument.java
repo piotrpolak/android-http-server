@@ -64,7 +64,7 @@ class HtmlErrorDocument {
                 + "<html lang=\"en\">\n"
                 + "<head>\n"
                 + "<title>\n"
-                + this.title
+                + title
                 + "</title>\n"
                 + "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n"
                 + "<style type=\"text/css\">\n"
@@ -87,9 +87,9 @@ class HtmlErrorDocument {
                 + "</head>\n"
                 + "<body>\n"
                 + "    <div id=\"main\">\n"
-                + "        <h1>" + this.title + "</h1>\n"
+                + "        <h1>" + title + "</h1>\n"
                 + "        <div class=\"content\">\n"
-                + this.message
+                + message
                 + "        </div>\n"
                 + "        <footer>Android HTTP Server</footer>\n"
                 + "    </div>\n"

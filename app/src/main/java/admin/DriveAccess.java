@@ -26,7 +26,7 @@ public class DriveAccess extends Servlet {
         }
 
         HTMLDocument doc = new HTMLDocument("Drive Access");
-        doc.setOwnerClass(this.getClass().getSimpleName());
+        doc.setOwnerClass(getClass().getSimpleName());
 
         doc.writeln("<div class=\"page-header\"><h1>Drive Access</h1></div>");
 

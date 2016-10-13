@@ -21,7 +21,7 @@ public class Index extends Servlet {
         }
 
         HTMLDocument doc = new HTMLDocument("About");
-        doc.setOwnerClass(this.getClass().getSimpleName());
+        doc.setOwnerClass(getClass().getSimpleName());
 
         doc.writeln("<div class=\"page-header\"><h1>About</h1></div>");
         doc.write("<p>" + ro.polak.webserver.WebServer.SIGNATURE + " running.</p>");

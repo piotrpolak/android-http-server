@@ -39,7 +39,7 @@ public class FileResourceProvider implements ResourceProvider {
     @Override
     public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) {
 
-        File file = new File(this.basePath + uri);
+        File file = new File(basePath + uri);
 
         if (file.exists() && file.isFile()) {
             String fileExtension = Utilities.getExtension(file.getName());

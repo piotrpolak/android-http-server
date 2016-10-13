@@ -54,7 +54,7 @@ public class UploadedFile {
      * @return the HTML form postFieldName
      */
     public String getPostFieldName() {
-        return this.postFieldName;
+        return postFieldName;
     }
 
     /**
@@ -63,7 +63,7 @@ public class UploadedFile {
      * @return the postFieldName of uploaded file
      */
     public String getFileName() {
-        return this.fileName;
+        return fileName;
     }
 
     /**

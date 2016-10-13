@@ -46,14 +46,14 @@ public class ServletPool {
          */
         public ServletPoolItem(Servlet servlet) {
             this.servlet = servlet;
-            this.update();
+            update();
         }
 
         /**
          * Updates timestamp
          */
         public void update() {
-            this.timestamp = (new Date()).getTime();
+            timestamp = (new Date()).getTime();
         }
 
         /**
@@ -62,7 +62,7 @@ public class ServletPool {
          * @return
          */
         public long getTimestamp() {
-            return this.timestamp;
+            return timestamp;
         }
 
         /**
@@ -71,15 +71,15 @@ public class ServletPool {
          * @return
          */
         public Servlet getServlet() {
-            return this.servlet;
+            return servlet;
         }
 
         /**
          * Cleanup method that should be called when the item is about to expire
          */
         public void finalize() {
-            this.servlet.destroy();
-            this.servlet = null;
+            servlet.destroy();
+            servlet = null;
         }
     }
 
@@ -112,9 +112,9 @@ public class ServletPool {
      * Default constructor
      */
     public ServletPool() {
-        this.map = new HashMap<String, ServletPoolItem>();
-        this.pingerTimer = new Timer();
-        this.pingerTimer.schedule(new RevalidatorTask(this), 1000, MainController.getInstance().getWebServer().getServerConfig().getServletServicePoolPingerInterval());
+        map = new HashMap<String, ServletPoolItem>();
+        pingerTimer = new Timer();
+        pingerTimer.schedule(new RevalidatorTask(this), 1000, MainController.getInstance().getWebServer().getServerConfig().getServletServicePoolPingerInterval());
     }
 
     /**
@@ -124,8 +124,8 @@ public class ServletPool {
      * @param servlet
      */
     public void add(String servletName, Servlet servlet) {
-        synchronized (this.map) {
-            this.map.put(servletName, new ServletPoolItem(servlet));
+        synchronized (map) {
+            map.put(servletName, new ServletPoolItem(servlet));
         }
     }
 
@@ -137,9 +137,9 @@ public class ServletPool {
      */
     public Servlet getServlet(String name) {
         ServletPoolItem spi;
-        synchronized (this.map) {
+        synchronized (map) {
             try {
-                spi = this.map.get(name);
+                spi = map.get(name);
                 spi.update();
                 return spi.getServlet();
             } catch (NullPointerException e) {
@@ -152,14 +152,14 @@ public class ServletPool {
      * Retaliates the pool and removes out dated items
      */
     protected void revalidate() {
-        if (this.map.size() == 0) {
+        if (map.size() == 0) {
             return;
         }
 
         long expireTimestamp = new Date().getTime() - MainController.getInstance().getWebServer().getServerConfig().getServletServicePoolServletExpires();
 
-        synchronized (this.map) {
-            Iterator<ServletPoolItem> it = this.map.values().iterator();
+        synchronized (map) {
+            Iterator<ServletPoolItem> it = map.values().iterator();
             while (it.hasNext()) {
                 ServletPoolItem spi = it.next();
 

@@ -20,7 +20,7 @@ public class Login extends Servlet {
         AccessControl ac = new AccessControl(request.getSession());
 
         HTMLDocument doc = new HTMLDocument("Login", false);
-        doc.setOwnerClass(this.getClass().getSimpleName());
+        doc.setOwnerClass(getClass().getSimpleName());
 
         doc.writeln("<div class=\"form-login\">");
 
@@ -29,7 +29,7 @@ public class Login extends Servlet {
         if (request._post("dologin") != null) {
             if (ac.doLogin(request._post("login"), request._post("password"))) {
 
-                MainController.getInstance().println(this.getClass(), "Successfully logged in");
+                MainController.getInstance().println(getClass(), "Successfully logged in");
 
                 if (request._get("relocate") != null) {
                     response.sendRedirect(request._get("relocate"));
@@ -37,7 +37,7 @@ public class Login extends Servlet {
                     response.sendRedirect("/admin/Index.dhtml");
                 }
             } else {
-                MainController.getInstance().println(this.getClass(), "Unable to login");
+                MainController.getInstance().println(getClass(), "Unable to login");
                 doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Incorrect login or password!</div>");
             }
         }

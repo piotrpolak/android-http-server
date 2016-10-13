@@ -70,7 +70,7 @@ public class MainController implements Controller {
     }
 
     public void println(Class c, String text) {
-        this.println(String.format("%1$-" + 50 + "s", c.getCanonicalName()) + "  -  " + text);
+        println(String.format("%1$-" + 50 + "s", c.getCanonicalName()) + "  -  " + text);
     }
 
     /**
@@ -80,7 +80,7 @@ public class MainController implements Controller {
         gui.initialize(this);
         try {
             String baseConfigPath;
-            if (this.getContext() != null) {
+            if (getContext() != null) {
                 baseConfigPath = Environment.getExternalStorageDirectory() + "/httpd/";
             } else {
                 baseConfigPath = "./app/src/main/assets/conf/";
@@ -88,7 +88,7 @@ public class MainController implements Controller {
 
             String tempPath = System.getProperty("java.io.tmpdir");
 
-            this.println(this.getClass(), "Temp directory: " + tempPath);
+            println(getClass(), "Temp directory: " + tempPath);
 
             webServer = new WebServer(this, new ServerSocket(), new ServerConfig(baseConfigPath, tempPath));
             if (webServer.startServer()) {

@@ -94,7 +94,7 @@ public class ServletResourceProvider implements ResourceProvider {
             try {
                 servletContext.handleSession(session, response);
             } catch (IOException e) {
-                MainController.getInstance().println(this.getClass(), "Unable to persist session: " + e.getMessage());
+                MainController.getInstance().println(getClass(), "Unable to persist session: " + e.getMessage());
             }
         }
 

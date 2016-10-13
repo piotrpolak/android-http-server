@@ -25,7 +25,7 @@ public class HTMLDocument {
     public HTMLDocument(String title) {
         this.title = title;
         body = headers = "";
-        this.isLogged = true;
+        isLogged = true;
     }
 
     public HTMLDocument(String title, boolean isLogged) {
@@ -85,7 +85,7 @@ public class HTMLDocument {
                 "<meta name=\"author\" content=\"\">\n" +
                 "<base href=\"/\">\n";
 
-        out += "<title>" + this.title + " - Android HTTP Server</title>\n";
+        out += "<title>" + title + " - Android HTTP Server</title>\n";
         out += headers;
         out += "<link href=\"/assets/css/bootstrap.min.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
         out += "<link href=\"/assets/css/bootstrap-theme.min.css\" rel=\"stylesheet\" type=\"text/css\" />\n";
@@ -104,7 +104,7 @@ public class HTMLDocument {
         menuElements.put("Logout", "Logout");
 
 
-        if (this.isLogged) {
+        if (isLogged) {
             out += "<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n";
             out += "<div class=\"container\">\n";
             out += "    <div class=\"navbar-header\">\n";
@@ -131,7 +131,7 @@ public class HTMLDocument {
         }
 
         out += "<div class=\"container theme-showcase\" role=\"main\">\n\n";
-        out += this.body;
+        out += body;
         out += "\n</div>\n";
         out += "<script type=\"text/javascript\" src=\"/assets/js/jquery.min.js\" ></script>\n";
         out += "<script type=\"text/javascript\" src=\"/assets/js/bootstrap.min.js\" ></script>\n";

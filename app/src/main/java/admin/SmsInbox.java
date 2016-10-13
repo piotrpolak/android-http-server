@@ -34,7 +34,7 @@ public class SmsInbox extends Servlet {
         }
 
         HTMLDocument doc = new HTMLDocument("SMS inbox");
-        doc.setOwnerClass(this.getClass().getSimpleName());
+        doc.setOwnerClass(getClass().getSimpleName());
 
 
         String threadIdGet = request._get("thread_id");

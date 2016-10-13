@@ -34,7 +34,7 @@ public class Config extends HashMap<String, String> {
         String parameterValue;
 
         try {
-            MainController.getInstance().println(this.getClass(), "Reading config file: " + configFilePath);
+            MainController.getInstance().println(getClass(), "Reading config file: " + configFilePath);
 
             // TODO Read from assets
             BufferedReader input = new BufferedReader(new FileReader(configFilePath));
@@ -58,12 +58,12 @@ public class Config extends HashMap<String, String> {
 
                 parameterName = line.substring(0, firstSpacePosition);
                 parameterValue = line.substring(firstSpacePosition + 1).trim();
-                this.put(parameterName, parameterValue);
+                put(parameterName, parameterValue);
             }
 
             input.close();
         } catch (Exception e) {
-            MainController.getInstance().println(this.getClass(), "Unable to read config file: " + configFilePath);
+            MainController.getInstance().println(getClass(), "Unable to read config file: " + configFilePath);
             return false;
         }
 

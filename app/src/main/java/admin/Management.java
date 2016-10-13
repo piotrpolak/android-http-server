@@ -22,7 +22,7 @@ public class Management extends Servlet {
         }
 
         HTMLDocument doc = new HTMLDocument("Management");
-        doc.setOwnerClass(this.getClass().getSimpleName());
+        doc.setOwnerClass(getClass().getSimpleName());
 
         if (request._get("task") == null) {
             doc.writeln("<div class=\"page-header\"><h1>Management</h1></div>");

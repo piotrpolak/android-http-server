@@ -105,7 +105,7 @@ public class MultipartRequestHandler {
      * @return AttributeList representation of POST attributes
      */
     public Map<String, String> getPost() {
-        return this.post;
+        return post;
     }
 
     /**
@@ -114,7 +114,7 @@ public class MultipartRequestHandler {
      * @return
      */
     public List<UploadedFile> getUploadedFiles() {
-        return this.uploadedFiles;
+        return uploadedFiles;
     }
 
     private void handleBoundary() throws IOException {
@@ -223,7 +223,7 @@ public class MultipartRequestHandler {
                          *
                          * Processing the last read (accepted) characters
                          */
-                        this.switchStates(begin, i - currentDeliminator.length());
+                        switchStates(begin, i - currentDeliminator.length());
 
                         // Next first char is the next pos
                         begin = i + 1;
@@ -246,7 +246,7 @@ public class MultipartRequestHandler {
                         if (wasPreviousBuffered) {
                             // If the buffer was activated in the last loop
                             // Avoiding duplication of information
-                            this.releaseTempBuffer();
+                            releaseTempBuffer();
                             wasPreviousBuffered = false;
                         }
                     }
@@ -263,7 +263,7 @@ public class MultipartRequestHandler {
                 wasPreviousBuffered = true;
             }
             // Releasing the read buffer, excluding temp last bytes (see -charPosition)
-            this.releaseBuffer(begin, bytesRead - charPosition);
+            releaseBuffer(begin, bytesRead - charPosition);
 
         }
 
@@ -382,7 +382,7 @@ public class MultipartRequestHandler {
                         valueStringBuffered.append((char) buffer[i]);
                     }
                 }
-                this.post.put(multipartHeadersPart.getPostFieldName(), valueStringBuffered.toString());
+                post.put(multipartHeadersPart.getPostFieldName(), valueStringBuffered.toString());
             }
         }
     }

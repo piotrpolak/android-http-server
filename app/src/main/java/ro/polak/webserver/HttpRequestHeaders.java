@@ -84,7 +84,7 @@ public class HttpRequestHeaders extends Headers {
      * @return method of the request
      */
     public String getMethod() {
-        return this.method;
+        return method;
     }
 
     /**
@@ -93,7 +93,7 @@ public class HttpRequestHeaders extends Headers {
      * @return requested URI
      */
     public String getURI() {
-        return this.uri;
+        return uri;
     }
 
     /**
@@ -120,7 +120,7 @@ public class HttpRequestHeaders extends Headers {
      * @return request protocol
      */
     public String getProtocol() {
-        return this.protocol;
+        return protocol;
     }
 
     /**

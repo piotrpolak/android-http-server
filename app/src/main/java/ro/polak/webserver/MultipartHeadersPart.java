@@ -31,7 +31,7 @@ public class MultipartHeadersPart extends Headers {
         super.parse(headersString, false);
 
         // Reading uploaded file name
-        String contentDisposition = this.getHeader(Headers.HEADER_CONTENT_DISPOSITION);
+        String contentDisposition = getHeader(Headers.HEADER_CONTENT_DISPOSITION);
         String name = contentDisposition.substring(contentDisposition.indexOf("name=\"") + 6);
 
         int quotationMarkPosition = name.indexOf("\"");
@@ -40,7 +40,7 @@ public class MultipartHeadersPart extends Headers {
         }
 
         // Getting file type
-        String contentType = this.getHeader(Headers.HEADER_CONTENT_TYPE);
+        String contentType = getHeader(Headers.HEADER_CONTENT_TYPE);
 
         // Getting file name
         String fileName = contentDisposition.substring(contentDisposition.indexOf("filename=\"") + 10);

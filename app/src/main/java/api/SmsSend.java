@@ -7,17 +7,17 @@
 
 package api;
 
-import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
-import ro.polak.webserver.servlet.Servlet;
-
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.telephony.SmsManager;
 
 import org.json.JSONException;
+
+import ro.polak.webserver.controller.MainController;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.servlet.Servlet;
 
 /**
  * SMS Send method API endpoint
@@ -94,7 +94,7 @@ public class SmsSend extends Servlet {
         }
 
         // Sending a real message
-        this.sendSMS(to, message);
+        sendSMS(to, message);
         response.getPrintWriter().print(jsonResponse);
     }
 

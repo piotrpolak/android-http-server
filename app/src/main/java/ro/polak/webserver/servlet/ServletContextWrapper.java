@@ -48,7 +48,7 @@ public class ServletContextWrapper implements ServletContext {
 
                 if (isSessionExpired(session)) {
                     sessionStorage.removeSession(session);
-                    MainController.getInstance().println(this.getClass(), "Removed expired session: " + session.getId());
+                    MainController.getInstance().println(getClass(), "Removed expired session: " + session.getId());
                     session = null;
                 }
             }
@@ -67,7 +67,7 @@ public class ServletContextWrapper implements ServletContext {
     public HttpSessionWrapper createNewSession() {
         HttpSessionWrapper session = new HttpSessionWrapper(RandomStringGenerator.generate());
         session.setServletContext(this);
-        MainController.getInstance().println(this.getClass(), "Created a new session: " + session.getId());
+        MainController.getInstance().println(getClass(), "Created a new session: " + session.getId());
         return session;
     }
 
@@ -84,7 +84,7 @@ public class ServletContextWrapper implements ServletContext {
             cookie.setMaxAge(-100);
 
             sessionStorage.removeSession(session);
-            MainController.getInstance().println(this.getClass(), "Invalidated session: " + session.getId());
+            MainController.getInstance().println(getClass(), "Invalidated session: " + session.getId());
         } else {
             cookie.setValue(session.getId());
             sessionStorage.persistSession(session);

@@ -27,7 +27,7 @@ public class UpdateConfiguration extends Servlet {
         }
 
         HTMLDocument doc = new HTMLDocument("Update configuration");
-        doc.setOwnerClass(this.getClass().getSimpleName());
+        doc.setOwnerClass(getClass().getSimpleName());
 
         doc.writeln("<div class=\"page-header\"><h1>Update configuration</h1></div>");
         FileUpload fu = request.getFileUpload();

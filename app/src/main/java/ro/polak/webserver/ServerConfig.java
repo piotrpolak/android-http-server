@@ -48,7 +48,7 @@ public class ServerConfig extends Config {
         servletServicePoolPingerInterval = 10000;
         servletServicePoolServletExpires = 30000;
 
-        this.read();
+        read();
     }
 
     /**
@@ -57,32 +57,32 @@ public class ServerConfig extends Config {
     public void read() {
         if (super.read(basePath + "httpd.conf")) {
             // Assigning values
-            listenPort = Integer.parseInt(this.get("Listen"));
-            documentRootPath = basePath + this.get("DocumentRoot");
-            defaultMimeType = this.get("DefaultMimeType");
-            maxServerThreads = Integer.parseInt(this.get("MaxThreads"));
-            keepAlive = this.get("KeepAlive").toLowerCase().equals("on");
+            listenPort = Integer.parseInt(get("Listen"));
+            documentRootPath = basePath + get("DocumentRoot");
+            defaultMimeType = get("DefaultMimeType");
+            maxServerThreads = Integer.parseInt(get("MaxThreads"));
+            keepAlive = get("KeepAlive").toLowerCase().equals("on");
 
-            if (this.get("ErrorDocument404") != null) {
-                errorDocument404Path = basePath + this.get("ErrorDocument404");
+            if (get("ErrorDocument404") != null) {
+                errorDocument404Path = basePath + get("ErrorDocument404");
             }
-            if (this.get("ErrorDocument403") != null) {
-                errorDocument403Path = basePath + this.get("ErrorDocument403");
+            if (get("ErrorDocument403") != null) {
+                errorDocument403Path = basePath + get("ErrorDocument403");
             }
 
-            servletMappedExtension = this.get("ServletMappedExtension");
+            servletMappedExtension = get("ServletMappedExtension");
 
             // Initializing mime mapping
             try {
-                mimeTypeMapping = new MimeTypeMapping(new FileInputStream(basePath + this.get("MimeType")), this.get("DefaultMimeType"));
-                MainController.getInstance().println(this.getClass(), "Read mime type config: " + basePath + this.get("MimeType"));
+                mimeTypeMapping = new MimeTypeMapping(new FileInputStream(basePath + get("MimeType")), get("DefaultMimeType"));
+                MainController.getInstance().println(getClass(), "Read mime type config: " + basePath + get("MimeType"));
             } catch (IOException e) {
-                MainController.getInstance().println(this.getClass(), "Unable to read mime type config: " + basePath + this.get("MimeType"));
+                MainController.getInstance().println(getClass(), "Unable to read mime type config: " + basePath + get("MimeType"));
             }
 
 
             // Generating index files
-            String directoryIndexLine[] = this.get("DirectoryIndex").split(" ");
+            String directoryIndexLine[] = get("DirectoryIndex").split(" ");
             for (int i = 0; i < directoryIndexLine.length; i++) {
                 directoryIndex.add(directoryIndexLine[i]);
             }

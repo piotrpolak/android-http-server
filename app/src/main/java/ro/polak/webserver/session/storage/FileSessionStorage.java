@@ -51,7 +51,7 @@ public class FileSessionStorage implements SessionStorage {
         ObjectOutputStream out = new ObjectOutputStream(fos);
         out.writeObject(session);
 
-        MainController.getInstance().println(this.getClass(), "Persisted session: " + tempPath + session.getId());
+        MainController.getInstance().println(getClass(), "Persisted session: " + tempPath + session.getId());
 
         try {
             out.close();
@@ -81,10 +81,10 @@ public class FileSessionStorage implements SessionStorage {
 
                 } catch (ClassNotFoundException e) {
                 } catch (IOException e) {
-                    MainController.getInstance().println(this.getClass(), "Unable to read session: " + tempPath + id);
+                    MainController.getInstance().println(getClass(), "Unable to read session: " + tempPath + id);
                 }
             } else {
-                MainController.getInstance().println(this.getClass(), "Session file does not exist: " + tempPath + id);
+                MainController.getInstance().println(getClass(), "Session file does not exist: " + tempPath + id);
             }
         }
 

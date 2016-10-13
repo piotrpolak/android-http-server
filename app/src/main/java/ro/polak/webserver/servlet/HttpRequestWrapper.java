@@ -223,7 +223,7 @@ public class HttpRequestWrapper implements HttpRequest {
 
     @Override
     public FileUpload getFileUpload() {
-        return this.fileUpload;
+        return fileUpload;
     }
 
     @Override
@@ -266,7 +266,7 @@ public class HttpRequestWrapper implements HttpRequest {
 
     @Override
     public String _get(String paramName, String defaultValue) {
-        String value = this._get(paramName);
+        String value = _get(paramName);
         if (value == null) {
             value = defaultValue;
         }
@@ -281,7 +281,7 @@ public class HttpRequestWrapper implements HttpRequest {
 
     @Override
     public String _post(String paramName, String defaultValue) {
-        String value = this._post(paramName);
+        String value = _post(paramName);
         if (value == null) {
             value = defaultValue;
         }
@@ -293,7 +293,7 @@ public class HttpRequestWrapper implements HttpRequest {
     public HttpSessionWrapper getSession(boolean create) {
         if (!sessionWasRequested) {
             sessionWasRequested = true;
-            session = servletContext.getSession(this.getCookie(HttpSessionWrapper.COOKIE_NAME));
+            session = servletContext.getSession(getCookie(HttpSessionWrapper.COOKIE_NAME));
         }
 
         if (session == null && create) {

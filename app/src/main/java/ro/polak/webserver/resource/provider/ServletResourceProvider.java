@@ -11,10 +11,10 @@ import java.io.IOException;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.Headers;
-import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.error.HttpError500;
 import ro.polak.webserver.servlet.HttpRequestWrapper;
+import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
 import ro.polak.webserver.servlet.HttpSessionWrapper;
 import ro.polak.webserver.servlet.Servlet;
@@ -58,7 +58,7 @@ public class ServletResourceProvider implements ResourceProvider {
 
                 Servlet servlet = servletService.loadServlet(uri);
                 servlet.init(servletConfig);
-                response.setStatus(HttpResponseHeaders.STATUS_OK);
+                response.setStatus(HttpResponse.STATUS_OK);
                 servlet.service(request, response);
                 terminate(request, response);
             } catch (Exception e) {

@@ -7,7 +7,6 @@
 
 package ro.polak.webserver.error;
 
-import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
 
@@ -25,7 +24,7 @@ public class HttpError405 implements HttpError {
         doc.setTitle("Error 405 - Method Not Allowed");
         doc.setMessage("<p>The method specified in the Request-Line is not allowed for the resource identified by the Request-URI.</p>");
 
-        response.setStatus(HttpResponseHeaders.STATUS_METHOD_NOT_ALLOWED);
+        response.setStatus(HttpResponse.STATUS_METHOD_NOT_ALLOWED);
         response.setContentType("text/html");
         response.setContentLength(doc.toString().length());
         ((HttpResponseWrapper) response).flushHeaders();

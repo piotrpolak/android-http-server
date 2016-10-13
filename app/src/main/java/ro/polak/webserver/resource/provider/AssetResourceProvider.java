@@ -13,8 +13,8 @@ import android.content.res.AssetManager;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.servlet.HttpRequestWrapper;
+import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
 
 /**
@@ -47,7 +47,7 @@ public class AssetResourceProvider implements ResourceProvider {
         try {
             InputStream inputStream = assetManager.open(assetPath);
 
-            response.setStatus(HttpResponseHeaders.STATUS_OK);
+            response.setStatus(HttpResponse.STATUS_OK);
 
             // This must be done in a separate try catch block as some assets do not have a FD
             try (AssetFileDescriptor afd = assetManager.openFd(assetPath)) {

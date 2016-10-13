@@ -9,7 +9,6 @@ package ro.polak.webserver.error;
 
 import java.io.File;
 
-import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.Statistics;
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HttpResponse;
@@ -27,7 +26,7 @@ public class HttpError404 implements HttpError {
     public void serve(HttpResponse response) {
         Statistics.addError404();
 
-        response.setStatus(HttpResponseHeaders.STATUS_NOT_FOUND);
+        response.setStatus(HttpResponse.STATUS_NOT_FOUND);
         response.setContentType("text/html");
 
         String errorDocumentPath = MainController.getInstance().getWebServer().getServerConfig().getErrorDocument404Path();

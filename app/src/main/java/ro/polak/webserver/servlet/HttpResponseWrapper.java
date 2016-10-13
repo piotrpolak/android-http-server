@@ -223,7 +223,7 @@ public class HttpResponseWrapper implements HttpResponse {
 
     @Override
     public void sendRedirect(String location) {
-        headers.setStatus(HttpResponseHeaders.STATUS_MOVED_PERMANENTLY);
+        headers.setStatus(HttpResponse.STATUS_MOVED_PERMANENTLY);
         headers.setHeader(Headers.HEADER_LOCATION, location);
     }
 

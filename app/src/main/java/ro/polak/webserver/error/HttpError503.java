@@ -7,7 +7,6 @@
 
 package ro.polak.webserver.error;
 
-import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
 
@@ -24,11 +23,11 @@ public class HttpError503 implements HttpError {
         String message = "Error 503 - Service Unavailable";
 
         // RAW Writing directly to the socket
-        String msg = HttpResponseHeaders.STATUS_SERVICE_UNAVAILABLE
+        String msg = HttpResponse.STATUS_SERVICE_UNAVAILABLE
                 + "Content-Length: " + message.length() + "\r\n"
                 + "Content-Type: text/plain\r\n\r\n" + message;
 
-        response.setStatus(HttpResponseHeaders.STATUS_INTERNAL_SERVER_ERROR);
+        response.setStatus(HttpResponse.STATUS_INTERNAL_SERVER_ERROR);
         response.setContentType("text/html");
         response.setContentLength(msg.length());
         ((HttpResponseWrapper) response).flushHeaders();

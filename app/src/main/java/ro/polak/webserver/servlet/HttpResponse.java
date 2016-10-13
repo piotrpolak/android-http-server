@@ -19,6 +19,16 @@ import ro.polak.webserver.HttpResponseHeaders;
  */
 public interface HttpResponse {
 
+    String STATUS_OK = "HTTP/1.1 200 OK";
+    String STATUS_NOT_FOUND = "HTTP/1.1 404 Not Found";
+    String STATUS_SERVICE_UNAVAILABLE = "HTTP/1.1 503 Service Unavailable";
+    String STATUS_METHOD_NOT_ALLOWED = "HTTP/1.1 405 Method Not Allowed";
+    String STATUS_INTERNAL_SERVER_ERROR = "HTTP/1.1 500 Internal Server Error";
+    String STATUS_ACCESS_DENIED = "HTTP/1.1 403 Forbidden";
+    String STATUS_MOVED_PERMANENTLY = "HTTP/1.1 301 Moved Permanently";
+    String STATUS_NOT_MODIFIED = "HTTP/1.1 304 Not Modified";
+    String STATUS_NOT_IMPLEMENTED = "HTTP/1.1 501 Not Implemented";
+
     /**
      * Adds a cookie.
      *

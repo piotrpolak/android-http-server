@@ -20,16 +20,6 @@ import java.util.Set;
  */
 public class HttpResponseHeaders extends Headers {
 
-    public static final String STATUS_OK = "HTTP/1.1 200 OK";
-    public static final String STATUS_NOT_FOUND = "HTTP/1.1 404 Not Found";
-    public static final String STATUS_SERVICE_UNAVAILABLE = "HTTP/1.1 503 Service Unavailable";
-    public static final String STATUS_METHOD_NOT_ALLOWED = "HTTP/1.1 405 Method Not Allowed";
-    public static final String STATUS_INTERNAL_SERVER_ERROR = "HTTP/1.1 500 Internal Server Error";
-    public static final String STATUS_ACCESS_DENIED = "HTTP/1.1 403 Forbidden";
-    public static final String STATUS_MOVED_PERMANENTLY = "HTTP/1.1 301 Moved Permanently";
-    public static final String STATUS_NOT_MODIFIED = "HTTP/1.1 304 Not Modified";
-    public static final String STATUS_NOT_IMPLEMENTED = "HTTP/1.1 501 Not Implemented";
-
     /**
      * String representation of headers
      *

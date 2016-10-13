@@ -9,7 +9,6 @@ package ro.polak.webserver.error;
 
 import java.io.File;
 
-import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
@@ -24,7 +23,7 @@ public class HttpError403 implements HttpError {
 
     @Override
     public void serve(HttpResponse response) {
-        response.setStatus(HttpResponseHeaders.STATUS_ACCESS_DENIED);
+        response.setStatus(HttpResponse.STATUS_ACCESS_DENIED);
         response.setContentType("text/html");
 
         String errorDocumentPath = MainController.getInstance().getWebServer().getServerConfig().getErrorDocument403Path();

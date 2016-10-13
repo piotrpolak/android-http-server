@@ -10,9 +10,9 @@ package ro.polak.webserver.resource.provider;
 import java.io.File;
 
 import ro.polak.utilities.Utilities;
-import ro.polak.webserver.HttpResponseHeaders;
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HttpRequestWrapper;
+import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
 
 /**
@@ -44,7 +44,7 @@ public class FileResourceProvider implements ResourceProvider {
         if (file.exists() && file.isFile()) {
             String fileExtension = Utilities.getExtension(file.getName());
 
-            response.setStatus(HttpResponseHeaders.STATUS_OK);
+            response.setStatus(HttpResponse.STATUS_OK);
             response.setContentType(MainController.getInstance().getWebServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(fileExtension));
             response.setContentLength(file.length());
 

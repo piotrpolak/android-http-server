@@ -15,7 +15,7 @@ public class MultipartHeadersPartTest {
         headers.parse("Content-Disposition: attachment; name=\"FIELDNAME\"; filename=\"FILE.PDF\"\nContent-type: application/pdf");
 
         assertThat(headers.getFileName(), is(equalTo("FILE.PDF")));
-        assertThat(headers.getPostFieldName(), is(equalTo("FIELDNAME")));
+        assertThat(headers.getName(), is(equalTo("FIELDNAME")));
         assertThat(headers.getContentType(), is(equalTo("application/pdf")));
     }
 
@@ -25,7 +25,7 @@ public class MultipartHeadersPartTest {
         headers.parse("CONTENT-DISPOSITION: attachment; NAME=\"FIELDNAME\"; FILENAME=\"FILE.PDF\"\nContent-TYPE: application/pdf");
 
         assertThat(headers.getFileName(), is(equalTo("FILE.PDF")));
-        assertThat(headers.getPostFieldName(), is(equalTo("FIELDNAME")));
+        assertThat(headers.getName(), is(equalTo("FIELDNAME")));
         assertThat(headers.getContentType(), is(equalTo("application/pdf")));
     }
 
@@ -35,7 +35,7 @@ public class MultipartHeadersPartTest {
         headers.parse("Content-Disposition: form-data; name=\"text\"");
 
         assertThat(headers.getFileName(), is(nullValue()));
-        assertThat(headers.getPostFieldName(), is(equalTo("text")));
+        assertThat(headers.getName(), is(equalTo("text")));
         assertThat(headers.getContentType(), is(nullValue()));
     }
 }

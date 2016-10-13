@@ -7,8 +7,6 @@
 
 package ro.polak.webserver;
 
-import java.util.Arrays;
-
 /**
  * Multipart request headers (for each multipart)
  *
@@ -20,7 +18,7 @@ public class MultipartHeadersPart extends Headers {
 
     private String fileName;
     private String contentType;
-    private String postFieldName;
+    private String name;
 
     private static final String nameStart = "name=\"";
     private static final String fileNameStart = "filename=\"";
@@ -66,7 +64,7 @@ public class MultipartHeadersPart extends Headers {
                 } else {
                     name = name.substring(0, quotationMarkPosition);
                 }
-                setPostFieldName(name);
+                setName(name);
             }
 
 
@@ -111,8 +109,8 @@ public class MultipartHeadersPart extends Headers {
      *
      * @return
      */
-    public String getPostFieldName() {
-        return postFieldName;
+    public String getName() {
+        return name;
     }
 
     /**
@@ -138,7 +136,7 @@ public class MultipartHeadersPart extends Headers {
      *
      * @param name
      */
-    private void setPostFieldName(String name) {
-        this.postFieldName = name;
+    private void setName(String name) {
+        this.name = name;
     }
 }

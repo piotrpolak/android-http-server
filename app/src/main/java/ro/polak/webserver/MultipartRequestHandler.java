@@ -371,7 +371,7 @@ public class MultipartRequestHandler {
                     fos.write(buffer, begin, len);
                 }
 
-                uploadedFiles.add(new UploadedFile(multipartHeadersPart.getPostFieldName(), multipartHeadersPart.getFileName(), currentFile));
+                uploadedFiles.add(new UploadedFile(multipartHeadersPart.getName(), multipartHeadersPart.getFileName(), currentFile));
                 // Resetting
                 currentFile = null;
                 fos.close();
@@ -382,7 +382,7 @@ public class MultipartRequestHandler {
                         valueStringBuffered.append((char) buffer[i]);
                     }
                 }
-                post.put(multipartHeadersPart.getPostFieldName(), valueStringBuffered.toString());
+                post.put(multipartHeadersPart.getName(), valueStringBuffered.toString());
             }
         }
     }

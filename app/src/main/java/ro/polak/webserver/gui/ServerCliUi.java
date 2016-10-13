@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2015
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
 package ro.polak.webserver.gui;
@@ -11,18 +11,30 @@ import ro.polak.webserver.controller.Controller;
 import ro.polak.webserver.controller.MainController;
 
 /**
- * Server CLI interface
+ * Server CLI interface along with a runner.
  */
 public class ServerCliUi implements ServerGui {
 
+    private Controller controller;
+
+    /**
+     * The main CLI runner method.
+     *
+     * @param args
+     */
     public static void main(String[] args) {
+        ServerGui gui = new ServerCliUi();
+        gui.println("   __ __ ______ ______ ___    ____                         \n" +
+                "  / // //_  __//_  __// _ \\  / __/___  ____ _  __ ___  ____\n" +
+                " / _  /  / /    / /  / ___/ _\\ \\ / -_)/ __/| |/ // -_)/ __/\n" +
+                "/_//_/  /_/    /_/  /_/    /___/ \\__//_/   |___/ \\__//_/   \n");
+        gui.println("https://github.com/piotrpolak/android-http-server");
+        gui.println("");
         MainController mainController = MainController.getInstance();
-        mainController.setGui(new ServerCliUi());
+        mainController.setGui(gui);
         mainController.setContext(null);
         mainController.start();
     }
-
-    Controller controller;
 
     @Override
     public void initialize(Controller controller) {
@@ -36,11 +48,11 @@ public class ServerCliUi implements ServerGui {
 
     @Override
     public void stop() {
-        this.controller.println(this.getClass(), "The server has stopped.");
+        controller.println(getClass(), "The server has stopped.");
     }
 
     @Override
     public void start() {
-        this.controller.println(this.getClass(), "The server has started.");
+        controller.println(getClass(), "The server has started.");
     }
 }

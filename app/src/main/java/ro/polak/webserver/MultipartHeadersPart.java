@@ -7,6 +7,8 @@
 
 package ro.polak.webserver;
 
+import java.util.Arrays;
+
 /**
  * Multipart request headers (for each multipart)
  *
@@ -20,36 +22,70 @@ public class MultipartHeadersPart extends Headers {
     private String contentType;
     private String postFieldName;
 
+    private static final String nameStart = "name=\"";
+    private static final String fileNameStart = "filename=\"";
+
+//    private static final String[] ALLOWED_CONTENT_DISPOSITIONS = {"inline",
+//            "attachment",
+//            "form-data",
+//            "signal",
+//            "alert",
+//            "icon",
+//            "render",
+//            "recipient-list-history",
+//            "session",
+//            "aib",
+//            "early-session",
+//            "recipient",
+//            "notification",
+//            "by-reference",
+//            "info-package",
+//            "recording-session"
+//    };
+
+
     /**
      * Parses multipart headers
      *
      * @param headersString headers
      */
     public void parse(String headersString) {
-
-        // Parsing header pairs
         super.parse(headersString, false);
 
-        // Reading uploaded file name
-        String contentDisposition = getHeader(Headers.HEADER_CONTENT_DISPOSITION);
-        String name = contentDisposition.substring(contentDisposition.indexOf("name=\"") + 6);
+        String contentDispositionHeaderValue = getHeader(Headers.HEADER_CONTENT_DISPOSITION);
+        if (contentDispositionHeaderValue != null) {
+            String contentDispositionLower = contentDispositionHeaderValue.toLowerCase();
 
-        int quotationMarkPosition = name.indexOf("\"");
-        if (quotationMarkPosition > -1) {
-            name = name.substring(0, quotationMarkPosition);
+            int nameStartPos = contentDispositionLower.indexOf(nameStart);
+            if (nameStartPos > -1) {
+                String name = contentDispositionHeaderValue.substring(nameStartPos + nameStart.length());
+                int quotationMarkPosition = name.indexOf("\"");
+                if (quotationMarkPosition == -1) {
+                    // TODO throw new MalformedHeaderException();
+                    name = null;
+                } else {
+                    name = name.substring(0, quotationMarkPosition);
+                }
+                setPostFieldName(name);
+            }
+
+
+            int fileNameStartPos = contentDispositionLower.indexOf(fileNameStart);
+            if (fileNameStartPos > -1) {
+                String fileName = contentDispositionHeaderValue.substring(fileNameStartPos + fileNameStart.length());
+                int quotationMark2Position = fileName.indexOf("\"");
+
+                if (quotationMark2Position == -1) {
+                    // TODO throw new MalformedHeaderException();
+                    fileName = null;
+                } else {
+                    fileName = fileName.substring(0, quotationMark2Position);
+                }
+
+                setFileName(fileName);
+            }
         }
-
-        // Getting file type
-        String contentType = getHeader(Headers.HEADER_CONTENT_TYPE);
-
-        // Getting file name
-        String fileName = contentDisposition.substring(contentDisposition.indexOf("filename=\"") + 10);
-        fileName = fileName.substring(0, fileName.indexOf("\""));
-
-        // Assigning values
-        setPostFieldName(name);
-        setContentType(contentType);
-        setFileName(fileName);
+        setContentType(getHeader(Headers.HEADER_CONTENT_TYPE));
     }
 
     /**

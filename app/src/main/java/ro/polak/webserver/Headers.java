@@ -57,7 +57,7 @@ public class Headers {
         // Mandatory \r https://www.w3.org/Protocols/rfc2616/rfc2616-sec2.html#sec2.2
         StringTokenizer st = new StringTokenizer(headersString, "\r\n");
         String lastHeaderName = null;
-        StringBuffer lastHeaderValue = new StringBuffer();
+        StringBuilder lastHeaderValue = new StringBuilder();
 
         while (st.hasMoreElements()) {
             String line = st.nextToken();

@@ -39,8 +39,8 @@ public class MultipartRequestHandler {
     private boolean headerReadingState = true;
     private byte[] tempBuffer;
     private byte[] buffer;
-    private StringBuffer headersStringBuffered;
-    private StringBuffer valueStringBuffered;
+    private StringBuilder headersStringBuffered;
+    private StringBuilder valueStringBuffered;
     private String endBoundary;
     private String beginBoundary;
     private String currentDeliminator;
@@ -67,7 +67,7 @@ public class MultipartRequestHandler {
         beginBoundary = "--" + boundary;
         allBytesRead = 0;
         wasHandledBefore = false;
-        headersStringBuffered = new StringBuffer();
+        headersStringBuffered = new StringBuilder();
         uploadedFiles = new ArrayList<>();
         post = new HashMap<>();
     }
@@ -345,7 +345,7 @@ public class MultipartRequestHandler {
                 fos = new FileOutputStream(currentFile);
             } else {
                 // For values
-                valueStringBuffered = new StringBuffer();
+                valueStringBuffered = new StringBuilder();
             }
 
             // Switching to content state Changing endBoundary
@@ -353,7 +353,7 @@ public class MultipartRequestHandler {
             currentDeliminator = endBoundary;
 
             // Resetting headers string buffer
-            headersStringBuffered = new StringBuffer();
+            headersStringBuffered = new StringBuilder();
 
             // This is the end of the code for headers
         } else {

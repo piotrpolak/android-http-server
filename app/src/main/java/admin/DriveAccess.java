@@ -73,8 +73,8 @@ public class DriveAccess extends Servlet {
             File f = new File(path);
 
             if (f.exists() && f.isDirectory()) {
-                StringBuffer files = new StringBuffer();
-                StringBuffer directories = new StringBuffer();
+                StringBuilder files = new StringBuilder();
+                StringBuilder directories = new StringBuilder();
                 String fileNames[] = f.list();
                 File f2;
                 if (fileNames == null) {

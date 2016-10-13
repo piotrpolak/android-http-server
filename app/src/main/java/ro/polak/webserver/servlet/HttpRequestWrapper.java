@@ -68,8 +68,8 @@ public class HttpRequestWrapper implements HttpRequest {
         request.setRemoteAddr(socket.getInetAddress().getHostAddress().toString());
 
         // StringBuilder is more efficient when the string will be accessed from a single thread
-        StringBuffer inputHeadersBuffer = new StringBuffer();
-        StringBuffer statusLineBuffer = new StringBuffer();
+        StringBuilder inputHeadersBuffer = new StringBuilder();
+        StringBuilder statusLineBuffer = new StringBuilder();
 
         // Reading the input stream
 
@@ -157,7 +157,7 @@ public class HttpRequestWrapper implements HttpRequest {
                 // For normal requests
                 else {
                     buffer = new byte[1];
-                    StringBuffer postLine = new StringBuffer();
+                    StringBuilder postLine = new StringBuilder();
                     while (in.read(buffer, 0, buffer.length) != -1) {
                         postLine.append((char) buffer[0]);
                         if (postLine.length() >= postLength) {

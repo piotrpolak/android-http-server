@@ -85,8 +85,10 @@ public class HttpError500 implements HttpError {
         doc.setTitle("Error 500 - The server made a boo boo");
         response.setStatus(HttpResponse.STATUS_INTERNAL_SERVER_ERROR);
         response.setContentType("text/html");
-        response.setContentLength(doc.toString().length());
+
+        String msg = doc.toString();
+        response.setContentLength(msg.length());
         ((HttpResponseWrapper) response).flushHeaders();
-        response.getPrintWriter().print(doc.toString());
+        ((HttpResponseWrapper) response).write(msg);
     }
 }

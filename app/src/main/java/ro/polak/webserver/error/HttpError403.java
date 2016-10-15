@@ -35,7 +35,7 @@ public class HttpError403 implements HttpError {
 
             response.setContentLength(doc.toString().length());
             ((HttpResponseWrapper) response).flushHeaders();
-            response.getPrintWriter().print(doc.toString());
+            ((HttpResponseWrapper) response).write(doc.toString());
         } else {
             File file = new File(errorDocumentPath);
 

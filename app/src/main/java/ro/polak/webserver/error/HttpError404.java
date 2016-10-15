@@ -8,6 +8,7 @@
 package ro.polak.webserver.error;
 
 import java.io.File;
+import java.io.IOException;
 
 import ro.polak.webserver.Statistics;
 import ro.polak.webserver.controller.MainController;
@@ -36,9 +37,10 @@ public class HttpError404 implements HttpError {
             doc.setTitle("Error 404 - File Not Found");
             doc.setMessage("<p>The server has not found anything matching the specified URL.</p>");
 
-            response.setContentLength(doc.toString().length());
+            String msg = doc.toString();
+            response.setContentLength(msg.length());
             ((HttpResponseWrapper) response).flushHeaders();
-            response.getPrintWriter().print(doc.toString());
+            ((HttpResponseWrapper) response).write(msg);
         } else {
             File file = new File(errorDocumentPath);
 

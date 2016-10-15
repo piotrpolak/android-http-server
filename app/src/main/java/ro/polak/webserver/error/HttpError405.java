@@ -26,8 +26,10 @@ public class HttpError405 implements HttpError {
 
         response.setStatus(HttpResponse.STATUS_METHOD_NOT_ALLOWED);
         response.setContentType("text/html");
-        response.setContentLength(doc.toString().length());
+
+        String msg = doc.toString();
+        response.setContentLength(msg.length());
         ((HttpResponseWrapper) response).flushHeaders();
-        response.getPrintWriter().print(doc.toString());
+        ((HttpResponseWrapper) response).write(msg);
     }
 }

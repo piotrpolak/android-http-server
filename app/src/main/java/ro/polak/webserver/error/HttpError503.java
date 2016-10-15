@@ -20,17 +20,11 @@ public class HttpError503 implements HttpError {
 
     @Override
     public void serve(HttpResponse response) {
-        String message = "Error 503 - Service Unavailable";
-
-        // RAW Writing directly to the socket
-        String msg = HttpResponse.STATUS_SERVICE_UNAVAILABLE
-                + "Content-Length: " + message.length() + "\r\n"
-                + "Content-Type: text/plain\r\n\r\n" + message;
-
+        String msg = "Error 503 - Service Unavailable";
         response.setStatus(HttpResponse.STATUS_INTERNAL_SERVER_ERROR);
-        response.setContentType("text/html");
+        response.setContentType("text/plain");
         response.setContentLength(msg.length());
         ((HttpResponseWrapper) response).flushHeaders();
-        response.getPrintWriter().print(msg);
+        ((HttpResponseWrapper) response).write(msg);
     }
 }

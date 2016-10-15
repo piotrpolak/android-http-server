@@ -52,11 +52,17 @@ public class ServletResourceProvider implements ResourceProvider {
         // Check whether the extension is of Servlet type
         if (extension.equals(MainController.getInstance().getWebServer().getServerConfig().getServletMappedExtension())) {
             try {
+                Servlet servlet;
+                try {
+                    servlet = servletService.loadServlet(uri);
+                } catch (ClassNotFoundException e) {
+                    return false;
+                }
+
                 ServletConfigWrapper servletConfig = new ServletConfigWrapper();
                 request.setServletContext(servletContext);
                 servletConfig.setServletContext(servletContext);
 
-                Servlet servlet = servletService.loadServlet(uri);
                 servlet.init(servletConfig);
                 response.setStatus(HttpResponse.STATUS_OK);
                 servlet.service(request, response);
@@ -117,11 +123,6 @@ public class ServletResourceProvider implements ResourceProvider {
 
         if (response.getPrintWriter().length() > 0) {
             response.write(response.getPrintWriter().toString());
-        }
-
-        try {
-            response.flush();
-        } catch (Exception e) {
         }
     }
 }

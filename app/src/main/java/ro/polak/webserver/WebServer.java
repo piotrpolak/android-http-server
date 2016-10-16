@@ -16,6 +16,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.controller.Controller;
@@ -70,19 +75,17 @@ public class WebServer extends Thread {
 
         selectActiveResourceProviders();
 
+        ThreadPoolExecutor executorPool = new ThreadPoolExecutor(1, serverConfig.getMaxServerThreads(),
+                20, TimeUnit.SECONDS,
+                new ArrayBlockingQueue<Runnable>(100),
+                Executors.defaultThreadFactory(),
+                new ServiceUnavailableHandler()
+        );
+
         while (listen) {
             try {
                 Socket socket = serverSocket.accept();
-                // controller.println("Accepting connection from "+socket.getInetAddress().getHostAddress().toString());
-
-                if (serverConfig.getMaxServerThreads() >= ServerThread.activeCount()) {
-                    // If there are threads allowed to start
-                    new ServerThread(socket, this).start();
-                } else {
-                    // 503 Service Unavailable HERE
-                    (new HttpError503()).serve(HttpResponseWrapper.createFromSocket(socket));
-                    socket.close();
-                }
+                executorPool.execute(new ServerRunnable(socket, this));
             } catch (IOException e) {
                 if (listen) {
                     controller.println(getClass(), "Exception: " + e.getClass().getName() + " " + e.getMessage());
@@ -94,6 +97,8 @@ public class WebServer extends Thread {
             serverSocket.close();
         } catch (IOException e) {
         }
+
+        executorPool.shutdown();
     }
 
     private void selectActiveResourceProviders() {
@@ -191,5 +196,28 @@ public class WebServer extends Thread {
      */
     public ServerConfig getServerConfig() {
         return serverConfig;
+    }
+
+    /**
+     * ServiceUnavailableHandler is responsible for sending 503 error pages when there is more space
+     * in the runnable queue. To test this class you have to limit the number of available threads and
+     * queue size to 1 and then to try open multiple connections at the same time.
+     */
+    private static class ServiceUnavailableHandler implements RejectedExecutionHandler {
+
+        @Override
+        public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+            if (r instanceof ServerRunnable) {
+                Socket socket = ((ServerRunnable) r).getSocket();
+                try {
+                    (new HttpError503()).serve(HttpResponseWrapper.createFromSocket(socket));
+                } catch (IOException e) {
+                }
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                }
+            }
+        }
     }
 }

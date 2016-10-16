@@ -59,11 +59,9 @@ public class ServerRunnable implements Runnable {
                 }
                 if (!isResourceLoaded) {
                     (new HttpError404()).serve(response);
-                    return;
                 }
             } else {
                 serveMethodNotAllowed(response);
-                return;
             }
 
             socket.close();
@@ -177,6 +175,11 @@ public class ServerRunnable implements Runnable {
         return false;
     }
 
+    /**
+     * Returns associated socket.
+     *
+     * @return
+     */
     protected Socket getSocket() {
         return socket;
     }

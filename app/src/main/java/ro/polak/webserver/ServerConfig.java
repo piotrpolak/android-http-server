@@ -44,7 +44,7 @@ public class ServerConfig extends Config {
         listenPort = 8080;
         servletMappedExtension = "dhtml";
         defaultMimeType = "text/plain";
-        maxServerThreads = 50;
+        maxServerThreads = 10;
         servletServicePoolPingerInterval = 10000;
         servletServicePoolServletExpires = 30000;
 

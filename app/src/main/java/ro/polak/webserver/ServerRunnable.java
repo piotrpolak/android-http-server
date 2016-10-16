@@ -23,7 +23,7 @@ import ro.polak.webserver.servlet.HttpResponseWrapper;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class ServerThread extends Thread {
+public class ServerRunnable implements Runnable {
 
     private Socket socket;
     private WebServer webServer;
@@ -33,7 +33,7 @@ public class ServerThread extends Thread {
      *
      * @param socket
      */
-    public ServerThread(Socket socket, WebServer webServer) {
+    public ServerRunnable(Socket socket, WebServer webServer) {
         this.socket = socket;
         this.webServer = webServer;
     }
@@ -59,9 +59,11 @@ public class ServerThread extends Thread {
                 }
                 if (!isResourceLoaded) {
                     (new HttpError404()).serve(response);
+                    return;
                 }
             } else {
                 serveMethodNotAllowed(response);
+                return;
             }
 
             socket.close();
@@ -173,5 +175,9 @@ public class ServerThread extends Thread {
             }
         }
         return false;
+    }
+
+    protected Socket getSocket() {
+        return socket;
     }
 }

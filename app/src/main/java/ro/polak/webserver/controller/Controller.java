@@ -18,18 +18,26 @@ import ro.polak.webserver.WebServer;
 public interface Controller {
 
     /**
-     * Prints the log line into the specific output
+     * Prints the log line into the specific output.
      *
      * @param text
      */
     void println(String text);
 
     /**
-     * Prints the log line into the specific output
+     * Prints the log line into the specific output.
      *
      * @param text
      */
-    void println(Class c, String text);
+    void println(Class aClass, String text);
+
+    /**
+     * Prints the log line into the specific output.
+     *
+     * @param aClassCanonicalName
+     * @param text
+     */
+    void println(String aClassCanonicalName, String text);
 
     /**
      * Starts the server logic
@@ -37,26 +45,26 @@ public interface Controller {
     void start();
 
     /**
-     * Stops the server logic
+     * Stops the server logic.
      */
     void stop();
 
     /**
-     * Returns the server thread
+     * Returns the server thread.
      *
      * @return
      */
     WebServer getWebServer();
 
     /**
-     * Returns application context, this is mostly used for android applications
+     * Returns application context, this is mostly used for android applications.
      *
      * @return
      */
     Object getContext();
 
     /**
-     * Sets application context, this is mostly used for android applications
+     * Sets application context, this is mostly used for android applications.
      *
      * @param context
      */

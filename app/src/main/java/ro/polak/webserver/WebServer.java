@@ -72,7 +72,6 @@ public class WebServer extends Thread {
 
     @Override
     public void run() {
-
         selectActiveResourceProviders();
 
         ThreadPoolExecutor executorPool = new ThreadPoolExecutor(1, serverConfig.getMaxServerThreads(),

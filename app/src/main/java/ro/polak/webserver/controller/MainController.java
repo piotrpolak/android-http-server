@@ -10,6 +10,9 @@ package ro.polak.webserver.controller;
 import android.os.Environment;
 
 import java.io.IOException;
+import java.io.InvalidObjectException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.ServerSocket;
 
 import ro.polak.webserver.ServerConfig;
@@ -34,6 +37,17 @@ public class MainController implements Controller {
      */
     private MainController() {
 
+        final MainController that = this;
+
+        Thread.currentThread().setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread thread, Throwable ex) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                ex.printStackTrace(pw);
+                that.println(ex.getStackTrace()[0].getClassName(), sw.toString());
+            }
+        });
     }
 
     /**
@@ -58,24 +72,24 @@ public class MainController implements Controller {
         this.gui = gui;
     }
 
-    /**
-     * Prints the log line into the specific output
-     *
-     * @param text
-     */
+    @Override
     public void println(String text) {
         if (gui != null) {
             gui.println(WebServer.sdf.format(new java.util.Date()) + "  -  " + text);
         }
     }
 
-    public void println(Class c, String text) {
-        println(String.format("%1$-" + 50 + "s", c.getCanonicalName()) + "  -  " + text);
+    @Override
+    public void println(Class aClass, String text) {
+        println(aClass.getCanonicalName(), text);
     }
 
-    /**
-     * Starts the server logic
-     */
+    @Override
+    public void println(String aClassCanonicalName, String text) {
+        println(String.format("%1$-" + 50 + "s", aClassCanonicalName) + "  -  " + text);
+    }
+
+    @Override
     public void start() {
         gui.initialize(this);
         try {
@@ -98,9 +112,7 @@ public class MainController implements Controller {
         }
     }
 
-    /**
-     * Stops the server logic
-     */
+    @Override
     public void stop() {
         if (webServer != null) {
             webServer.stopServer();
@@ -109,29 +121,17 @@ public class MainController implements Controller {
         gui.stop();
     }
 
-    /**
-     * Returns the server thread
-     *
-     * @return
-     */
+    @Override
     public WebServer getWebServer() {
         return webServer;
     }
 
-    /**
-     * Returns application context, this is mostly used for android applications
-     *
-     * @return
-     */
+    @Override
     public Object getContext() {
         return context;
     }
 
-    /**
-     * Sets application context, this is mostly used for android applications
-     *
-     * @param context
-     */
+    @Override
     public void setContext(Object context) {
         this.context = context;
     }

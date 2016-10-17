@@ -175,6 +175,9 @@ public class HttpRequestWrapper implements HttpRequest {
 
         // Assigning headers
         request.setHeaders(headers);
+        if (headers.containsHeader(Headers.HEADER_CONNECTION)) {
+            request.setKeepAlive(headers.getHeader(Headers.HEADER_CONNECTION).toLowerCase().equals("keep-alive"));
+        }
         // Returns the created request
         return request;
     }

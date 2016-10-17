@@ -14,7 +14,8 @@ It can be used as a standalone web server for static content or as a remote appl
 * Supports dynamic pages via Servlets (own specification)
 * Implements Servlet Pool for memory optimisation and resource reuse
 * Support for GET, POST, HEAD methods
-* Supports KEEP-ALIVE connections
+* Supports chunked transfer type
+* ~~Supports KEEP-ALIVE connections~~
 * Full support for mime types (uses Apache mime.type)
 * Supports buffered file upload (multipart requests)
 * Exposes compact API for handling sessions
@@ -46,6 +47,8 @@ public class HelloWorld extends Servlet {
     }
 }
 ```
+
+More examples can be found in [app/src/main/java/example](./tree/master/app/src/main/java/example).
 
 ## Screens
 

@@ -7,6 +7,8 @@
 
 package admin;
 
+import java.io.IOException;
+
 import ro.polak.webserver.Headers;
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HttpRequest;
@@ -26,6 +28,9 @@ public class BackupConfiguration extends Servlet {
 
         response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename=httpd.conf");
         response.setContentType("application/octet-stream");
-        ((HttpResponseWrapper) response).serveFile(new java.io.File(MainController.getInstance().getWebServer().getServerConfig().getBasePath() + "httpd.conf"));
+        try {
+            ((HttpResponseWrapper) response).serveFile(new java.io.File(MainController.getInstance().getWebServer().getServerConfig().getBasePath() + "httpd.conf"));
+        } catch (IOException e) {
+        }
     }
 }

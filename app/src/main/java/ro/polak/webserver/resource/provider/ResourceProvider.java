@@ -27,6 +27,7 @@ public interface ResourceProvider {
      * @param request
      * @param response
      * @return
+     * @throws IOException
      */
     boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException;
 }

@@ -8,6 +8,7 @@
 package ro.polak.webserver.resource.provider;
 
 import java.io.File;
+import java.io.IOException;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.controller.MainController;
@@ -37,7 +38,7 @@ public class FileResourceProvider implements ResourceProvider {
     }
 
     @Override
-    public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) {
+    public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
 
         File file = new File(basePath + uri);
 

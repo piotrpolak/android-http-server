@@ -7,10 +7,9 @@
 
 package ro.polak.webserver.servlet;
 
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,11 +35,10 @@ public class HttpResponseWrapper implements HttpResponse {
 
     private HttpResponseHeaders headers;
     private OutputStream out;
-    private PrintWriter printWriter;
+    private ChunkedPrintWriter printWriter;
     private boolean headersFlushed;
     private List<Cookie> cookies;
     private static Charset charset;
-    private ByteArrayOutputStream baos;
 
     static {
         charset = Charset.forName("UTF-8");
@@ -69,29 +67,15 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     /**
-     * Writes byte array to the output
-     *
-     * @param byteArray byte array
-     */
-    public void write(byte[] byteArray) {
-        try {
-            Statistics.addBytesSend(byteArray.length);
-            out.write(byteArray);
-            out.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Flushes headers, returns false when headers already flushed.
      * <p/>
      * Can be called once per responce, after the fisrt call it "locks"
      *
      * @return true if headers flushed
      * @throws IllegalStateException when headers have been previously flushed.
+     * @throws IOException
      */
-    public void flushHeaders() throws IllegalStateException {
+    private void flushHeaders() throws IllegalStateException, IOException {
 
         // Prevent from flushing headers more than once
         if (headersFlushed) {
@@ -104,7 +88,7 @@ public class HttpResponseWrapper implements HttpResponse {
             headers.setHeader(Headers.HEADER_SET_COOKIE, getCookieHeaderValue(cookie));
         }
 
-        write(headers.toString().getBytes(charset));
+        serveStream(new ByteArrayInputStream(headers.toString().getBytes(charset)), false);
     }
 
     /**
@@ -143,46 +127,47 @@ public class HttpResponseWrapper implements HttpResponse {
      * Flushes headers and serves the specified file
      *
      * @param file file to be served
+     * @throws IOException
      */
-    public void serveFile(File file) {
-        try {
-            setContentLength(file.length());
-            FileInputStream inputStream = new FileInputStream(file);
-            serveStream(inputStream);
-        } catch (FileNotFoundException e) {
-            // TODO Throw exception instead of printing the stack trace
-            e.printStackTrace();
-            // Suppose this was verified and prevented before
-        }
+    public void serveFile(File file) throws IOException {
+        setContentLength(file.length());
+        FileInputStream inputStream = new FileInputStream(file);
+        serveStream(inputStream);
     }
 
     /**
      * Server an asset
      *
      * @param inputStream
+     * @throws IOException
      */
-    public void serveStream(InputStream inputStream) {
+    public void serveStream(InputStream inputStream) throws IOException {
+        serveStream(inputStream, false);
+    }
 
+    /**
+     * @param inputStream
+     * @param flushHeaders
+     * @throws IOException
+     */
+    private void serveStream(InputStream inputStream, boolean flushHeaders) throws IOException {
         // Make sure headers are served before the file content
         // If this throws an IllegalStateException, it means you have tried (incorrectly) to flush headers before
-        flushHeaders();
+        if (flushHeaders) {
+            flushHeaders();
+        }
 
         int numberOfBufferReadBytes;
         byte[] buffer = new byte[512];
 
-        try {
-            while ((numberOfBufferReadBytes = inputStream.read(buffer)) != -1) {
-                out.write(buffer, 0, numberOfBufferReadBytes);
-                out.flush();
-
-                Statistics.addBytesSend(numberOfBufferReadBytes);
-            }
-            // Flushing remaining buffer, just in case
+        while ((numberOfBufferReadBytes = inputStream.read(buffer)) != -1) {
+            out.write(buffer, 0, numberOfBufferReadBytes);
             out.flush();
 
-        } catch (IOException e) {
-
+            Statistics.addBytesSend(numberOfBufferReadBytes);
         }
+        // Flushing remaining buffer, just in case
+        out.flush();
 
         try {
             inputStream.close();
@@ -206,27 +191,36 @@ public class HttpResponseWrapper implements HttpResponse {
         return headersFlushed;
     }
 
+    private boolean isTransferChunked() {
+        if (!getHeaders().containsHeader(Headers.HEADER_TRANSFER_ENCODING)) {
+            return false;
+        }
+
+        return getHeaders().getHeader(Headers.HEADER_TRANSFER_ENCODING).toLowerCase().equals("chunked");
+    }
+
     /**
      * Flushes the output
      *
      * @throws IOException
      */
     public void flush() throws IOException {
-        if (baos != null) {
-            // The following flush is only needed because of baos
-            getPrintWriter().flush();
-            if (baos.size() > 0) {
-                if (!getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
-                    setContentLength(baos.size());
-                }
+        // It makes no sense to set chunked encoding if there is no print writer
+        if (printWriter != null) {
+            if (!getHeaders().containsHeader(Headers.HEADER_TRANSFER_ENCODING) && !getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
+                getHeaders().setHeader(Headers.HEADER_TRANSFER_ENCODING, "chunked");
             }
         }
 
         flushHeaders();
 
-        if (baos != null) {
-            baos.writeTo(out);
+        if (printWriter != null) {
+            if (isTransferChunked()) {
+                printWriter.writeEnd();
+            }
+            printWriter.flush();
         }
+
         out.flush();
     }
 
@@ -275,8 +269,7 @@ public class HttpResponseWrapper implements HttpResponse {
     public PrintWriter getPrintWriter() {
         // Creating print writer if it does not exist
         if (printWriter == null) {
-            baos = new ByteArrayOutputStream(8048);
-            printWriter = new PrintWriter(baos);
+            printWriter = new ChunkedPrintWriter(out);
         }
 
         return printWriter;

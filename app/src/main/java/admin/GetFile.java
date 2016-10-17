@@ -8,6 +8,7 @@
 package admin;
 
 import java.io.File;
+import java.io.IOException;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.Headers;
@@ -43,7 +44,10 @@ public class GetFile extends Servlet {
             if (f.exists() && f.isFile()) {
                 response.setContentType(MainController.getInstance().getWebServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(Utilities.getExtension(f.getName())));
                 response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename=" + Utilities.URLEncode(f.getName()));
-                ((HttpResponseWrapper) response).serveFile(f); // TODO remove this ugly hack
+                try {
+                    ((HttpResponseWrapper) response).serveFile(f); // TODO remove this ugly hack
+                } catch (IOException e) {
+                }
             } else {
                 response.getPrintWriter().print("File does not exist.");
             }

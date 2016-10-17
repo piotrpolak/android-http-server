@@ -33,6 +33,7 @@ public class Headers {
     public static final String HEADER_CACHE_CONTROL = "Cache-Control";
     public static final String HEADER_PRAGMA = "Pragma";
     public static final String HEADER_COOKIE = "Cookie";
+    public static final String HEADER_TRANSFER_ENCODING = "Transfer-Encoding";
 
     protected String status = "";
     protected Map<String, String> headers = new HashMap<>();

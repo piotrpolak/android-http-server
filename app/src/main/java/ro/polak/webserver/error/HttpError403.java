@@ -8,6 +8,7 @@
 package ro.polak.webserver.error;
 
 import java.io.File;
+import java.io.IOException;
 
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HttpResponse;
@@ -22,7 +23,7 @@ import ro.polak.webserver.servlet.HttpResponseWrapper;
 public class HttpError403 implements HttpError {
 
     @Override
-    public void serve(HttpResponse response) {
+    public void serve(HttpResponse response) throws IOException {
         response.setStatus(HttpResponse.STATUS_ACCESS_DENIED);
         response.setContentType("text/html");
 
@@ -32,16 +33,14 @@ public class HttpError403 implements HttpError {
             HtmlErrorDocument doc = new HtmlErrorDocument();
             doc.setTitle("Error 403 - Forbidden");
             doc.setMessage("<p>Access Denied.</p>");
+            String msg = doc.toString();
 
-            response.setContentLength(doc.toString().length());
-            ((HttpResponseWrapper) response).flushHeaders();
-            ((HttpResponseWrapper) response).write(doc.toString());
+            response.getPrintWriter().write(msg);
+            ((HttpResponseWrapper) response).flush();
         } else {
             File file = new File(errorDocumentPath);
 
             if (file.exists()) {
-                response.setContentLength(file.length());
-                ((HttpResponseWrapper) response).flushHeaders();
                 ((HttpResponseWrapper) response).serveFile(file);
             } else {
                 // Serve 500

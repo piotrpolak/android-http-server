@@ -7,6 +7,8 @@
 
 package ro.polak.webserver.error;
 
+import java.io.IOException;
+
 import ro.polak.webserver.servlet.HttpResponse;
 
 /**
@@ -18,8 +20,10 @@ import ro.polak.webserver.servlet.HttpResponse;
 public interface HttpError {
 
     /**
-     * Serves the error page
+     * Serves the error page.
+     *
      * @param response
+     * @throws IOException
      */
-    void serve(HttpResponse response);
+    void serve(HttpResponse response) throws IOException;
 }

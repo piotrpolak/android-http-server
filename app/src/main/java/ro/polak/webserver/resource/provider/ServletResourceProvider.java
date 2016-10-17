@@ -45,7 +45,7 @@ public class ServletResourceProvider implements ResourceProvider {
     }
 
     @Override
-    public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) {
+    public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
 
         String extension = Utilities.getExtension(uri);
 
@@ -79,6 +79,7 @@ public class ServletResourceProvider implements ResourceProvider {
                 error500.serve(response);
                 e.printStackTrace();
             }
+
             return true;
         }
 
@@ -109,20 +110,10 @@ public class ServletResourceProvider implements ResourceProvider {
                 response.setContentType("text/html");
             }
 
-            if (response.getPrintWriter().isInitialized()) {
-                if (!response.getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
-                    response.setContentLength(response.getPrintWriter().length());
-                }
-            }
-
             response.getHeaders().setHeader(Headers.HEADER_CACHE_CONTROL, "no-cache");
             response.getHeaders().setHeader(Headers.HEADER_PRAGMA, "no-cache");
-
-            response.flushHeaders();
         }
 
-        if (response.getPrintWriter().length() > 0) {
-            response.write(response.getPrintWriter().toString());
-        }
+        response.flush();
     }
 }

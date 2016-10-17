@@ -7,6 +7,8 @@
 
 package ro.polak.webserver.error;
 
+import java.io.IOException;
+
 import ro.polak.webserver.Statistics;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
@@ -79,7 +81,7 @@ public class HttpError500 implements HttpError {
     }
 
     @Override
-    public void serve(HttpResponse response) {
+    public void serve(HttpResponse response) throws IOException {
         Statistics.addError500();
 
         doc.setTitle("Error 500 - The server made a boo boo");
@@ -87,8 +89,7 @@ public class HttpError500 implements HttpError {
         response.setContentType("text/html");
 
         String msg = doc.toString();
-        response.setContentLength(msg.length());
-        ((HttpResponseWrapper) response).flushHeaders();
-        ((HttpResponseWrapper) response).write(msg);
+        response.getPrintWriter().write(msg);
+        ((HttpResponseWrapper) response).flush();
     }
 }

@@ -7,6 +7,8 @@
 
 package ro.polak.webserver.servlet;
 
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.List;
 
 import ro.polak.webserver.HttpResponseHeaders;

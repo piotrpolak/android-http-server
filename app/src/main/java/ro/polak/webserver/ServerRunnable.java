@@ -86,9 +86,10 @@ public class ServerRunnable implements Runnable {
      * @param request
      * @param response
      * @param path
+     * @throws IOException
      * @return
      */
-    private boolean loadDirectoryIndexResource(HttpRequestWrapper request, HttpResponseWrapper response, String path) {
+    private boolean loadDirectoryIndexResource(HttpRequestWrapper request, HttpResponseWrapper response, String path) throws IOException {
         path = getNormalizedDirectoryPath(path);
         for (String index : webServer.getServerConfig().getDirectoryIndex()) {
             if (loadResourceByPath(request, response, path + index)) {
@@ -102,8 +103,9 @@ public class ServerRunnable implements Runnable {
      * Server Method Not Allowed error page.
      *
      * @param response
+     * @throws IOException
      */
-    private void serveMethodNotAllowed(HttpResponseWrapper response) {
+    private void serveMethodNotAllowed(HttpResponseWrapper response) throws IOException {
         StringBuilder sb = new StringBuilder();
         String[] supportedMethods = webServer.getSupportedMethods();
         for (int i = 0; i < supportedMethods.length; i++) {
@@ -124,8 +126,9 @@ public class ServerRunnable implements Runnable {
      * @param response
      * @param path
      * @return
+     * @throws IOException
      */
-    private boolean loadResourceByPath(HttpRequestWrapper request, HttpResponseWrapper response, String path) {
+    private boolean loadResourceByPath(HttpRequestWrapper request, HttpResponseWrapper response, String path) throws IOException {
         ResourceProvider[] rl = webServer.getResourceProviders();
         for (int i = 0; i < rl.length; i++) {
             if (rl[i].load(path, request, response)) {

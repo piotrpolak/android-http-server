@@ -24,7 +24,7 @@ import ro.polak.webserver.servlet.HttpResponseWrapper;
 public class HttpError404 implements HttpError {
 
     @Override
-    public void serve(HttpResponse response) {
+    public void serve(HttpResponse response) throws IOException {
         Statistics.addError404();
 
         response.setStatus(HttpResponse.STATUS_NOT_FOUND);
@@ -38,15 +38,13 @@ public class HttpError404 implements HttpError {
             doc.setMessage("<p>The server has not found anything matching the specified URL.</p>");
 
             String msg = doc.toString();
-            response.setContentLength(msg.length());
-            ((HttpResponseWrapper) response).flushHeaders();
-            ((HttpResponseWrapper) response).write(msg);
+            response.getPrintWriter().write(msg);
+            ((HttpResponseWrapper) response).flush();
         } else {
             File file = new File(errorDocumentPath);
 
             if (file.exists()) {
                 response.setContentLength(file.length());
-                ((HttpResponseWrapper) response).flushHeaders();
                 ((HttpResponseWrapper) response).serveFile(file);
             } else {
                 // Serve 500

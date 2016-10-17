@@ -7,9 +7,10 @@
 
 package example;
 
+import java.io.PrintWriter;
+
 import ro.polak.webserver.servlet.HttpRequest;
 import ro.polak.webserver.servlet.HttpResponse;
-import ro.polak.webserver.servlet.PrintWriter;
 import ro.polak.webserver.servlet.Servlet;
 
 /**

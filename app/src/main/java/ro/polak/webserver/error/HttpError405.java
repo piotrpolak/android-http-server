@@ -7,6 +7,8 @@
 
 package ro.polak.webserver.error;
 
+import java.io.IOException;
+
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
 
@@ -19,7 +21,7 @@ import ro.polak.webserver.servlet.HttpResponseWrapper;
 public class HttpError405 implements HttpError {
 
     @Override
-    public void serve(HttpResponse response) {
+    public void serve(HttpResponse response) throws IOException {
         HtmlErrorDocument doc = new HtmlErrorDocument();
         doc.setTitle("Error 405 - Method Not Allowed");
         doc.setMessage("<p>The method specified in the Request-Line is not allowed for the resource identified by the Request-URI.</p>");
@@ -28,8 +30,7 @@ public class HttpError405 implements HttpError {
         response.setContentType("text/html");
 
         String msg = doc.toString();
-        response.setContentLength(msg.length());
-        ((HttpResponseWrapper) response).flushHeaders();
-        ((HttpResponseWrapper) response).write(msg);
+        response.getPrintWriter().write(msg);
+        ((HttpResponseWrapper) response).flush();
     }
 }

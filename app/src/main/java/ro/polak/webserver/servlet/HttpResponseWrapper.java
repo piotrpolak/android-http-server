@@ -7,12 +7,14 @@
 
 package ro.polak.webserver.servlet;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ public class HttpResponseWrapper implements HttpResponse {
     private boolean headersFlushed;
     private List<Cookie> cookies;
     private static Charset charset;
+    private ByteArrayOutputStream baos;
 
     static {
         charset = Charset.forName("UTF-8");
@@ -81,15 +84,6 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     /**
-     * Writes string to the output
-     *
-     * @param s String to be written
-     */
-    public void write(String s) {
-        write(s.getBytes(charset));
-    }
-
-    /**
      * Flushes headers, returns false when headers already flushed.
      * <p/>
      * Can be called once per responce, after the fisrt call it "locks"
@@ -110,7 +104,7 @@ public class HttpResponseWrapper implements HttpResponse {
             headers.setHeader(Headers.HEADER_SET_COOKIE, getCookieHeaderValue(cookie));
         }
 
-        write(headers.toString());
+        write(headers.toString().getBytes(charset));
     }
 
     /**
@@ -218,6 +212,21 @@ public class HttpResponseWrapper implements HttpResponse {
      * @throws IOException
      */
     public void flush() throws IOException {
+        if (baos != null) {
+            // The following flush is only needed because of baos
+            getPrintWriter().flush();
+            if (baos.size() > 0) {
+                if (!getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
+                    setContentLength(baos.size());
+                }
+            }
+        }
+
+        flushHeaders();
+
+        if (baos != null) {
+            baos.writeTo(out);
+        }
         out.flush();
     }
 
@@ -266,7 +275,8 @@ public class HttpResponseWrapper implements HttpResponse {
     public PrintWriter getPrintWriter() {
         // Creating print writer if it does not exist
         if (printWriter == null) {
-            printWriter = new PrintWriter();
+            baos = new ByteArrayOutputStream(8048);
+            printWriter = new PrintWriter(baos);
         }
 
         return printWriter;

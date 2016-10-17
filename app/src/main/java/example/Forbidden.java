@@ -7,6 +7,8 @@
 
 package example;
 
+import java.io.IOException;
+
 import ro.polak.webserver.error.HttpError403;
 import ro.polak.webserver.servlet.HttpRequest;
 import ro.polak.webserver.servlet.HttpResponse;
@@ -19,7 +21,9 @@ public class Forbidden extends Servlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        // Displays 403 Forbidden page
-        new HttpError403().serve(response);
+        try {
+            new HttpError403().serve(response);
+        } catch (IOException e) {
+        }
     }
 }

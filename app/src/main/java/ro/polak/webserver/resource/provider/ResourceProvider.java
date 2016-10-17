@@ -7,6 +7,8 @@
 
 package ro.polak.webserver.resource.provider;
 
+import java.io.IOException;
+
 import ro.polak.webserver.servlet.HttpRequestWrapper;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
 
@@ -26,5 +28,5 @@ public interface ResourceProvider {
      * @param response
      * @return
      */
-    boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response);
+    boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException;
 }

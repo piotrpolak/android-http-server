@@ -7,6 +7,8 @@
 
 package ro.polak.webserver.error;
 
+import java.io.IOException;
+
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
 
@@ -19,12 +21,11 @@ import ro.polak.webserver.servlet.HttpResponseWrapper;
 public class HttpError503 implements HttpError {
 
     @Override
-    public void serve(HttpResponse response) {
+    public void serve(HttpResponse response) throws IOException {
         String msg = "Error 503 - Service Unavailable";
         response.setStatus(HttpResponse.STATUS_INTERNAL_SERVER_ERROR);
         response.setContentType("text/plain");
-        response.setContentLength(msg.length());
-        ((HttpResponseWrapper) response).flushHeaders();
-        ((HttpResponseWrapper) response).write(msg);
+        response.getPrintWriter().write(msg);
+        ((HttpResponseWrapper) response).flush();
     }
 }

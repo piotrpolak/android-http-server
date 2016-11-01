@@ -10,7 +10,6 @@ package ro.polak.webserver.controller;
 import android.os.Environment;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.ServerSocket;
@@ -18,6 +17,7 @@ import java.net.ServerSocket;
 import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.WebServer;
 import ro.polak.webserver.gui.ServerGui;
+import ro.polak.webserver.impl.ServerConfigImpl;
 
 /**
  * The main controller of the server, can only be initialized as a singleton
@@ -95,16 +95,22 @@ public class MainController implements Controller {
         try {
             String baseConfigPath;
             if (getContext() != null) {
+                // On Android
                 baseConfigPath = Environment.getExternalStorageDirectory() + "/httpd/";
             } else {
+                // On desktop
                 baseConfigPath = "./app/src/main/assets/conf/";
             }
 
-            String tempPath = System.getProperty("java.io.tmpdir");
+            ServerConfig serverConfig;
+            try {
+                serverConfig = ServerConfigImpl.getFromPath(baseConfigPath, System.getProperty("java.io.tmpdir"));
+            } catch (IOException e) {
+                println(getClass(), "Unable to read server config. Using the default configuration.");
+                serverConfig = new ServerConfigImpl();
+            }
 
-            println(getClass(), "Temp directory: " + tempPath);
-
-            webServer = new WebServer(this, new ServerSocket(), new ServerConfig(baseConfigPath, tempPath));
+            webServer = new WebServer(this, new ServerSocket(), serverConfig);
             if (webServer.startServer()) {
                 gui.start();
             }

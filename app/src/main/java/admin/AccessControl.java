@@ -7,14 +7,19 @@
 
 package admin;
 
-import ro.polak.utilities.Config;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import ro.polak.utilities.ConfigReader;
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HttpSessionWrapper;
 
 public class AccessControl {
 
     protected HttpSessionWrapper session;
-    private static Config config;
+    private static Map<String, String> config;
 
     /**
      * Default constructor
@@ -85,11 +90,17 @@ public class AccessControl {
      *
      * @return
      */
-    public static Config getConfig() {
+    public static Map<String, String> getConfig() {
         // Initializes config only once
         if (config == null) {
-            config = new Config();
-            config.read(MainController.getInstance().getWebServer().getServerConfig().getBasePath() + "admin.conf");
+            try {
+                ConfigReader reader = new ConfigReader();
+                String configPath = MainController.getInstance().getWebServer().getServerConfig().getBasePath() + "admin.conf";
+                config = reader.read(new FileInputStream(configPath));
+            } catch (IOException e) {
+                // TODO Log error
+                config = new HashMap<>();
+            }
         }
 
         return config;

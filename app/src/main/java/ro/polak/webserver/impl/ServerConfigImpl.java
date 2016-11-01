@@ -51,7 +51,7 @@ public class ServerConfigImpl implements ServerConfig {
      * @return
      * @throws IOException
      */
-    public static ServerConfig getFromPath(String basePath, String tempPath) throws IOException {
+    public static ServerConfig createFromPath(String basePath, String tempPath) throws IOException {
         ConfigReader reader = new ConfigReader();
         Map<String, String> config = reader.read(new FileInputStream(basePath + "httpd.conf"));
 

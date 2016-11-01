@@ -104,7 +104,7 @@ public class MainController implements Controller {
 
             ServerConfig serverConfig;
             try {
-                serverConfig = ServerConfigImpl.getFromPath(baseConfigPath, System.getProperty("java.io.tmpdir"));
+                serverConfig = ServerConfigImpl.createFromPath(baseConfigPath, System.getProperty("java.io.tmpdir"));
             } catch (IOException e) {
                 println(getClass(), "Unable to read server config. Using the default configuration.");
                 serverConfig = new ServerConfigImpl();

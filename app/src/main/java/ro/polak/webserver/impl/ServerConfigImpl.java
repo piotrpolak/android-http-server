@@ -24,6 +24,7 @@ import ro.polak.webserver.ServerConfig;
  * @since 201509
  */
 public class ServerConfigImpl implements ServerConfig {
+
     private String basePath;
     private String documentRootPath;
     private String tempPath;
@@ -34,7 +35,7 @@ public class ServerConfigImpl implements ServerConfig {
     private boolean keepAlive;
     private String errorDocument404Path;
     private String errorDocument403Path;
-    public List<String> directoryIndex = new ArrayList();
+    public List<String> directoryIndex;
 
     public ServerConfigImpl() {
         basePath = "/httpd/";
@@ -43,6 +44,7 @@ public class ServerConfigImpl implements ServerConfig {
         listenPort = 8080;
         servletMappedExtension = "dhtml";
         maxServerThreads = 10;
+        directoryIndex = new ArrayList();
     }
 
     /**

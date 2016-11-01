@@ -2,22 +2,24 @@ package ro.polak.webserver;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class HttpRequestHeadersTest {
 
     @Test
-    public void testDefault() {
+    public void shouldParseRequestString() {
         HttpRequestHeaders headers = new HttpRequestHeaders();
         headers.setStatus("GET /home?param1=ABC&param2=123 HTTP/1.1");
-        assertEquals("GET", headers.getMethod());
-        assertEquals("param1=ABC&param2=123", headers.getQueryString());
-        assertEquals("/home?param1=ABC&param2=123", headers.getURI());
-        assertEquals("/home", headers.getPath());
-        assertEquals("HTTP/1.1", headers.getProtocol());
+
+        assertThat(headers.getMethod(), is("GET"));
+        assertThat(headers.getQueryString(), is("param1=ABC&param2=123"));
+        assertThat(headers.getURI(), is("/home?param1=ABC&param2=123"));
+        assertThat(headers.getPath(), is("/home"));
+        assertThat(headers.getProtocol(), is("HTTP/1.1"));
 
         // This should not really be tested here
-        assertEquals("ABC", headers._get("param1"));
-        assertEquals("123", headers._get("param2"));
+        assertThat(headers._get("param1"), is("ABC"));
+        assertThat(headers._get("param2"), is("123"));
     }
 }

@@ -4,12 +4,13 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class QueryStringParserTest {
 
     @Test
-    public void testDefault() {
+    public void shouldParseFields() {
 
         String data = "&param1=ABCD1"
                 + "&param2=ABCD2"
@@ -19,11 +20,11 @@ public class QueryStringParserTest {
         QueryStringParser parser = new QueryStringParser();
         Map<String, String> parameters = parser.parse(data);
 
-        assertEquals(4, parameters.size());
+        assertThat(parameters.size(), is(4));
 
-        assertEquals("ABCD1", parameters.get("param1"));
-        assertEquals("ABCD2", parameters.get("param2"));
-        assertEquals("ABC=DEF", parameters.get("param3"));
-        assertEquals("A B = % *", parameters.get("param4"));
+        assertThat(parameters.get("param1"), is("ABCD1"));
+        assertThat(parameters.get("param2"), is("ABCD2"));
+        assertThat(parameters.get("param3"), is("ABC=DEF"));
+        assertThat(parameters.get("param4"), is("A B = % *"));
     }
 }

@@ -1,5 +1,6 @@
 package ro.polak.webserver.servlet;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class ServletContextWrapperTest {
 
         for (Cookie cookie : response.getCookies()) {
             if (cookie.getName().equals(HttpSessionWrapper.COOKIE_NAME)) {
-                assertThat(null, is(not(cookie.getValue())));
+                assertThat(cookie.getValue(), is(not(nullValue())));
                 return;
             }
         }
@@ -67,7 +68,7 @@ public class ServletContextWrapperTest {
         ServletContextWrapper servletContext = new ServletContextWrapper(sessionStorage);
         HttpSessionWrapper sessionRead = servletContext.getSession("123");
         assertThat(sessionRead, is(not(nullValue())));
-        assertThat(sessionRead.getServletContext(), is(equalTo((ServletContext) servletContext)));
+        assertThat(sessionRead.getServletContext(), is((ServletContext) servletContext));
     }
 
     @Test
@@ -88,6 +89,6 @@ public class ServletContextWrapperTest {
         ServletContextWrapper servletContext = new ServletContextWrapper(sessionStorage);
         HttpSessionWrapper session = servletContext.createNewSession();
         assertThat(session, is(not(nullValue())));
-        assertThat(session.getServletContext(), is(equalTo((ServletContext) servletContext)));
+        assertThat(session.getServletContext(), is((ServletContext) servletContext));
     }
 }

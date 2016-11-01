@@ -13,9 +13,9 @@ import static org.junit.Assert.fail;
 
 public class MultipartRequestHandlerTest {
 
-    String boundary;
-    String nl;
-    String temporaryUploadsDirectory = System.getProperty("java.io.tmpdir");
+    private String boundary;
+    private String nl;
+    private String temporaryUploadsDirectory = System.getProperty("java.io.tmpdir");
 
     @Before
     public void setUp() {
@@ -24,7 +24,7 @@ public class MultipartRequestHandlerTest {
     }
 
     @Test
-    public void testBasicFieldsOnly() {
+    public void shouldParseBasicFields() {
         String data =
                 "--" + boundary + nl +
                         "Content-Disposition: form-data; name=\"field_1\"" + nl +
@@ -56,7 +56,7 @@ public class MultipartRequestHandlerTest {
     }
 
     @Test
-    public void testBoundaryLikeFieldValues() {
+    public void shouldParseWhenBoundaryIsLikeFieldValues() {
         String data =
                 "--" + boundary + nl +
                         "Content-Disposition: form-data; name=\"field_0\"" + nl +
@@ -89,7 +89,7 @@ public class MultipartRequestHandlerTest {
     }
 
     @Test
-    public void testBasicFileUpload() {
+    public void shouldHandleBasicFileUpload() {
         String data =
                 "--" + boundary + nl +
                         "Content-Disposition: form-data; name=\"field_1\"" + nl +
@@ -118,7 +118,7 @@ public class MultipartRequestHandlerTest {
     }
 
     @Test
-    public void testFieldsOnBufferMargin() {
+    public void shouldHandleFieldsOnBufferMargin() {
         // TODO Implement similar test for file upload to see whether delayed write works fine
         boundary = "%";
         String data =

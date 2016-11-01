@@ -96,7 +96,7 @@ public class ServerConfigImpl implements ServerConfig {
                     defaultMimeType = config.get("DefaultMimeType");
                 }
 
-                serverConfig.mimeTypeMapping = new MimeTypeMapping(new FileInputStream(basePath + config.get("MimeType")), defaultMimeType);
+                serverConfig.mimeTypeMapping = MimeTypeMappingImpl.createFromStream(new FileInputStream(basePath + config.get("MimeType")), defaultMimeType);
             } catch (IOException e) {
             }
         }
@@ -110,7 +110,7 @@ public class ServerConfigImpl implements ServerConfig {
 
         if (serverConfig.mimeTypeMapping == null) {
             // Initializing an empty mime type mapping to prevent null pointer exceptions
-            serverConfig.mimeTypeMapping = new MimeTypeMapping();
+            serverConfig.mimeTypeMapping = new MimeTypeMappingImpl();
         }
 
         return serverConfig;

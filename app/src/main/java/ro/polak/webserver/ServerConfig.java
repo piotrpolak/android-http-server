@@ -58,7 +58,7 @@ public interface ServerConfig {
      * @return
      */
     MimeTypeMapping getMimeTypeMapping();
-    
+
     /**
      * Returns the number of maximum allowed threads
      *

@@ -35,12 +35,12 @@ import ro.polak.webserver.session.storage.FileSessionStorage;
 public class ServletResourceProvider implements ResourceProvider {
 
     // Initialize servlet service in a static way
-    private static ServletLoader servletService;
+    private static ServletLoader servletLoader;
     private static ServletContextWrapper servletContext;
 
     static {
         String tmpPath = MainController.getInstance().getWebServer().getServerConfig().getTempPath();
-        servletService = new ro.polak.webserver.servlet.ServletLoader(new ClassPathServletLoader());
+        servletLoader = new ClassPathServletLoader();
         servletContext = new ServletContextWrapper(new FileSessionStorage(tmpPath));
     }
 
@@ -54,7 +54,7 @@ public class ServletResourceProvider implements ResourceProvider {
             try {
                 Servlet servlet;
                 try {
-                    servlet = servletService.loadServlet(uri);
+                    servlet = servletLoader.loadServlet(uri);
                 } catch (ClassNotFoundException e) {
                     return false;
                 }

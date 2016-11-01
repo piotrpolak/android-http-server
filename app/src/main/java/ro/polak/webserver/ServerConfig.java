@@ -58,14 +58,7 @@ public interface ServerConfig {
      * @return
      */
     MimeTypeMapping getMimeTypeMapping();
-
-    /**
-     * Returns the default mime type
-     *
-     * @return
-     */
-    String getDefaultMimeType();
-
+    
     /**
      * Returns the number of maximum allowed threads
      *

@@ -30,7 +30,6 @@ public class ServerConfigImpl implements ServerConfig {
     private int listenPort;
     private String servletMappedExtension;
     private MimeTypeMapping mimeTypeMapping;
-    private String defaultMimeType;
     private int maxServerThreads;
     private boolean keepAlive;
     private String errorDocument404Path;
@@ -43,7 +42,6 @@ public class ServerConfigImpl implements ServerConfig {
         tempPath = "/httpd/temp/";
         listenPort = 8080;
         servletMappedExtension = "dhtml";
-        defaultMimeType = "text/plain";
         maxServerThreads = 10;
     }
 
@@ -69,10 +67,6 @@ public class ServerConfigImpl implements ServerConfig {
             serverConfig.documentRootPath = basePath + config.get("DocumentRoot");
         }
 
-        if (config.containsKey("DefaultMimeType")) {
-            serverConfig.defaultMimeType = config.get("DefaultMimeType");
-        }
-
         if (config.containsKey("MaxThreads")) {
             serverConfig.maxServerThreads = Integer.parseInt(config.get("MaxThreads"));
         }
@@ -96,7 +90,13 @@ public class ServerConfigImpl implements ServerConfig {
 
         if (config.containsKey("MimeType")) {
             try {
-                serverConfig.mimeTypeMapping = new MimeTypeMapping(new FileInputStream(basePath + config.get("MimeType")), config.get("DefaultMimeType"));
+
+                String defaultMimeType = "text/plain";
+                if (config.containsKey("DefaultMimeType")) {
+                    defaultMimeType = config.get("DefaultMimeType");
+                }
+
+                serverConfig.mimeTypeMapping = new MimeTypeMapping(new FileInputStream(basePath + config.get("MimeType")), defaultMimeType);
             } catch (IOException e) {
             }
         }
@@ -144,11 +144,6 @@ public class ServerConfigImpl implements ServerConfig {
     @Override
     public MimeTypeMapping getMimeTypeMapping() {
         return mimeTypeMapping;
-    }
-
-    @Override
-    public String getDefaultMimeType() {
-        return defaultMimeType;
     }
 
     @Override

@@ -27,6 +27,7 @@ import ro.polak.webserver.servlet.HttpSessionWrapper;
 public class FileSessionStorage implements SessionStorage {
 
     private String tempPath;
+    private static Pattern pattern = Pattern.compile("[a-z]+");
 
     /**
      * Default constructor.
@@ -62,8 +63,6 @@ public class FileSessionStorage implements SessionStorage {
     @Override
     public HttpSessionWrapper getSession(String id) throws IOException {
         HttpSessionWrapper session = null;
-
-        Pattern pattern = Pattern.compile("[a-z]+");
         boolean isIdValid = id != null && id.length() == 32 && pattern.matcher(id).matches();
         if (isIdValid) {
             File file = new File(getSessionStoragePath(id));

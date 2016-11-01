@@ -39,7 +39,7 @@ public class FileSessionStorage implements SessionStorage {
 
     @Override
     public void persistSession(HttpSessionWrapper session) throws IOException {
-        if (session.getId() == null || session.getId() == "") {
+        if (session.getId() == null || session.getId().equals("")) {
             throw new IllegalArgumentException("Session ID can not be empty");
         }
 

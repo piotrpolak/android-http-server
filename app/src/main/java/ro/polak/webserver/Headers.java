@@ -9,6 +9,7 @@ package ro.polak.webserver;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 /**
@@ -107,7 +108,7 @@ public class Headers {
     }
 
     /**
-     * Sets a header
+     * Sets a header.
      *
      * @param name  header name
      * @param value header value
@@ -128,7 +129,16 @@ public class Headers {
     }
 
     /**
-     * Tells whether a header of specified name exists
+     * Returns header names' set.
+     *
+     * @return
+     */
+    public Set<String> keySet() {
+        return headers.keySet();
+    }
+
+    /**
+     * Tells whether a header of specified name exists.
      *
      * @param name
      * @return
@@ -138,19 +148,18 @@ public class Headers {
     }
 
     /**
-     * Sets the status, the first line of HTTP headers
+     * Sets the status, the first line of HTTP headers.
      */
     public void setStatus(String status) {
         this.status = status;
     }
 
     /**
-     * Returns the status, the first line of HTTP headers
+     * Returns the status, the first line of HTTP headers.
      *
      * @return status
      */
     public String getStatus() {
         return status;
     }
-
 }

@@ -21,7 +21,7 @@ import java.util.List;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.Headers;
-import ro.polak.webserver.HttpResponseHeaders;
+import ro.polak.webserver.HeadersSerializer;
 import ro.polak.webserver.Statistics;
 import ro.polak.webserver.WebServer;
 
@@ -33,22 +33,24 @@ import ro.polak.webserver.WebServer;
  */
 public class HttpResponseWrapper implements HttpResponse {
 
-    private HttpResponseHeaders headers;
+    private Headers headers;
     private OutputStream out;
     private ChunkedPrintWriter printWriter;
     private boolean headersFlushed;
     private List<Cookie> cookies;
     private static Charset charset;
+    private static HeadersSerializer headersSerializer;
 
     static {
         charset = Charset.forName("UTF-8");
+        headersSerializer = new HeadersSerializer();
     }
 
     /**
      * Default constructor.
      */
     public HttpResponseWrapper() {
-        headers = new HttpResponseHeaders();
+        headers = new Headers();
         setKeepAlive(false);
         headersFlushed = false;
         cookies = new ArrayList<>();
@@ -88,7 +90,7 @@ public class HttpResponseWrapper implements HttpResponse {
             headers.setHeader(Headers.HEADER_SET_COOKIE, getCookieHeaderValue(cookie));
         }
 
-        serveStream(new ByteArrayInputStream(headers.toString().getBytes(charset)), false);
+        serveStream(new ByteArrayInputStream(headersSerializer.serialize(headers).getBytes(charset)), false);
     }
 
     /**
@@ -256,7 +258,7 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     @Override
-    public HttpResponseHeaders getHeaders() {
+    public Headers getHeaders() {
         return headers;
     }
 

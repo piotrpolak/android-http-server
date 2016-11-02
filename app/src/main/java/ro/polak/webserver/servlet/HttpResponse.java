@@ -1,17 +1,16 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p>
+ * <p/>
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
 package ro.polak.webserver.servlet;
 
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
-import ro.polak.webserver.HttpResponseHeaders;
+import ro.polak.webserver.Headers;
 
 /**
  * Represents HTTP response
@@ -100,7 +99,7 @@ public interface HttpResponse {
      *
      * @return
      */
-    HttpResponseHeaders getHeaders();
+    Headers getHeaders();
 
     /**
      * Sets status of response

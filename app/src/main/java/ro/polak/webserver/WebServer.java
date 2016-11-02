@@ -103,6 +103,7 @@ public class WebServer extends Thread {
     private void selectActiveResourceProviders() {
         String assetBasePath = "public";
         if (controller.getContext() != null) {
+            // For Android
             resourceProviders = new ResourceProvider[]{
                     new FileResourceProvider(MainController.getInstance().getWebServer().getServerConfig().getDocumentRootPath()),
                     new AssetResourceProvider(((Context) MainController.getInstance().getContext()).getResources().getAssets(),
@@ -110,6 +111,7 @@ public class WebServer extends Thread {
                     new ServletResourceProvider()
             };
         } else {
+            // For desktop
             resourceProviders = new ResourceProvider[]{
                     new FileResourceProvider(MainController.getInstance().getWebServer().getServerConfig().getDocumentRootPath()),
                     new FileResourceProvider("./app/src/main/assets/" + assetBasePath),

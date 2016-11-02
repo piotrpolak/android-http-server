@@ -1,13 +1,13 @@
 /**************************************************
- *
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- *
+ * <p/>
  * Copyright (c) Piotr Polak 2008-2015
- *
  **************************************************/
 
 package ro.polak.utilities;
+
+import java.util.Random;
 
 /**
  * Random string generator
@@ -33,14 +33,13 @@ public class RandomStringGenerator {
      * @return random string of 32 characters
      */
     public static String generate(int length) {
-        String sid = "";
-
-        java.util.Random r = new java.util.Random();
+        StringBuilder randomString = new StringBuilder(length);
+        Random random = new Random();
 
         // ASCI 97 - 122
-        while (sid.length() < length) {
-            sid += (char) (r.nextInt(25) + 97);
+        while (randomString.length() < length) {
+            randomString.append((char) (random.nextInt(25) + 97));
         }
-        return sid;
+        return randomString.toString();
     }
 }

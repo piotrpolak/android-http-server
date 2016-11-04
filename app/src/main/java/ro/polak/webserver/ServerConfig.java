@@ -10,7 +10,7 @@ package ro.polak.webserver;
 import java.util.List;
 
 /**
- * Server configuration
+ * Server configuration.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
@@ -18,77 +18,77 @@ import java.util.List;
 public interface ServerConfig {
 
     /**
-     * Returns base path
+     * Returns base path.
      *
      * @return
      */
     String getBasePath();
 
     /**
-     * Returns document root path
+     * Returns document root path.
      *
      * @return
      */
     String getDocumentRootPath();
 
     /**
-     * Returns server temp path
+     * Returns server temp path.
      *
      * @return
      */
     String getTempPath();
 
     /**
-     * Returns the listen port
+     * Returns the listen port.
      *
      * @return
      */
     int getListenPort();
 
     /**
-     * Returns the servlet mapped extension
+     * Returns the servlet mapped extension.
      *
      * @return
      */
     String getServletMappedExtension();
 
     /**
-     * Returns the mime type mapping
+     * Returns the mime type mapping.
      *
      * @return
      */
     MimeTypeMapping getMimeTypeMapping();
 
     /**
-     * Returns the number of maximum allowed threads
+     * Returns the number of maximum allowed threads.
      *
      * @return
      */
     int getMaxServerThreads();
 
     /**
-     * Returns whether the server should keep the connections alive
+     * Returns whether the server should keep the connections alive.
      *
      * @return
      */
     boolean isKeepAlive();
 
     /**
-     * Returns error 404 file path
+     * Returns error 404 file path.
      *
      * @return
      */
     String getErrorDocument404Path();
 
     /**
-     * Returns the error 403 file path
+     * Returns the error 403 file path.
      *
      * @return
      */
     String getErrorDocument403Path();
 
     /**
-     * Returns the directory index
+     * Returns the directory index.
      *
      * @return
      */

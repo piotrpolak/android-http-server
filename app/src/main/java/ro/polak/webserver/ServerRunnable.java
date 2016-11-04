@@ -10,11 +10,13 @@ package ro.polak.webserver;
 import java.io.IOException;
 import java.net.Socket;
 
+import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.error.HttpError403;
 import ro.polak.webserver.error.HttpError404;
 import ro.polak.webserver.error.HttpError405;
 import ro.polak.webserver.resource.provider.ResourceProvider;
 import ro.polak.webserver.servlet.HttpRequestWrapper;
+import ro.polak.webserver.servlet.HttpRequestWrapperFactory;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
 
 /**
@@ -27,6 +29,11 @@ public class ServerRunnable implements Runnable {
 
     private Socket socket;
     private WebServer webServer;
+    private static HttpRequestWrapperFactory requestFactory;
+
+    static {
+        requestFactory = new HttpRequestWrapperFactory(MainController.getInstance().getWebServer().getServerConfig().getTempPath());
+    }
 
     /**
      * Default constructor.
@@ -41,9 +48,9 @@ public class ServerRunnable implements Runnable {
     @Override
     public void run() {
         try {
-            HttpRequestWrapper request = HttpRequestWrapper.createFromSocket(socket);
+            HttpRequestWrapper request = requestFactory.createFromSocket(socket);
             HttpResponseWrapper response = HttpResponseWrapper.createFromSocket(socket);
-            String path = request.getHeaders().getPath();
+            String path = request.getRequestURI();
 
             if (isPathIllegal(path)) {
                 (new HttpError403()).serve(response);
@@ -52,7 +59,7 @@ public class ServerRunnable implements Runnable {
 
             setDefaultResponseHeaders(request, response);
 
-            if (isMethodSupported(request.getHeaders().getMethod())) {
+            if (isMethodSupported(request.getMethod())) {
                 boolean isResourceLoaded = loadResourceByPath(request, response, path);
                 if (!isResourceLoaded) {
                     isResourceLoaded = loadDirectoryIndexResource(request, response, path);
@@ -76,7 +83,13 @@ public class ServerRunnable implements Runnable {
      * @param response
      */
     private void setDefaultResponseHeaders(HttpRequestWrapper request, HttpResponseWrapper response) {
-        response.setKeepAlive(request.isKeepAlive() && webServer.getServerConfig().isKeepAlive());
+
+        boolean isKeepAlive = false;
+        if (request.getHeaders().containsHeader(Headers.HEADER_CONNECTION)) {
+            isKeepAlive = request.getHeaders().getHeader(Headers.HEADER_CONNECTION).toLowerCase().equals("keep-alive");
+        }
+
+        response.setKeepAlive(isKeepAlive && webServer.getServerConfig().isKeepAlive());
         response.getHeaders().setHeader(Headers.HEADER_SERVER, WebServer.SIGNATURE);
     }
 
@@ -86,8 +99,8 @@ public class ServerRunnable implements Runnable {
      * @param request
      * @param response
      * @param path
-     * @throws IOException
      * @return
+     * @throws IOException
      */
     private boolean loadDirectoryIndexResource(HttpRequestWrapper request, HttpResponseWrapper response, String path) throws IOException {
         path = getNormalizedDirectoryPath(path);

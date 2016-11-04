@@ -22,7 +22,7 @@ public class BackupConfiguration extends Servlet {
     public void service(HttpRequest request, HttpResponse response) {
         AccessControl ac = new AccessControl(request.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());
+            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getRequestURI());
             return;
         }
 

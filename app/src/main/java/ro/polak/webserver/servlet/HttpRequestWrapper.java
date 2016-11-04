@@ -7,18 +7,17 @@
 
 package ro.polak.webserver.servlet;
 
-import java.io.IOException;
+import java.io.BufferedReader;
 import java.io.InputStream;
-import java.net.Socket;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
-import ro.polak.utilities.Utilities;
 import ro.polak.webserver.Headers;
-import ro.polak.webserver.HttpRequestHeaders;
-import ro.polak.webserver.MultipartRequestHandler;
 import ro.polak.webserver.Statistics;
-import ro.polak.webserver.controller.MainController;
+import ro.polak.webserver.RequestStatus;
 
 /**
  * HTTP request wrapper
@@ -39,179 +38,88 @@ public class HttpRequestWrapper implements HttpRequest {
     public final static String METHOD_PUT = "PUT";
     public final static String METHOD_TRACE = "TRACE";
 
-    private HttpRequestHeaders headers;
-    private boolean isKeepAlive = false;
+    private Map<String, String> postParameters;
+    private Map<String, String> getParameters;
+
+    private RequestStatus status;
+    private Headers headers;
     private boolean isMultipart = false;
-    private String remoteAddress;
-    private Map cookies;
+    private String remoteAddr;
+
+    private Map<String, Cookie> cookies;
     private FileUpload fileUpload;
     private HttpSessionWrapper session;
     private boolean sessionWasRequested = false;
     private ServletContextWrapper servletContext;
+    private Map<String, Object> attributes;
+    private String characterEncoding = "UTF-8";
 
-    /**
-     * Creates and returns a request out of the socket
-     *
-     * @param socket
-     * @return
-     */
-    public static HttpRequestWrapper createFromSocket(Socket socket) throws IOException {
-
-        // FIXME Move to HttpRequestWrapperFactory
-
-        // The request object
-        HttpRequestWrapper request = new HttpRequestWrapper();
-        // The headers object
-        HttpRequestHeaders headers = new HttpRequestHeaders();
-
-        // Setting remote IP
-        request.setRemoteAddr(socket.getInetAddress().getHostAddress().toString());
-
-        // StringBuilder is more efficient when the string will be accessed from a single thread
-        StringBuilder inputHeadersBuffer = new StringBuilder();
-        StringBuilder statusLineBuffer = new StringBuilder();
-
-        // Reading the input stream
-
-        // Getting the input stream out of the socket
-        InputStream in = socket.getInputStream();
-
-        // Reading the first, status line
-        byte[] buffer = new byte[1];
-        while (in.read(buffer, 0, buffer.length) != -1) {
-            // Appending buffer as long as the last character differs from \n
-            if (buffer[0] == '\n') {
-                break;
-            }
-            statusLineBuffer.append((char) buffer[0]);
-        }
-        // Setting status line, getting method, URI etc
-        headers.setStatus(statusLineBuffer.toString());
-        Statistics.addBytesReceived(statusLineBuffer.length() + 1);
-
-
-        // Resetting buffer and reading the rest of headers until \r\n
-        buffer = new byte[1];
-        while (in.read(buffer, 0, buffer.length) != -1) {
-            // Appending input headers
-            inputHeadersBuffer.append((char) buffer[0]);
-            // Check if the headers length is at least 3 characters long
-            if (inputHeadersBuffer.length() > 3) {
-                // Getting the last 3 characters
-                if (inputHeadersBuffer.substring(inputHeadersBuffer.length() - 3, inputHeadersBuffer.length()).equals("\n\r\n")) {
-                    // Remove the last 3 characters
-                    inputHeadersBuffer.setLength(inputHeadersBuffer.length() - 3);
-                    break;
-                }
-            }
-        }
-        Statistics.addBytesReceived(inputHeadersBuffer.length() + 3);
-
-        // Parsing headers if they are at least 3 characters long
-        if (inputHeadersBuffer.length() > 3) {
-            // Removing the last 3 characters and parsing the buffer
-            headers.parse(inputHeadersBuffer.toString());
-        }
-
-
-        // For post method
-        if (headers.getMethod().toUpperCase().equals(HttpRequestWrapper.METHOD_POST)) {
-
-            // Getting the postLength
-            int postLength = 0;
-            // Checking whether the header exists
-            if (headers.containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
-                try {
-                    // Parsing content length
-                    postLength = Integer.parseInt(headers.getHeader(Headers.HEADER_CONTENT_LENGTH));
-                } catch (NumberFormatException e) {
-                    // Keep 0 value - makes no sense to parse the data
-                }
-            }
-
-            // Only if post length is greater than 0
-            if (postLength > 0) {
-                // For multipart request
-                if (headers.containsHeader(Headers.HEADER_CONTENT_TYPE) && headers.getHeader(Headers.HEADER_CONTENT_TYPE).startsWith("multipart/form-data")) {
-                    // Getting the boundary
-                    String boundary = headers.getHeader(Headers.HEADER_CONTENT_TYPE);
-
-                    // Getting boundary
-                    String boundaryStartString = "boundary=";
-                    int boundaryPosition = boundary.indexOf(boundaryStartString);
-
-                    // Checking whether boundary= exists
-                    if (boundaryPosition > -1) {
-                        // Protection against illegal indexes
-                        try {
-                            boundary = boundary.substring(boundaryPosition + boundaryStartString.length(), boundary.length());
-                            MultipartRequestHandler mrh = new MultipartRequestHandler(in, postLength, boundary, MainController.getInstance().getWebServer().getServerConfig().getTempPath());
-                            mrh.handle();
-
-                            headers.setPost(mrh.getPost());
-                            request.setFileUpload(new FileUpload(mrh.getUploadedFiles()));
-                        } catch (IndexOutOfBoundsException e) {
-                        }
-                    }
-                }
-                // For normal requests
-                else {
-                    buffer = new byte[1];
-                    StringBuilder postLine = new StringBuilder();
-                    while (in.read(buffer, 0, buffer.length) != -1) {
-                        postLine.append((char) buffer[0]);
-                        if (postLine.length() >= postLength) {
-                            // Forced "the end"
-                            break;
-                        }
-                    }
-                    // Setting the headers post line
-                    headers.setPostLine(postLine.toString());
-
-                    Statistics.addBytesReceived(postLine.length());
-                } // end else
-            } // end if length
-        } // end if post
-
-        // Assigning headers
-        request.setHeaders(headers);
-        if (headers.containsHeader(Headers.HEADER_CONNECTION)) {
-            request.setKeepAlive(headers.getHeader(Headers.HEADER_CONNECTION).toLowerCase().equals("keep-alive"));
-        }
-        // Returns the created request
-        return request;
-    }
+    private InputStream in;
+    private String localAddr;
+    private int localPort;
+    private String remoteHost;
+    private int remotePort;
+    private int serverPort;
+    private String localName;
+    private String serverName;
+    private String scheme;
+    private boolean isSecure;
 
     /**
      * Default constructor
      */
     public HttpRequestWrapper() {
         Statistics.addRequest();
+        postParameters = new HashMap<>();
+        getParameters = new HashMap<>();
         fileUpload = new FileUpload();
+        attributes = new HashMap<>();
     }
 
-    /**
-     * Sets the servlet context.
-     *
-     * @param servletContext
-     */
-    public void setServletContext(ServletContextWrapper servletContext) {
-        this.servletContext = servletContext;
+    @Override
+    public String getRequestURI() {
+        return status.getUri();
+    }
+
+    @Override
+    public StringBuilder getRequestURL() {
+        String host;
+        if (headers.containsHeader(Headers.HEADER_HOST)) {
+            // Strip port number
+            host = headers.getHeader(Headers.HEADER_HOST).split(":")[0];
+        } else {
+            host = getLocalAddr();
+        }
+
+        StringBuilder url = new StringBuilder();
+        url.append(getScheme()).append(host);
+
+        int port = getServerPort();
+        if (port != 80 && port != 433) {
+            url.append(':').append(port);
+        }
+
+        url.append(status.getUri());
+        return url;
+    }
+
+    @Override
+    public String getHeader(String name) {
+        return headers.getHeader(name);
+    }
+
+    @Override
+    public int getIntHeader(String name) {
+        try {
+            return Integer.valueOf(getHeader(name));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     @Override
     public String getRemoteAddr() {
-        return remoteAddress;
-    }
-
-    @Override
-    public boolean isKeepAlive() {
-        return isKeepAlive;
-    }
-
-    @Override
-    public void setKeepAlive(boolean isKeepAlive) {
-        this.isKeepAlive = isKeepAlive;
+        return remoteAddr;
     }
 
     @Override
@@ -220,8 +128,180 @@ public class HttpRequestWrapper implements HttpRequest {
     }
 
     @Override
-    public HttpRequestHeaders getHeaders() {
+    public Headers getHeaders() {
         return headers;
+    }
+
+    @Override
+    public long getDateHeader(String name) {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public Enumeration getHeaderNames(String name) {
+        return Collections.enumeration(headers.keySet());
+    }
+
+    @Override
+    public Cookie[] getCookies() {
+        Cookie[] cookiesArray = new Cookie[cookies.size()];
+        cookies.values().toArray(cookiesArray);
+
+        return cookiesArray;
+    }
+
+    @Override
+    public String getQueryString() {
+        return status.getQueryString();
+    }
+
+    @Override
+    public String getRequestedSessionId() {
+        Cookie sessionCookie = getCookie(HttpSessionWrapper.COOKIE_NAME);
+        if (sessionCookie == null) {
+            return null;
+
+        }
+        return sessionCookie.getValue();
+    }
+
+    @Override
+    public Object getAttribute(String name) {
+        return attributes.get(name);
+    }
+
+    @Override
+    public Enumeration getAttributeNames() {
+        return Collections.enumeration(attributes.keySet());
+    }
+
+    @Override
+    public String getCharacterEncoding() {
+        return characterEncoding;
+    }
+
+    @Override
+    public int getContentLength() {
+        return getIntHeader(Headers.HEADER_CONTENT_LENGTH);
+    }
+
+    @Override
+    public String getContentType() {
+        return headers.getHeader(Headers.HEADER_CONTENT_TYPE);
+    }
+
+    @Override
+    public InputStream getInputStream() {
+        return in;
+    }
+
+    @Override
+    public String getLocalAddr() {
+        return localAddr;
+    }
+
+    @Override
+    public Locale getLocale() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public Enumeration getLocales() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public String getLocalName() {
+        return localName;
+    }
+
+    @Override
+    public int getLocalPort() {
+        return localPort;
+    }
+
+    @Override
+    public Map getParameterMap() {
+        String method = getMethod().toUpperCase();
+        if (method.equals(METHOD_POST) || method.equals(METHOD_PUT)) {
+            return postParameters;
+        }
+
+        return getParameters;
+    }
+
+    @Override
+    public Enumeration getParameterNames() {
+        return Collections.enumeration(getParameterMap().keySet());
+    }
+
+    @Override
+    public String[] getParameterValues(String name) {
+        String[] values = new String[getParameterMap().size()];
+        getParameterMap().values().toArray(values);
+        return values;
+    }
+
+    @Override
+    public String getProtocol() {
+        return status.getProtocol();
+    }
+
+    @Override
+    public BufferedReader getReader() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public String getRemoteHost() {
+        return remoteHost;
+    }
+
+    @Override
+    public int getRemotePort() {
+        return remotePort;
+    }
+
+    //  RequestDispatcher	getRequestDispatcher(String path)
+
+    @Override
+    public String getScheme() {
+        return scheme;
+    }
+
+    @Override
+    public String getServerName() {
+        return serverName;
+    }
+
+    @Override
+    public int getServerPort() {
+        return serverPort;
+    }
+
+    @Override
+    public boolean isSecure() {
+        return isSecure;
+    }
+
+    @Override
+    public void removeAttribute(String name) {
+        attributes.remove(name);
+    }
+
+    @Override
+    public void setAttribute(String name, Object o) {
+        attributes.put(name, o);
+    }
+
+    @Override
+    public void setCharacterEncoding(String characterEncoding) {
+        this.characterEncoding = characterEncoding;
+    }
+
+    @Override
+    public String getMethod() {
+        return status.getMethod();
     }
 
     @Override
@@ -230,73 +310,31 @@ public class HttpRequestWrapper implements HttpRequest {
     }
 
     @Override
-    public String getCookie(String cookieName) {
-        // Parses cookies upon request
-        if (cookies == null) {
-            // now parsing only for a new cookies
-            cookies = new HashMap();
-
-            // Return null when there is no cookie headers
-            if (!headers.containsHeader(Headers.HEADER_COOKIE)) {
-                return null;
-            }
-
-            // Splitting separate cookies array
-            String cookiesStr[] = headers.getHeader(Headers.HEADER_COOKIE).split(";");
-            for (int i = 0; i < cookiesStr.length; i++) {
-                // Splitting cookie name=value pair
-                try {
-                    String cookieValues[] = cookiesStr[i].split("=");
-                    cookies.put(cookieValues[0].trim(), cookieValues[1]);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    // No value or no = character
-                    return null;
-                }
-            }
+    public Cookie getCookie(String cookieName) {
+        if (cookies.containsKey(cookieName)) {
+            return cookies.get(cookieName);
         }
-
-        try {
-            return Utilities.URLDecode((String) cookies.get(cookieName));
-        } catch (Exception e) {
-            return null;
-        }
+        return null;
     }
 
     @Override
-    public String _get(String paramName) {
-        return headers._get(paramName);
+    public String getParameter(String paramName) {
+        return getParameters.get(paramName);
     }
 
     @Override
-    public String _get(String paramName, String defaultValue) {
-        String value = _get(paramName);
-        if (value == null) {
-            value = defaultValue;
-        }
-
-        return value;
-    }
-
-    @Override
-    public String _post(String paramName) {
-        return headers._post(paramName);
-    }
-
-    @Override
-    public String _post(String paramName, String defaultValue) {
-        String value = _post(paramName);
-        if (value == null) {
-            value = defaultValue;
-        }
-
-        return value;
+    public String getPostParameter(String paramName) {
+        return postParameters.get(paramName);
     }
 
     @Override
     public HttpSessionWrapper getSession(boolean create) {
         if (!sessionWasRequested) {
             sessionWasRequested = true;
-            session = servletContext.getSession(getCookie(HttpSessionWrapper.COOKIE_NAME));
+            String sessionId = getRequestedSessionId();
+            if (sessionId != null) {
+                session = servletContext.getSession(sessionId);
+            }
         }
 
         if (session == null && create) {
@@ -316,29 +354,79 @@ public class HttpRequestWrapper implements HttpRequest {
     }
 
     /**
-     * Sets the remote address
+     * Sets the servlet context.
      *
-     * @param remoteAddress
+     * @param servletContext
      */
-    private void setRemoteAddr(String remoteAddress) {
-        this.remoteAddress = remoteAddress;
+    public void setServletContext(ServletContextWrapper servletContext) {
+        this.servletContext = servletContext;
     }
 
-    /**
-     * Sets the request headers
-     *
-     * @param headers
-     */
-    public void setHeaders(HttpRequestHeaders headers) {
+    public void setRemoteAddr(String remoteAddr) {
+        this.remoteAddr = remoteAddr;
+    }
+
+    public void setHeaders(Headers headers) {
         this.headers = headers;
     }
 
-    /**
-     * Sets the file upload associated with the request
-     *
-     * @param fileUpload
-     */
-    private void setFileUpload(FileUpload fileUpload) {
+    public void setFileUpload(FileUpload fileUpload) {
         this.fileUpload = fileUpload;
+    }
+
+    public void setGetParameters(Map<String, String> getParameters) {
+        this.getParameters = getParameters;
+    }
+
+    public void setPostParameters(Map<String, String> postParameters) {
+        this.postParameters = postParameters;
+    }
+
+    public void setStatus(RequestStatus status) {
+        this.status = status;
+    }
+
+    public void setCookies(Map<String, Cookie> cookies) {
+        this.cookies = cookies;
+    }
+
+    public void setInputStream(InputStream in) {
+        this.in = in;
+    }
+
+    public void setLocalPort(int localPort) {
+        this.localPort = localPort;
+    }
+
+    public void setRemoteHost(String remoteHost) {
+        this.remoteHost = remoteHost;
+    }
+
+    public void setRemotePort(int remotePort) {
+        this.remotePort = remotePort;
+    }
+
+    public void setLocalAddr(String localAddr) {
+        this.localAddr = localAddr;
+    }
+
+    public void setServerPort(int serverPort) {
+        this.serverPort = serverPort;
+    }
+
+    public void setLocalName(String localName) {
+        this.localName = localName;
+    }
+
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
+    }
+
+    public void setScheme(String scheme) {
+        this.scheme = scheme;
+    }
+
+    public void setSecure(boolean secure) {
+        isSecure = secure;
     }
 }

@@ -2,10 +2,10 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
-package ro.polak.webserver;
+package ro.polak.webserver.parser;
 
 import java.util.HashMap;
 import java.util.Map;

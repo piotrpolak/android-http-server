@@ -51,7 +51,7 @@ public class FileResourceProvider implements ResourceProvider {
 
             // Serving file for all the request but for HEAD
             // TODO This should be moved out into the parent class
-            if (!request.getHeaders().getMethod().equals(HttpRequestWrapper.METHOD_HEAD)) {
+            if (!request.getMethod().equals(HttpRequestWrapper.METHOD_HEAD)) {
                 response.serveFile(file);
             }
 

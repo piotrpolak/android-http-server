@@ -7,18 +7,18 @@
 
 package api;
 
-import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
-import ro.polak.webserver.servlet.Servlet;
-
 import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONArray;
+
+import ro.polak.webserver.controller.MainController;
+import ro.polak.webserver.servlet.HttpRequest;
+import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.servlet.Servlet;
 
 /**
  * SMS Inbox method API endpoint
@@ -32,7 +32,7 @@ public class SmsInbox extends Servlet {
         response.setContentType("text/json");
 
         // Setting max results out of the maxResults query parameter or default value
-        int maxResults = Integer.parseInt(request._get("maxResults", "10"));
+        int maxResults = request.getParameter("maxResults") != null ? Integer.parseInt(request.getParameter("maxResults")) : 10;
 
         // Querying
         String[] projection = {"address", "body", "date", "date_sent"};

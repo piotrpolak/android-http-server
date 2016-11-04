@@ -31,9 +31,9 @@ public class SmsSend extends Servlet {
         response.setContentType("text/json");
 
         // Getting parameter value
-        String to = request._post("to");
-        String message = request._post("message");
-        String test = request._post("test");
+        String to = request.getPostParameter("to");
+        String message = request.getPostParameter("message");
+        String test = request.getPostParameter("test");
 
         // Variable holding the JSON response
         String jsonResponse = "";

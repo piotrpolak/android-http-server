@@ -28,7 +28,7 @@ public class Cookie extends Servlet {
         // Getting the page hits from session if exists
         if (request.getCookie(attributeName) != null) {
             // Please note the session attribute is of String type
-            pageHits = Integer.parseInt(request.getCookie(attributeName));
+            pageHits = Integer.parseInt(request.getCookie(attributeName).getValue());
         }
 
         // Incrementing hits counter
@@ -38,6 +38,6 @@ public class Cookie extends Servlet {
         response.addCookie(new ro.polak.webserver.servlet.Cookie(attributeName, Integer.toString(pageHits)));
 
         // Printing out the result
-        response.getPrintWriter().print("Cookie page hits: " + pageHits + " " + request.getCookie(attributeName));
+        response.getPrintWriter().print("Cookie page hits: " + pageHits + " " + request.getCookie(attributeName).getValue());
     }
 }

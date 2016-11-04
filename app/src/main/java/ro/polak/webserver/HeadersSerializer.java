@@ -27,7 +27,6 @@ public class HeadersSerializer {
     public String serialize(Headers headers) {
         Set<String> names = headers.keySet();
         StringBuilder sb = new StringBuilder();
-        sb.append(headers.getStatus()).append(NEW_LINE);
         for (String name : names) {
             sb.append(name).append(": ").append(headers.getHeader(name)).append(NEW_LINE);
         }

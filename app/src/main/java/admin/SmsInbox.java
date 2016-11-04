@@ -29,7 +29,7 @@ public class SmsInbox extends Servlet {
     public void service(HttpRequest request, HttpResponse response) {
         AccessControl ac = new AccessControl(request.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());
+            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getRequestURI());
             return;
         }
 
@@ -37,7 +37,7 @@ public class SmsInbox extends Servlet {
         doc.setOwnerClass(getClass().getSimpleName());
 
 
-        String threadIdGet = request._get("thread_id");
+        String threadIdGet = request.getParameter("thread_id");
         String whereString = null;
 
         if (threadIdGet != null) {

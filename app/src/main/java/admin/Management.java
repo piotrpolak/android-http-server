@@ -17,21 +17,21 @@ public class Management extends Servlet {
     public void service(HttpRequest request, HttpResponse response) {
         AccessControl ac = new AccessControl(request.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());
+            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getRequestURI());
             return;
         }
 
         HTMLDocument doc = new HTMLDocument("Management");
         doc.setOwnerClass(getClass().getSimpleName());
 
-        if (request._get("task") == null) {
+        if (request.getParameter("task") == null) {
             doc.writeln("<div class=\"page-header\"><h1>Management</h1></div>");
             doc.write("<p>Edit <b>/storage/httpd/httpd.conf</b> to modify the server configuration.</p>");
             doc.write("<ul>");
             doc.write("<li><a href=\"/admin/BackupConfiguration.dhtml\">Backup the configuration</a></li>");
             doc.write("<li><a href=\"/admin/Management.dhtml?task=updateConfiguration\">Update the configuration</a></li>");
             doc.write("</ul>");
-        } else if (request._get("task").equals("updateConfiguration")) {
+        } else if (request.getParameter("task").equals("updateConfiguration")) {
             doc.writeln("<div class=\"page-header\"><h1>Management - update configuration</h1></div>");
             doc.writeln("<form action=\"/admin/UpdateConfiguration.dhtml\" method=\"post\" enctype=\"multipart/form-data\"><input name=\"file\" type=\"file\" size=\"40\" class=\"input_i\" />&nbsp;<input name=\"submit\" type=\"submit\" value=\"Update\"  class=\"input_b\" /></form>");
         }

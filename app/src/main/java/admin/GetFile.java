@@ -24,7 +24,7 @@ public class GetFile extends Servlet {
     public void service(HttpRequest request, HttpResponse response) {
         AccessControl ac = new AccessControl(request.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());
+            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getRequestURI());
             return;
         }
 
@@ -33,13 +33,8 @@ public class GetFile extends Servlet {
             return;
         }
 
-        String qs = request.getHeaders().getURI();
-        int p;
-        String path;
-
-		/* checking if ? in string */
-        if ((p = qs.indexOf('?')) != -1) {
-            path = qs.substring(p + 1);
+        if (!request.getQueryString().equals("")) {
+            String path = request.getQueryString();
             File f = new File(path);
             if (f.exists() && f.isFile()) {
                 response.setContentType(MainController.getInstance().getWebServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(Utilities.getExtension(f.getName())));

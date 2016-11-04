@@ -21,7 +21,7 @@ public class DriveAccess extends Servlet {
     public void service(HttpRequest request, HttpResponse response) {
         AccessControl ac = new AccessControl(request.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getHeaders().getURI());
+            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getRequestURI());
             return;
         }
 
@@ -37,21 +37,17 @@ public class DriveAccess extends Servlet {
             return;
         }
 
-        int p;
-        String path;
         File[] roots = File.listRoots();
 
-        String qs = request.getHeaders().getURI();
-
-		/* checking if ? in string */
-        if ((p = qs.indexOf('?')) != -1) {
+        /* checking if ? in string */
+        if (!request.getQueryString().equals("")) {
             doc.write("<p>Drive: ");
             for (int i = 0; i < roots.length; i++) {
                 doc.writeln("<a href=\"/admin/DriveAccess.dhtml?" + roots[i].getAbsolutePath() + "\"><b>" + roots[i].getAbsolutePath().charAt(0) + "</b></a> ");
             }
             doc.writeln("</p>");
 
-            path = qs.substring(p + 1);
+            String path = request.getQueryString();
 
             doc.writeln("<ol class=\"breadcrumb\">");
             StringTokenizer st = new StringTokenizer(path.replace('\\', '/'), "/");

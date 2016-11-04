@@ -26,13 +26,13 @@ public class Login extends Servlet {
 
         doc.writeln("<h2>HTTP Server Login</h2>");
 
-        if (request._post("dologin") != null) {
-            if (ac.doLogin(request._post("login"), request._post("password"))) {
+        if (request.getPostParameter("dologin") != null) {
+            if (ac.doLogin(request.getPostParameter("login"), request.getPostParameter("password"))) {
 
                 MainController.getInstance().println(getClass(), "Successfully logged in");
 
-                if (request._get("relocate") != null) {
-                    response.sendRedirect(request._get("relocate"));
+                if (request.getParameter("relocate") != null) {
+                    response.sendRedirect(request.getParameter("relocate"));
                 } else {
                     response.sendRedirect("/admin/Index.dhtml");
                 }
@@ -43,8 +43,8 @@ public class Login extends Servlet {
         }
 
         String location = "/admin/Login.dhtml";
-        if (request._get("relocate") != null) {
-            location += "?relocate=" + Utilities.URLEncode(request._get("relocate"));
+        if (request.getParameter("relocate") != null) {
+            location += "?relocate=" + Utilities.URLEncode(request.getParameter("relocate"));
         }
 
 

@@ -1,10 +1,9 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p/>
+ * <p>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
-
 package ro.polak.webserver.servlet;
 
 import java.io.ByteArrayInputStream;
@@ -40,6 +39,7 @@ public class HttpResponseWrapper implements HttpResponse {
     private List<Cookie> cookies;
     private static Charset charset;
     private static HeadersSerializer headersSerializer;
+    private String status;
 
     static {
         charset = Charset.forName("UTF-8");
@@ -56,6 +56,72 @@ public class HttpResponseWrapper implements HttpResponse {
         cookies = new ArrayList<>();
     }
 
+    @Override
+    public void addCookie(Cookie cookie) {
+        cookies.add(cookie);
+    }
+
+    @Override
+    public List<Cookie> getCookies() {
+        return cookies;
+    }
+
+    @Override
+    public boolean isCommitted() {
+        return headersFlushed;
+    }
+
+    @Override
+    public void sendRedirect(String location) {
+        this.setStatus(HttpResponse.STATUS_MOVED_PERMANENTLY);
+        headers.setHeader(Headers.HEADER_LOCATION, location);
+    }
+
+    @Override
+    public void setContentType(String contentType) {
+        headers.setHeader(Headers.HEADER_CONTENT_TYPE, contentType);
+    }
+
+    @Override
+    public String getContentType() {
+        return headers.getHeader(Headers.HEADER_CONTENT_TYPE);
+    }
+
+    @Override
+    public void setKeepAlive(boolean keepAlive) {
+        headers.setHeader(Headers.HEADER_CONNECTION, keepAlive ? "keep-alive" : "close");
+    }
+
+    @Override
+    public void setContentLength(int length) {
+        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, "" + length);
+    }
+
+    @Override
+    public void setContentLength(long length) {
+        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, "" + length);
+    }
+
+    @Override
+    public Headers getHeaders() {
+        return headers;
+    }
+
+    @Override
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public PrintWriter getPrintWriter() {
+        // Creating print writer if it does not exist
+        if (printWriter == null) {
+            printWriter = new ChunkedPrintWriter(out);
+        }
+
+        return printWriter;
+    }
+
     /**
      * Creates and returns a response out of the socket
      *
@@ -70,8 +136,8 @@ public class HttpResponseWrapper implements HttpResponse {
 
     /**
      * Flushes headers, returns false when headers already flushed.
-     * <p/>
-     * Can be called once per responce, after the fisrt call it "locks"
+     * <p>
+     * Can be called once per response, after the first call "locks" itself.
      *
      * @return true if headers flushed
      * @throws IllegalStateException when headers have been previously flushed.
@@ -90,7 +156,8 @@ public class HttpResponseWrapper implements HttpResponse {
             headers.setHeader(Headers.HEADER_SET_COOKIE, getCookieHeaderValue(cookie));
         }
 
-        serveStream(new ByteArrayInputStream(headersSerializer.serialize(headers).getBytes(charset)), false);
+        // TODO Use string builder
+        serveStream(new ByteArrayInputStream((getStatus() + "\r\n" + headersSerializer.serialize(headers)).getBytes(charset)), false);
     }
 
     /**
@@ -178,21 +245,20 @@ public class HttpResponseWrapper implements HttpResponse {
         }
     }
 
-    @Override
-    public void addCookie(Cookie cookie) {
-        cookies.add(cookie);
+    /**
+     * Returns HTTP status.
+     *
+     * @return
+     */
+    public String getStatus() {
+        return status;
     }
 
-    @Override
-    public List<Cookie> getCookies() {
-        return cookies;
-    }
-
-    @Override
-    public boolean isCommitted() {
-        return headersFlushed;
-    }
-
+    /**
+     * Tells whether the transfer encoding is chunked.
+     *
+     * @return
+     */
     private boolean isTransferChunked() {
         if (!getHeaders().containsHeader(Headers.HEADER_TRANSFER_ENCODING)) {
             return false;
@@ -224,56 +290,5 @@ public class HttpResponseWrapper implements HttpResponse {
         }
 
         out.flush();
-    }
-
-    @Override
-    public void sendRedirect(String location) {
-        headers.setStatus(HttpResponse.STATUS_MOVED_PERMANENTLY);
-        headers.setHeader(Headers.HEADER_LOCATION, location);
-    }
-
-    @Override
-    public void setContentType(String contentType) {
-        headers.setHeader(Headers.HEADER_CONTENT_TYPE, contentType);
-    }
-
-    @Override
-    public String getContentType() {
-        return headers.getHeader(Headers.HEADER_CONTENT_TYPE);
-    }
-
-    @Override
-    public void setKeepAlive(boolean keepAlive) {
-        headers.setHeader(Headers.HEADER_CONNECTION, keepAlive ? "keep-alive" : "close");
-    }
-
-    @Override
-    public void setContentLength(int length) {
-        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, "" + length);
-    }
-
-    @Override
-    public void setContentLength(long length) {
-        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, "" + length);
-    }
-
-    @Override
-    public Headers getHeaders() {
-        return headers;
-    }
-
-    @Override
-    public void setStatus(String status) {
-        headers.setStatus(status);
-    }
-
-    @Override
-    public PrintWriter getPrintWriter() {
-        // Creating print writer if it does not exist
-        if (printWriter == null) {
-            printWriter = new ChunkedPrintWriter(out);
-        }
-
-        return printWriter;
     }
 }

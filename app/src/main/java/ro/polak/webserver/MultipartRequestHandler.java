@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import ro.polak.utilities.RandomStringGenerator;
+import ro.polak.webserver.parser.MultipartHeadersPartParser;
 import ro.polak.webserver.servlet.UploadedFile;
 
 /**
@@ -27,6 +28,7 @@ import ro.polak.webserver.servlet.UploadedFile;
  * @since 200802
  */
 public class MultipartRequestHandler {
+
     private final String headersDeliminator = "\r\n\r\n";
     private InputStream in;
     private File currentFile;
@@ -45,10 +47,16 @@ public class MultipartRequestHandler {
     private String beginBoundary;
     private String currentDeliminator;
     private String temporaryUploadsDirectory;
-    private MultipartHeadersPart multipartHeadersPart;
+    private MultipartHeadersPart multipartHeadersPart; // TODO do not make an instance variable - bad design
     private List<UploadedFile> uploadedFiles;
     private Map<String, String> post;
     private boolean wasHandledBefore;
+
+    private static MultipartHeadersPartParser multipartHeadersPartParser;
+
+    static {
+        multipartHeadersPartParser = new MultipartHeadersPartParser();
+    }
 
     /**
      * Constructor
@@ -337,7 +345,7 @@ public class MultipartRequestHandler {
             }
 
             // Creating headers
-            multipartHeadersPart.parse(headersStringBuffered.toString());
+            multipartHeadersPart = multipartHeadersPartParser.parse(headersStringBuffered.toString());
 
             if (multipartHeadersPart.getContentType() != null) {
                 // For files

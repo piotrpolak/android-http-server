@@ -32,13 +32,14 @@ public class Cookie {
      * @throws IllegalArgumentException
      */
     public Cookie(String name, String value) throws IllegalArgumentException {
-        validateName(name);
+        checkNameForIllegalCharacters(name);
 
         this.name = name;
         this.value = value;
     }
 
-    private void validateName(String name) throws IllegalArgumentException {
+
+    private void checkNameForIllegalCharacters(String name) throws IllegalArgumentException {
         char illegalCharacters[] = {';', ' ', '\n', '\r', '\t'};
         for (char illegalChar : illegalCharacters) {
             if (name.indexOf(illegalChar) > -1) {

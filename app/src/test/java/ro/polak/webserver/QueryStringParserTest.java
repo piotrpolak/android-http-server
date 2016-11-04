@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import ro.polak.webserver.parser.QueryStringParser;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 

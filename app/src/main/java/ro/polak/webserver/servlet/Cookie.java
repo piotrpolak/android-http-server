@@ -25,8 +25,6 @@ public class Cookie {
     private boolean httpOnly;
 
     /**
-     * Default constructor.
-     *
      * @param name
      * @param value
      * @throws IllegalArgumentException
@@ -36,6 +34,42 @@ public class Cookie {
 
         this.name = name;
         this.value = value;
+    }
+
+    /**
+     * @param name
+     * @param value
+     * @throws IllegalArgumentException
+     */
+    public Cookie(String name, int value) throws IllegalArgumentException {
+        this(name, Integer.toString(value));
+    }
+
+    /**
+     * @param name
+     * @param value
+     * @throws IllegalArgumentException
+     */
+    public Cookie(String name, long value) throws IllegalArgumentException {
+        this(name, Long.toString(value));
+    }
+
+    /**
+     * @param name
+     * @param value
+     * @throws IllegalArgumentException
+     */
+    public Cookie(String name, double value) throws IllegalArgumentException {
+        this(name, Double.toString(value));
+    }
+
+    /**
+     * @param name
+     * @param value
+     * @throws IllegalArgumentException
+     */
+    public Cookie(String name, boolean value) throws IllegalArgumentException {
+        this(name, Boolean.toString(value));
     }
 
 

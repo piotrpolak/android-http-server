@@ -42,7 +42,7 @@ public class Index extends Servlet {
         printWriter.println("<p>Request URL: " + request.getRequestURL() + "</p>");
         printWriter.println("<ul>");
         printWriter.println("<li><a href='Session.dhtml'>Session example</a></li>");
-        printWriter.println("<li><a href='Cookie.dhtml'>Cookie example</a></li>");
+        printWriter.println("<li><a href='Cookies.dhtml'>Cookies example</a></li>");
         printWriter.println("<li><a href='Forbidden.dhtml'>Forbidden page example</a></li>");
         printWriter.println("</ul>");
     }

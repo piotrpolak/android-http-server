@@ -52,6 +52,8 @@ public class ServerRunnable implements Runnable {
             HttpResponseWrapper response = HttpResponseWrapper.createFromSocket(socket);
             String path = request.getRequestURI();
 
+            MainController.getInstance().println(getClass(), "Incoming request " + request.getMethod() + " " + request.getRequestURI());
+
             if (isPathIllegal(path)) {
                 (new HttpError403()).serve(response);
                 return;

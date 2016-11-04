@@ -4,6 +4,7 @@
  * <p/>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
+
 package ro.polak.webserver.servlet;
 
 import java.io.OutputStream;
@@ -31,8 +32,16 @@ public class ChunkedPrintWriter extends PrintWriter {
     }
 
     @Override
+    public void println() {
+        // Overwrites the original new line character
+        synchronized (lock) {
+            print(NEW_LINE);
+        }
+    }
+
+    @Override
     public void write(String str) {
-        String head = Long.toHexString(str.length()) + NEW_LINE;
+        String head = Long.toHexString(str.length()).toUpperCase() + NEW_LINE;
         super.write(head);
         super.write(str);
         super.write(NEW_LINE);

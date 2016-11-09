@@ -19,9 +19,29 @@ import ro.polak.webserver.servlet.HttpSessionWrapper;
  */
 public interface SessionStorage {
 
+    /**
+     * Persists session, throws exception in case of failure.
+     *
+     * @param session
+     * @throws IOException
+     */
     void persistSession(HttpSessionWrapper session) throws IOException;
 
+    /**
+     * Reads session for the given id. Returns null if there is no such session and throws
+     * exception in case of failure.
+     *
+     * @param id
+     * @return
+     * @throws IOException
+     */
     HttpSessionWrapper getSession(String id) throws IOException;
 
+    /**
+     * Removes session.
+     *
+     * @param session
+     * @return
+     */
     boolean removeSession(HttpSessionWrapper session);
 }

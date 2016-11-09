@@ -10,9 +10,9 @@ package ro.polak.webserver.controller;
 import android.os.Environment;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.ServerSocket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.WebServer;
@@ -27,6 +27,8 @@ import ro.polak.webserver.impl.ServerConfigImpl;
  */
 public class MainController implements Controller {
 
+    private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
+
     private WebServer webServer;
     private ServerGui gui;
     private Object context;
@@ -36,16 +38,11 @@ public class MainController implements Controller {
      * Making the controller constructor private for singleton
      */
     private MainController() {
-
-        final MainController that = this;
-
         Thread.currentThread().setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                ex.printStackTrace(pw);
-                that.println(ex.getStackTrace()[0].getClassName(), sw.toString());
+                final String originalClass = ex.getStackTrace()[0].getClassName();
+                Logger.getLogger(originalClass).log(Level.SEVERE, "Exception", ex);
             }
         });
     }
@@ -73,23 +70,6 @@ public class MainController implements Controller {
     }
 
     @Override
-    public void println(String text) {
-        if (gui != null) {
-            gui.println(WebServer.sdf.format(new java.util.Date()) + "  -  " + text);
-        }
-    }
-
-    @Override
-    public void println(Class aClass, String text) {
-        println(aClass.getCanonicalName(), text);
-    }
-
-    @Override
-    public void println(String aClassCanonicalName, String text) {
-        println(String.format("%1$-" + 50 + "s", aClassCanonicalName) + "  -  " + text);
-    }
-
-    @Override
     public void start() {
         gui.initialize(this);
         try {
@@ -106,7 +86,7 @@ public class MainController implements Controller {
             try {
                 serverConfig = ServerConfigImpl.createFromPath(baseConfigPath, System.getProperty("java.io.tmpdir"));
             } catch (IOException e) {
-                println(getClass(), "Unable to read server config. Using the default configuration.");
+                LOGGER.warning("Unable to read server config. Using the default configuration.");
                 serverConfig = new ServerConfigImpl();
             }
 

@@ -11,12 +11,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import ro.polak.utilities.ConfigReader;
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HttpSessionWrapper;
 
 public class AccessControl {
+
+    private static final Logger LOGGER = Logger.getLogger(AccessControl.class.getName());
 
     protected HttpSessionWrapper session;
     private static Map<String, String> config;
@@ -38,7 +41,7 @@ public class AccessControl {
     public boolean isLogged() {
         // There is no session active
         if (session == null) {
-            MainController.getInstance().println(getClass(), "No session, not logged in");
+            LOGGER.fine("No session, not logged in");
             return false;
         }
 
@@ -47,12 +50,11 @@ public class AccessControl {
             if (session.getAttribute("loggedin").equals("1")) {
                 return true;
             } else {
-                MainController.getInstance().println(getClass(), "Not logging in - session attribute is NOT null");
+                LOGGER.fine("Not logging in - session attribute is NOT null");
             }
         } else {
-            MainController.getInstance().println(getClass(), "Not logging in - session attribute is null");
+            LOGGER.fine("Not logging in - session attribute is null");
         }
-
 
         return false;
     }

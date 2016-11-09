@@ -12,8 +12,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +25,8 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ro.polak.webserver.R;
 import ro.polak.webserver.controller.Controller;
@@ -35,6 +37,8 @@ import ro.polak.webserver.gui.ServerGui;
  * The main server Android activity
  */
 public class MainActivity extends AppCompatActivity implements ServerGui {
+
+    private static final Logger LOGGER = Logger.getLogger(MainActivity.class.getName());
 
     private TextView status, ipText, consoleText;
     private Button actionButton, backgroundButton, quitButton;
@@ -213,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements ServerGui {
                     }
                 }
             } catch (SocketException ex) {
-                ex.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Unable to obtain own IP address", e);
             }
         }
 

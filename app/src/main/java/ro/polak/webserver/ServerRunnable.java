@@ -9,6 +9,8 @@ package ro.polak.webserver;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.error.HttpError403;
@@ -26,6 +28,8 @@ import ro.polak.webserver.servlet.HttpResponseWrapper;
  * @since 200802
  */
 public class ServerRunnable implements Runnable {
+
+    private static final Logger LOGGER = Logger.getLogger(ServerRunnable.class.getName());
 
     private Socket socket;
     private WebServer webServer;
@@ -52,7 +56,9 @@ public class ServerRunnable implements Runnable {
             HttpResponseWrapper response = HttpResponseWrapper.createFromSocket(socket);
             String path = request.getRequestURI();
 
-            MainController.getInstance().println(getClass(), "Incoming request " + request.getMethod() + " " + request.getRequestURI());
+            LOGGER.log(Level.INFO, "Handling request {0} {1}", new Object[]{
+                    request.getMethod(), request.getRequestURI()
+            });
 
             if (isPathIllegal(path)) {
                 (new HttpError403()).serve(response);

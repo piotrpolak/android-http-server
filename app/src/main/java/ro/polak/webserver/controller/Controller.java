@@ -18,28 +18,6 @@ import ro.polak.webserver.WebServer;
 public interface Controller {
 
     /**
-     * Prints the log line into the specific output.
-     *
-     * @param text
-     */
-    void println(String text);
-
-    /**
-     * Prints the log line into the specific output.
-     *
-     * @param text
-     */
-    void println(Class aClass, String text);
-
-    /**
-     * Prints the log line into the specific output.
-     *
-     * @param aClassCanonicalName
-     * @param text
-     */
-    void println(String aClassCanonicalName, String text);
-
-    /**
      * Starts the server logic
      */
     void start();

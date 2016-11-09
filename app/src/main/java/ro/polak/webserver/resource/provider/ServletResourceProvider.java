@@ -8,6 +8,8 @@
 package ro.polak.webserver.resource.provider;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.Headers;
@@ -33,6 +35,8 @@ import ro.polak.webserver.session.storage.FileSessionStorage;
  * @since 201509
  */
 public class ServletResourceProvider implements ResourceProvider {
+
+    private static final Logger LOGGER = Logger.getLogger(ServletResourceProvider.class.getName());
 
     // Initialize servlet service in a static way
     private static ServletLoader servletLoader;
@@ -71,13 +75,13 @@ public class ServletResourceProvider implements ResourceProvider {
                 HttpError500 error500 = new HttpError500();
                 error500.setReason(e);
                 error500.serve(response);
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Servlet exception", e);
             } catch (Error e) {
                 // For compilation problems
                 HttpError500 error500 = new HttpError500();
                 error500.setReason(e);
                 error500.serve(response);
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "Servlet exception", e);
             }
 
             return true;
@@ -101,7 +105,7 @@ public class ServletResourceProvider implements ResourceProvider {
             try {
                 servletContext.handleSession(session, response);
             } catch (IOException e) {
-                MainController.getInstance().println(getClass(), "Unable to persist session: " + e.getMessage());
+                LOGGER.log(Level.WARNING, "Unable to persist session", e);
             }
         }
 

@@ -22,13 +22,6 @@ public interface ServerGui {
     void initialize(Controller controller);
 
     /**
-     * GUI print debug method
-     *
-     * @param text
-     */
-    void println(String text);
-
-    /**
      * GUI method called by controller on stop
      */
     void stop();

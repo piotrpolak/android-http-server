@@ -13,9 +13,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HttpSessionWrapper;
 
 /**
@@ -25,6 +26,8 @@ import ro.polak.webserver.servlet.HttpSessionWrapper;
  * @since 201610
  */
 public class FileSessionStorage implements SessionStorage {
+
+    private static final Logger LOGGER = Logger.getLogger(FileSessionStorage.class.getName());
 
     private String tempPath;
     private static Pattern pattern = Pattern.compile("[a-z]+");
@@ -52,7 +55,8 @@ public class FileSessionStorage implements SessionStorage {
         ObjectOutputStream out = new ObjectOutputStream(fos);
         out.writeObject(session);
 
-        MainController.getInstance().println(getClass(), "Persisted session: " + tempPath + session.getId());
+        LOGGER.log(Level.FINE, "Persisted session {0} in {1}",
+                new Object[]{session.getId(), tempPath});
 
         try {
             out.close();
@@ -80,10 +84,12 @@ public class FileSessionStorage implements SessionStorage {
 
                 } catch (ClassNotFoundException e) {
                 } catch (IOException e) {
-                    MainController.getInstance().println(getClass(), "Unable to read session: " + tempPath + id);
+                    LOGGER.log(Level.WARNING,
+                            "Unable to read session " + id + " under " + tempPath, e);
                 }
             } else {
-                MainController.getInstance().println(getClass(), "Session file does not exist: " + tempPath + id);
+                LOGGER.log(Level.FINE, "Session file does not exist {0} under {1}",
+                        new Object[]{id, tempPath});
             }
         }
 

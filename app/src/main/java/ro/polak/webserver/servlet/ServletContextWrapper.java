@@ -1,16 +1,17 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p>
+ * <p/>
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
 package ro.polak.webserver.servlet;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ro.polak.utilities.RandomStringGenerator;
-import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.session.storage.SessionStorage;
 
 /**
@@ -20,6 +21,8 @@ import ro.polak.webserver.session.storage.SessionStorage;
  * @since 201610
  */
 public class ServletContextWrapper implements ServletContext {
+
+    private static final Logger LOGGER = Logger.getLogger(ServletContextWrapper.class.getName());
 
     private SessionStorage sessionStorage;
 
@@ -48,7 +51,8 @@ public class ServletContextWrapper implements ServletContext {
 
                 if (isSessionExpired(session)) {
                     sessionStorage.removeSession(session);
-                    MainController.getInstance().println(getClass(), "Removed expired session: " + session.getId());
+                    LOGGER.log(Level.FINE, "Removed expired session {0}",
+                            new Object[]{session.getId()});
                     session = null;
                 }
             }
@@ -67,7 +71,8 @@ public class ServletContextWrapper implements ServletContext {
     public HttpSessionWrapper createNewSession() {
         HttpSessionWrapper session = new HttpSessionWrapper(RandomStringGenerator.generate());
         session.setServletContext(this);
-        MainController.getInstance().println(getClass(), "Created a new session: " + session.getId());
+        LOGGER.log(Level.FINE, "Created a new session {0}",
+                new Object[]{session.getId()});
         return session;
     }
 
@@ -84,7 +89,8 @@ public class ServletContextWrapper implements ServletContext {
             cookie.setMaxAge(-100);
 
             sessionStorage.removeSession(session);
-            MainController.getInstance().println(getClass(), "Invalidated session: " + session.getId());
+            LOGGER.log(Level.FINE, "Invalidated session {0}",
+                    new Object[]{session.getId()});
         } else {
             cookie.setValue(session.getId());
             sessionStorage.persistSession(session);

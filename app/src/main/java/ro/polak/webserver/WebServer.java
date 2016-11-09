@@ -21,6 +21,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.controller.Controller;
@@ -41,7 +43,8 @@ import ro.polak.webserver.servlet.HttpResponseWrapper;
  */
 public class WebServer extends Thread {
 
-    // Some static info
+    private static final Logger LOGGER = Logger.getLogger(WebServer.class.getName());
+
     public static final String NAME = "AndroidHTTPServer";
     public static final String VERSION = "0.1.5-dev";
     public static final String SIGNATURE = NAME + "/" + VERSION;
@@ -87,7 +90,7 @@ public class WebServer extends Thread {
                 executorPool.execute(new ServerRunnable(socket, this));
             } catch (IOException e) {
                 if (listen) {
-                    controller.println(getClass(), "Exception: " + e.getClass().getName() + " " + e.getMessage());
+                    LOGGER.log(Level.SEVERE, "Communication error", e);
                 }
             }
         }
@@ -145,24 +148,31 @@ public class WebServer extends Thread {
         listen = true;
 
         if (!(new File(serverConfig.getDocumentRootPath()).isDirectory())) {
-            controller.println(getClass(), "WARNING: DocumentRoot does not exist! PATH: " + serverConfig.getDocumentRootPath());
+            LOGGER.log(Level.WARNING, "DocumentRoot does not exist! PATH {0}", new Object[]{
+                    serverConfig.getDocumentRootPath()
+            });
         }
 
         if (serverConfig.getMaxServerThreads() < 1) {
-            controller.println(getClass(), "ERROR: MaxThreads should be greater or equal to 1! " + serverConfig.getMaxServerThreads() + " is given.");
+            LOGGER.log(Level.SEVERE, "MaxThreads should be greater or equal to 1! {0} is given.", new Object[]{
+                    serverConfig.getMaxServerThreads()
+            });
             return false;
         }
 
         try {
             serverSocket.bind(new InetSocketAddress(serverConfig.getListenPort()));
         } catch (IOException e) {
-            controller.println(getClass(), "ERROR: Unable to start server: unable to listen on port " + serverConfig.getListenPort() + " - " + e.getMessage());
+            LOGGER.log(Level.SEVERE, "Unable to start server: unable to listen on port " +
+                    serverConfig.getListenPort(), e);
             return false;
         }
 
         Utilities.clearDirectory(serverConfig.getTempPath());
 
-        controller.println(getClass(), "Server has been started. Listening on port " + serverConfig.getListenPort());
+        LOGGER.log(Level.INFO, "Server has been started. Listening on port {0}", new Object[]{
+                serverConfig.getListenPort()
+        });
         start();
         return true;
     }
@@ -178,7 +188,7 @@ public class WebServer extends Thread {
             } catch (IOException e) {
             }
         }
-        controller.println(getClass(), "Server has been stopped");
+        LOGGER.info("Server has been stopped.");
     }
 
     /**

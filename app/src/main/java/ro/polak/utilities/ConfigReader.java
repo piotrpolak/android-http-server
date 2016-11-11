@@ -1,7 +1,7 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p/>
+ * <p>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
@@ -31,37 +31,36 @@ public class ConfigReader {
      */
     public Map<String, String> read(InputStream in) throws IOException {
         HashMap<String, String> values = new HashMap<>();
-        String line;
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String line;
 
         while ((line = reader.readLine()) != null) {
-
-            // Ignoring any line that is shorter than 3 characters
-            if (line.length() < 3) {
-                continue;
-            }
-            // Ignoring comments
-            if (line.charAt(0) == '#') {
+            if (isEmptyLine(line)) {
                 continue;
             }
 
-            // Protection against empty parameter name
-            int firstSpacePosition = line.indexOf(" ");
-            if (firstSpacePosition < 1) {
-                continue;
-            }
-
-            String parameterName = line.substring(0, firstSpacePosition);
-            String parameterValue = line.substring(firstSpacePosition + 1).trim();
-            values.put(parameterName, parameterValue);
+            String[] parameter = line.split(" ", 1);
+            values.put(parameter[0].trim(), parameter[1].trim());
         }
 
         try {
             reader.close();
         } catch (IOException e) {
-
         }
 
         return values;
+    }
+
+    /**
+     * Any line should be:
+     * - composed of at least 3 characters
+     * - should not begin with #
+     * - should contain at least one space
+     *
+     * @param line
+     * @return
+     */
+    private boolean isEmptyLine(String line) {
+        return line.length() < 3 || line.trim().charAt(0) == '#' || line.indexOf(" ") < 1;
     }
 }

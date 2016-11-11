@@ -19,6 +19,8 @@ import ro.polak.webserver.Headers;
  */
 public class HeadersParser {
 
+    private static final String NEW_LINE = "\r\n";
+
     /**
      * Parses message headers.
      *
@@ -39,7 +41,7 @@ public class HeadersParser {
         Headers headers = new Headers();
 
         // Mandatory \r https://www.w3.org/Protocols/rfc2616/rfc2616-sec2.html#sec2.2
-        StringTokenizer st = new StringTokenizer(headersString, "\r\n");
+        StringTokenizer st = new StringTokenizer(headersString, NEW_LINE);
         String lastHeaderName = null;
         StringBuilder lastHeaderValue = new StringBuilder();
 

@@ -1,7 +1,7 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p/>
+ * <p>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
@@ -29,7 +29,10 @@ import ro.polak.webserver.servlet.UploadedFile;
  */
 public class MultipartRequestHandler {
 
-    private final String headersDeliminator = "\r\n\r\n";
+    private static final String NEW_LINE = "\r\n";
+    private static final String BOUNDARY_BEGIN_MARK = "--";
+
+    private final String headersDeliminator = NEW_LINE + NEW_LINE;
     private InputStream in;
     private File currentFile;
     private FileOutputStream fos;
@@ -71,8 +74,8 @@ public class MultipartRequestHandler {
         this.expectedPostLength = expectedPostLength;
         this.temporaryUploadsDirectory = temporaryUploadsDirectory;
 
-        endBoundary = "\r\n--" + boundary;
-        beginBoundary = "--" + boundary;
+        endBoundary = NEW_LINE + BOUNDARY_BEGIN_MARK + boundary;
+        beginBoundary = BOUNDARY_BEGIN_MARK + boundary;
         allBytesRead = 0;
         wasHandledBefore = false;
         headersStringBuffered = new StringBuilder();

@@ -32,6 +32,8 @@ import ro.polak.webserver.WebServer;
  */
 public class HttpResponseWrapper implements HttpResponse {
 
+    private static final String NEW_LINE = "\r\n";
+
     private Headers headers;
     private OutputStream out;
     private ChunkedPrintWriter printWriter;
@@ -157,7 +159,7 @@ public class HttpResponseWrapper implements HttpResponse {
         }
 
         // TODO Use string builder
-        serveStream(new ByteArrayInputStream((getStatus() + "\r\n" + headersSerializer.serialize(headers)).getBytes(charset)), false);
+        serveStream(new ByteArrayInputStream((getStatus() + NEW_LINE + headersSerializer.serialize(headers)).getBytes(charset)), false);
     }
 
     /**

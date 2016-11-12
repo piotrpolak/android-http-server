@@ -59,7 +59,7 @@ public class ServerRunnable implements Runnable {
             });
 
             if (isPathIllegal(path)) {
-                (new HttpError403()).serve(response);
+                (new HttpError403(serverConfig.getErrorDocument403Path())).serve(response);
                 return;
             }
 
@@ -71,7 +71,7 @@ public class ServerRunnable implements Runnable {
                     isResourceLoaded = loadDirectoryIndexResource(request, response, path);
                 }
                 if (!isResourceLoaded) {
-                    (new HttpError404()).serve(response);
+                    (new HttpError404(serverConfig.getErrorDocument404Path())).serve(response);
                 }
             } else {
                 serveMethodNotAllowed(response);

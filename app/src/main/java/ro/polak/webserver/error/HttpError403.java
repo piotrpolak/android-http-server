@@ -10,7 +10,6 @@ package ro.polak.webserver.error;
 import java.io.File;
 import java.io.IOException;
 
-import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
 
@@ -22,13 +21,22 @@ import ro.polak.webserver.servlet.HttpResponseWrapper;
  */
 public class HttpError403 implements HttpError {
 
+    private String errorDocumentPath;
+
+    /**
+     * Default constructor.
+     *
+     * @param errorDocumentPath
+     */
+    public HttpError403(String errorDocumentPath) {
+        this.errorDocumentPath = errorDocumentPath;
+    }
+
     @Override
     public void serve(HttpResponse response) throws IOException {
         response.setStatus(HttpResponse.STATUS_ACCESS_DENIED);
         response.setContentType("text/html");
-
-        String errorDocumentPath = MainController.getInstance().getWebServer().getServerConfig().getErrorDocument403Path();
-
+        
         if (errorDocumentPath == null || errorDocumentPath.equals("")) {
             HtmlErrorDocument doc = new HtmlErrorDocument();
             doc.setTitle("Error 403 - Forbidden");

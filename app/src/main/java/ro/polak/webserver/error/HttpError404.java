@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 
 import ro.polak.webserver.Statistics;
-import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
 
@@ -23,14 +22,23 @@ import ro.polak.webserver.servlet.HttpResponseWrapper;
  */
 public class HttpError404 implements HttpError {
 
+    private String errorDocumentPath;
+
+    /**
+     * Default constructor.
+     *
+     * @param errorDocumentPath
+     */
+    public HttpError404(String errorDocumentPath) {
+        this.errorDocumentPath = errorDocumentPath;
+    }
+
     @Override
     public void serve(HttpResponse response) throws IOException {
         Statistics.addError404();
 
         response.setStatus(HttpResponse.STATUS_NOT_FOUND);
         response.setContentType("text/html");
-
-        String errorDocumentPath = MainController.getInstance().getWebServer().getServerConfig().getErrorDocument404Path();
 
         if (errorDocumentPath == null || errorDocumentPath.equals("")) {
             HtmlErrorDocument doc = new HtmlErrorDocument();

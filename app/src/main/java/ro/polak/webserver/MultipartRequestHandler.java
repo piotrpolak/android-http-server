@@ -1,7 +1,7 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p>
+ * <p/>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
@@ -55,11 +55,7 @@ public class MultipartRequestHandler {
     private Map<String, String> post;
     private boolean wasHandledBefore;
 
-    private static MultipartHeadersPartParser multipartHeadersPartParser;
-
-    static {
-        multipartHeadersPartParser = new MultipartHeadersPartParser();
-    }
+    private static MultipartHeadersPartParser multipartHeadersPartParser = new MultipartHeadersPartParser();
 
     /**
      * Constructor

@@ -40,10 +40,11 @@ public class WebServer extends Thread {
     public static final String NAME = "AndroidHTTPServer";
     public static final String VERSION = "0.1.5-dev";
     public static final String SIGNATURE = NAME + "/" + VERSION;
-    public static final SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US);
+    public static final SimpleDateFormat sdf;
 
     static {
-        WebServer.sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
+        sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US);
+        sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
     }
 
     private boolean listen;

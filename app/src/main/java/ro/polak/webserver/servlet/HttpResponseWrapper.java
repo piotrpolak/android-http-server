@@ -1,7 +1,7 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p>
+ * <p/>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 package ro.polak.webserver.servlet;
@@ -34,19 +34,15 @@ public class HttpResponseWrapper implements HttpResponse {
 
     private static final String NEW_LINE = "\r\n";
 
+    private static Charset charset = Charset.forName("UTF-8");
+    private static HeadersSerializer headersSerializer = new HeadersSerializer();
+
     private Headers headers;
     private OutputStream out;
     private ChunkedPrintWriter printWriter;
     private boolean headersFlushed;
     private List<Cookie> cookies;
-    private static Charset charset;
-    private static HeadersSerializer headersSerializer;
     private String status;
-
-    static {
-        charset = Charset.forName("UTF-8");
-        headersSerializer = new HeadersSerializer();
-    }
 
     /**
      * Default constructor.

@@ -32,19 +32,12 @@ public class HttpRequestWrapperFactory {
 
     private static String BOUNDARY_START = "boundary=";
 
-    private static HeadersParser headersParser;
-    private static QueryStringParser queryStringParser;
-    private static RequestStatusParser statusParser;
-    private static CookieParser cookieParser;
+    private static HeadersParser headersParser = new HeadersParser();
+    private static QueryStringParser queryStringParser = new QueryStringParser();
+    private static RequestStatusParser statusParser = new RequestStatusParser();
+    private static CookieParser cookieParser = new CookieParser();
 
     private String tempPath;
-
-    static {
-        headersParser = new HeadersParser();
-        queryStringParser = new QueryStringParser();
-        statusParser = new RequestStatusParser();
-        cookieParser = new CookieParser();
-    }
 
     /**
      * Default constructor.

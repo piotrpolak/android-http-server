@@ -39,7 +39,7 @@ public class ConfigReader {
                 continue;
             }
 
-            String[] parameter = line.split(" ", 1);
+            String[] parameter = line.split(" ", 2);
             values.put(parameter[0].trim(), parameter[1].trim());
         }
 

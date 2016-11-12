@@ -7,6 +7,7 @@
 
 package admin;
 
+import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.servlet.HttpRequest;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.Servlet;
@@ -15,7 +16,8 @@ public class Logout extends Servlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        AccessControl ac = new AccessControl(request.getSession());
+        ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
+        AccessControl ac = new AccessControl(serverConfig, request.getSession());
         ac.logout();
 
         HTMLDocument doc = new HTMLDocument("Logout", false);

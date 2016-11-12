@@ -7,6 +7,7 @@
 
 package admin;
 
+import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.servlet.HttpRequest;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.Servlet;
@@ -14,7 +15,8 @@ import ro.polak.webserver.servlet.Servlet;
 public class Index extends Servlet {
 
     public void service(HttpRequest request, HttpResponse response) {
-        AccessControl ac = new AccessControl(request.getSession());
+        ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
+        AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
             response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getRequestURI());
             return;

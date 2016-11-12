@@ -9,6 +9,7 @@ package example;
 
 import java.io.IOException;
 
+import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.error.HttpError403;
 import ro.polak.webserver.servlet.HttpRequest;
@@ -23,7 +24,8 @@ public class Forbidden extends Servlet {
     @Override
     public void service(HttpRequest request, HttpResponse response) {
         try {
-            new HttpError403(MainController.getInstance().getWebServer().getServerConfig().getErrorDocument403Path()).serve(response);
+            String errorDocument403Path = ((ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName())).getErrorDocument403Path();
+            new HttpError403(errorDocument403Path).serve(response);
         } catch (IOException e) {
         }
     }

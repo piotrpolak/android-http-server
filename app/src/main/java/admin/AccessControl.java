@@ -11,25 +11,29 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ro.polak.utilities.ConfigReader;
-import ro.polak.webserver.controller.MainController;
+import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.servlet.HttpSessionWrapper;
 
 public class AccessControl {
 
     private static final Logger LOGGER = Logger.getLogger(AccessControl.class.getName());
 
-    protected HttpSessionWrapper session;
-    private static Map<String, String> config;
+    private ServerConfig serverConfig;
+    private HttpSessionWrapper session;
+
 
     /**
      * Default constructor
      *
+     * @param serverConfig
      * @param session
      */
-    public AccessControl(HttpSessionWrapper session) {
+    public AccessControl(ServerConfig serverConfig, HttpSessionWrapper session) {
+        this.serverConfig = serverConfig;
         this.session = session;
     }
 
@@ -76,13 +80,16 @@ public class AccessControl {
     public boolean doLogin(String login, String password) {
         boolean logged = false;
         try {
-            // TODO Get the user from storage
-            if (AccessControl.getConfig().get("_managementLogin").equals(login) && AccessControl.getConfig().get("_managementPassword").equals(password)) {
+            Map<String, String> config = getConfig(serverConfig);
+            if (config.get("_managementLogin").equals(login) && config.get("_managementPassword").equals(password)) {
                 session.setAttribute("loggedin", "1");
                 logged = true;
+            } else {
+                LOGGER.fine("Not logging in - wrong password");
             }
         } catch (NullPointerException e) {
             logged = false;
+            LOGGER.fine("Not logging in - null pointer exception");
         }
         return logged;
     }
@@ -90,21 +97,23 @@ public class AccessControl {
     /**
      * Returns server config
      *
+     * @param serverConfig
      * @return
      */
-    public static Map<String, String> getConfig() {
-        // Initializes config only once
-        if (config == null) {
-            try {
-                ConfigReader reader = new ConfigReader();
-                String configPath = MainController.getInstance().getWebServer().getServerConfig().getBasePath() + "admin.conf";
-                config = reader.read(new FileInputStream(configPath));
-            } catch (IOException e) {
-                // TODO Log error
+    public static Map<String, String> getConfig(ServerConfig serverConfig) {
+        Map<String, String> config = null;
+        try {
+            ConfigReader reader = new ConfigReader();
+            String configPath = serverConfig.getBasePath() + "admin.conf";
+            config = reader.read(new FileInputStream(configPath));
+        } catch (IOException e) {
+            LOGGER.log(Level.FINE, "Unable to read config", e);
+        } finally {
+            if (config == null) {
+                LOGGER.fine("Creating a default config");
                 config = new HashMap<>();
             }
         }
-
         return config;
     }
 }

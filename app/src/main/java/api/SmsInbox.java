@@ -37,8 +37,7 @@ public class SmsInbox extends Servlet {
 
         // Querying
         String[] projection = {"address", "body", "date", "date_sent"};
-        Cursor cursor = ((Activity) MainController.getInstance()
-                .getAndroidContext())
+        Cursor cursor = ((Activity) getServletContext().getAttribute("android.content.Context"))
                 .getContentResolver()
                 .query(Uri.parse("content://sms/inbox"), projection, null, null, "date DESC");
 

@@ -14,7 +14,6 @@ import android.telephony.SmsManager;
 
 import org.json.JSONException;
 
-import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.servlet.HttpRequest;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.Servlet;
@@ -99,7 +98,7 @@ public class SmsSend extends Servlet {
     }
 
     private void sendSMS(String phoneNo, String message) {
-        Activity a = ((Activity) MainController.getInstance().getAndroidContext());
+        Activity a = (Activity) getServletContext().getAttribute("android.content.Context");
 
         PendingIntent pi = PendingIntent.getActivity(a, 0, new Intent(a, a.getClass()), 0);
         SmsManager sms = SmsManager.getDefault();

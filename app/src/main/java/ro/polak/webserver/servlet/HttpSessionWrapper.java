@@ -28,22 +28,32 @@ public class HttpSessionWrapper implements HttpSession, Serializable {
     private long lastAccessedTime;
     private int maxInactiveInterval = 3600;
     private String id;
-    private Map<String, String> vars;
+    private Map<String, Object> attributes;
 
     /**
      * @param id
      */
     public HttpSessionWrapper(String id) {
         this.id = id;
-        vars = new HashMap<>();
+        attributes = new HashMap<>();
         creationTime = lastAccessedTime = System.currentTimeMillis();
     }
 
     @Override
-    public String getAttribute(String name) throws IllegalStateException {
+    public void setAttribute(String name, Object value) throws IllegalStateException {
         checkInvalidatedSession();
-        if (vars.containsKey(name)) {
-            return vars.get(name);
+        if (value == null) {
+            attributes.remove(name);
+        } else {
+            attributes.put(name, value);
+        }
+    }
+
+    @Override
+    public Object getAttribute(String name) throws IllegalStateException {
+        checkInvalidatedSession();
+        if (attributes.containsKey(name)) {
+            return attributes.get(name);
         }
 
         return null;
@@ -53,7 +63,7 @@ public class HttpSessionWrapper implements HttpSession, Serializable {
     public Enumeration getAttributeNames() throws IllegalStateException {
         checkInvalidatedSession();
 
-        final Iterator iterator = vars.keySet().iterator();
+        final Iterator iterator = attributes.keySet().iterator();
 
         return new Enumeration() {
             @Override
@@ -111,23 +121,13 @@ public class HttpSessionWrapper implements HttpSession, Serializable {
     @Override
     public void removeAttribute(String name) throws IllegalStateException {
         checkInvalidatedSession();
-        vars.remove(name);
+        attributes.remove(name);
     }
 
     @Override
     public boolean isNew() {
         checkInvalidatedSession();
         return creationTime == lastAccessedTime;
-    }
-
-    @Override
-    public void setAttribute(String name, String value) throws IllegalStateException {
-        checkInvalidatedSession();
-        if (value == null) {
-            vars.remove(name);
-        } else {
-            vars.put(name, value);
-        }
     }
 
     /**

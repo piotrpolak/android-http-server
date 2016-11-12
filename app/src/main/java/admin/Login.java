@@ -10,6 +10,7 @@ package admin;
 import java.util.logging.Logger;
 
 import ro.polak.utilities.Utilities;
+import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.servlet.HttpRequest;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.Servlet;
@@ -20,7 +21,8 @@ public class Login extends Servlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        AccessControl ac = new AccessControl(request.getSession());
+        ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
+        AccessControl ac = new AccessControl(serverConfig, request.getSession());
 
         HTMLDocument doc = new HTMLDocument("Login", false);
         doc.setOwnerClass(getClass().getSimpleName());

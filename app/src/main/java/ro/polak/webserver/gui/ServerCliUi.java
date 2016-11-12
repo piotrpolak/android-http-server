@@ -7,6 +7,7 @@
 
 package ro.polak.webserver.gui;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ro.polak.webserver.controller.Controller;
@@ -28,6 +29,10 @@ public class ServerCliUi implements ServerGui {
         System.setProperty("java.util.logging.SimpleFormatter.format",
                 "%1$tF %1$tT  - %4$s  -  %2$s  -  %5$s%6$s%n");
 
+        Logger rootLog = Logger.getLogger("");
+        rootLog.setLevel(Level.FINE);
+        rootLog.getHandlers()[0].setLevel(Level.FINE);
+
         ServerGui gui = new ServerCliUi();
         System.out.println("   __ __ ______ ______ ___    ____                         \n" +
                 "  / // //_  __//_  __// _ \\  / __/___  ____ _  __ ___  ____\n" +
@@ -35,7 +40,7 @@ public class ServerCliUi implements ServerGui {
                 "/_//_/  /_/    /_/  /_/    /___/ \\__//_/   |___/ \\__//_/   \n");
         System.out.println("https://github.com/piotrpolak/android-http-server");
         System.out.println("");
-        MainController mainController = MainController.getInstance();
+        MainController mainController = new MainController();
         mainController.setGui(gui);
         mainController.setAndroidContext(null);
         mainController.start();

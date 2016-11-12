@@ -17,13 +17,22 @@ import java.util.Enumeration;
 interface HttpSession {
 
     /**
+     * Sets session attribute.
+     *
+     * @param name
+     * @param value
+     * @throws IllegalStateException
+     */
+    void setAttribute(String name, Object value) throws IllegalStateException;
+
+    /**
      * Gets session attribute of the specified name.
      *
      * @param name Attribute name
      * @return
      * @throws IllegalStateException
      */
-    String getAttribute(String name) throws IllegalStateException;
+    Object getAttribute(String name) throws IllegalStateException;
 
     /**
      * Returns enumeration representing attribute names.
@@ -99,13 +108,4 @@ interface HttpSession {
      * @throws IllegalStateException
      */
     boolean isNew() throws IllegalStateException;
-
-    /**
-     * Sets session attribute.
-     *
-     * @param name
-     * @param value
-     * @throws IllegalStateException
-     */
-    void setAttribute(String name, String value) throws IllegalStateException;
 }

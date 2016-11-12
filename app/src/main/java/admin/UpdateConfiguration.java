@@ -10,7 +10,7 @@ package admin;
 import java.io.File;
 
 import ro.polak.utilities.Utilities;
-import ro.polak.webserver.controller.MainController;
+import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.servlet.FileUpload;
 import ro.polak.webserver.servlet.HttpRequest;
 import ro.polak.webserver.servlet.HttpResponse;
@@ -20,7 +20,8 @@ public class UpdateConfiguration extends Servlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        AccessControl ac = new AccessControl(request.getSession());
+        ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
+        AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
             response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getRequestURI());
             return;
@@ -36,7 +37,7 @@ public class UpdateConfiguration extends Servlet {
             doc.writeln("<p>Error: no file uploaded (" + fu.size() + ")</p>");
         } else {
 
-            String basePath = MainController.getInstance().getWebServer().getServerConfig().getBasePath();
+            String basePath = ((ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName())).getBasePath();
 
             if (Utilities.getExtension(fu.get("file").getFileName()).equals("conf")) {
 

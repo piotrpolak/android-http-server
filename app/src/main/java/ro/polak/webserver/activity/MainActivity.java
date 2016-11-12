@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements ServerGui {
 
         status.setText("Initializing");
 
-        mainController = MainController.getInstance();
+        mainController = new MainController();
         mainController.setGui(this);
         mainController.setAndroidContext(this);
         mainController.start();

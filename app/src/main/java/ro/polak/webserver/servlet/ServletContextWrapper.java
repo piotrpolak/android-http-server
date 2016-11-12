@@ -8,6 +8,10 @@
 package ro.polak.webserver.servlet;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +32,7 @@ public class ServletContextWrapper implements ServletContext {
 
     private ServerConfig serverConfig;
     private SessionStorage sessionStorage;
+    private Map<String, Object> attributes;
 
     /**
      * Default constructor.
@@ -38,12 +43,49 @@ public class ServletContextWrapper implements ServletContext {
     public ServletContextWrapper(ServerConfig serverConfig, SessionStorage sessionStorage) {
         this.serverConfig = serverConfig;
         this.sessionStorage = sessionStorage;
+        attributes = new HashMap<>();
     }
 
     @Override
     public String getMimeType(String file) {
         return serverConfig.getMimeTypeMapping().
                 getMimeTypeByExtension(Utilities.getExtension(file));
+    }
+
+    @Override
+    public void setAttribute(String name, Object value) {
+        if (value == null) {
+            attributes.remove(name);
+        } else {
+            attributes.put(name, value);
+        }
+    }
+
+    @Override
+    public Object getAttribute(String name) {
+        if (attributes.containsKey(name)) {
+            return attributes.get(name);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Enumeration getAttributeNames() {
+
+        final Iterator iterator = attributes.keySet().iterator();
+
+        return new Enumeration() {
+            @Override
+            public boolean hasMoreElements() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public Object nextElement() {
+                return iterator.next();
+            }
+        };
     }
 
     /**

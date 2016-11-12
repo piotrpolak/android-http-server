@@ -28,7 +28,7 @@ public class Session extends Servlet {
         // Getting the page hits from session if exists
         if (request.getSession().getAttribute(attributeName) != null) {
             // Please note the session attribute is of String type
-            pageHits = Integer.parseInt(request.getSession().getAttribute(attributeName));
+            pageHits = Integer.parseInt((String) request.getSession().getAttribute(attributeName));
         }
 
         // Incrementing hits counter

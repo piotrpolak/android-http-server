@@ -7,6 +7,8 @@
 
 package ro.polak.webserver.servlet;
 
+import java.util.Enumeration;
+
 /**
  * Servlet context.
  *
@@ -14,6 +16,32 @@ package ro.polak.webserver.servlet;
  * @since 201610
  */
 public interface ServletContext {
+
+    /**
+     * Sets context attribute.
+     *
+     * @param name
+     * @param value
+     * @throws IllegalStateException
+     */
+    void setAttribute(String name, Object value);
+
+    /**
+     * Gets context attribute of the specified name.
+     *
+     * @param name Attribute name
+     * @return
+     * @throws IllegalStateException
+     */
+    Object getAttribute(String name);
+
+    /**
+     * Returns enumeration representing attribute names.
+     *
+     * @return
+     * @throws IllegalStateException
+     */
+    Enumeration getAttributeNames();
 
     /**
      * Returns the MIME type of the specified file, or null if the MIME type is not known.

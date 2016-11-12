@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.StringTokenizer;
 
 import ro.polak.utilities.Utilities;
+import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.servlet.HttpRequest;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.Servlet;
@@ -19,7 +20,8 @@ public class DriveAccess extends Servlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        AccessControl ac = new AccessControl(request.getSession());
+        ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
+        AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
             response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getRequestURI());
             return;
@@ -30,7 +32,7 @@ public class DriveAccess extends Servlet {
 
         doc.writeln("<div class=\"page-header\"><h1>Drive Access</h1></div>");
 
-        if (!AccessControl.getConfig().get("_managementEnableDriveAccess").equals("On")) {
+        if (!AccessControl.getConfig(serverConfig).get("_managementEnableDriveAccess").equals("On")) {
             doc.writeln("<div class=\"alert alert-warning\" role=\"alert\">Drive Access option has been disabled in configuration.</div>");
             doc.writeln("<p>See <b>httpd.conf</b>, parameter <b>_managementEnableDriveAccess</b> must be <b>On</b>.</p>");
             response.getPrintWriter().print(doc.toString());

@@ -43,12 +43,11 @@ public class MainController implements Controller {
     private WebServer webServer;
     private ServerGui gui;
     private Object context;
-    private static MainController instance;
 
     /**
      * Making the controller constructor private for singleton
      */
-    private MainController() {
+    public MainController() {
         Thread.currentThread().setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
@@ -56,19 +55,6 @@ public class MainController implements Controller {
                 Logger.getLogger(originalClass).log(Level.SEVERE, "Exception", ex);
             }
         });
-    }
-
-    /**
-     * Singleton method
-     *
-     * @return
-     */
-    public static MainController getInstance() {
-        if (MainController.instance == null) {
-            MainController.instance = new MainController();
-        }
-
-        return MainController.instance;
     }
 
     /**
@@ -161,9 +147,18 @@ public class MainController implements Controller {
 
     private ServletResourceProvider getServletResourceProvider(ServerConfig serverConfig) {
         return new ServletResourceProvider(
-                new ServletContextWrapper(serverConfig,
-                        new FileSessionStorage(serverConfig.getTempPath())),
+                getServletContext(serverConfig),
                 serverConfig.getServletMappedExtension());
+    }
+
+    private ServletContextWrapper getServletContext(ServerConfig serverConfig) {
+        ServletContextWrapper servletContext = new ServletContextWrapper(serverConfig,
+                new FileSessionStorage(serverConfig.getTempPath()));
+
+        servletContext.setAttribute(ServerConfig.class.getName(), serverConfig);
+        servletContext.setAttribute("android.content.Context", getAndroidContext()); // Must be Android independent
+
+        return servletContext;
     }
 
     private ResourceProvider getAssetsResourceProvider(MimeTypeMapping mimeTypeMapping) {

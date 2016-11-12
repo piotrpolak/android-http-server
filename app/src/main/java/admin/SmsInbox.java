@@ -18,7 +18,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
-import ro.polak.webserver.controller.MainController;
+import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.servlet.HttpRequest;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.Servlet;
@@ -27,7 +27,8 @@ public class SmsInbox extends Servlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        AccessControl ac = new AccessControl(request.getSession());
+        ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
+        AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
             response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getRequestURI());
             return;
@@ -44,7 +45,7 @@ public class SmsInbox extends Servlet {
             whereString = "thread_id=" + threadIdGet;
         }
 
-        Cursor cursor = ((Activity) MainController.getInstance().getAndroidContext()).
+        Cursor cursor = ((Activity) getServletContext().getAttribute("android.content.Context")).
                 getContentResolver()
                 .query(Uri.parse("content://sms"), null, whereString, null, "date DESC");
         cursor.moveToFirst();

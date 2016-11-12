@@ -1,14 +1,20 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p>
+ * <p/>
  * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
 
 package ro.polak.utilities;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import static java.util.TimeZone.getTimeZone;
 
 /**
  * Utilities
@@ -19,6 +25,14 @@ import java.text.DecimalFormat;
 public class Utilities {
 
     // TODO This class should be split into dedicated ones
+
+    private static final SimpleDateFormat simpleDateFormat;
+    public static final String CHARSET_NAME = "UTF-8";
+
+    static {
+        simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US);
+        simpleDateFormat.setTimeZone(getTimeZone("GMT"));
+    }
 
     /**
      * Returns the extension sting for a given file path
@@ -68,8 +82,8 @@ public class Utilities {
      */
     public static String URLEncode(String text) {
         try {
-            return java.net.URLEncoder.encode(text, "UTF-8");
-        } catch (Exception e) {
+            return java.net.URLEncoder.encode(text, CHARSET_NAME);
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -82,8 +96,8 @@ public class Utilities {
      */
     public static String URLDecode(String text) {
         try {
-            return java.net.URLDecoder.decode(text, "UTF-8");
-        } catch (Exception e) {
+            return java.net.URLDecoder.decode(text, CHARSET_NAME);
+        } catch (UnsupportedEncodingException e) {
             return null;
         }
     }
@@ -109,5 +123,15 @@ public class Utilities {
         } else {
             return format.format(size / 1073741824) + " GB";
         }
+    }
+
+    /**
+     * Formats date into the RFC 822 GMT format.
+     *
+     * @param date
+     * @return
+     */
+    public static String dateFormat(Date date) {
+        return simpleDateFormat.format(date);
     }
 }

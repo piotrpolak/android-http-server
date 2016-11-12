@@ -18,11 +18,10 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import ro.polak.utilities.Utilities;
+import ro.polak.webserver.CookieHeaderSerializer;
 import ro.polak.webserver.Headers;
 import ro.polak.webserver.HeadersSerializer;
 import ro.polak.webserver.Statistics;
-import ro.polak.webserver.WebServer;
 
 /**
  * Represents HTTP response
@@ -36,6 +35,7 @@ public class HttpResponseWrapper implements HttpResponse {
 
     private static Charset charset = Charset.forName("UTF-8");
     private static HeadersSerializer headersSerializer = new HeadersSerializer();
+    private static final CookieHeaderSerializer cookieHeaderSerializer = new CookieHeaderSerializer();
 
     private Headers headers;
     private OutputStream out;
@@ -134,7 +134,7 @@ public class HttpResponseWrapper implements HttpResponse {
 
     /**
      * Flushes headers, returns false when headers already flushed.
-     * <p>
+     * <p/>
      * Can be called once per response, after the first call "locks" itself.
      *
      * @return true if headers flushed
@@ -151,43 +151,11 @@ public class HttpResponseWrapper implements HttpResponse {
         headersFlushed = true;
 
         for (Cookie cookie : cookies) {
-            headers.setHeader(Headers.HEADER_SET_COOKIE, getCookieHeaderValue(cookie));
+            headers.setHeader(Headers.HEADER_SET_COOKIE, cookieHeaderSerializer.serialize(cookie));
         }
 
         // TODO Use string builder
         serveStream(new ByteArrayInputStream((getStatus() + NEW_LINE + headersSerializer.serialize(headers)).getBytes(charset)), false);
-    }
-
-    /**
-     * Returns serialized cookie header value.
-     *
-     * @param cookie
-     * @return
-     */
-    private String getCookieHeaderValue(Cookie cookie) {
-
-        // TODO delegate it to a specialized class
-        // TODO test encoding cookie values
-
-        StringBuilder sb = new StringBuilder();
-        sb.append(cookie.getName()).append("=").append(Utilities.URLEncode(cookie.getValue()));
-        if (cookie.getMaxAge() != -1) {
-            String expires = WebServer.sdf.format(new java.util.Date(System.currentTimeMillis() + (cookie.getMaxAge() * 1000)));
-            sb.append("; Expires=").append(expires);
-        }
-        if (cookie.getPath() != null) {
-            sb.append("; Path=").append(cookie.getPath());
-        }
-        if (cookie.getDomain() != null) {
-            sb.append("; Domain=").append(cookie.getDomain());
-        }
-        if (cookie.isHttpOnly()) {
-            sb.append("; HttpOnly");
-        }
-        if (cookie.isSecure()) {
-            sb.append("; Secure");
-        }
-        return sb.toString();
     }
 
     /**

@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionHandler;
@@ -40,12 +38,6 @@ public class WebServer extends Thread {
     public static final String NAME = "AndroidHTTPServer";
     public static final String VERSION = "0.1.5-dev";
     public static final String SIGNATURE = NAME + "/" + VERSION;
-    public static final SimpleDateFormat sdf;
-
-    static {
-        sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US);
-        sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
-    }
 
     private boolean listen;
     private ServerSocket serverSocket;

@@ -1,7 +1,7 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p/>
+ * <p>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
@@ -18,6 +18,7 @@ import java.util.Set;
 public class HeadersSerializer {
 
     private static final String NEW_LINE = "\r\n";
+    public static final String KEY_VALUE_SEPARATOR = ": ";
 
     /**
      * Generates string representation of headers.
@@ -28,7 +29,10 @@ public class HeadersSerializer {
         Set<String> names = headers.keySet();
         StringBuilder sb = new StringBuilder();
         for (String name : names) {
-            sb.append(name).append(": ").append(headers.getHeader(name)).append(NEW_LINE);
+            sb.append(name)
+                    .append(KEY_VALUE_SEPARATOR)
+                    .append(headers.getHeader(name))
+                    .append(NEW_LINE);
         }
         sb.append(NEW_LINE);
 

@@ -37,7 +37,7 @@ public class GetFile extends Servlet {
             String path = request.getQueryString();
             File f = new File(path);
             if (f.exists() && f.isFile()) {
-                response.setContentType(MainController.getInstance().getWebServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(Utilities.getExtension(f.getName())));
+                response.setContentType(getServletContext().getMimeType(f.getName()));
                 response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename=" + Utilities.URLEncode(f.getName()));
                 try {
                     ((HttpResponseWrapper) response).serveFile(f); // TODO remove this ugly hack

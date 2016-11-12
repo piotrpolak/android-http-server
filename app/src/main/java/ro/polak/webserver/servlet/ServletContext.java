@@ -14,4 +14,12 @@ package ro.polak.webserver.servlet;
  * @since 201610
  */
 public interface ServletContext {
+
+    /**
+     * Returns the MIME type of the specified file, or null if the MIME type is not known.
+     *
+     * @param file
+     * @return
+     */
+    String getMimeType(String file);
 }

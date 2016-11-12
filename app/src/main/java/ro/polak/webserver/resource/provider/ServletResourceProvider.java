@@ -23,7 +23,6 @@ import ro.polak.webserver.servlet.ServletConfigWrapper;
 import ro.polak.webserver.servlet.ServletContextWrapper;
 import ro.polak.webserver.servlet.loader.ClassPathServletLoader;
 import ro.polak.webserver.servlet.loader.ServletLoader;
-import ro.polak.webserver.session.storage.FileSessionStorage;
 
 /**
  * Servlet resource provider
@@ -44,12 +43,12 @@ public class ServletResourceProvider implements ResourceProvider {
     /**
      * Default constructor.
      *
+     * @param servletContext
      * @param servletMappedExtension
-     * @param tmpPath
      */
-    public ServletResourceProvider(String servletMappedExtension, String tmpPath) {
+    public ServletResourceProvider(ServletContextWrapper servletContext, String servletMappedExtension) {
+        this.servletContext = servletContext;
         this.servletMappedExtension = servletMappedExtension;
-        servletContext = new ServletContextWrapper(new FileSessionStorage(tmpPath));
     }
 
     @Override

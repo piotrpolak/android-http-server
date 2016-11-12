@@ -12,6 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ro.polak.utilities.RandomStringGenerator;
+import ro.polak.utilities.Utilities;
+import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.session.storage.SessionStorage;
 
 /**
@@ -24,15 +26,24 @@ public class ServletContextWrapper implements ServletContext {
 
     private static final Logger LOGGER = Logger.getLogger(ServletContextWrapper.class.getName());
 
+    private ServerConfig serverConfig;
     private SessionStorage sessionStorage;
 
     /**
      * Default constructor.
      *
+     * @param serverConfig
      * @param sessionStorage
      */
-    public ServletContextWrapper(SessionStorage sessionStorage) {
+    public ServletContextWrapper(ServerConfig serverConfig, SessionStorage sessionStorage) {
+        this.serverConfig = serverConfig;
         this.sessionStorage = sessionStorage;
+    }
+
+    @Override
+    public String getMimeType(String file) {
+        return serverConfig.getMimeTypeMapping().
+                getMimeTypeByExtension(Utilities.getExtension(file));
     }
 
     /**

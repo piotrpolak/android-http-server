@@ -27,6 +27,8 @@ import ro.polak.webserver.resource.provider.AssetResourceProvider;
 import ro.polak.webserver.resource.provider.FileResourceProvider;
 import ro.polak.webserver.resource.provider.ResourceProvider;
 import ro.polak.webserver.resource.provider.ServletResourceProvider;
+import ro.polak.webserver.servlet.ServletContextWrapper;
+import ro.polak.webserver.session.storage.FileSessionStorage;
 
 /**
  * The main controller of the server, can only be initialized as a singleton
@@ -146,13 +148,25 @@ public class MainController implements Controller {
     private ResourceProvider[] selectActiveResourceProviders(ServerConfig serverConfig) {
         List<ResourceProvider> resourceProviders = new ArrayList<>();
 
-        resourceProviders.add(new FileResourceProvider(serverConfig.getMimeTypeMapping(), serverConfig.getDocumentRootPath()));
-        resourceProviders.add(getFileResourceProvider(serverConfig.getMimeTypeMapping()));
-        resourceProviders.add(new ServletResourceProvider(serverConfig.getServletMappedExtension(), serverConfig.getTempPath()));
+        resourceProviders.add(getFileResourceProvider(serverConfig));
+        resourceProviders.add(getAssetsResourceProvider(serverConfig.getMimeTypeMapping()));
+        resourceProviders.add(getServletResourceProvider(serverConfig));
         return resourceProviders.toArray(new ResourceProvider[resourceProviders.size()]);
     }
 
-    private ResourceProvider getFileResourceProvider(MimeTypeMapping mimeTypeMapping) {
+    private FileResourceProvider getFileResourceProvider(ServerConfig serverConfig) {
+        return new FileResourceProvider(serverConfig.getMimeTypeMapping(),
+                serverConfig.getDocumentRootPath());
+    }
+
+    private ServletResourceProvider getServletResourceProvider(ServerConfig serverConfig) {
+        return new ServletResourceProvider(
+                new ServletContextWrapper(serverConfig,
+                        new FileSessionStorage(serverConfig.getTempPath())),
+                serverConfig.getServletMappedExtension());
+    }
+
+    private ResourceProvider getAssetsResourceProvider(MimeTypeMapping mimeTypeMapping) {
         String assetBasePath = "public";
         if (getAndroidContext() != null) {
             AssetManager assetManager = ((Context) getAndroidContext()).getResources().getAssets();

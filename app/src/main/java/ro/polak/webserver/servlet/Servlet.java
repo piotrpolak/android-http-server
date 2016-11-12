@@ -15,11 +15,23 @@ package ro.polak.webserver.servlet;
  */
 public abstract class Servlet implements HttpServlet {
 
+    private ServletConfig servletConfig;
+
     @Override
     public void init(ServletConfig servletConfig) {
+        this.servletConfig = servletConfig;
     }
 
     @Override
     public void destroy() {
+    }
+
+    /**
+     * Returns servlet context.
+     *
+     * @return
+     */
+    public ServletContext getServletContext() {
+        return servletConfig.getServletContext();
     }
 }

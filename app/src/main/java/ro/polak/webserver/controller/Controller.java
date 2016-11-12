@@ -35,16 +35,16 @@ public interface Controller {
     WebServer getWebServer();
 
     /**
-     * Returns application context, this is mostly used for android applications.
+     * Returns application context, this is mostly used for Android applications.
      *
      * @return
      */
-    Object getContext();
+    Object getAndroidContext();
 
     /**
      * Sets application context, this is mostly used for android applications.
      *
      * @param context
      */
-    void setContext(Object context);
+    void setAndroidContext(Object context);
 }

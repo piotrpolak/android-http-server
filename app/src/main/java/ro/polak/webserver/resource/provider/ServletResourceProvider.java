@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 import ro.polak.utilities.Utilities;
 import ro.polak.webserver.Headers;
-import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.error.HttpError500;
 import ro.polak.webserver.servlet.HttpRequestWrapper;
 import ro.polak.webserver.servlet.HttpResponse;
@@ -38,13 +37,18 @@ public class ServletResourceProvider implements ResourceProvider {
 
     private static final Logger LOGGER = Logger.getLogger(ServletResourceProvider.class.getName());
 
-    // Initialize servlet service in a static way
-    private static ServletLoader servletLoader;
-    private static ServletContextWrapper servletContext;
+    private static ServletLoader servletLoader = new ClassPathServletLoader();
+    private ServletContextWrapper servletContext;
+    private String servletMappedExtension;
 
-    static {
-        String tmpPath = MainController.getInstance().getWebServer().getServerConfig().getTempPath();
-        servletLoader = new ClassPathServletLoader();
+    /**
+     * Default constructor.
+     *
+     * @param servletMappedExtension
+     * @param tmpPath
+     */
+    public ServletResourceProvider(String servletMappedExtension, String tmpPath) {
+        this.servletMappedExtension = servletMappedExtension;
         servletContext = new ServletContextWrapper(new FileSessionStorage(tmpPath));
     }
 
@@ -54,7 +58,7 @@ public class ServletResourceProvider implements ResourceProvider {
         String extension = Utilities.getExtension(uri);
 
         // Check whether the extension is of Servlet type
-        if (extension.equals(MainController.getInstance().getWebServer().getServerConfig().getServletMappedExtension())) {
+        if (extension.equals(servletMappedExtension)) {
             try {
                 Servlet servlet;
                 try {

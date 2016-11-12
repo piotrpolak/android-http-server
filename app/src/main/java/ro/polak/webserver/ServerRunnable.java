@@ -12,7 +12,6 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ro.polak.webserver.controller.MainController;
 import ro.polak.webserver.error.HttpError403;
 import ro.polak.webserver.error.HttpError404;
 import ro.polak.webserver.error.HttpError405;
@@ -31,22 +30,21 @@ public class ServerRunnable implements Runnable {
 
     private static final Logger LOGGER = Logger.getLogger(ServerRunnable.class.getName());
 
+    private ServerConfig serverConfig;
     private Socket socket;
-    private WebServer webServer;
-    private static HttpRequestWrapperFactory requestFactory;
-
-    static {
-        requestFactory = new HttpRequestWrapperFactory(MainController.getInstance().getWebServer().getServerConfig().getTempPath());
-    }
+    private HttpRequestWrapperFactory requestFactory;
 
     /**
      * Default constructor.
      *
      * @param socket
+     * @param serverConfig
+     * @param requestFactory
      */
-    public ServerRunnable(Socket socket, WebServer webServer) {
+    public ServerRunnable(Socket socket, final ServerConfig serverConfig, final HttpRequestWrapperFactory requestFactory) {
         this.socket = socket;
-        this.webServer = webServer;
+        this.serverConfig = serverConfig;
+        this.requestFactory = requestFactory;
     }
 
     @Override
@@ -97,7 +95,7 @@ public class ServerRunnable implements Runnable {
             isKeepAlive = request.getHeaders().getHeader(Headers.HEADER_CONNECTION).toLowerCase().equals("keep-alive");
         }
 
-        response.setKeepAlive(isKeepAlive && webServer.getServerConfig().isKeepAlive());
+        response.setKeepAlive(isKeepAlive && serverConfig.isKeepAlive());
         response.getHeaders().setHeader(Headers.HEADER_SERVER, WebServer.SIGNATURE);
     }
 
@@ -112,7 +110,7 @@ public class ServerRunnable implements Runnable {
      */
     private boolean loadDirectoryIndexResource(HttpRequestWrapper request, HttpResponseWrapper response, String path) throws IOException {
         path = getNormalizedDirectoryPath(path);
-        for (String index : webServer.getServerConfig().getDirectoryIndex()) {
+        for (String index : serverConfig.getDirectoryIndex()) {
             if (loadResourceByPath(request, response, path + index)) {
                 return true;
             }
@@ -128,7 +126,7 @@ public class ServerRunnable implements Runnable {
      */
     private void serveMethodNotAllowed(HttpResponseWrapper response) throws IOException {
         StringBuilder sb = new StringBuilder();
-        String[] supportedMethods = webServer.getSupportedMethods();
+        String[] supportedMethods = serverConfig.getSupportedMethods();
         for (int i = 0; i < supportedMethods.length; i++) {
             sb.append(supportedMethods[i]);
             if (i != supportedMethods.length - 1) {
@@ -150,7 +148,7 @@ public class ServerRunnable implements Runnable {
      * @throws IOException
      */
     private boolean loadResourceByPath(HttpRequestWrapper request, HttpResponseWrapper response, String path) throws IOException {
-        ResourceProvider[] rl = webServer.getResourceProviders();
+        ResourceProvider[] rl = serverConfig.getResourceProviders();
         for (int i = 0; i < rl.length; i++) {
             if (rl[i].load(path, request, response)) {
                 return true;
@@ -191,7 +189,7 @@ public class ServerRunnable implements Runnable {
      * @return
      */
     private boolean isMethodSupported(String method) {
-        for (String aMethod : webServer.getSupportedMethods()) {
+        for (String aMethod : serverConfig.getSupportedMethods()) {
             if (aMethod.equals(method)) {
                 return true;
             }

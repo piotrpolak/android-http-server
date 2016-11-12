@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 import ro.polak.utilities.Utilities;
-import ro.polak.webserver.controller.MainController;
+import ro.polak.webserver.MimeTypeMapping;
 import ro.polak.webserver.servlet.HttpRequestWrapper;
 import ro.polak.webserver.servlet.HttpResponse;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
@@ -26,14 +26,17 @@ import ro.polak.webserver.servlet.HttpResponseWrapper;
  */
 public class FileResourceProvider implements ResourceProvider {
 
+    private MimeTypeMapping mimeTypeMapping;
     private String basePath;
 
     /**
      * Default constructor.
      *
+     * @param mimeTypeMapping
      * @param basePath
      */
-    public FileResourceProvider(String basePath) {
+    public FileResourceProvider(final MimeTypeMapping mimeTypeMapping, final String basePath) {
+        this.mimeTypeMapping = mimeTypeMapping;
         this.basePath = basePath;
     }
 
@@ -46,7 +49,7 @@ public class FileResourceProvider implements ResourceProvider {
             String fileExtension = Utilities.getExtension(file.getName());
 
             response.setStatus(HttpResponse.STATUS_OK);
-            response.setContentType(MainController.getInstance().getWebServer().getServerConfig().getMimeTypeMapping().getMimeTypeByExtension(fileExtension));
+            response.setContentType(mimeTypeMapping.getMimeTypeByExtension(fileExtension));
             response.setContentLength(file.length());
 
             // Serving file for all the request but for HEAD

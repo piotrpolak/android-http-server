@@ -37,7 +37,7 @@ public class ServerCliUi implements ServerGui {
         System.out.println("");
         MainController mainController = MainController.getInstance();
         mainController.setGui(gui);
-        mainController.setContext(null);
+        mainController.setAndroidContext(null);
         mainController.start();
     }
 

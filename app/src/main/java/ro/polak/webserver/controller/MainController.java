@@ -7,17 +7,26 @@
 
 package ro.polak.webserver.controller;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Environment;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ro.polak.webserver.MimeTypeMapping;
 import ro.polak.webserver.ServerConfig;
 import ro.polak.webserver.WebServer;
 import ro.polak.webserver.gui.ServerGui;
 import ro.polak.webserver.impl.ServerConfigImpl;
+import ro.polak.webserver.resource.provider.AssetResourceProvider;
+import ro.polak.webserver.resource.provider.FileResourceProvider;
+import ro.polak.webserver.resource.provider.ResourceProvider;
+import ro.polak.webserver.resource.provider.ServletResourceProvider;
 
 /**
  * The main controller of the server, can only be initialized as a singleton
@@ -65,7 +74,7 @@ public class MainController implements Controller {
      *
      * @param gui
      */
-    public void setGui(ServerGui gui) {
+    public void setGui(final ServerGui gui) {
         this.gui = gui;
     }
 
@@ -74,23 +83,16 @@ public class MainController implements Controller {
         gui.initialize(this);
         try {
             String baseConfigPath;
-            if (getContext() != null) {
-                // On Android
+            if (getAndroidContext() != null) {
                 baseConfigPath = Environment.getExternalStorageDirectory() + "/httpd/";
             } else {
-                // On desktop
                 baseConfigPath = "./app/src/main/assets/conf/";
             }
 
             ServerConfig serverConfig;
-            try {
-                serverConfig = ServerConfigImpl.createFromPath(baseConfigPath, System.getProperty("java.io.tmpdir"));
-            } catch (IOException e) {
-                LOGGER.warning("Unable to read server config. Using the default configuration.");
-                serverConfig = new ServerConfigImpl();
-            }
+            serverConfig = getServerConfig(baseConfigPath);
 
-            webServer = new WebServer(this, new ServerSocket(), serverConfig);
+            webServer = new WebServer(new ServerSocket(), serverConfig);
             if (webServer.startServer()) {
                 gui.start();
             }
@@ -113,12 +115,50 @@ public class MainController implements Controller {
     }
 
     @Override
-    public Object getContext() {
+    public Object getAndroidContext() {
         return context;
     }
 
     @Override
-    public void setContext(Object context) {
+    public void setAndroidContext(Object context) {
         this.context = context;
+    }
+
+    private ServerConfig getServerConfig(String baseConfigPath) {
+        ServerConfigImpl serverConfig;
+        try {
+            serverConfig = ServerConfigImpl.createFromPath(baseConfigPath, System.getProperty("java.io.tmpdir"));
+        } catch (IOException e) {
+            LOGGER.warning("Unable to read server config. Using the default configuration.");
+            serverConfig = new ServerConfigImpl();
+        }
+
+        serverConfig.setResourceProviders(selectActiveResourceProviders(serverConfig));
+        return serverConfig;
+    }
+
+    /**
+     * For performance reasons ServletResourceProvider is the last resource provider.
+     *
+     * @param serverConfig
+     * @return
+     */
+    private ResourceProvider[] selectActiveResourceProviders(ServerConfig serverConfig) {
+        List<ResourceProvider> resourceProviders = new ArrayList<>();
+
+        resourceProviders.add(new FileResourceProvider(serverConfig.getMimeTypeMapping(), serverConfig.getDocumentRootPath()));
+        resourceProviders.add(getFileResourceProvider(serverConfig.getMimeTypeMapping()));
+        resourceProviders.add(new ServletResourceProvider(serverConfig.getServletMappedExtension(), serverConfig.getTempPath()));
+        return resourceProviders.toArray(new ResourceProvider[resourceProviders.size()]);
+    }
+
+    private ResourceProvider getFileResourceProvider(MimeTypeMapping mimeTypeMapping) {
+        String assetBasePath = "public";
+        if (getAndroidContext() != null) {
+            AssetManager assetManager = ((Context) getAndroidContext()).getResources().getAssets();
+            return new AssetResourceProvider(assetManager, assetBasePath);
+        } else {
+            return new FileResourceProvider(mimeTypeMapping, "./app/src/main/assets/" + assetBasePath);
+        }
     }
 }

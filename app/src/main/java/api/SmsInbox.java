@@ -1,7 +1,7 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p/>
+ * <p>
  * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
 
@@ -32,17 +32,23 @@ public class SmsInbox extends Servlet {
         response.setContentType("text/json");
 
         // Setting max results out of the maxResults query parameter or default value
-        int maxResults = request.getParameter("maxResults") != null ? Integer.parseInt(request.getParameter("maxResults")) : 10;
+        int maxResults = request.getParameter("maxResults") != null
+                ? Integer.parseInt(request.getParameter("maxResults")) : 10;
 
         // Querying
         String[] projection = {"address", "body", "date", "date_sent"};
-        Cursor cursor = ((Activity) MainController.getInstance().getContext()).getContentResolver().query(Uri.parse("content://sms/inbox"), projection, null, null, "date DESC");
+        Cursor cursor = ((Activity) MainController.getInstance()
+                .getAndroidContext())
+                .getContentResolver()
+                .query(Uri.parse("content://sms/inbox"), projection, null, null, "date DESC");
+
         cursor.moveToFirst();
 
         // The output object
         JSONArray result = new JSONArray();
 
-        // Counter needed to implement maxResults, at the same time we need to keep the original value of maxResults
+        // Counter needed to implement maxResults,
+        // at the same time we need to keep the original value of maxResults
         int counterRemaining = maxResults;
 
         // Looping

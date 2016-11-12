@@ -99,7 +99,7 @@ public class SmsSend extends Servlet {
     }
 
     private void sendSMS(String phoneNo, String message) {
-        Activity a = ((Activity) MainController.getInstance().getContext());
+        Activity a = ((Activity) MainController.getInstance().getAndroidContext());
 
         PendingIntent pi = PendingIntent.getActivity(a, 0, new Intent(a, a.getClass()), 0);
         SmsManager sms = SmsManager.getDefault();

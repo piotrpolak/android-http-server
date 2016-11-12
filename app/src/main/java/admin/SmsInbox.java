@@ -44,7 +44,9 @@ public class SmsInbox extends Servlet {
             whereString = "thread_id=" + threadIdGet;
         }
 
-        Cursor cursor = ((Activity) MainController.getInstance().getContext()).getContentResolver().query(Uri.parse("content://sms"), null, whereString, null, "date DESC");
+        Cursor cursor = ((Activity) MainController.getInstance().getAndroidContext()).
+                getContentResolver()
+                .query(Uri.parse("content://sms"), null, whereString, null, "date DESC");
         cursor.moveToFirst();
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

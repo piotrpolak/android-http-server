@@ -1,7 +1,7 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p/>
+ * <p>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
@@ -16,6 +16,8 @@ import java.util.Map;
 import ro.polak.utilities.ConfigReader;
 import ro.polak.webserver.MimeTypeMapping;
 import ro.polak.webserver.ServerConfig;
+import ro.polak.webserver.resource.provider.ResourceProvider;
+import ro.polak.webserver.servlet.HttpRequestWrapper;
 
 /**
  * Server configuration
@@ -24,6 +26,8 @@ import ro.polak.webserver.ServerConfig;
  * @since 201509
  */
 public class ServerConfigImpl implements ServerConfig {
+
+    public static final String[] SUPPORTED_METHODS = new String[]{HttpRequestWrapper.METHOD_GET, HttpRequestWrapper.METHOD_POST, HttpRequestWrapper.METHOD_HEAD};
 
     private String basePath;
     private String documentRootPath;
@@ -36,6 +40,7 @@ public class ServerConfigImpl implements ServerConfig {
     private String errorDocument404Path;
     private String errorDocument403Path;
     public List<String> directoryIndex;
+    private ResourceProvider[] resourceProviders;
 
     public ServerConfigImpl() {
         basePath = "/httpd/";
@@ -53,7 +58,7 @@ public class ServerConfigImpl implements ServerConfig {
      * @return
      * @throws IOException
      */
-    public static ServerConfig createFromPath(String basePath, String tempPath) throws IOException {
+    public static ServerConfigImpl createFromPath(String basePath, String tempPath) throws IOException {
         ConfigReader reader = new ConfigReader();
         Map<String, String> config = reader.read(new FileInputStream(basePath + "httpd.conf"));
 
@@ -171,5 +176,19 @@ public class ServerConfigImpl implements ServerConfig {
     @Override
     public List<String> getDirectoryIndex() {
         return directoryIndex;
+    }
+
+    @Override
+    public String[] getSupportedMethods() {
+        return SUPPORTED_METHODS;
+    }
+
+    @Override
+    public ResourceProvider[] getResourceProviders() {
+        return resourceProviders;
+    }
+
+    public void setResourceProviders(ResourceProvider[] resourceProviders) {
+        this.resourceProviders = resourceProviders;
     }
 }

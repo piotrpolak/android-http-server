@@ -9,6 +9,8 @@ package ro.polak.webserver;
 
 import java.util.List;
 
+import ro.polak.webserver.resource.provider.ResourceProvider;
+
 /**
  * Server configuration.
  *
@@ -93,4 +95,18 @@ public interface ServerConfig {
      * @return
      */
     List<String> getDirectoryIndex();
+
+    /**
+     * Returns an array of supported HTTP methods.
+     *
+     * @return
+     */
+    String[] getSupportedMethods();
+
+    /**
+     * Returns available resource providers.
+     *
+     * @return
+     */
+    ResourceProvider[] getResourceProviders();
 }

@@ -19,6 +19,12 @@ public class RequestBuilder {
         return this;
     }
 
+    public RequestBuilder method(String method, String uri) {
+        this.method = method;
+        this.uri = uri;
+        return this;
+    }
+
     public RequestBuilder withHeader(String name, String value) {
         headers.setHeader(name, value);
         return this;

@@ -58,26 +58,51 @@ public class ProtocolIT extends AbstractIT {
 
         Socket socket = null;
         OutputStream out;
-        try {
-            socket = new Socket(HOST, PORT);
-            socket.setSoTimeout(0);
-            out = socket.getOutputStream();
-            out.write(requestBody.getBytes());
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String line;
-            int numberOfLinesRead = 0;
-            while ((line = in.readLine()) != null) {
-                if (++numberOfLinesRead == 1) {
-                    assertThat(line, startsWith("HTTP/1.1 404"));
-                }
-            }
 
-            if (numberOfLinesRead == 0) {
-                fail("No server response was read");
+        socket = new Socket(HOST, PORT);
+        socket.setSoTimeout(0);
+        out = socket.getOutputStream();
+        out.write(requestBody.getBytes());
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line;
+        int numberOfLinesRead = 0;
+        while ((line = in.readLine()) != null) {
+            if (++numberOfLinesRead == 1) {
+                assertThat(line, startsWith("HTTP/1.1 404"));
             }
+        }
 
-        } catch (IOException e) {
-            fail("The test failed too early due IOException" + e.getMessage());
+        if (numberOfLinesRead == 0) {
+            fail("No server response was read");
+        }
+
+        socket.close();
+    }
+
+    @Test
+    public void shouldReturn405MethodNotAllowed() throws IOException, InterruptedException {
+        String requestBody = RequestBuilder.defaultBuilder()
+                .method("UNKNOWN", "/")
+                .withCloseConnection()
+                .toString();
+
+        Socket socket = null;
+        OutputStream out;
+        socket = new Socket(HOST, PORT);
+        socket.setSoTimeout(0);
+        out = socket.getOutputStream();
+        out.write(requestBody.getBytes());
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line;
+        int numberOfLinesRead = 0;
+        while ((line = in.readLine()) != null) {
+            if (++numberOfLinesRead == 1) {
+                assertThat(line, startsWith("HTTP/1.1 405"));
+            }
+        }
+
+        if (numberOfLinesRead == 0) {
+            fail("No server response was read");
         }
 
         socket.close();

@@ -96,12 +96,38 @@ public class WebServer extends Thread {
             });
         }
 
+        if (!isNumberOfThreadsSufficient()) {
+            return false;
+        }
+
+        if (!isTempPathWritable()) {
+            return false;
+        }
+
+        if (!bindSocket()) {
+            return false;
+        }
+
+        LOGGER.log(Level.INFO, "Server has been started. Listening on port {0}", new Object[]{
+                serverConfig.getListenPort()
+        });
+
+        Utilities.clearDirectory(serverConfig.getTempPath());
+
+        start();
+        return true;
+    }
+
+    private boolean isNumberOfThreadsSufficient() {
         if (serverConfig.getMaxServerThreads() < 1) {
             LOGGER.log(Level.SEVERE, "MaxThreads should be greater or equal to 1! {0} is given.",
                     new Object[]{serverConfig.getMaxServerThreads()});
             return false;
         }
+        return true;
+    }
 
+    private boolean bindSocket() {
         try {
             serverSocket.bind(new InetSocketAddress(serverConfig.getListenPort()));
         } catch (IOException e) {
@@ -109,13 +135,27 @@ public class WebServer extends Thread {
                     serverConfig.getListenPort(), e);
             return false;
         }
+        return true;
+    }
 
-        Utilities.clearDirectory(serverConfig.getTempPath());
+    private boolean isTempPathWritable() {
+        File tempPath = new File(serverConfig.getTempPath());
+        if (!tempPath.exists()) {
+            if (!tempPath.mkdirs()) {
+                LOGGER.log(Level.SEVERE, "TempPath does not exist and can not be created! PATH {0}", new Object[]{
+                        serverConfig.getTempPath()
+                });
+                return false;
+            }
+        }
 
-        LOGGER.log(Level.INFO, "Server has been started. Listening on port {0}", new Object[]{
-                serverConfig.getListenPort()
-        });
-        start();
+        if (!tempPath.canWrite()) {
+            LOGGER.log(Level.SEVERE, "TempPath is not writable! PATH {0}", new Object[]{
+                    serverConfig.getTempPath()
+            });
+            return false;
+        }
+
         return true;
     }
 

@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -115,8 +116,11 @@ public class MainController implements Controller {
 
     private ServerConfig getServerConfig(String baseConfigPath) {
         ServerConfigImpl serverConfig;
+
+        String tempPath = System.getProperty("java.io.tmpdir") + "webserver" + File.separator;
+
         try {
-            serverConfig = ServerConfigImpl.createFromPath(baseConfigPath, System.getProperty("java.io.tmpdir"));
+            serverConfig = ServerConfigImpl.createFromPath(baseConfigPath, tempPath);
         } catch (IOException e) {
             LOGGER.warning("Unable to read server config. Using the default configuration.");
             serverConfig = new ServerConfigImpl();

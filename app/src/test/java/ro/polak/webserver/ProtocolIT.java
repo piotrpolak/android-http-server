@@ -12,6 +12,9 @@ import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 
+/**
+ * @url https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+ */
 public class ProtocolIT extends AbstractIT {
 
     private String HOST = "localhost";
@@ -82,7 +85,7 @@ public class ProtocolIT extends AbstractIT {
     @Test
     public void shouldReturn405MethodNotAllowed() throws IOException, InterruptedException {
         String requestBody = RequestBuilder.defaultBuilder()
-                .method("UNKNOWN", "/")
+                .method("CONNECT", "/") // Connect is not yet implemented
                 .withCloseConnection()
                 .toString();
 
@@ -106,5 +109,141 @@ public class ProtocolIT extends AbstractIT {
         }
 
         socket.close();
+    }
+
+    @Test
+    public void shouldReturn414URITooLong() throws IOException {
+        String requestBody = RequestBuilder.defaultBuilder()
+                .get(getTooLongUri())
+                .withCloseConnection()
+                .toString();
+
+        Socket socket = null;
+        OutputStream out;
+        socket = new Socket(HOST, PORT);
+        socket.setSoTimeout(0);
+        out = socket.getOutputStream();
+        out.write(requestBody.getBytes());
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line;
+        int numberOfLinesRead = 0;
+        while ((line = in.readLine()) != null) {
+            if (++numberOfLinesRead == 1) {
+                assertThat(line, startsWith("HTTP/1.1 414"));
+            }
+        }
+
+        if (numberOfLinesRead == 0) {
+            fail("No server response was read");
+        }
+
+        socket.close();
+    }
+
+    private String getTooLongUri() {
+        // 2048 characters seems reasonable
+        // see http://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+        int length = 2048;
+        char[] uri = new char[length + 1];
+        uri[0] = '/';
+        for (int i = 1; i <= length; i++) {
+            uri[i] = 'a';
+        }
+
+        return new String(uri);
+    }
+
+    @Test
+    public void shouldReturn413PayloadTooLarge() {
+        // maxPostSize 2mb
+        // TODO implement
+    }
+
+    @Test
+    public void shouldReturn411LengthRequired() {
+        // TODO implement
+    }
+
+    @Test
+    public void shouldReturn400BadRequestOnUnrecognizedMethod() throws IOException {
+        String requestBody = RequestBuilder.defaultBuilder()
+                .method("ABC", "/")
+                .withCloseConnection()
+                .toString();
+
+        Socket socket = null;
+        OutputStream out;
+        socket = new Socket(HOST, PORT);
+        socket.setSoTimeout(0);
+        out = socket.getOutputStream();
+        out.write(requestBody.getBytes());
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line;
+        int numberOfLinesRead = 0;
+        while ((line = in.readLine()) != null) {
+            if (++numberOfLinesRead == 1) {
+                assertThat(line, startsWith("HTTP/1.1 400"));
+            }
+        }
+
+        if (numberOfLinesRead == 0) {
+            fail("No server response was read");
+        }
+
+        socket.close();
+    }
+
+    @Test
+    public void shouldReturn400BadRequestOnTooLongMethod() throws IOException {
+        String requestBody = RequestBuilder.defaultBuilder()
+                .method("ABCABCABCABCABC", "/")
+                .withCloseConnection()
+                .toString();
+
+        Socket socket = null;
+        OutputStream out;
+        socket = new Socket(HOST, PORT);
+        socket.setSoTimeout(0);
+        out = socket.getOutputStream();
+        out.write(requestBody.getBytes());
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line;
+        int numberOfLinesRead = 0;
+        while ((line = in.readLine()) != null) {
+            if (++numberOfLinesRead == 1) {
+                assertThat(line, startsWith("HTTP/1.1 400"));
+            }
+        }
+
+        if (numberOfLinesRead == 0) {
+            fail("No server response was read");
+        }
+
+        socket.close();
+    }
+
+    @Test
+    public void shouldReturn400BadRequest() {
+        // TODO implement
+    }
+
+    @Test
+    public void shouldReturn416RangeNotSatisfiable() {
+        // TODO implement
+    }
+
+    @Test
+    public void shouldReturn431RequestHeaderFieldsTooLarge() {
+        // TODO implement
+    }
+
+    @Test
+    public void shouldReturn500InternalServerError() {
+        // TODO implement
+    }
+
+    @Test
+    public void shouldReturn505HTTPVersionNotSupported() {
+        // TODO implement
     }
 }

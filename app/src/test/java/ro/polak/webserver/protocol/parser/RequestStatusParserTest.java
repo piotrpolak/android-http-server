@@ -1,9 +1,8 @@
-package ro.polak.webserver.parser;
+package ro.polak.webserver.protocol.parser;
 
 import org.junit.Test;
 
 import ro.polak.webserver.RequestStatus;
-import ro.polak.webserver.parser.RequestStatusParser;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

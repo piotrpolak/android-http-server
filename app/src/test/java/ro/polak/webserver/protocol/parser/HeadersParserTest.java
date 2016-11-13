@@ -1,4 +1,4 @@
-package ro.polak.webserver.parser;
+package ro.polak.webserver.protocol.parser;
 
 import org.junit.BeforeClass;
 import org.junit.Test;

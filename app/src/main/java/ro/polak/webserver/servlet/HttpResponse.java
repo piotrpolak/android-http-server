@@ -29,6 +29,8 @@ public interface HttpResponse {
     String STATUS_MOVED_PERMANENTLY = "HTTP/1.1 301 Moved Permanently";
     String STATUS_NOT_MODIFIED = "HTTP/1.1 304 Not Modified";
     String STATUS_NOT_IMPLEMENTED = "HTTP/1.1 501 Not Implemented";
+    String STATUS_URI_TOO_LONG = "HTTP/1.1 414 URI Too Long";
+    String STATUS_BAD_REQUEST = "HTTP/1.1 400 Bad Request";
 
     /**
      * Adds a cookie.

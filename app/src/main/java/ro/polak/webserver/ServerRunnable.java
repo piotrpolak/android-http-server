@@ -12,13 +12,18 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ro.polak.webserver.error.HttpError400;
 import ro.polak.webserver.error.HttpError403;
 import ro.polak.webserver.error.HttpError404;
 import ro.polak.webserver.error.HttpError405;
+import ro.polak.webserver.error.HttpError414;
 import ro.polak.webserver.resource.provider.ResourceProvider;
 import ro.polak.webserver.servlet.HttpRequestWrapper;
 import ro.polak.webserver.servlet.HttpRequestWrapperFactory;
 import ro.polak.webserver.servlet.HttpResponseWrapper;
+import ro.polak.webserver.protocol.exception.ProtocolException;
+import ro.polak.webserver.protocol.exception.StatusLineTooLongProtocolException;
+import ro.polak.webserver.protocol.exception.UriTooLongProtocolException;
 
 /**
  * Server thread.
@@ -50,16 +55,27 @@ public class ServerRunnable implements Runnable {
     @Override
     public void run() {
         try {
-            HttpRequestWrapper request = requestFactory.createFromSocket(socket);
+
             HttpResponseWrapper response = HttpResponseWrapper.createFromSocket(socket);
-            String path = request.getRequestURI();
+
+            HttpRequestWrapper request;
+            try {
+                request = requestFactory.createFromSocket(socket);
+            } catch (ProtocolException e) {
+                handleProtocolException(e, response);
+                socket.close();
+                return;
+            }
 
             LOGGER.log(Level.INFO, "Handling request {0} {1}", new Object[]{
                     request.getMethod(), request.getRequestURI()
             });
 
+            String path = request.getRequestURI();
+
             if (isPathIllegal(path)) {
                 (new HttpError403(serverConfig.getErrorDocument403Path())).serve(response);
+                socket.close();
                 return;
             }
 
@@ -72,6 +88,8 @@ public class ServerRunnable implements Runnable {
                 }
                 if (!isResourceLoaded) {
                     (new HttpError404(serverConfig.getErrorDocument404Path())).serve(response);
+                    socket.close();
+                    return;
                 }
             } else {
                 serveMethodNotAllowed(response);
@@ -83,13 +101,29 @@ public class ServerRunnable implements Runnable {
     }
 
     /**
+     * Handles protocol exception. Writes specified response.
+     *
+     * @param e
+     * @param response
+     * @throws IOException
+     */
+    private void handleProtocolException(ProtocolException e, HttpResponseWrapper response) throws IOException {
+        if (e instanceof StatusLineTooLongProtocolException) {
+            (new HttpError414()).serve(response);
+        } else if (e instanceof UriTooLongProtocolException) {
+            (new HttpError414()).serve(response);
+        } else {
+            (new HttpError400()).serve(response);
+        }
+    }
+
+    /**
      * Sets default response headers.
      *
      * @param request
      * @param response
      */
     private void setDefaultResponseHeaders(HttpRequestWrapper request, HttpResponseWrapper response) {
-
         boolean isKeepAlive = false;
         if (request.getHeaders().containsHeader(Headers.HEADER_CONNECTION)) {
             isKeepAlive = request.getHeaders().getHeader(Headers.HEADER_CONNECTION).toLowerCase().equals("keep-alive");

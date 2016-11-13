@@ -14,9 +14,7 @@ public class RequestBuilder {
     }
 
     public RequestBuilder get(String uri) {
-        this.uri = uri;
-        method = "GET";
-        return this;
+        return method("GET", uri);
     }
 
     public RequestBuilder method(String method, String uri) {

@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
-package ro.polak.webserver.parser;
+package ro.polak.webserver.protocol.parser;
 
 import java.util.StringTokenizer;
 

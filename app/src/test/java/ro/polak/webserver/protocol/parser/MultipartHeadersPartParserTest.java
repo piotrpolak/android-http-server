@@ -1,10 +1,9 @@
-package ro.polak.webserver.parser;
+package ro.polak.webserver.protocol.parser;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ro.polak.webserver.MultipartHeadersPart;
-import ro.polak.webserver.parser.MultipartHeadersPartParser;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;

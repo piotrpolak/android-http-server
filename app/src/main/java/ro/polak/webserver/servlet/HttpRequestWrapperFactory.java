@@ -11,16 +11,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ro.polak.webserver.Headers;
 import ro.polak.webserver.MultipartRequestHandler;
 import ro.polak.webserver.RequestStatus;
 import ro.polak.webserver.Statistics;
-import ro.polak.webserver.parser.HeadersParser;
-import ro.polak.webserver.parser.QueryStringParser;
-import ro.polak.webserver.parser.RequestStatusParser;
+import ro.polak.webserver.protocol.parser.CookieParser;
+import ro.polak.webserver.protocol.parser.HeadersParser;
+import ro.polak.webserver.protocol.parser.QueryStringParser;
+import ro.polak.webserver.protocol.parser.RequestStatusParser;
+import ro.polak.webserver.protocol.exception.MalformedOrUnsupporedMethodProtocolException;
+import ro.polak.webserver.protocol.exception.StatusLineTooLongProtocolException;
+import ro.polak.webserver.protocol.exception.UriTooLongProtocolException;
 
 /**
  * Utility facilitating creating new requests out of the socket.
@@ -30,7 +36,22 @@ import ro.polak.webserver.parser.RequestStatusParser;
  */
 public class HttpRequestWrapperFactory {
 
-    private static String BOUNDARY_START = "boundary=";
+    private static final String BOUNDARY_START = "boundary=";
+    private static final int URI_MAX_LENGTH = 2048;
+    private static final int STATUS_MAX_LENGTH = 8 + URI_MAX_LENGTH + 9; // CONNECT + space + URI + space + HTTP/1.0
+    private static final String[] RECOGNIZED_METHODS = {"OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT"};
+    private static final int METHOD_MAX_LENGTH;
+    private static final List<String> RECOGNIZED_METHODS_LIST = Arrays.asList(RECOGNIZED_METHODS);
+
+    static {
+        int maxMethodLenth = 0;
+        for (String method : RECOGNIZED_METHODS) {
+            if (method.length() > maxMethodLenth) {
+                maxMethodLenth = method.length();
+            }
+        }
+        METHOD_MAX_LENGTH = maxMethodLenth;
+    }
 
     private static HeadersParser headersParser = new HeadersParser();
     private static QueryStringParser queryStringParser = new QueryStringParser();
@@ -54,12 +75,21 @@ public class HttpRequestWrapperFactory {
      * @param socket
      * @return
      */
-    public HttpRequestWrapper createFromSocket(Socket socket) throws IOException {
+    public HttpRequestWrapper createFromSocket(Socket socket)
+            throws IOException, StatusLineTooLongProtocolException,
+            MalformedOrUnsupporedMethodProtocolException, UriTooLongProtocolException {
+
         HttpRequestWrapper request = new HttpRequestWrapper();
 
         InputStream in = socket.getInputStream();
         // The order matters
         RequestStatus status = statusParser.parse(getStatusLine(in));
+
+        int uriLengthExceededWith = status.getUri().length() - URI_MAX_LENGTH;
+        if (uriLengthExceededWith > 0) {
+            throw new UriTooLongProtocolException("Uri length exceeded max length with" + uriLengthExceededWith + " characters");
+        }
+
         String headersString = getHeaders(in);
         Statistics.addBytesReceived(headersString.length() + 3);
 
@@ -104,14 +134,38 @@ public class HttpRequestWrapperFactory {
         return new HashMap<>();
     }
 
-    private String getStatusLine(InputStream in) throws IOException {
+    private String getStatusLine(InputStream in)
+            throws IOException, StatusLineTooLongProtocolException, MalformedOrUnsupporedMethodProtocolException {
         StringBuilder statusLine = new StringBuilder();
         byte[] buffer = new byte[1];
+        int length = 0;
+        boolean wasMethodRead = false;
         while (in.read(buffer, 0, buffer.length) != -1) {
+
+            ++length;
+
             if (buffer[0] == '\n') {
                 break;
             }
             statusLine.append((char) buffer[0]);
+
+            if (!wasMethodRead) {
+                if (buffer[0] == ' ') {
+                    wasMethodRead = true;
+                    String method = statusLine.substring(0, statusLine.length() - 1).toUpperCase();
+                    if (!RECOGNIZED_METHODS_LIST.contains(method)) {
+                        throw new MalformedOrUnsupporedMethodProtocolException("Method " + method + " is not supported");
+                    }
+                } else {
+                    if (length > METHOD_MAX_LENGTH) {
+                        throw new MalformedOrUnsupporedMethodProtocolException("Method name is longer than expected");
+                    }
+                }
+            }
+
+            if (length > STATUS_MAX_LENGTH) {
+                throw new StatusLineTooLongProtocolException("Exceeded max size of " + STATUS_MAX_LENGTH);
+            }
         }
         Statistics.addBytesReceived(statusLine.length() + 1);
 

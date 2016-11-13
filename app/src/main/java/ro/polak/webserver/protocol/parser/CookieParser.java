@@ -5,12 +5,13 @@
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
-package ro.polak.webserver.servlet;
+package ro.polak.webserver.protocol.parser;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import ro.polak.utilities.Utilities;
+import ro.polak.webserver.servlet.Cookie;
 
 /**
  * Cookie parser utility.

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import ro.polak.utilities.RandomStringGenerator;
-import ro.polak.webserver.parser.MultipartHeadersPartParser;
+import ro.polak.webserver.protocol.parser.MultipartHeadersPartParser;
 import ro.polak.webserver.servlet.UploadedFile;
 
 /**

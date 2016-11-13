@@ -5,11 +5,12 @@
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
-package ro.polak.webserver.protocol.parser;
+package ro.polak.webserver.protocol.parser.impl;
 
 import java.util.StringTokenizer;
 
 import ro.polak.webserver.Headers;
+import ro.polak.webserver.protocol.parser.Parser;
 
 /**
  * Parses headers string into headers representation.
@@ -17,7 +18,7 @@ import ro.polak.webserver.Headers;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201611
  */
-public class HeadersParser {
+public class HeadersParser implements Parser<Headers> {
 
     private static final String NEW_LINE = "\r\n";
 
@@ -26,6 +27,7 @@ public class HeadersParser {
      *
      * @param headersString raw headers
      */
+    @Override
     public Headers parse(String headersString) {
         return parse(headersString, true);
     }

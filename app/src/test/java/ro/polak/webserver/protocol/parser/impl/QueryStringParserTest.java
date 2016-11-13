@@ -1,10 +1,11 @@
-package ro.polak.webserver;
+package ro.polak.webserver.protocol.parser.impl;
 
 import org.junit.Test;
 
 import java.util.Map;
 
-import ro.polak.webserver.protocol.parser.QueryStringParser;
+import ro.polak.webserver.protocol.parser.Parser;
+import ro.polak.webserver.protocol.parser.impl.QueryStringParser;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -19,7 +20,7 @@ public class QueryStringParserTest {
                 + "&param3=ABC=DEF"
                 + "&param4=A%20B%20%3D%20%25%20*";
 
-        QueryStringParser parser = new QueryStringParser();
+        Parser<Map<String, String>> parser = new QueryStringParser();
         Map<String, String> parameters = parser.parse(data);
 
         assertThat(parameters.size(), is(4));

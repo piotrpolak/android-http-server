@@ -1,4 +1,4 @@
-package ro.polak.webserver;
+package ro.polak.webserver.protocol.serializer.impl;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.Date;
 
 import ro.polak.utilities.Utilities;
+import ro.polak.webserver.protocol.serializer.impl.CookieHeaderSerializer;
 import ro.polak.webserver.servlet.Cookie;
 
 import static org.hamcrest.CoreMatchers.is;

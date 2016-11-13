@@ -1,9 +1,10 @@
-package ro.polak.webserver.protocol.parser;
+package ro.polak.webserver.protocol.parser.impl;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ro.polak.webserver.MultipartHeadersPart;
+import ro.polak.webserver.protocol.parser.Parser;
+import ro.polak.webserver.protocol.parser.impl.MultipartHeadersPartParser;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -11,12 +12,7 @@ import static org.junit.Assert.assertThat;
 
 public class MultipartHeadersPartParserTest {
 
-    private static MultipartHeadersPartParser multipartHeadersPartParser;
-
-    @BeforeClass
-    public static void setup() {
-        multipartHeadersPartParser = new MultipartHeadersPartParser();
-    }
+    private static Parser<MultipartHeadersPart> multipartHeadersPartParser = new MultipartHeadersPartParser();
 
     @Test
     public void shouldParseValidAttachmentHeader() {

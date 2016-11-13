@@ -20,13 +20,14 @@ import ro.polak.webserver.Headers;
 import ro.polak.webserver.MultipartRequestHandler;
 import ro.polak.webserver.RequestStatus;
 import ro.polak.webserver.Statistics;
-import ro.polak.webserver.protocol.parser.CookieParser;
-import ro.polak.webserver.protocol.parser.HeadersParser;
-import ro.polak.webserver.protocol.parser.QueryStringParser;
-import ro.polak.webserver.protocol.parser.RequestStatusParser;
 import ro.polak.webserver.protocol.exception.MalformedOrUnsupporedMethodProtocolException;
 import ro.polak.webserver.protocol.exception.StatusLineTooLongProtocolException;
 import ro.polak.webserver.protocol.exception.UriTooLongProtocolException;
+import ro.polak.webserver.protocol.parser.Parser;
+import ro.polak.webserver.protocol.parser.impl.CookieParser;
+import ro.polak.webserver.protocol.parser.impl.HeadersParser;
+import ro.polak.webserver.protocol.parser.impl.QueryStringParser;
+import ro.polak.webserver.protocol.parser.impl.RequestStatusParser;
 
 /**
  * Utility facilitating creating new requests out of the socket.
@@ -53,10 +54,10 @@ public class HttpRequestWrapperFactory {
         METHOD_MAX_LENGTH = maxMethodLenth;
     }
 
-    private static HeadersParser headersParser = new HeadersParser();
-    private static QueryStringParser queryStringParser = new QueryStringParser();
-    private static RequestStatusParser statusParser = new RequestStatusParser();
-    private static CookieParser cookieParser = new CookieParser();
+    private static Parser<Headers> headersParser = new HeadersParser();
+    private static Parser<Map<String, String>> queryStringParser = new QueryStringParser();
+    private static Parser<RequestStatus> statusParser = new RequestStatusParser();
+    private static Parser<Map<String, Cookie>> cookieParser = new CookieParser();
 
     private String tempPath;
 

@@ -1,9 +1,10 @@
-package ro.polak.webserver.protocol.parser;
+package ro.polak.webserver.protocol.parser.impl;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ro.polak.webserver.Headers;
+import ro.polak.webserver.protocol.parser.Parser;
+import ro.polak.webserver.protocol.parser.impl.HeadersParser;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -11,12 +12,7 @@ import static org.junit.Assert.assertThat;
 
 public class HeadersParserTest {
 
-    private static HeadersParser headersParser;
-
-    @BeforeClass
-    public static void setup() {
-        headersParser = new HeadersParser();
-    }
+    private static Parser<Headers> headersParser = new HeadersParser();
 
     @Test
     public void shouldParseSimpleHeaders() {

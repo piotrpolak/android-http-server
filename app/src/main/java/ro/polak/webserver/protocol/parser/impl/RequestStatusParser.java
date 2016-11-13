@@ -5,9 +5,10 @@
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
-package ro.polak.webserver.protocol.parser;
+package ro.polak.webserver.protocol.parser.impl;
 
 import ro.polak.webserver.RequestStatus;
+import ro.polak.webserver.protocol.parser.Parser;
 
 /**
  * Utility for parsing HTTP status line.
@@ -15,7 +16,7 @@ import ro.polak.webserver.RequestStatus;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201611
  */
-public class RequestStatusParser {
+public class RequestStatusParser implements Parser<RequestStatus> {
 
     /**
      * Parses status line
@@ -23,6 +24,7 @@ public class RequestStatusParser {
      * @param input
      * @return
      */
+    @Override
     public RequestStatus parse(String input) {
 
         RequestStatus status = new RequestStatus();

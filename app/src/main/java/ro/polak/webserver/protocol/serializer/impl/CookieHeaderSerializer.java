@@ -4,11 +4,12 @@
  * <p/>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
-package ro.polak.webserver;
+package ro.polak.webserver.protocol.serializer.impl;
 
 import java.util.Date;
 
 import ro.polak.utilities.Utilities;
+import ro.polak.webserver.protocol.serializer.Serializer;
 import ro.polak.webserver.servlet.Cookie;
 
 /**
@@ -17,7 +18,7 @@ import ro.polak.webserver.servlet.Cookie;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201611
  */
-public class CookieHeaderSerializer {
+public class CookieHeaderSerializer implements Serializer<Cookie> {
 
     private static final String SEPARATOR = "; ";
     private static final String EQUALS = "=";
@@ -28,6 +29,7 @@ public class CookieHeaderSerializer {
      * @param cookie
      * @return
      */
+    @Override
     public String serialize(Cookie cookie) {
         StringBuilder sb = new StringBuilder();
         sb.append(cookie.getName())

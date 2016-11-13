@@ -1,10 +1,12 @@
-package ro.polak.webserver.protocol.parser;
+package ro.polak.webserver.protocol.parser.impl;
 
 import org.junit.Test;
 
 import java.util.Map;
 
 import ro.polak.utilities.Utilities;
+import ro.polak.webserver.protocol.parser.Parser;
+import ro.polak.webserver.protocol.parser.impl.CookieParser;
 import ro.polak.webserver.servlet.Cookie;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -13,7 +15,7 @@ import static org.junit.Assert.assertThat;
 
 public class CookieParserTest {
 
-    private static CookieParser cookieParser = new CookieParser();
+    private static Parser<Map<String, Cookie>> cookieParser = new CookieParser();
 
     @Test
     public void shouldParseCookieHavingSpaceInValue() {

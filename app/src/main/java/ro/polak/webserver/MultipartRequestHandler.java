@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import ro.polak.utilities.RandomStringGenerator;
-import ro.polak.webserver.protocol.parser.MultipartHeadersPartParser;
+import ro.polak.webserver.protocol.parser.Parser;
+import ro.polak.webserver.protocol.parser.impl.MultipartHeadersPartParser;
 import ro.polak.webserver.servlet.UploadedFile;
 
 /**
@@ -55,7 +56,7 @@ public class MultipartRequestHandler {
     private Map<String, String> post;
     private boolean wasHandledBefore;
 
-    private static MultipartHeadersPartParser multipartHeadersPartParser = new MultipartHeadersPartParser();
+    private static Parser<MultipartHeadersPart> multipartHeadersPartParser = new MultipartHeadersPartParser();
 
     /**
      * Constructor

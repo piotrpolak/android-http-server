@@ -70,6 +70,9 @@ public class MainController implements Controller {
 
     @Override
     public void start() {
+
+        ensureGuiIsNonEmpty();
+
         gui.initialize(this);
         try {
             String baseConfigPath;
@@ -92,6 +95,9 @@ public class MainController implements Controller {
 
     @Override
     public void stop() {
+
+        ensureGuiIsNonEmpty();
+
         if (webServer != null) {
             webServer.stopServer();
             webServer = null;
@@ -117,7 +123,7 @@ public class MainController implements Controller {
     private ServerConfig getServerConfig(String baseConfigPath) {
         ServerConfigImpl serverConfig;
 
-        String tempPath = System.getProperty("java.io.tmpdir") + "webserver" + File.separator;
+        String tempPath = getTempPath();
 
         try {
             serverConfig = ServerConfigImpl.createFromPath(baseConfigPath, tempPath);
@@ -128,6 +134,10 @@ public class MainController implements Controller {
 
         serverConfig.setResourceProviders(selectActiveResourceProviders(serverConfig));
         return serverConfig;
+    }
+
+    private String getTempPath() {
+        return System.getProperty("java.io.tmpdir") + "webserver" + File.separator;
     }
 
     /**
@@ -175,5 +185,32 @@ public class MainController implements Controller {
         servletContext.setAttribute(ANDROID_CONTENT_CONTEXT, getAndroidContext());
 
         return servletContext;
+    }
+
+    private void ensureGuiIsNonEmpty() {
+        if (gui == null) {
+            gui = new DummyServerGui();
+        }
+    }
+
+    /**
+     * Default dummy server GUI.
+     *
+     * @author Piotr Polak piotr [at] polak [dot] ro
+     * @since 201611
+     */
+    private static class DummyServerGui implements ServerGui {
+
+        @Override
+        public void initialize(Controller controller) {
+        }
+
+        @Override
+        public void stop() {
+        }
+
+        @Override
+        public void start() {
+        }
     }
 }

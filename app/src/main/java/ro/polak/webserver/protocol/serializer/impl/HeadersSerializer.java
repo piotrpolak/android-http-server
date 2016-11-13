@@ -1,13 +1,16 @@
 /**************************************************
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
- * <p>
+ * <p/>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.webserver;
+package ro.polak.webserver.protocol.serializer.impl;
 
 import java.util.Set;
+
+import ro.polak.webserver.Headers;
+import ro.polak.webserver.protocol.serializer.Serializer;
 
 /**
  * Serializes headers to text representation.
@@ -15,7 +18,7 @@ import java.util.Set;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201611
  */
-public class HeadersSerializer {
+public class HeadersSerializer implements Serializer<Headers> {
 
     private static final String NEW_LINE = "\r\n";
     public static final String KEY_VALUE_SEPARATOR = ": ";
@@ -25,6 +28,7 @@ public class HeadersSerializer {
      *
      * @return
      */
+    @Override
     public String serialize(Headers headers) {
         Set<String> names = headers.keySet();
         StringBuilder sb = new StringBuilder();

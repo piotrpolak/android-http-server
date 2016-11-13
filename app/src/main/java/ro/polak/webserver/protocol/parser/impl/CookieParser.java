@@ -5,12 +5,13 @@
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
-package ro.polak.webserver.protocol.parser;
+package ro.polak.webserver.protocol.parser.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import ro.polak.utilities.Utilities;
+import ro.polak.webserver.protocol.parser.Parser;
 import ro.polak.webserver.servlet.Cookie;
 
 /**
@@ -19,7 +20,7 @@ import ro.polak.webserver.servlet.Cookie;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201611
  */
-public class CookieParser {
+public class CookieParser implements Parser<Map<String, Cookie>> {
 
     /**
      * Parses cookie string, returns an array representing cookies read.
@@ -27,6 +28,7 @@ public class CookieParser {
      * @param cookiesString
      * @return
      */
+    @Override
     public Map<String, Cookie> parse(String cookiesString) {
 
         Map<String, Cookie> cookies = new HashMap<>();

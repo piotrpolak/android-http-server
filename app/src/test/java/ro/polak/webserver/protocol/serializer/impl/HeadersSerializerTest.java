@@ -1,8 +1,9 @@
-package ro.polak.webserver;
+package ro.polak.webserver.protocol.serializer.impl;
 
 import org.junit.Test;
 
-import ro.polak.webserver.servlet.HttpResponse;
+import ro.polak.webserver.Headers;
+import ro.polak.webserver.protocol.serializer.Serializer;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
@@ -10,13 +11,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class HeadersSerializerTest {
 
+    private static Serializer<Headers> headersSerializer = new HeadersSerializer();
+
     @Test
     public void shouldSerializeResponse() {
         Headers headers = new Headers();
         headers.setHeader("Header", "Value");
         headers.setHeader("SomeOtherHeader", "123");
-
-        HeadersSerializer headersSerializer = new HeadersSerializer();
 
         assertThat(headersSerializer.serialize(headers), anyOf(
                 is("SomeOtherHeader: 123\r\nHeader: Value\r\n\r\n"),
@@ -29,8 +30,6 @@ public class HeadersSerializerTest {
         Headers headers = new Headers();
         headers.setHeader("header", "Value");
         headers.setHeader("someOtherHeader", "123");
-
-        HeadersSerializer headersSerializer = new HeadersSerializer();
 
         assertThat(headersSerializer.serialize(headers), anyOf(
                 is("someOtherHeader: 123\r\nheader: Value\r\n\r\n"),

@@ -5,10 +5,12 @@
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
-package ro.polak.webserver.protocol.parser;
+package ro.polak.webserver.protocol.parser.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import ro.polak.webserver.protocol.parser.Parser;
 
 /**
  * HTTP request headers wrapper
@@ -16,7 +18,7 @@ import java.util.Map;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201609
  */
-public class QueryStringParser {
+public class QueryStringParser implements Parser<Map<String, String>> {
 
     /**
      * Returns parsed query parameters
@@ -24,6 +26,7 @@ public class QueryStringParser {
      * @param queryString
      * @return
      */
+    @Override
     public Map<String, String> parse(String queryString) {
         Map<String, String> parameters = new HashMap<>();
         String queryParametersArray[] = queryString.split("&");

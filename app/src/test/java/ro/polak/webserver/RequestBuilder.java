@@ -1,12 +1,15 @@
 package ro.polak.webserver;
 
+import ro.polak.webserver.protocol.serializer.Serializer;
+import ro.polak.webserver.protocol.serializer.impl.HeadersSerializer;
+
 public class RequestBuilder {
 
     private final String NEW_LINE = "\r\n";
     private String method;
     private String uri;
     private Headers headers = new Headers();
-    private HeadersSerializer headersSerializer = new HeadersSerializer();
+    private Serializer<Headers> headersSerializer = new HeadersSerializer();
 
     public static RequestBuilder defaultBuilder() {
         RequestBuilder rb = new RequestBuilder();

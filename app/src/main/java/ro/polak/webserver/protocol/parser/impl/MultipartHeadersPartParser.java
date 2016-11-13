@@ -5,10 +5,11 @@
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
-package ro.polak.webserver.protocol.parser;
+package ro.polak.webserver.protocol.parser.impl;
 
 import ro.polak.webserver.Headers;
 import ro.polak.webserver.MultipartHeadersPart;
+import ro.polak.webserver.protocol.parser.Parser;
 
 /**
  * Multipart request headers parser
@@ -16,7 +17,7 @@ import ro.polak.webserver.MultipartHeadersPart;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201611
  */
-public class MultipartHeadersPartParser {
+public class MultipartHeadersPartParser implements Parser<MultipartHeadersPart> {
 
     private static final String NAME_START = "name=\"";
     private static final String FILENAME_START = "filename=\"";
@@ -44,6 +45,7 @@ public class MultipartHeadersPartParser {
      *
      * @param headersString headers
      */
+    @Override
     public MultipartHeadersPart parse(String headersString) {
 
         MultipartHeadersPart part = new MultipartHeadersPart();

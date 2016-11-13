@@ -18,9 +18,10 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import ro.polak.webserver.CookieHeaderSerializer;
+import ro.polak.webserver.protocol.serializer.impl.CookieHeaderSerializer;
 import ro.polak.webserver.Headers;
-import ro.polak.webserver.HeadersSerializer;
+import ro.polak.webserver.protocol.serializer.Serializer;
+import ro.polak.webserver.protocol.serializer.impl.HeadersSerializer;
 import ro.polak.webserver.Statistics;
 
 /**
@@ -34,7 +35,7 @@ public class HttpResponseWrapper implements HttpResponse {
     private static final String NEW_LINE = "\r\n";
 
     private static Charset charset = Charset.forName("UTF-8");
-    private static HeadersSerializer headersSerializer = new HeadersSerializer();
+    private static Serializer<Headers> headersSerializer = new HeadersSerializer();
     private static final CookieHeaderSerializer cookieHeaderSerializer = new CookieHeaderSerializer();
 
     private Headers headers;

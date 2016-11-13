@@ -39,13 +39,14 @@ import ro.polak.webserver.session.storage.FileSessionStorage;
 public class MainController implements Controller {
 
     private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
+    private static final String ANDROID_CONTENT_CONTEXT = "android.content.Context";
 
     private WebServer webServer;
     private ServerGui gui;
     private Object context;
 
     /**
-     * Making the controller constructor private for singleton
+     * Default constructor.
      */
     public MainController() {
         Thread.currentThread().setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -151,16 +152,6 @@ public class MainController implements Controller {
                 serverConfig.getServletMappedExtension());
     }
 
-    private ServletContextWrapper getServletContext(ServerConfig serverConfig) {
-        ServletContextWrapper servletContext = new ServletContextWrapper(serverConfig,
-                new FileSessionStorage(serverConfig.getTempPath()));
-
-        servletContext.setAttribute(ServerConfig.class.getName(), serverConfig);
-        servletContext.setAttribute("android.content.Context", getAndroidContext()); // Must be Android independent
-
-        return servletContext;
-    }
-
     private ResourceProvider getAssetsResourceProvider(MimeTypeMapping mimeTypeMapping) {
         String assetBasePath = "public";
         if (getAndroidContext() != null) {
@@ -169,5 +160,16 @@ public class MainController implements Controller {
         } else {
             return new FileResourceProvider(mimeTypeMapping, "./app/src/main/assets/" + assetBasePath);
         }
+    }
+
+    private ServletContextWrapper getServletContext(ServerConfig serverConfig) {
+        ServletContextWrapper servletContext = new ServletContextWrapper(serverConfig,
+                new FileSessionStorage(serverConfig.getTempPath()));
+
+        servletContext.setAttribute(ServerConfig.class.getName(), serverConfig);
+        // Must be Android independent
+        servletContext.setAttribute(ANDROID_CONTENT_CONTEXT, getAndroidContext());
+
+        return servletContext;
     }
 }

@@ -47,26 +47,19 @@ public class WebServer extends Thread {
      * @param serverSocket
      * @param serverConfig
      */
-    public WebServer(ServerSocket serverSocket, ServerConfig serverConfig) {
+    public WebServer(ServerSocket serverSocket, final ServerConfig serverConfig) {
         this.serverSocket = serverSocket;
         this.serverConfig = serverConfig;
     }
 
     @Override
     public void run() {
-        ThreadPoolExecutor executorPool = new ThreadPoolExecutor(1, serverConfig.getMaxServerThreads(),
-                20, TimeUnit.SECONDS,
-                new ArrayBlockingQueue<Runnable>(100),
-                Executors.defaultThreadFactory(),
-                new ServiceUnavailableHandler()
-        );
-
-        HttpRequestWrapperFactory requestWrapperFactory = new HttpRequestWrapperFactory(getServerConfig().getTempPath());
+        ThreadPoolExecutor threadPoolExecutor = getThreadPoolExecutor();
+        HttpRequestWrapperFactory requestWrapperFactory = new HttpRequestWrapperFactory(serverConfig.getTempPath());
 
         while (listen) {
             try {
-                Socket socket = serverSocket.accept();
-                executorPool.execute(new ServerRunnable(socket, getServerConfig(), requestWrapperFactory));
+                threadPoolExecutor.execute(new ServerRunnable(serverSocket.accept(), serverConfig, requestWrapperFactory));
             } catch (IOException e) {
                 if (listen) {
                     LOGGER.log(Level.SEVERE, "Communication error", e);
@@ -79,7 +72,16 @@ public class WebServer extends Thread {
         } catch (IOException e) {
         }
 
-        executorPool.shutdown();
+        threadPoolExecutor.shutdown();
+    }
+
+    private ThreadPoolExecutor getThreadPoolExecutor() {
+        return new ThreadPoolExecutor(1, serverConfig.getMaxServerThreads(),
+                20, TimeUnit.SECONDS,
+                new ArrayBlockingQueue<Runnable>(serverConfig.getMaxServerThreads() * 3),
+                Executors.defaultThreadFactory(),
+                new ServiceUnavailableHandler()
+        );
     }
 
     /**

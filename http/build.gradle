@@ -1,0 +1,10 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7;
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.+'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
+}

@@ -9,12 +9,12 @@ package admin;
 
 import java.io.File;
 
+import ro.polak.http.ServerConfig;
+import ro.polak.http.servlet.FileUpload;
+import ro.polak.http.servlet.HttpRequest;
+import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.Servlet;
 import ro.polak.utilities.Utilities;
-import ro.polak.webserver.ServerConfig;
-import ro.polak.webserver.servlet.FileUpload;
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
-import ro.polak.webserver.servlet.Servlet;
 
 public class UpdateConfiguration extends Servlet {
 

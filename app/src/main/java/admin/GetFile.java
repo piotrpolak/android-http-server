@@ -10,14 +10,13 @@ package admin;
 import java.io.File;
 import java.io.IOException;
 
+import ro.polak.http.Headers;
+import ro.polak.http.ServerConfig;
+import ro.polak.http.servlet.HttpRequest;
+import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.Servlet;
 import ro.polak.utilities.Utilities;
-import ro.polak.webserver.Headers;
-import ro.polak.webserver.ServerConfig;
-import ro.polak.webserver.controller.MainController;
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
-import ro.polak.webserver.servlet.HttpResponseWrapper;
-import ro.polak.webserver.servlet.Servlet;
 
 public class GetFile extends Servlet {
 

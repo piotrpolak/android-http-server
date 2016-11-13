@@ -1,0 +1,44 @@
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2008-2015
+ **************************************************/
+
+package ro.polak.http.controller;
+
+import ro.polak.http.WebServer;
+import ro.polak.http.gui.ServerGui;
+
+/**
+ * Defines methods that must be implemented by the server controller
+ *
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @since 201012
+ */
+public interface Controller {
+
+    /**
+     * Starts the server logic
+     */
+    void start();
+
+    /**
+     * Stops the server logic.
+     */
+    void stop();
+
+    /**
+     * Sets server GUI
+     *
+     * @param gui
+     */
+    void setGui(final ServerGui gui);
+
+    /**
+     * Returns webserver instance.
+     *
+     * @return
+     */
+    WebServer getWebServer();
+}

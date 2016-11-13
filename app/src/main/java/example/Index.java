@@ -9,9 +9,9 @@ package example;
 
 import java.io.PrintWriter;
 
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
-import ro.polak.webserver.servlet.Servlet;
+import ro.polak.http.servlet.HttpRequest;
+import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.Servlet;
 
 /**
  * Hello page example page

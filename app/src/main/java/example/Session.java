@@ -7,9 +7,9 @@
 
 package example;
 
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
-import ro.polak.webserver.servlet.Servlet;
+import ro.polak.http.servlet.HttpRequest;
+import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.Servlet;
 
 /**
  * Session usage example page

@@ -14,9 +14,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ro.polak.http.ServerConfig;
+import ro.polak.http.servlet.HttpSessionWrapper;
 import ro.polak.utilities.ConfigReader;
-import ro.polak.webserver.ServerConfig;
-import ro.polak.webserver.servlet.HttpSessionWrapper;
 
 public class AccessControl {
 

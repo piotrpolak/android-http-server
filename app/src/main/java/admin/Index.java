@@ -7,10 +7,10 @@
 
 package admin;
 
-import ro.polak.webserver.ServerConfig;
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
-import ro.polak.webserver.servlet.Servlet;
+import ro.polak.http.ServerConfig;
+import ro.polak.http.servlet.HttpRequest;
+import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.Servlet;
 
 public class Index extends Servlet {
 
@@ -26,7 +26,7 @@ public class Index extends Servlet {
         doc.setOwnerClass(getClass().getSimpleName());
 
         doc.writeln("<div class=\"page-header\"><h1>About</h1></div>");
-        doc.write("<p>" + ro.polak.webserver.WebServer.SIGNATURE + " running.</p>");
+        doc.write("<p>" + ro.polak.http.WebServer.SIGNATURE + " running.</p>");
         doc.write("<p>Small multithread web server written completely in Java SE. ");
         doc.write("Implements most of the HTTP 1.1 specification. Uses JLWS Servlets for handling dynamic pages. ");
         doc.write("Supports cookies, sessions, file uploads.</p>");

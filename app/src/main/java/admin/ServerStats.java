@@ -7,10 +7,10 @@
 
 package admin;
 
-import ro.polak.webserver.ServerConfig;
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
-import ro.polak.webserver.servlet.Servlet;
+import ro.polak.http.ServerConfig;
+import ro.polak.http.servlet.HttpRequest;
+import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.Servlet;
 
 public class ServerStats extends Servlet {
 
@@ -31,19 +31,19 @@ public class ServerStats extends Servlet {
 
         doc.writeln("<table class=\"table\">");
         doc.writeln("<tr>");
-        doc.writeln("   <td>Data received</td><td>" + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.webserver.Statistics.getBytesReceived()) + "</td>");
+        doc.writeln("   <td>Data received</td><td>" + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.http.Statistics.getBytesReceived()) + "</td>");
         doc.writeln("</tr>");
         doc.writeln("<tr>");
-        doc.writeln("   <td>Data sent</td><td>" + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.webserver.Statistics.getBytesSend()) + "</td>");
+        doc.writeln("   <td>Data sent</td><td>" + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.http.Statistics.getBytesSend()) + "</td>");
         doc.writeln("</tr>");
         doc.writeln("<tr>");
-        doc.writeln("   <td>Requests handled</td><td>" + ro.polak.webserver.Statistics.getRequests() + "</td>");
+        doc.writeln("   <td>Requests handled</td><td>" + ro.polak.http.Statistics.getRequests() + "</td>");
         doc.writeln("</tr>");
         doc.writeln("<tr>");
-        doc.writeln("   <td>404 errors</td><td>" + ro.polak.webserver.Statistics.getError404s() + "</td>");
+        doc.writeln("   <td>404 errors</td><td>" + ro.polak.http.Statistics.getError404s() + "</td>");
         doc.writeln("</tr>");
         doc.writeln("<tr>");
-        doc.writeln("   <td>500 errors</td><td>" + ro.polak.webserver.Statistics.getError500s() + "</td>");
+        doc.writeln("   <td>500 errors</td><td>" + ro.polak.http.Statistics.getError500s() + "</td>");
         doc.writeln("</tr>");
         doc.writeln("</table");
 

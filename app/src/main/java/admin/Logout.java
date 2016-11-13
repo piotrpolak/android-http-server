@@ -7,10 +7,10 @@
 
 package admin;
 
-import ro.polak.webserver.ServerConfig;
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
-import ro.polak.webserver.servlet.Servlet;
+import ro.polak.http.ServerConfig;
+import ro.polak.http.servlet.HttpRequest;
+import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.Servlet;
 
 public class Logout extends Servlet {
 

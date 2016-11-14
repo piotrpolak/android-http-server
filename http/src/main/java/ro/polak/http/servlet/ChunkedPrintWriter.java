@@ -19,6 +19,8 @@ import java.io.PrintWriter;
  */
 public class ChunkedPrintWriter extends PrintWriter {
 
+    // TODO Move this capability to the OutputStreamWrapper
+
     private static String NEW_LINE = "\r\n";
     private static String END_LINE = "0\r\n\r\n";
 

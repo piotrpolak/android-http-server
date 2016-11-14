@@ -7,13 +7,15 @@
 
 package admin;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import ro.polak.http.Headers;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.servlet.HttpRequest;
 import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.HttpResponseWrapper;
 import ro.polak.http.servlet.Servlet;
 
 public class BackupConfiguration extends Servlet {
@@ -31,7 +33,15 @@ public class BackupConfiguration extends Servlet {
         response.setContentType("application/octet-stream");
 
         try {
-            ((HttpResponseWrapper) response).serveFile(new java.io.File(serverConfig.getBasePath() + "httpd.conf"));
+            OutputStream out = response.getOutputStream();
+            FileInputStream in = new FileInputStream(new File(serverConfig.getBasePath() + "httpd.conf"));
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = in.read(buffer)) > 0) {
+                out.write(buffer, 0, length);
+            }
+            in.close();
+            out.flush();
         } catch (IOException e) {
         }
     }

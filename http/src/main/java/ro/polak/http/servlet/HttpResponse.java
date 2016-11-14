@@ -7,6 +7,7 @@
 
 package ro.polak.http.servlet;
 
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -116,4 +117,11 @@ public interface HttpResponse {
      * @return request print writer
      */
     PrintWriter getPrintWriter();
+
+    /**
+     * Returns the output stream.
+     *
+     * @return
+     */
+    OutputStream getOutputStream();
 }

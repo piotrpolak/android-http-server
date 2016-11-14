@@ -8,13 +8,14 @@
 package admin;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import ro.polak.http.Headers;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.servlet.HttpRequest;
 import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.HttpResponseWrapper;
 import ro.polak.http.servlet.Servlet;
 import ro.polak.utilities.Utilities;
 
@@ -41,7 +42,16 @@ public class GetFile extends Servlet {
                 response.setContentType(getServletContext().getMimeType(f.getName()));
                 response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename=" + Utilities.URLEncode(f.getName()));
                 try {
-                    ((HttpResponseWrapper) response).serveFile(f); // TODO remove this ugly hack
+                    OutputStream out = response.getOutputStream();
+                    FileInputStream in = new FileInputStream(f);
+                    byte[] buffer = new byte[4096];
+                    int length;
+                    while ((length = in.read(buffer)) > 0) {
+                        out.write(buffer, 0, length);
+                    }
+                    in.close();
+                    out.flush();
+
                 } catch (IOException e) {
                 }
             } else {

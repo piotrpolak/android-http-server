@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ro.polak.http.Headers;
+import ro.polak.http.OutputStreamWrapper;
 import ro.polak.http.Statistics;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.protocol.serializer.impl.CookieHeaderSerializer;
@@ -33,15 +34,19 @@ import ro.polak.http.protocol.serializer.impl.HeadersSerializer;
 public class HttpResponseWrapper implements HttpResponse {
 
     private static final String NEW_LINE = "\r\n";
+    private static final String TRANSFER_ENCODING_CHUNKED = "chunked";
+    private static final String CONNECTION_KEEP_ALIVE = "keep-alive";
+    private static final String CONNECTION_CLOSE = "close";
 
     private static Charset charset = Charset.forName("UTF-8");
     private static Serializer<Headers> headersSerializer = new HeadersSerializer();
     private static final CookieHeaderSerializer cookieHeaderSerializer = new CookieHeaderSerializer();
 
     private Headers headers;
-    private OutputStream out;
+    private OutputStream outputStream;
+    private OutputStream wrappedOutputStream;
     private ChunkedPrintWriter printWriter;
-    private boolean headersFlushed;
+    private boolean isCommitted;
     private List<Cookie> cookies;
     private String status;
 
@@ -51,7 +56,7 @@ public class HttpResponseWrapper implements HttpResponse {
     public HttpResponseWrapper() {
         headers = new Headers();
         setKeepAlive(false);
-        headersFlushed = false;
+        isCommitted = false;
         cookies = new ArrayList<>();
     }
 
@@ -67,7 +72,7 @@ public class HttpResponseWrapper implements HttpResponse {
 
     @Override
     public boolean isCommitted() {
-        return headersFlushed;
+        return isCommitted;
     }
 
     @Override
@@ -88,17 +93,17 @@ public class HttpResponseWrapper implements HttpResponse {
 
     @Override
     public void setKeepAlive(boolean keepAlive) {
-        headers.setHeader(Headers.HEADER_CONNECTION, keepAlive ? "keep-alive" : "close");
+        headers.setHeader(Headers.HEADER_CONNECTION, keepAlive ? CONNECTION_KEEP_ALIVE : CONNECTION_CLOSE);
     }
 
     @Override
     public void setContentLength(int length) {
-        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, "" + length);
+        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, Integer.toString(length));
     }
 
     @Override
     public void setContentLength(long length) {
-        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, "" + length);
+        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, Long.toString(length));
     }
 
     @Override
@@ -115,21 +120,27 @@ public class HttpResponseWrapper implements HttpResponse {
     public PrintWriter getPrintWriter() {
         // Creating print writer if it does not exist
         if (printWriter == null) {
-            printWriter = new ChunkedPrintWriter(out);
+            printWriter = new ChunkedPrintWriter(outputStream);
         }
 
         return printWriter;
     }
 
+    @Override
+    public OutputStream getOutputStream() {
+        return wrappedOutputStream;
+    }
+
     /**
-     * Creates and returns a response out of the socket
+     * Creates and returns a response outputStream of the socket
      *
      * @param socket
      * @return
      */
     public static HttpResponseWrapper createFromSocket(Socket socket) throws IOException {
         HttpResponseWrapper response = new HttpResponseWrapper();
-        response.out = socket.getOutputStream();
+        response.outputStream = socket.getOutputStream();
+        response.wrappedOutputStream = new OutputStreamWrapper(socket.getOutputStream(), response);
         return response;
     }
 
@@ -142,21 +153,21 @@ public class HttpResponseWrapper implements HttpResponse {
      * @throws IllegalStateException when headers have been previously flushed.
      * @throws IOException
      */
-    private void flushHeaders() throws IllegalStateException, IOException {
+    public void flushHeaders() throws IllegalStateException, IOException {
 
         // Prevent from flushing headers more than once
-        if (headersFlushed) {
+        if (isCommitted) {
             throw new IllegalStateException("Headers already committed");
         }
 
-        headersFlushed = true;
+        isCommitted = true;
 
         for (Cookie cookie : cookies) {
             headers.setHeader(Headers.HEADER_SET_COOKIE, cookieHeaderSerializer.serialize(cookie));
         }
 
         // TODO Use string builder
-        serveStream(new ByteArrayInputStream((getStatus() + NEW_LINE + headersSerializer.serialize(headers)).getBytes(charset)), false);
+        serveStream(new ByteArrayInputStream((getStatus() + NEW_LINE + headersSerializer.serialize(headers)).getBytes(charset)));
     }
 
     /**
@@ -166,9 +177,12 @@ public class HttpResponseWrapper implements HttpResponse {
      * @throws IOException
      */
     public void serveFile(File file) throws IOException {
+        // TODO Eliminate this method
+        // TODO Use chunked encoding if the length of the file is not known
+
         setContentLength(file.length());
         FileInputStream inputStream = new FileInputStream(file);
-        serveStream(inputStream);
+        serveStream(inputStream, true);
     }
 
     /**
@@ -178,6 +192,7 @@ public class HttpResponseWrapper implements HttpResponse {
      * @throws IOException
      */
     public void serveStream(InputStream inputStream) throws IOException {
+        // TODO Make it the default method, for best results move it to an external helper
         serveStream(inputStream, false);
     }
 
@@ -187,6 +202,8 @@ public class HttpResponseWrapper implements HttpResponse {
      * @throws IOException
      */
     private void serveStream(InputStream inputStream, boolean flushHeaders) throws IOException {
+        // TODO Eliminate flushHeaders parameter
+
         // Make sure headers are served before the file content
         // If this throws an IllegalStateException, it means you have tried (incorrectly) to flush headers before
         if (flushHeaders) {
@@ -197,13 +214,13 @@ public class HttpResponseWrapper implements HttpResponse {
         byte[] buffer = new byte[512];
 
         while ((numberOfBufferReadBytes = inputStream.read(buffer)) != -1) {
-            out.write(buffer, 0, numberOfBufferReadBytes);
-            out.flush();
+            outputStream.write(buffer, 0, numberOfBufferReadBytes);
+            outputStream.flush();
 
             Statistics.addBytesSend(numberOfBufferReadBytes);
         }
         // Flushing remaining buffer, just in case
-        out.flush();
+        outputStream.flush();
 
         try {
             inputStream.close();
@@ -231,7 +248,7 @@ public class HttpResponseWrapper implements HttpResponse {
             return false;
         }
 
-        return getHeaders().getHeader(Headers.HEADER_TRANSFER_ENCODING).toLowerCase().equals("chunked");
+        return getHeaders().getHeader(Headers.HEADER_TRANSFER_ENCODING).toLowerCase().equals(TRANSFER_ENCODING_CHUNKED);
     }
 
     /**
@@ -243,11 +260,13 @@ public class HttpResponseWrapper implements HttpResponse {
         // It makes no sense to set chunked encoding if there is no print writer
         if (printWriter != null) {
             if (!getHeaders().containsHeader(Headers.HEADER_TRANSFER_ENCODING) && !getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
-                getHeaders().setHeader(Headers.HEADER_TRANSFER_ENCODING, "chunked");
+                getHeaders().setHeader(Headers.HEADER_TRANSFER_ENCODING, TRANSFER_ENCODING_CHUNKED);
             }
         }
 
-        flushHeaders();
+        if (!isCommitted()) {
+            flushHeaders();
+        }
 
         if (printWriter != null) {
             if (isTransferChunked()) {
@@ -256,6 +275,6 @@ public class HttpResponseWrapper implements HttpResponse {
             printWriter.flush();
         }
 
-        out.flush();
+        outputStream.flush();
     }
 }

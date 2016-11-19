@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http.activity;
+package ro.polak.webserver.resource.provider.impl;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -22,6 +22,7 @@ import ro.polak.http.ServerConfig;
 import ro.polak.http.impl.DefaultServerConfigFactory;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.resource.provider.impl.FileResourceProvider;
+import ro.polak.webserver.AssetResourceProvider;
 
 /**
  * Android server config factory.
@@ -50,7 +51,11 @@ public class AndroidServerConfigFactory extends DefaultServerConfigFactory {
 
     @Override
     protected String getTempPath() {
-        return ((Context) context).getCacheDir().getAbsolutePath() + File.separator + "webserver" + File.separator;
+        if (context != null) {
+            return ((Context) context).getCacheDir().getAbsolutePath() + File.separator + "webserver" + File.separator;
+        } else {
+            return super.getTempPath();
+        }
     }
 
     @Override

@@ -20,9 +20,9 @@ import ro.polak.http.impl.DefaultServerConfigFactory;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201008
  */
-public class CliServerGui implements ServerGui {
+public class DefaultCliServerGui implements ServerGui {
 
-    private static final Logger LOGGER = Logger.getLogger(CliServerGui.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(DefaultCliServerGui.class.getName());
 
     public void init() {
         System.setProperty("java.util.logging.SimpleFormatter.format",
@@ -32,7 +32,7 @@ public class CliServerGui implements ServerGui {
         rootLog.setLevel(Level.FINE);
         rootLog.getHandlers()[0].setLevel(Level.FINE);
 
-        ServerGui gui = new CliServerGui();
+        ServerGui gui = new DefaultCliServerGui();
         System.out.println("   __ __ ______ ______ ___    ____                         \n" +
                 "  / // //_  __//_  __// _ \\  / __/___  ____ _  __ ___  ____\n" +
                 " / _  /  / /    / /  / ___/ _\\ \\ / -_)/ __/| |/ // -_)/ __/\n" +
@@ -54,7 +54,7 @@ public class CliServerGui implements ServerGui {
      * @param args
      */
     public static void main(String[] args) {
-        (new CliServerGui()).init();
+        (new DefaultCliServerGui()).init();
     }
 
     @Override

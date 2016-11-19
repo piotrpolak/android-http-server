@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http.activity;
+package ro.polak.webserver;
 
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;

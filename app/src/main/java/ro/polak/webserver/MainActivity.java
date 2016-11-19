@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
 
-package ro.polak.http.activity;
+package ro.polak.webserver;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -31,6 +31,7 @@ import ro.polak.http.R;
 import ro.polak.http.controller.Controller;
 import ro.polak.http.controller.MainController;
 import ro.polak.http.gui.ServerGui;
+import ro.polak.webserver.resource.provider.impl.AndroidServerConfigFactory;
 
 /**
  * The main server Android activity

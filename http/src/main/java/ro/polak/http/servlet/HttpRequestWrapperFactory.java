@@ -43,23 +43,24 @@ public class HttpRequestWrapperFactory {
     private static final String[] RECOGNIZED_METHODS = {"OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT"};
     private static final int METHOD_MAX_LENGTH;
     private static final List<String> RECOGNIZED_METHODS_LIST = Arrays.asList(RECOGNIZED_METHODS);
+    private static final String HEADERS_END_DELIMINATOR = "\n\r\n";
 
     static {
-        int maxMethodLenth = 0;
+        int maxMethodLength = 0;
         for (String method : RECOGNIZED_METHODS) {
-            if (method.length() > maxMethodLenth) {
-                maxMethodLenth = method.length();
+            if (method.length() > maxMethodLength) {
+                maxMethodLength = method.length();
             }
         }
-        METHOD_MAX_LENGTH = maxMethodLenth;
+        METHOD_MAX_LENGTH = maxMethodLength;
     }
 
-    private static Parser<Headers> headersParser = new HeadersParser();
-    private static Parser<Map<String, String>> queryStringParser = new QueryStringParser();
-    private static Parser<RequestStatus> statusParser = new RequestStatusParser();
-    private static Parser<Map<String, Cookie>> cookieParser = new CookieParser();
+    private static final Parser<Headers> headersParser = new HeadersParser();
+    private static final Parser<Map<String, String>> queryStringParser = new QueryStringParser();
+    private static final Parser<RequestStatus> statusParser = new RequestStatusParser();
+    private static final Parser<Map<String, Cookie>> cookieParser = new CookieParser();
 
-    private String tempPath;
+    private final String tempPath;
 
     /**
      * Default constructor.
@@ -91,15 +92,12 @@ public class HttpRequestWrapperFactory {
             throw new UriTooLongProtocolException("Uri length exceeded max length with" + uriLengthExceededWith + " characters");
         }
 
-        String headersString = getHeaders(in);
-        Statistics.addBytesReceived(headersString.length() + 3);
-
         request.setInputStream(in);
         assignSocketMetadata(socket, request);
         request.setStatus(status);
         request.setGetParameters(queryStringParser.parse(status.getQueryString()));
 
-
+        String headersString = getHeaders(in);
         if (headersString.length() > 3) {
             request.setHeaders(headersParser.parse(headersString));
             request.setCookies(getCookies(request.getHeaders()));
@@ -115,7 +113,6 @@ public class HttpRequestWrapperFactory {
     }
 
     private void assignSocketMetadata(Socket socket, HttpRequestWrapper request) {
-        // TODO Inspect values set here
         request.setSecure(false);
         request.setScheme("http");
         request.setRemoteAddr(socket.getInetAddress().getHostAddress());
@@ -177,25 +174,25 @@ public class HttpRequestWrapperFactory {
         StringBuilder headersString = new StringBuilder();
         byte[] buffer;
         buffer = new byte[1];
+        int headersEndSymbolLength = HEADERS_END_DELIMINATOR.length();
+
         while (in.read(buffer, 0, buffer.length) != -1) {
-            // Appending input headers
             headersString.append((char) buffer[0]);
-            // Check if the headers length is at least 3 characters long
-            if (headersString.length() > 3) {
-                // Getting the last 3 characters
-                if (headersString.substring(headersString.length() - 3, headersString.length()).equals("\n\r\n")) {
-                    // Remove the last 3 characters
-                    headersString.setLength(headersString.length() - 3);
+            if (headersString.length() > headersEndSymbolLength) {
+                String endChars = headersString.substring(headersString.length() - headersEndSymbolLength, headersString.length());
+                if (endChars.equals(HEADERS_END_DELIMINATOR)) {
+                    headersString.setLength(headersString.length() - headersEndSymbolLength);
                     break;
                 }
             }
         }
 
+        Statistics.addBytesReceived(headersString.length() + headersEndSymbolLength);
         return headersString.toString();
     }
 
     private void handlePostRequest(HttpRequestWrapper request, InputStream in) throws IOException {
-        int postLength = 0; // TODO Consider long
+        int postLength = 0;
         if (request.getHeaders().containsHeader(request.getHeaders().HEADER_CONTENT_LENGTH)) {
             try {
                 postLength = Integer.parseInt(request.getHeaders().getHeader(request.getHeaders().HEADER_CONTENT_LENGTH));
@@ -222,7 +219,7 @@ public class HttpRequestWrapperFactory {
     }
 
     private void handlePostPlainRequest(HttpRequestWrapper request, InputStream in, int postLength) throws IOException {
-        byte[] buffer;// For non-multipart requests
+        byte[] buffer;
         buffer = new byte[1];
         StringBuilder postLine = new StringBuilder();
         while (in.read(buffer, 0, buffer.length) != -1) {
@@ -239,19 +236,15 @@ public class HttpRequestWrapperFactory {
     private void handlePostMultipartRequest(HttpRequestWrapper request, InputStream in, int postLength) throws IOException {
         String boundary = request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE);
         int boundaryPosition = boundary.toLowerCase().indexOf(BOUNDARY_START);
-
-        // Checking whether boundary= exists
         if (boundaryPosition > -1) {
-            // Protection against illegal indexes
-            try {
-                boundary = boundary.substring(boundaryPosition + BOUNDARY_START.length(), boundary.length());
+            int boundaryStartPos = boundaryPosition + BOUNDARY_START.length();
+            if (boundaryStartPos < boundary.length()) {
+                boundary = boundary.substring(boundaryStartPos, boundary.length());
                 MultipartRequestHandler mrh = new MultipartRequestHandler(in, postLength, boundary, tempPath);
                 mrh.handle();
 
                 request.setPostParameters(mrh.getPost());
                 request.setFileUpload(new FileUpload(mrh.getUploadedFiles()));
-            } catch (IndexOutOfBoundsException e) {
-                // TODO Refactor, avoid try catch
             }
         }
     }

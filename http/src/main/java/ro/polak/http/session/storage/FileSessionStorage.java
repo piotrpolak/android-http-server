@@ -29,8 +29,8 @@ public class FileSessionStorage implements SessionStorage {
 
     private static final Logger LOGGER = Logger.getLogger(FileSessionStorage.class.getName());
 
-    private String tempPath;
-    private static Pattern pattern = Pattern.compile("[a-z]+");
+    private final String tempPath;
+    private static final Pattern pattern = Pattern.compile("[a-z]+");
 
     /**
      * Default constructor.
@@ -43,7 +43,7 @@ public class FileSessionStorage implements SessionStorage {
 
     @Override
     public void persistSession(HttpSessionWrapper session) throws IOException {
-        if (session.getId() == null || session.getId().equals("")) {
+        if (!isSessionIdValid(session.getId())) {
             throw new IllegalArgumentException("Session ID can not be empty");
         }
 
@@ -51,42 +51,20 @@ public class FileSessionStorage implements SessionStorage {
         if (!file.exists()) {
             file.createNewFile();
         }
-        FileOutputStream fos = new FileOutputStream(file);
-        ObjectOutputStream out = new ObjectOutputStream(fos);
-        out.writeObject(session);
+        writeSession(session, file);
 
         LOGGER.log(Level.FINE, "Persisted session {0} in {1}",
                 new Object[]{session.getId(), tempPath});
-
-        try {
-            out.close();
-        } catch (IOException e) {
-        }
     }
 
     @Override
     public HttpSessionWrapper getSession(String id) throws IOException {
         HttpSessionWrapper session = null;
-        boolean isIdValid = id != null && id.length() == 32 && pattern.matcher(id).matches();
-        if (isIdValid) {
+        if (isSessionIdValid(id)) {
             File file = new File(getSessionStoragePath(id));
 
             if (file.exists()) {
-                try {
-                    FileInputStream fis = new FileInputStream(file);
-                    ObjectInputStream in = new ObjectInputStream(fis);
-                    session = (HttpSessionWrapper) in.readObject();
-
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                    }
-
-                } catch (ClassNotFoundException e) {
-                } catch (IOException e) {
-                    LOGGER.log(Level.WARNING,
-                            "Unable to read session " + id + " under " + tempPath, e);
-                }
+                session = readSession(id, session, file);
             } else {
                 LOGGER.log(Level.FINE, "Session file does not exist {0} under {1}",
                         new Object[]{id, tempPath});
@@ -96,10 +74,51 @@ public class FileSessionStorage implements SessionStorage {
         return session;
     }
 
+    /**
+     * Session ID must be verified both on reading and writing in order to prevent from a potential
+     * file system damage in case Session ID is a valid file path.
+     *
+     * @param id
+     * @return
+     */
+    private boolean isSessionIdValid(String id) {
+        return id != null && id.length() == 32 && pattern.matcher(id).matches();
+    }
+
     @Override
     public boolean removeSession(HttpSessionWrapper session) {
         File file = new File(getSessionStoragePath(session.getId()));
         return file.delete();
+    }
+
+    private HttpSessionWrapper readSession(String id, HttpSessionWrapper session, File file) {
+        try {
+            FileInputStream fileInputStream = new FileInputStream(file);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            session = (HttpSessionWrapper) objectInputStream.readObject();
+
+            try {
+                objectInputStream.close();
+                fileInputStream.close();
+            } catch (IOException e) {
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            LOGGER.log(Level.WARNING,
+                    "Unable to read session " + id + " under " + tempPath, e);
+        }
+        return session;
+    }
+
+    private void writeSession(HttpSessionWrapper session, File file) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(session);
+
+        try {
+            objectOutputStream.close();
+            fileOutputStream.close();
+        } catch (IOException e) {
+        }
     }
 
     private String getSessionStoragePath(String id) {

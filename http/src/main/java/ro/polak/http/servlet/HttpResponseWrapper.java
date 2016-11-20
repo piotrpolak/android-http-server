@@ -120,7 +120,7 @@ public class HttpResponseWrapper implements HttpResponse {
     public PrintWriter getPrintWriter() {
         // Creating print writer if it does not exist
         if (printWriter == null) {
-            printWriter = new ChunkedPrintWriter(outputStream);
+            printWriter = new ChunkedPrintWriter(wrappedOutputStream);
         }
 
         return printWriter;

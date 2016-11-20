@@ -17,9 +17,6 @@ import static org.junit.Assert.assertThat;
  */
 public class ProtocolIT extends AbstractIT {
 
-    private String HOST = "localhost";
-    private int PORT = 8080;
-
     @Test(expected = IOException.class)
     public void shouldCloseSocketAfterCloseConnectionRequest() throws IOException, InterruptedException {
         String requestBody = RequestBuilder.defaultBuilder()
@@ -31,8 +28,7 @@ public class ProtocolIT extends AbstractIT {
         Socket socket = null;
         OutputStream out = null;
         try {
-            socket = new Socket(HOST, PORT);
-            socket.setSoTimeout(0);
+            socket = getSocket();
             out = socket.getOutputStream();
             out.write(requestBody.getBytes());
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -62,8 +58,7 @@ public class ProtocolIT extends AbstractIT {
         Socket socket = null;
         OutputStream out;
 
-        socket = new Socket(HOST, PORT);
-        socket.setSoTimeout(0);
+        socket = getSocket();
         out = socket.getOutputStream();
         out.write(requestBody.getBytes());
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -91,8 +86,7 @@ public class ProtocolIT extends AbstractIT {
 
         Socket socket = null;
         OutputStream out;
-        socket = new Socket(HOST, PORT);
-        socket.setSoTimeout(0);
+        socket = getSocket();
         out = socket.getOutputStream();
         out.write(requestBody.getBytes());
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -120,8 +114,7 @@ public class ProtocolIT extends AbstractIT {
 
         Socket socket = null;
         OutputStream out;
-        socket = new Socket(HOST, PORT);
-        socket.setSoTimeout(0);
+        socket = getSocket();
         out = socket.getOutputStream();
         out.write(requestBody.getBytes());
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -173,8 +166,7 @@ public class ProtocolIT extends AbstractIT {
 
         Socket socket = null;
         OutputStream out;
-        socket = new Socket(HOST, PORT);
-        socket.setSoTimeout(0);
+        socket = getSocket();
         out = socket.getOutputStream();
         out.write(requestBody.getBytes());
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -202,8 +194,7 @@ public class ProtocolIT extends AbstractIT {
 
         Socket socket = null;
         OutputStream out;
-        socket = new Socket(HOST, PORT);
-        socket.setSoTimeout(0);
+        socket = getSocket();
         out = socket.getOutputStream();
         out.write(requestBody.getBytes());
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));

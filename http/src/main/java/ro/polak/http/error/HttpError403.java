@@ -8,7 +8,9 @@
 package ro.polak.http.error;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import ro.polak.http.servlet.HttpResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
@@ -49,7 +51,15 @@ public class HttpError403 implements HttpError {
             File file = new File(errorDocumentPath);
 
             if (file.exists()) {
-                ((HttpResponseWrapper) response).serveFile(file);
+                response.setContentLength(file.length());
+                ((HttpResponseWrapper) response).flushHeaders();
+                InputStream inputStream = new FileInputStream(file);
+                ((HttpResponseWrapper) response).serveStream(inputStream);
+                ((HttpResponseWrapper) response).flush();
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                }
             } else {
                 // Serve 500
                 HttpError500 error500 = new HttpError500();

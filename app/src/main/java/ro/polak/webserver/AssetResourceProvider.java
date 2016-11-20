@@ -60,8 +60,14 @@ public class AssetResourceProvider implements ResourceProvider {
             // TODO Set mime type
             //response.setContentType(JLWSConfig.MimeTypeMapping.getMimeTypeByExtension(fileExt));
 
-            // DO NOT CLOSE STREAM HERE
+            response.flushHeaders();
             response.serveStream(inputStream);
+
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+            }
+
             return true;
         } catch (IOException e) {
 

@@ -7,8 +7,6 @@
 package ro.polak.http.servlet;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -118,7 +116,6 @@ public class HttpResponseWrapper implements HttpResponse {
 
     @Override
     public PrintWriter getPrintWriter() {
-        // Creating print writer if it does not exist
         if (printWriter == null) {
             printWriter = new ChunkedPrintWriter(wrappedOutputStream);
         }
@@ -154,10 +151,8 @@ public class HttpResponseWrapper implements HttpResponse {
      * @throws IOException
      */
     public void flushHeaders() throws IllegalStateException, IOException {
-
-        // Prevent from flushing headers more than once
         if (isCommitted) {
-            throw new IllegalStateException("Headers already committed");
+            throw new IllegalStateException("Headers should not be committed more than once.");
         }
 
         isCommitted = true;
@@ -166,23 +161,13 @@ public class HttpResponseWrapper implements HttpResponse {
             headers.setHeader(Headers.HEADER_SET_COOKIE, cookieHeaderSerializer.serialize(cookie));
         }
 
-        // TODO Use string builder
-        serveStream(new ByteArrayInputStream((getStatus() + NEW_LINE + headersSerializer.serialize(headers)).getBytes(charset)));
-    }
-
-    /**
-     * Flushes headers and serves the specified file
-     *
-     * @param file file to be served
-     * @throws IOException
-     */
-    public void serveFile(File file) throws IOException {
-        // TODO Eliminate this method
-        // TODO Use chunked encoding if the length of the file is not known
-
-        setContentLength(file.length());
-        FileInputStream inputStream = new FileInputStream(file);
-        serveStream(inputStream, true);
+        byte[] head = (getStatus() + NEW_LINE + headersSerializer.serialize(headers)).getBytes(charset);
+        InputStream inputStream = new ByteArrayInputStream(head);
+        serveStream(inputStream);
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+        }
     }
 
     /**
@@ -192,24 +177,7 @@ public class HttpResponseWrapper implements HttpResponse {
      * @throws IOException
      */
     public void serveStream(InputStream inputStream) throws IOException {
-        // TODO Make it the default method, for best results move it to an external helper
-        serveStream(inputStream, false);
-    }
-
-    /**
-     * @param inputStream
-     * @param flushHeaders
-     * @throws IOException
-     */
-    private void serveStream(InputStream inputStream, boolean flushHeaders) throws IOException {
-        // TODO Eliminate flushHeaders parameter
-
-        // Make sure headers are served before the file content
-        // If this throws an IllegalStateException, it means you have tried (incorrectly) to flush headers before
-        if (flushHeaders) {
-            flushHeaders();
-        }
-
+        // TODO for best results move it to an external helper
         int numberOfBufferReadBytes;
         byte[] buffer = new byte[512];
 
@@ -218,14 +186,6 @@ public class HttpResponseWrapper implements HttpResponse {
             outputStream.flush();
 
             Statistics.addBytesSend(numberOfBufferReadBytes);
-        }
-        // Flushing remaining buffer, just in case
-        outputStream.flush();
-
-        try {
-            inputStream.close();
-        } // Closing file input stream
-        catch (IOException e) {
         }
     }
 

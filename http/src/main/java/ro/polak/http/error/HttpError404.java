@@ -8,7 +8,9 @@
 package ro.polak.http.error;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import ro.polak.http.Statistics;
 import ro.polak.http.servlet.HttpResponse;
@@ -53,7 +55,14 @@ public class HttpError404 implements HttpError {
 
             if (file.exists()) {
                 response.setContentLength(file.length());
-                ((HttpResponseWrapper) response).serveFile(file);
+                ((HttpResponseWrapper) response).flushHeaders();
+                InputStream inputStream = new FileInputStream(file);
+                ((HttpResponseWrapper) response).serveStream(inputStream);
+                ((HttpResponseWrapper) response).flush();
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                }
             } else {
                 // Serve 500
                 HttpError500 error500 = new HttpError500();

@@ -37,9 +37,9 @@ public class ServletResourceProvider implements ResourceProvider {
 
     private static final Logger LOGGER = Logger.getLogger(ServletResourceProvider.class.getName());
 
-    private static ServletLoader servletLoader = new ClassPathServletLoader();
-    private ServletContextWrapper servletContext;
-    private String servletMappedExtension;
+    private static final ServletLoader servletLoader = new ClassPathServletLoader();
+    private final ServletContextWrapper servletContext;
+    private final String servletMappedExtension;
 
     /**
      * Default constructor.
@@ -54,7 +54,6 @@ public class ServletResourceProvider implements ResourceProvider {
 
     @Override
     public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
-
         String extension = Utilities.getExtension(uri);
 
         // Check whether the extension is of Servlet type
@@ -75,13 +74,7 @@ public class ServletResourceProvider implements ResourceProvider {
                 response.setStatus(HttpResponse.STATUS_OK);
                 servlet.service(request, response);
                 terminate(request, response);
-            } catch (Exception e) {
-                HttpError500 error500 = new HttpError500();
-                error500.setReason(e);
-                error500.serve(response);
-                LOGGER.log(Level.SEVERE, "Servlet exception", e);
-            } catch (Error e) {
-                // For compilation problems
+            } catch (Throwable e) {
                 HttpError500 error500 = new HttpError500();
                 error500.setReason(e);
                 error500.serve(response);

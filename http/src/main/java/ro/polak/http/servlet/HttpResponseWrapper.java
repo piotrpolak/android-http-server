@@ -208,7 +208,7 @@ public class HttpResponseWrapper implements HttpResponse {
             return false;
         }
 
-        return getHeaders().getHeader(Headers.HEADER_TRANSFER_ENCODING).toLowerCase().equals(TRANSFER_ENCODING_CHUNKED);
+        return getHeaders().getHeader(Headers.HEADER_TRANSFER_ENCODING).equalsIgnoreCase(TRANSFER_ENCODING_CHUNKED);
     }
 
     /**

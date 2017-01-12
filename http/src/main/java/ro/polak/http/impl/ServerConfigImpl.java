@@ -82,7 +82,7 @@ public class ServerConfigImpl implements ServerConfig {
         }
 
         if (config.containsKey("KeepAlive")) {
-            serverConfig.keepAlive = config.get("KeepAlive").toLowerCase().equals("on");
+            serverConfig.keepAlive = config.get("KeepAlive").equalsIgnoreCase("on");
         }
 
         if (config.containsKey("ErrorDocument404")) {

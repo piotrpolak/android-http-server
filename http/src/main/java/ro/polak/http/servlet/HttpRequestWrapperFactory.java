@@ -121,7 +121,7 @@ public class HttpRequestWrapperFactory {
             request.setHeaders(new Headers()); // Setting implicit empty headers
         }
 
-        if (request.getMethod().toUpperCase().equals(HttpRequestWrapper.METHOD_POST)) {
+        if (request.getMethod().equalsIgnoreCase(HttpRequestWrapper.METHOD_POST)) {
             try {
                 handlePostRequest(request, in);
             } catch (MalformedInputException e) {

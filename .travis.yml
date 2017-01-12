@@ -1,9 +1,9 @@
 language: java
 
 install:
-  - ./gradlew :http:build -x :app:assemble
+  - cd http; ../gradlew assemble; cd ..
 script:
-  - ./gradlew :http:check -x :app:assemble
+  - cd http; .../gradlew check; cd ..
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

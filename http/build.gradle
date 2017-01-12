@@ -2,6 +2,11 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.7;
 
+// Added here to enable http subproject to be built without the root project
+repositories {
+    jcenter()
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'

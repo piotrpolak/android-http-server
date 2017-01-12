@@ -34,7 +34,7 @@ public class CookieHeaderSerializer implements Serializer<Cookie> {
         StringBuilder sb = new StringBuilder();
         sb.append(cookie.getName())
                 .append(EQUALS)
-                .append(Utilities.URLEncode(cookie.getValue()));
+                .append(Utilities.urlEncode(cookie.getValue()));
 
         if (cookie.getMaxAge() != -1) {
             sb.append(SEPARATOR)

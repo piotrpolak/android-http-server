@@ -28,7 +28,7 @@ public class CookieParserTest {
     @Test
     public void shouldParseCookieHavingUrlEncodedValue() throws MalformedInputException {
         String value = "&<>some value";
-        Map<String, Cookie> cookies = cookieParser.parse("name=" + Utilities.URLEncode(value));
+        Map<String, Cookie> cookies = cookieParser.parse("name=" + Utilities.urlEncode(value));
         assertThat(cookies, hasKey("name"));
         assertThat(cookies.get("name").getValue(), is(value));
     }

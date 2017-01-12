@@ -148,7 +148,8 @@ public class MultipartRequestHandler {
     }
 
     private void handleBody() throws IOException, MalformedInputException {
-        int start, numberOfBytesRead;
+        int start;
+        int numberOfBytesRead;
         boolean wasBoundaryBeginningEncounteredInPreviousIteration = false;
         int boundaryMatchedCharacterIndex = 0;
         int tempBufferCharPosition = 0;

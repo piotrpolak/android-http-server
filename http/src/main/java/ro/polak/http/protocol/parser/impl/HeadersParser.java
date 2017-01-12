@@ -45,6 +45,8 @@ public class HeadersParser implements Parser<Headers> {
      */
     public Headers parse(String headersString, boolean joinRepeatingHeaders) throws MalformedInputException {
 
+        // TODO joinRepeatingHeaders should be replaced by MultiValuedMap
+
         Headers headers = new Headers();
 
         // Mandatory \r https://www.w3.org/Protocols/rfc2616/rfc2616-sec2.html#sec2.2
@@ -76,10 +78,8 @@ public class HeadersParser implements Parser<Headers> {
 
                 lastHeaderName = headerLineValues[0];
 
-                if (joinRepeatingHeaders) {
-                    if (headers.containsHeader(lastHeaderName)) {
-                        lastHeaderValue.append(headers.getHeader(lastHeaderName)).append(',');
-                    }
+                if (joinRepeatingHeaders && headers.containsHeader(lastHeaderName)) {
+                    lastHeaderValue.append(headers.getHeader(lastHeaderName)).append(',');
                 }
 
                 lastHeaderValue.append(ltrim(headerLineValues[1].substring(0, headerLineValues[1].length())));

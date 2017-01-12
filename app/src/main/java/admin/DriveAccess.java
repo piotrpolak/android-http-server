@@ -83,13 +83,13 @@ public class DriveAccess extends Servlet {
                         if (f2.isDirectory()) {
                             directories
                                     .append("<p class=\"filemanager\"><img src=\"/assets/img/folder.png\" alt=\"folder\" /> <a href=\"/admin/DriveAccess.dhtml?"
-                                            + Utilities.URLEncode(path
+                                            + Utilities.urlEncode(path
                                             + fileNames[i])
                                             + "/\">"
                                             + fileNames[i] + "</a></p>");
                         } else {
                             files.append("<p class=\"filemanager\"><img src=\"/assets/img/file.png\" alt=\"file\" /> <a href=\"/admin/GetFile.dhtml?"
-                                    + Utilities.URLEncode(path + fileNames[i])
+                                    + Utilities.urlEncode(path + fileNames[i])
                                     + "\">"
                                     + fileNames[i]
                                     + "</a> "

@@ -80,7 +80,7 @@ public class Utilities {
      * @param text text to be encoded
      * @return encoded string
      */
-    public static String URLEncode(String text) {
+    public static String urlEncode(String text) {
         try {
             return java.net.URLEncoder.encode(text, CHARSET_NAME);
         } catch (UnsupportedEncodingException e) {
@@ -94,7 +94,7 @@ public class Utilities {
      * @param text text to be decoded
      * @return decoded string
      */
-    public static String URLDecode(String text) {
+    public static String urlDecode(String text) {
         try {
             return java.net.URLDecoder.decode(text, CHARSET_NAME);
         } catch (UnsupportedEncodingException e) {

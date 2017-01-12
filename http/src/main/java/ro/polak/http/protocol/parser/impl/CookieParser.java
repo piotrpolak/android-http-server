@@ -41,7 +41,7 @@ public class CookieParser implements Parser<Map<String, Cookie>> {
             // Splitting cookie name=value pair
             String cookieValues[] = cookiesStr[i].split("=", 2);
             if (cookieValues.length > 1) {
-                Cookie cookie = new Cookie(cookieValues[0].trim(), Utilities.URLDecode(cookieValues[1]));
+                Cookie cookie = new Cookie(cookieValues[0].trim(), Utilities.urlDecode(cookieValues[1]));
                 cookies.put(cookie.getName(), cookie);
             }
         }

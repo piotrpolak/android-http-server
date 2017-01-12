@@ -49,7 +49,7 @@ public class Login extends Servlet {
 
         String location = "/admin/Login.dhtml";
         if (request.getParameter("relocate") != null) {
-            location += "?relocate=" + Utilities.URLEncode(request.getParameter("relocate"));
+            location += "?relocate=" + Utilities.urlEncode(request.getParameter("relocate"));
         }
 
 

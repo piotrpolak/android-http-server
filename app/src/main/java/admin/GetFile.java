@@ -40,7 +40,7 @@ public class GetFile extends Servlet {
             File f = new File(path);
             if (f.exists() && f.isFile()) {
                 response.setContentType(getServletContext().getMimeType(f.getName()));
-                response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename=" + Utilities.URLEncode(f.getName()));
+                response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename=" + Utilities.urlEncode(f.getName()));
                 try {
                     OutputStream out = response.getOutputStream();
                     FileInputStream in = new FileInputStream(f);

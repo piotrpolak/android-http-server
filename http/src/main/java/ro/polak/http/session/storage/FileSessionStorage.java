@@ -64,7 +64,7 @@ public class FileSessionStorage implements SessionStorage {
             File file = new File(getSessionStoragePath(id));
 
             if (file.exists()) {
-                session = readSession(id, session, file);
+                session = readSession(id, file);
             } else {
                 LOGGER.log(Level.FINE, "Session file does not exist {0} under {1}",
                         new Object[]{id, tempPath});
@@ -91,7 +91,8 @@ public class FileSessionStorage implements SessionStorage {
         return file.delete();
     }
 
-    private HttpSessionWrapper readSession(String id, HttpSessionWrapper session, File file) {
+    private HttpSessionWrapper readSession(String id, File file) {
+        HttpSessionWrapper session = null;
         try {
             FileInputStream fileInputStream = new FileInputStream(file);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);

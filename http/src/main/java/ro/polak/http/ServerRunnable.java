@@ -211,10 +211,8 @@ public class ServerRunnable implements Runnable {
      * @return
      */
     private String getNormalizedDirectoryPath(String path) {
-        if (path.length() > 0) {
-            if (path.charAt(path.length() - 1) != '/') {
-                path += "/";
-            }
+        if (path.length() > 0 && path.charAt(path.length() - 1) != '/') {
+            path += "/";
         }
         return path;
     }

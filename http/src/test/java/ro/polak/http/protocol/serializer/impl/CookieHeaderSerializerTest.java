@@ -71,7 +71,7 @@ public class CookieHeaderSerializerTest {
         String value = "= &";
         Cookie cookie = new Cookie("name", value);
         String serializedCookie = cookieHeaderSerializer.serialize(cookie);
-        assertThat(serializedCookie, is("name=" + Utilities.URLEncode(value)));
+        assertThat(serializedCookie, is("name=" + Utilities.urlEncode(value)));
     }
 
     private String getExpiresValue(String serializedCookie) {

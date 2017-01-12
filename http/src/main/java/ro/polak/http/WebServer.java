@@ -133,8 +133,10 @@ public class WebServer extends Thread {
 
     private boolean isTempPathWritable() {
         File tempPath = new File(serverConfig.getTempPath());
+
         if (!tempPath.exists()) {
-            if (!tempPath.mkdirs()) {
+            boolean successCreatedMissingDirectory = tempPath.mkdirs();
+            if (!successCreatedMissingDirectory) {
                 LOGGER.log(Level.SEVERE, "TempPath does not exist and can not be created! PATH {0}", new Object[]{
                         serverConfig.getTempPath()
                 });

@@ -20,7 +20,7 @@ public class FileSessionStorageTest {
 
     @BeforeClass
     public static void setup() {
-        fileSessionStorage = new FileSessionStorage(tempPath + "webserver/");
+        fileSessionStorage = new FileSessionStorage(tempPath);
     }
 
     @Test

@@ -2,7 +2,7 @@
 
 Small but powerful multithreaded web server written completely in Java SE and then ported to Android.
 
-[![Build Status](https://travis-ci.org/piotrpolak/android-http-server.svg?branch=master)](https://travis-ci.org/piotrpolak/android-http-server)
+[![Build Status](https://travis-ci.org/piotrpolak/android-http-server.svg?branch=master)](https://travis-ci.org/piotrpolak/android-http-server) [![codecov](https://codecov.io/gh/piotrpolak/android-http-server/branch/master/graph/badge.svg)](https://codecov.io/gh/piotrpolak/android-http-server)
 
 The server implements most of the HTTP 1.1 specification and ses its own specification of Servlets for handling dynamic pages.
 Servlets support cookies, sessions, file uploads and anything else to build a common web application.

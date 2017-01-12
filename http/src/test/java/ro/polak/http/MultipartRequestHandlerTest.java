@@ -15,7 +15,7 @@ public class MultipartRequestHandlerTest {
 
     private String boundary;
     private String nl;
-    private String temporaryUploadsDirectory = System.getProperty("java.io.tmpdir");
+    private String temporaryUploadsDirectory = System.getProperty("java.io.tmpdir") + "/";
 
     @Before
     public void setUp() {
@@ -45,7 +45,7 @@ public class MultipartRequestHandlerTest {
         try {
             mrh.handle();
         } catch (IOException e) {
-            fail("Should not throw IOException");
+            fail("Should not throw IOException: " + e.getMessage());
         }
 
         assertEquals(3, mrh.getPost().size());
@@ -77,7 +77,7 @@ public class MultipartRequestHandlerTest {
         try {
             mrh.handle();
         } catch (IOException e) {
-            fail("Should not throw IOException");
+            fail("Should not throw IOException: " + e.getMessage());
         }
 
 
@@ -106,7 +106,7 @@ public class MultipartRequestHandlerTest {
         try {
             mrh.handle();
         } catch (IOException e) {
-            fail("Should not throw IOException");
+            fail("Should not throw IOException: " + e.getMessage());
         }
 
         assertEquals(1, mrh.getPost().size());
@@ -172,7 +172,7 @@ public class MultipartRequestHandlerTest {
         try {
             mrh.handle();
         } catch (IOException e) {
-            fail("Should not throw IOException");
+            fail("Should not throw IOException: " + e.getMessage());
         }
 
         assertEquals("A", mrh.getPost().get("field_01"));

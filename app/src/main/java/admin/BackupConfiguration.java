@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
 package admin;
@@ -29,12 +29,16 @@ public class BackupConfiguration extends Servlet {
             return;
         }
 
+        streamConfiguration(response, serverConfig.getBasePath());
+    }
+
+    private void streamConfiguration(HttpResponse response, String basePath) {
         response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename=httpd.conf");
         response.setContentType("application/octet-stream");
 
         try {
             OutputStream out = response.getOutputStream();
-            FileInputStream in = new FileInputStream(new File(serverConfig.getBasePath() + "httpd.conf"));
+            FileInputStream in = new FileInputStream(new File(basePath) + "httpd.conf");
             byte[] buffer = new byte[4096];
             int length;
             while ((length = in.read(buffer)) > 0) {

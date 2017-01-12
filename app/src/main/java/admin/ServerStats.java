@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
 package admin;
@@ -23,6 +23,11 @@ public class ServerStats extends Servlet {
             return;
         }
 
+        HTMLDocument doc = renderDocument();
+        response.getPrintWriter().print(doc.toString());
+    }
+
+    private HTMLDocument renderDocument() {
         HTMLDocument doc = new HTMLDocument("Statistics");
         doc.setOwnerClass(getClass().getSimpleName());
 
@@ -47,6 +52,6 @@ public class ServerStats extends Servlet {
         doc.writeln("</tr>");
         doc.writeln("</table");
 
-        response.getPrintWriter().print(doc.toString());
+        return doc;
     }
 }

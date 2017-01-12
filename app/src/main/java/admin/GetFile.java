@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
 package admin;
@@ -35,30 +35,38 @@ public class GetFile extends Servlet {
             return;
         }
 
-        if (!request.getQueryString().equals("")) {
-            String path = request.getQueryString();
-            File f = new File(path);
-            if (f.exists() && f.isFile()) {
-                response.setContentType(getServletContext().getMimeType(f.getName()));
-                response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename=" + Utilities.urlEncode(f.getName()));
-                try {
-                    OutputStream out = response.getOutputStream();
-                    FileInputStream in = new FileInputStream(f);
-                    byte[] buffer = new byte[4096];
-                    int length;
-                    while ((length = in.read(buffer)) > 0) {
-                        out.write(buffer, 0, length);
-                    }
-                    in.close();
-                    out.flush();
+        boolean fileExists = false;
 
-                } catch (IOException e) {
-                }
-            } else {
-                response.getPrintWriter().print("File does not exist.");
+        if (!request.getQueryString().equals("")) {
+            File f = new File(request.getQueryString());
+            if (f.exists() && f.isFile()) {
+                fileExists = true;
+                serveFile(f, response);
             }
-        } else {
+        }
+
+        if (!fileExists) {
+            response.setStatus(HttpResponse.STATUS_NOT_FOUND);
             response.getPrintWriter().print("File does not exist.");
+        }
+    }
+
+    private void serveFile(File file, HttpResponse response) {
+        response.setContentType(getServletContext().getMimeType(file.getName()));
+        response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename="
+                + Utilities.urlEncode(file.getName()));
+        try {
+            OutputStream out = response.getOutputStream();
+            FileInputStream in = new FileInputStream(file);
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = in.read(buffer)) > 0) {
+                out.write(buffer, 0, length);
+            }
+            in.close();
+            out.flush();
+
+        } catch (IOException e) {
         }
     }
 }

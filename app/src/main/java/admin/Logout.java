@@ -20,15 +20,19 @@ public class Logout extends Servlet {
         AccessControl ac = new AccessControl(serverConfig, request.getSession());
         ac.logout();
 
+        HTMLDocument doc = renderDocument();
+        response.getPrintWriter().print(doc.toString());
+
+    }
+
+    private HTMLDocument renderDocument() {
         HTMLDocument doc = new HTMLDocument("Logout", false);
         doc.setOwnerClass(getClass().getSimpleName());
 
         doc.writeln("<div class=\"box-logout\">");
         doc.writeln("<h2>Logged out</h2>");
-        doc.writeln("<p><a href=\"/admin/Index.dhtml\">Go to main page</a></p>");
+        doc.writeln("<p><a href=\"/admin/Index.dhtml\">Go to the main page</a></p>");
         doc.writeln("</div>");
-
-        response.getPrintWriter().print(doc.toString());
-
+        return doc;
     }
 }

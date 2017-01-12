@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
 package admin;
@@ -27,39 +27,53 @@ public class UpdateConfiguration extends Servlet {
             return;
         }
 
-        HTMLDocument doc = new HTMLDocument("Update configuration");
-        doc.setOwnerClass(getClass().getSimpleName());
+        String message = handleFileUpload(request);
 
-        doc.writeln("<div class=\"page-header\"><h1>Update configuration</h1></div>");
-        FileUpload fu = request.getFileUpload();
+        HTMLDocument doc = renderDocument(message);
+        response.getPrintWriter().print(doc.toString());
+    }
 
-        if (fu.get("file") == null) {
-            doc.writeln("<p>Error: no file uploaded (" + fu.size() + ")</p>");
+    private String handleFileUpload(HttpRequest request) {
+        FileUpload fileUpload = request.getFileUpload();
+        String message;
+
+        if (fileUpload.get("file") == null) {
+            message = "Error: no file uploaded (" + fileUpload.size() + ")";
         } else {
-
             String basePath = ((ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName())).getBasePath();
 
-            if (Utilities.getExtension(fu.get("file").getFileName()).equals("conf")) {
+            if (Utilities.getExtension(fileUpload.get("file").getFileName()).equals("conf")) {
 
-                File file = fu.get("file").getFile();
+                File file = fileUpload.get("file").getFile();
                 File dest = new File(basePath + "httpd_test.conf");
                 if (file.renameTo(dest)) {
                     (new File(basePath + "bakup_httpd.conf")).delete();
                     (new File(basePath + "httpd.conf")).renameTo(new File(basePath + "bakup_httpd.conf"));
                     if (dest.renameTo((new File(basePath + "httpd.conf")))) {
-                        doc.writeln("<p>New configuration will be applied after server restart.</p>");
+                        message = "New configuration will be applied after server restart.";
                     } else {
-                        doc.writeln("<p>Unable to apply new configuration file.</p>");
+                        message = "Unable to apply new configuration file.";
                     }
 
                 } else {
-                    doc.writeln("<p>Unable to move file.</p>");
+                    message = "Unable to move file.";
                 }
             } else {
-                doc.writeln("<p>Uploaded file <b>" + fu.get("file").getFileName() + "</b> does not appear to be a valid configuration file. <a href=\"/admin/Management.dhtml?task=updateConfiguration\">Back</a></p>");
+                message = "Uploaded file <b>" + fileUpload.get("file").getFileName() + "</b> does not appear to be a valid configuration file. <a href=\"/admin/Management.dhtml?task=updateConfiguration\">Back</a>";
             }
         }
+        return message;
+    }
 
-        response.getPrintWriter().print(doc.toString());
+    private HTMLDocument renderDocument(String message) {
+        HTMLDocument doc = new HTMLDocument("Update configuration");
+        doc.setOwnerClass(getClass().getSimpleName());
+
+        doc.writeln("<div class=\"page-header\"><h1>Update configuration</h1></div>");
+        if (message != null) {
+            doc.writeln("<p>" + message + "</p>");
+        }
+
+        return doc;
     }
 }

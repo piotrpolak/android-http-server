@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
 package admin;
@@ -23,6 +23,11 @@ public class Management extends Servlet {
             return;
         }
 
+        HTMLDocument doc = renderDocument(request);
+        response.getPrintWriter().print(doc.toString());
+    }
+
+    private HTMLDocument renderDocument(HttpRequest request) {
         HTMLDocument doc = new HTMLDocument("Management");
         doc.setOwnerClass(getClass().getSimpleName());
 
@@ -37,6 +42,6 @@ public class Management extends Servlet {
             doc.writeln("<div class=\"page-header\"><h1>Management - update configuration</h1></div>");
             doc.writeln("<form action=\"/admin/UpdateConfiguration.dhtml\" method=\"post\" enctype=\"multipart/form-data\"><input name=\"file\" type=\"file\" size=\"40\" class=\"input_i\" />&nbsp;<input name=\"submit\" type=\"submit\" value=\"Update\"  class=\"input_b\" /></form>");
         }
-        response.getPrintWriter().print(doc.toString());
+        return doc;
     }
 }

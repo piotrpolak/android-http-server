@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
 package admin;
@@ -22,6 +22,11 @@ public class Index extends Servlet {
             return;
         }
 
+        HTMLDocument doc = renderDocument();
+        response.getPrintWriter().print(doc.toString());
+    }
+
+    private HTMLDocument renderDocument() {
         HTMLDocument doc = new HTMLDocument("About");
         doc.setOwnerClass(getClass().getSimpleName());
 
@@ -31,6 +36,6 @@ public class Index extends Servlet {
         doc.write("Implements most of the HTTP 1.1 specification. Uses JLWS Servlets for handling dynamic pages. ");
         doc.write("Supports cookies, sessions, file uploads.</p>");
         doc.write("<p>Written by Piotr Polak. <a href=\"https://github.com/piotrpolak/android-http-server\" target=\"_blank\">Visit homepage</a>.</p>");
-        response.getPrintWriter().print(doc.toString());
+        return doc;
     }
 }

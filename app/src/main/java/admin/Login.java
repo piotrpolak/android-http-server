@@ -53,7 +53,7 @@ public class Login extends Servlet {
         }
 
 
-        String ff = "<form action=\""
+        String form = "<form action=\""
                 + location
                 + "\" method=\"post\">\n"
                 + "      <input name=\"dologin\" type=\"hidden\" value=\"true\" />\n"
@@ -64,7 +64,7 @@ public class Login extends Servlet {
                 + "<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Login</button>\n"
                 + "</form>\n";
 
-        doc.write(ff);
+        doc.write(form);
         doc.writeln("</div>");
         response.getPrintWriter().print(doc.toString());
 

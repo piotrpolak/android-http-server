@@ -10,9 +10,11 @@ import static org.junit.Assert.*;
 
 public class UploadedFileTest {
 
+    private static String tempPath = System.getProperty("java.io.tmpdir") + "/";
+
     @Test
     public void shouldDeleteFileDestory() throws IOException {
-        File file = new File("/tmp/uploadfile.pdf");
+        File file = new File(tempPath + "uploadfile.pdf");
         file.createNewFile();
         assertThat(file.exists(), is(true));
         UploadedFile uploadedFile = new UploadedFile("myfile", "myfile.pdf", file);
@@ -25,11 +27,11 @@ public class UploadedFileTest {
 
     @Test
     public void shouldNotDeleteFileThatWasMoved() throws IOException {
-        File file = new File("/tmp/uploadfile.pdf");
+        File file = new File(tempPath + "uploadfile.pdf");
         file.createNewFile();
         assertThat(file.exists(), is(true));
         UploadedFile uploadedFile = new UploadedFile("myfile", "myfile.pdf", file);
-        File movedFile = new File("/tmp/uploadfile123.pdf");
+        File movedFile = new File(tempPath + "uploadfile123.pdf");
         movedFile.delete();
         assertThat(movedFile.exists(), is(false));
         assertThat(uploadedFile.getFile().renameTo(movedFile), is(true));

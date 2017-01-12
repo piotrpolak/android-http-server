@@ -16,10 +16,11 @@ public class FileSessionStorageTest {
 
     private static final String sessionId = "sessionidsjdfhgskldjfsghldkfjsgg";
     private static FileSessionStorage fileSessionStorage;
+    private static String tempPath = System.getProperty("java.io.tmpdir") + "/";
 
     @BeforeClass
     public static void setup() {
-        fileSessionStorage = new FileSessionStorage("/tmp/webserver/");
+        fileSessionStorage = new FileSessionStorage(tempPath + "webserver/");
     }
 
     @Test

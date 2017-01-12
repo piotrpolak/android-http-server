@@ -32,9 +32,10 @@ public class ProtocolIT extends AbstractIT {
             out = socket.getOutputStream();
             out.write(requestBody.getBytes());
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String line;
-            while ((line = in.readLine()) != null) {
+            while (in.readLine() != null) {
+                // Simulate reading
             }
+
         } catch (IOException e) {
             fail("The test failed too early due IOException" + e.getMessage());
         }

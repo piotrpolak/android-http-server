@@ -25,6 +25,6 @@ public class RequestStatusParserTest {
     @Test(expected = MalformedInputException.class)
     public void shouldThrowMalformedInputExceptionOnInvalidStatus() throws MalformedInputException {
         Parser<RequestStatus> requestStatusParser = new RequestStatusParser();
-        RequestStatus requestStatus = requestStatusParser.parse("GET HTTP/1.1");
+        requestStatusParser.parse("GET HTTP/1.1");
     }
 }

@@ -43,11 +43,11 @@ public class MultipartHeadersPartParserTest {
 
     @Test(expected = MalformedInputException.class)
     public void shouldThrowMalformedInputException() throws MalformedInputException {
-        MultipartHeadersPart headers = multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text\" filename=\"text");
+        multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text\" filename=\"text");
     }
 
     @Test(expected = MalformedInputException.class)
     public void shouldThrowMalformedInputExceptionForMissingClosing() throws MalformedInputException {
-        MultipartHeadersPart headers = multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text");
+        multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text");
     }
 }

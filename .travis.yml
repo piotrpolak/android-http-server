@@ -1,5 +1,10 @@
 language: java
 
+install:
+  - ./gradlew :http:build
+script:
+  - ./gradlew :http:check
+
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/

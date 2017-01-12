@@ -7,8 +7,8 @@
 
 package ro.polak.webserver.gui.impl;
 
+import ro.polak.http.ServerConfigFactory;
 import ro.polak.http.gui.impl.DefaultCliServerGui;
-import ro.polak.http.impl.DefaultServerConfigFactory;
 import ro.polak.webserver.resource.provider.impl.AndroidServerConfigFactory;
 
 /**
@@ -19,11 +19,6 @@ import ro.polak.webserver.resource.provider.impl.AndroidServerConfigFactory;
  */
 public class AndroidCliServerGui extends DefaultCliServerGui {
 
-    @Override
-    protected DefaultServerConfigFactory getServerConfigFactory() {
-        return new AndroidServerConfigFactory(null);
-    }
-
     /**
      * The main CLI runner method.
      *
@@ -31,5 +26,10 @@ public class AndroidCliServerGui extends DefaultCliServerGui {
      */
     public static void main(String[] args) {
         (new AndroidCliServerGui()).init();
+    }
+
+    @Override
+    protected ServerConfigFactory getServerConfigFactory() {
+        return new AndroidServerConfigFactory(null);
     }
 }

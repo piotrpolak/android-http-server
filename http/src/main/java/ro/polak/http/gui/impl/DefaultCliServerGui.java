@@ -10,6 +10,7 @@ package ro.polak.http.gui.impl;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ro.polak.http.ServerConfigFactory;
 import ro.polak.http.controller.MainController;
 import ro.polak.http.gui.ServerGui;
 import ro.polak.http.impl.DefaultServerConfigFactory;
@@ -23,6 +24,15 @@ import ro.polak.http.impl.DefaultServerConfigFactory;
 public class DefaultCliServerGui implements ServerGui {
 
     private static final Logger LOGGER = Logger.getLogger(DefaultCliServerGui.class.getName());
+
+    /**
+     * The main CLI runner method.
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        (new DefaultCliServerGui()).init();
+    }
 
     public void init() {
         System.setProperty("java.util.logging.SimpleFormatter.format",
@@ -44,17 +54,8 @@ public class DefaultCliServerGui implements ServerGui {
         mainController.start();
     }
 
-    protected DefaultServerConfigFactory getServerConfigFactory() {
+    protected ServerConfigFactory getServerConfigFactory() {
         return new DefaultServerConfigFactory();
-    }
-
-    /**
-     * The main CLI runner method.
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        (new DefaultCliServerGui()).init();
     }
 
     @Override

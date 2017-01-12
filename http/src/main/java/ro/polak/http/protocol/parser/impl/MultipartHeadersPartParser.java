@@ -9,6 +9,7 @@ package ro.polak.http.protocol.parser.impl;
 
 import ro.polak.http.Headers;
 import ro.polak.http.MultipartHeadersPart;
+import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 
 /**
@@ -41,12 +42,14 @@ public class MultipartHeadersPartParser implements Parser<MultipartHeadersPart> 
 //    };
 
     /**
-     * Parses multipart headers
+     * Parses multipart headers.
      *
-     * @param headersString headers
+     * @param headersString
+     * @return
+     * @throws MalformedInputException
      */
     @Override
-    public MultipartHeadersPart parse(String headersString) {
+    public MultipartHeadersPart parse(String headersString) throws MalformedInputException {
 
         MultipartHeadersPart part = new MultipartHeadersPart();
         HeadersParser parser = new HeadersParser();

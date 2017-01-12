@@ -28,7 +28,7 @@ import ro.polak.utilities.ConfigReader;
 public class ServerConfigImpl implements ServerConfig {
 
     public static final String[] SUPPORTED_METHODS = new String[]{HttpRequestWrapper.METHOD_GET, HttpRequestWrapper.METHOD_POST, HttpRequestWrapper.METHOD_HEAD};
-
+    public List<String> directoryIndex;
     private String basePath;
     private String documentRootPath;
     private String tempPath;
@@ -39,13 +39,16 @@ public class ServerConfigImpl implements ServerConfig {
     private boolean keepAlive;
     private String errorDocument404Path;
     private String errorDocument403Path;
-    public List<String> directoryIndex;
     private ResourceProvider[] resourceProviders;
 
     public ServerConfigImpl() {
+        this("/httpd/temp/");
+    }
+
+    public ServerConfigImpl(String tempPath) {
+        this.tempPath = tempPath;
         basePath = "/httpd/";
         documentRootPath = basePath + "www/";
-        tempPath = "/httpd/temp/";
         listenPort = 8080;
         servletMappedExtension = "dhtml";
         maxServerThreads = 10;

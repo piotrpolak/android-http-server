@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
 import ro.polak.http.servlet.UploadedFile;
@@ -93,7 +94,7 @@ public class MultipartRequestHandler {
      *
      * @throws IOException
      */
-    public void handle() throws IOException {
+    public void handle() throws IOException, MalformedInputException {
         if (wasHandledBefore) {
             throw new IllegalStateException("Handle method was not expected to be called more than once");
         }
@@ -146,7 +147,7 @@ public class MultipartRequestHandler {
         }
     }
 
-    private void handleBody() throws IOException {
+    private void handleBody() throws IOException, MalformedInputException {
         int start, numberOfBytesRead;
         boolean wasBoundaryBeginningEncounteredInPreviousIteration = false;
         int boundaryMatchedCharacterIndex = 0;
@@ -225,7 +226,7 @@ public class MultipartRequestHandler {
         }
     }
 
-    private String pushBufferOnEndOfState(byte[] bytes, int start, int end, boolean isHeadersReadingState) throws IOException {
+    private String pushBufferOnEndOfState(byte[] bytes, int start, int end, boolean isHeadersReadingState) throws IOException, MalformedInputException {
         if (isHeadersReadingState) {
             pushBufferOnEndOfStateHeaders(bytes, start, end);
             return endBoundary;
@@ -255,7 +256,7 @@ public class MultipartRequestHandler {
         }
     }
 
-    private void pushBufferOnEndOfStateHeaders(byte[] bytes, int start, int end) throws FileNotFoundException {
+    private void pushBufferOnEndOfStateHeaders(byte[] bytes, int start, int end) throws FileNotFoundException, MalformedInputException {
         for (int i = start; i < end; i++) {
             headersStringBuffered.append((char) bytes[i]);
         }

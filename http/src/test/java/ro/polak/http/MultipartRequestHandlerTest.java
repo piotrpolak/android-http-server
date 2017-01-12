@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import ro.polak.http.protocol.parser.MalformedInputException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -24,7 +26,7 @@ public class MultipartRequestHandlerTest {
     }
 
     @Test
-    public void shouldParseBasicFields() {
+    public void shouldParseBasicFields() throws MalformedInputException {
         String data =
                 "--" + boundary + nl +
                         "Content-Disposition: form-data; name=\"field_1\"" + nl +
@@ -56,7 +58,7 @@ public class MultipartRequestHandlerTest {
     }
 
     @Test
-    public void shouldParseWhenBoundaryIsLikeFieldValues() {
+    public void shouldParseWhenBoundaryIsLikeFieldValues() throws MalformedInputException {
         String data =
                 "--" + boundary + nl +
                         "Content-Disposition: form-data; name=\"field_0\"" + nl +
@@ -89,7 +91,7 @@ public class MultipartRequestHandlerTest {
     }
 
     @Test
-    public void shouldHandleBasicFileUpload() {
+    public void shouldHandleBasicFileUpload() throws MalformedInputException {
         String data =
                 "--" + boundary + nl +
                         "Content-Disposition: form-data; name=\"field_1\"" + nl +
@@ -118,7 +120,7 @@ public class MultipartRequestHandlerTest {
     }
 
     @Test
-    public void shouldHandleFieldsOnBufferMargin() {
+    public void shouldHandleFieldsOnBufferMargin() throws MalformedInputException {
         // TODO Implement similar test for file upload to see whether delayed write works fine
         boundary = "%";
         String data =

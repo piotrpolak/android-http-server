@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -12,7 +13,7 @@ import static org.junit.Assert.assertThat;
 public class QueryStringParserTest {
 
     @Test
-    public void shouldParseFields() {
+    public void shouldParseFields() throws MalformedInputException {
 
         String data = "&param1=ABCD1"
                 + "&param2=ABCD2"

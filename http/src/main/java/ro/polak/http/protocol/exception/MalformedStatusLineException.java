@@ -2,17 +2,17 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
 package ro.polak.http.protocol.exception;
 
 /**
- * Generic protocol exception.
+ * Malformed status line exception.
  */
-public class ProtocolException extends Exception {
+public class MalformedStatusLineException extends ProtocolException {
 
-    public ProtocolException(String message) {
+    public MalformedStatusLineException(String message) {
         super(message);
     }
 }

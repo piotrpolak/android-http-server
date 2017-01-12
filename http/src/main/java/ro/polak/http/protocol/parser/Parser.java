@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2016-2016
+ * Copyright (c) Piotr Polak 2016-2017
  **************************************************/
 
 package ro.polak.http.protocol.parser;
@@ -20,6 +20,7 @@ public interface Parser<T> {
      *
      * @param input
      * @return
+     * @throws MalformedInputException
      */
-    T parse(String input);
+    T parse(String input) throws MalformedInputException;
 }

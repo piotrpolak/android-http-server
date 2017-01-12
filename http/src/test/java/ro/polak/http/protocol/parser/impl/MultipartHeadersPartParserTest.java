@@ -3,6 +3,7 @@ package ro.polak.http.protocol.parser.impl;
 import org.junit.Test;
 
 import ro.polak.http.MultipartHeadersPart;
+import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -14,7 +15,7 @@ public class MultipartHeadersPartParserTest {
     private static Parser<MultipartHeadersPart> multipartHeadersPartParser = new MultipartHeadersPartParser();
 
     @Test
-    public void shouldParseValidAttachmentHeader() {
+    public void shouldParseValidAttachmentHeader() throws MalformedInputException {
         MultipartHeadersPart headers = multipartHeadersPartParser.parse("Content-Disposition: attachment; name=\"FIELDNAME\"; filename=\"FILE.PDF\"\nContent-type: application/pdf");
 
         assertThat(headers.getFileName(), is("FILE.PDF"));
@@ -23,7 +24,7 @@ public class MultipartHeadersPartParserTest {
     }
 
     @Test
-    public void shouldParseValidAttachmentHeaderCaseInsensitive() {
+    public void shouldParseValidAttachmentHeaderCaseInsensitive() throws MalformedInputException {
         MultipartHeadersPart headers = multipartHeadersPartParser.parse("CONTENT-DISPOSITION: attachment; NAME=\"FIELDNAME\"; FILENAME=\"FILE.PDF\"\nContent-TYPE: application/pdf");
 
         assertThat(headers.getFileName(), is("FILE.PDF"));
@@ -32,7 +33,7 @@ public class MultipartHeadersPartParserTest {
     }
 
     @Test
-    public void shouldParseFormDataText() {
+    public void shouldParseFormDataText() throws MalformedInputException {
         MultipartHeadersPart headers = multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text\"");
 
         assertThat(headers.getFileName(), is(nullValue()));

@@ -3,6 +3,7 @@ package ro.polak.http.protocol.parser.impl;
 import org.junit.Test;
 
 import ro.polak.http.Headers;
+import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -14,7 +15,7 @@ public class HeadersParserTest {
     private static Parser<Headers> headersParser = new HeadersParser();
 
     @Test
-    public void shouldParseSimpleHeaders() {
+    public void shouldParseSimpleHeaders() throws MalformedInputException {
         Headers headers = headersParser.parse("Cookie: ABCD\r\nTest: XYZ\r\nServer: 1");
 
         assertThat(headers.containsHeader("Cookie"), is(true));
@@ -28,7 +29,7 @@ public class HeadersParserTest {
     }
 
     @Test
-    public void shouldParseColonValue() {
+    public void shouldParseColonValue() throws MalformedInputException {
         Headers headers = headersParser.parse("Cookie: ABCD:XYZ");
 
         assertThat(headers.containsHeader("Cookie"), is(true));
@@ -36,7 +37,7 @@ public class HeadersParserTest {
     }
 
     @Test
-    public void shouldParseHeadersWithMissingValues() {
+    public void shouldParseHeadersWithMissingValues() throws MalformedInputException {
         Headers headers = headersParser.parse("Cookie\r\nTest\r\nServer: Pepis");
 
         assertThat(headers.containsHeader("Cookie"), is(false));
@@ -46,7 +47,7 @@ public class HeadersParserTest {
     }
 
     @Test
-    public void shouldIgnoreMultipleEmptyNewlines() {
+    public void shouldIgnoreMultipleEmptyNewlines() throws MalformedInputException {
         Headers headers = headersParser.parse("Cookie: ABCD\r\n\r\n\r\nTest: XYZ\r\nServer: 1\r\n\r\n\r\n\r\n");
 
         assertThat(headers.containsHeader("Cookie"), is(true));
@@ -59,7 +60,7 @@ public class HeadersParserTest {
     }
 
     @Test
-    public void shouldParseCaseInsensitiveHeaderNames() {
+    public void shouldParseCaseInsensitiveHeaderNames() throws MalformedInputException {
         Headers headers = headersParser.parse("COOKIE: ABCD\r\nTEST: XYZ\r\nSERVER: 1");
 
         assertThat(headers.containsHeader("Cookie"), is(true));
@@ -72,7 +73,7 @@ public class HeadersParserTest {
     }
 
     @Test
-    public void shouldParseWithoutLeadingSpace() {
+    public void shouldParseWithoutLeadingSpace() throws MalformedInputException {
         Headers headers = headersParser.parse("COOKIE:ABCD\r\nTEST:XYZ\r\nSERVER:1");
 
         assertThat(headers.containsHeader("Cookie"), is(true));
@@ -85,7 +86,7 @@ public class HeadersParserTest {
     }
 
     @Test
-    public void shouldParseMultilineHeaderWithSingleLeadingSpace() {
+    public void shouldParseMultilineHeaderWithSingleLeadingSpace() throws MalformedInputException {
         Headers headers = headersParser.parse("Word-Of-The-Day: The Fox Jumps Over\r\n the\r\n brown dog.\r\nAnother: Another\r\n multiline\r\n header\r\nCookie: ABCD");
 
         assertThat(headers.containsHeader("Word-Of-The-Day"), is(true));
@@ -99,7 +100,7 @@ public class HeadersParserTest {
     }
 
     @Test
-    public void shouldParseWrongMultilineHeaderWithSingleLeadingSpace() {
+    public void shouldParseWrongMultilineHeaderWithSingleLeadingSpace() throws MalformedInputException {
         Headers headers = headersParser.parse(" Word-Of-The-Day: The Fox Jumps Over\r\n the\r\n brown dog.\r\nCookie: ABCD");
 
         assertThat(headers.getHeader("Word-Of-The-Day"), is(nullValue()));
@@ -109,7 +110,7 @@ public class HeadersParserTest {
     }
 
     @Test
-    public void shouldParseMultilineHeaderWithSingleLeadingTab() {
+    public void shouldParseMultilineHeaderWithSingleLeadingTab() throws MalformedInputException {
         Headers headers = headersParser.parse("Word-Of-The-Day: The Fox Jumps Over\r\n\tthe\r\n\t brown dog.\r\nCookie: ABCD");
 
         assertThat(headers.containsHeader("Word-Of-The-Day"), is(true));
@@ -120,7 +121,7 @@ public class HeadersParserTest {
     }
 
     @Test
-    public void shouldParseMultilineHeaderWithLeadingSpaces() {
+    public void shouldParseMultilineHeaderWithLeadingSpaces() throws MalformedInputException {
         Headers headers = headersParser.parse("Word-Of-The-Day: The Fox Jumps Over\r\n        the\r\n        brown dog.\r\nCookie: ABCD");
 
         assertThat(headers.containsHeader("Word-Of-The-Day"), is(true));
@@ -131,7 +132,7 @@ public class HeadersParserTest {
     }
 
     @Test
-    public void shouldParseExtraReturns() {
+    public void shouldParseExtraReturns() throws MalformedInputException {
         Headers headers = headersParser.parse("Cookie: ABCD\r\r\n\rTest: XYZ\r\r\nServer: 1\r\n");
 
         assertThat(headers.containsHeader("Cookie"), is(true));
@@ -144,7 +145,7 @@ public class HeadersParserTest {
     }
 
     @Test
-    public void shouldParseMultiValues() {
+    public void shouldParseMultiValues() throws MalformedInputException {
         Headers headers = headersParser.parse("Accept: application/xml\r\nAccept: application/json\r\n");
 
         assertThat(headers.containsHeader("Accept"), is(true));

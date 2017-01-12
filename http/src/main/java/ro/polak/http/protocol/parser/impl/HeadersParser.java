@@ -10,6 +10,7 @@ package ro.polak.http.protocol.parser.impl;
 import java.util.StringTokenizer;
 
 import ro.polak.http.Headers;
+import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 
 /**
@@ -25,10 +26,12 @@ public class HeadersParser implements Parser<Headers> {
     /**
      * Parses message headers.
      *
-     * @param headersString raw headers
+     * @param headersString
+     * @return
+     * @throws MalformedInputException
      */
     @Override
-    public Headers parse(String headersString) {
+    public Headers parse(String headersString) throws MalformedInputException {
         return parse(headersString, true);
     }
 
@@ -37,8 +40,10 @@ public class HeadersParser implements Parser<Headers> {
      *
      * @param headersString
      * @param joinRepeatingHeaders
+     * @return
+     * @throws MalformedInputException
      */
-    public Headers parse(String headersString, boolean joinRepeatingHeaders) {
+    public Headers parse(String headersString, boolean joinRepeatingHeaders) throws MalformedInputException {
 
         Headers headers = new Headers();
 

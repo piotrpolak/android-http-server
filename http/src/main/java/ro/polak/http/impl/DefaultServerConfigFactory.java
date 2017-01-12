@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
 package ro.polak.http.impl;
@@ -40,10 +40,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         String baseConfigPath;
         baseConfigPath = getBasePath();
 
-        ServerConfig serverConfig;
-        serverConfig = getServerConfig(baseConfigPath);
-
-        return serverConfig;
+        return getServerConfig(baseConfigPath);
     }
 
     /**
@@ -52,7 +49,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
      * @return
      */
     protected String getTempPath() {
-        return System.getProperty("java.io.tmpdir") + "webserver" + File.separator;
+        return System.getProperty("java.io.tmpdir") + File.separator + "webserver" + File.separator;
     }
 
     /**
@@ -61,7 +58,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
      * @return
      */
     protected String getBasePath() {
-        return "./httpd";
+        return "." + File.separator + "httpd" + File.separator;
     }
 
     /**
@@ -90,8 +87,8 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         try {
             serverConfig = ServerConfigImpl.createFromPath(baseConfigPath, tempPath);
         } catch (IOException e) {
-            LOGGER.warning("Unable to read server config. Using the default configuration.");
-            serverConfig = new ServerConfigImpl();
+            LOGGER.warning("Unable to read server config. Using the default configuration. " + e.getMessage());
+            serverConfig = new ServerConfigImpl(tempPath);
         }
 
         serverConfig.setResourceProviders(selectActiveResourceProviders(serverConfig));

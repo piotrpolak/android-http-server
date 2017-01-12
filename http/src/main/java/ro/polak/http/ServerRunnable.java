@@ -97,6 +97,9 @@ public class ServerRunnable implements Runnable {
 
             socket.close();
         } catch (IOException e) {
+            LOGGER.log(Level.INFO, "Encountered IOException when handeling request {0}", new Object[]{
+                    e.getMessage()
+            });
         }
     }
 

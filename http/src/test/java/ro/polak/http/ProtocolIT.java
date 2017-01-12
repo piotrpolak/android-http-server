@@ -123,6 +123,7 @@ public class ProtocolIT extends AbstractIT {
         while ((line = in.readLine()) != null) {
             if (++numberOfLinesRead == 1) {
                 assertThat(line, startsWith("HTTP/1.1 414"));
+                break;
             }
         }
 
@@ -175,6 +176,7 @@ public class ProtocolIT extends AbstractIT {
         while ((line = in.readLine()) != null) {
             if (++numberOfLinesRead == 1) {
                 assertThat(line, startsWith("HTTP/1.1 400"));
+                break;
             }
         }
 
@@ -203,6 +205,7 @@ public class ProtocolIT extends AbstractIT {
         while ((line = in.readLine()) != null) {
             if (++numberOfLinesRead == 1) {
                 assertThat(line, startsWith("HTTP/1.1 400"));
+                break;
             }
         }
 

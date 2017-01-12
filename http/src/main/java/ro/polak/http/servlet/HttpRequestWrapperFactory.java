@@ -21,8 +21,11 @@ import ro.polak.http.MultipartRequestHandler;
 import ro.polak.http.RequestStatus;
 import ro.polak.http.Statistics;
 import ro.polak.http.protocol.exception.MalformedOrUnsupporedMethodProtocolException;
+import ro.polak.http.protocol.exception.MalformedStatusLineException;
+import ro.polak.http.protocol.exception.ProtocolException;
 import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
 import ro.polak.http.protocol.exception.UriTooLongProtocolException;
+import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.protocol.parser.impl.CookieParser;
 import ro.polak.http.protocol.parser.impl.HeadersParser;
@@ -44,6 +47,10 @@ public class HttpRequestWrapperFactory {
     private static final int METHOD_MAX_LENGTH;
     private static final List<String> RECOGNIZED_METHODS_LIST = Arrays.asList(RECOGNIZED_METHODS);
     private static final String HEADERS_END_DELIMINATOR = "\n\r\n";
+    private static final Parser<Headers> headersParser = new HeadersParser();
+    private static final Parser<Map<String, String>> queryStringParser = new QueryStringParser();
+    private static final Parser<RequestStatus> statusParser = new RequestStatusParser();
+    private static final Parser<Map<String, Cookie>> cookieParser = new CookieParser();
 
     static {
         int maxMethodLength = 0;
@@ -54,11 +61,6 @@ public class HttpRequestWrapperFactory {
         }
         METHOD_MAX_LENGTH = maxMethodLength;
     }
-
-    private static final Parser<Headers> headersParser = new HeadersParser();
-    private static final Parser<Map<String, String>> queryStringParser = new QueryStringParser();
-    private static final Parser<RequestStatus> statusParser = new RequestStatusParser();
-    private static final Parser<Map<String, Cookie>> cookieParser = new CookieParser();
 
     private final String tempPath;
 
@@ -77,15 +79,19 @@ public class HttpRequestWrapperFactory {
      * @param socket
      * @return
      */
-    public HttpRequestWrapper createFromSocket(Socket socket)
-            throws IOException, StatusLineTooLongProtocolException,
-            MalformedOrUnsupporedMethodProtocolException, UriTooLongProtocolException {
+    public HttpRequestWrapper createFromSocket(Socket socket) throws IOException, ProtocolException {
 
         HttpRequestWrapper request = new HttpRequestWrapper();
 
         InputStream in = socket.getInputStream();
         // The order matters
-        RequestStatus status = statusParser.parse(getStatusLine(in));
+
+        RequestStatus status;
+        try {
+            status = statusParser.parse(getStatusLine(in));
+        } catch (MalformedInputException e) {
+            throw new MalformedStatusLineException("Malformed status line " + e.getMessage());
+        }
 
         int uriLengthExceededWith = status.getUri().length() - URI_MAX_LENGTH;
         if (uriLengthExceededWith > 0) {
@@ -95,18 +101,32 @@ public class HttpRequestWrapperFactory {
         request.setInputStream(in);
         assignSocketMetadata(socket, request);
         request.setStatus(status);
-        request.setGetParameters(queryStringParser.parse(status.getQueryString()));
+
+        try {
+            request.setGetParameters(queryStringParser.parse(status.getQueryString()));
+        } catch (MalformedInputException e) {
+            throw new ProtocolException("Malformed request query string");
+        }
 
         String headersString = getHeaders(in);
         if (headersString.length() > 3) {
-            request.setHeaders(headersParser.parse(headersString));
+            try {
+                request.setHeaders(headersParser.parse(headersString));
+            } catch (MalformedInputException e) {
+                throw new ProtocolException("Malformed request headers");
+            }
+
             request.setCookies(getCookies(request.getHeaders()));
         } else {
             request.setHeaders(new Headers()); // Setting implicit empty headers
         }
 
         if (request.getMethod().toUpperCase().equals(HttpRequestWrapper.METHOD_POST)) {
-            handlePostRequest(request, in);
+            try {
+                handlePostRequest(request, in);
+            } catch (MalformedInputException e) {
+                throw new ProtocolException("Malformed post input");
+            }
         }
 
         return request;
@@ -127,7 +147,11 @@ public class HttpRequestWrapperFactory {
 
     private Map<String, Cookie> getCookies(Headers headers) {
         if (headers.containsHeader(Headers.HEADER_COOKIE)) {
-            return cookieParser.parse(headers.getHeader(Headers.HEADER_COOKIE));
+            try {
+                return cookieParser.parse(headers.getHeader(Headers.HEADER_COOKIE));
+            } catch (MalformedInputException e) {
+                // Return empty map
+            }
         }
         return new HashMap<>();
     }
@@ -191,7 +215,7 @@ public class HttpRequestWrapperFactory {
         return headersString.toString();
     }
 
-    private void handlePostRequest(HttpRequestWrapper request, InputStream in) throws IOException {
+    private void handlePostRequest(HttpRequestWrapper request, InputStream in) throws IOException, MalformedInputException {
         int postLength = 0;
         if (request.getHeaders().containsHeader(request.getHeaders().HEADER_CONTENT_LENGTH)) {
             try {
@@ -218,7 +242,7 @@ public class HttpRequestWrapperFactory {
                 && request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE).toLowerCase().startsWith("multipart/form-data");
     }
 
-    private void handlePostPlainRequest(HttpRequestWrapper request, InputStream in, int postLength) throws IOException {
+    private void handlePostPlainRequest(HttpRequestWrapper request, InputStream in, int postLength) throws IOException, MalformedInputException {
         byte[] buffer;
         buffer = new byte[1];
         StringBuilder postLine = new StringBuilder();
@@ -233,7 +257,7 @@ public class HttpRequestWrapperFactory {
         Statistics.addBytesReceived(postLine.length());
     }
 
-    private void handlePostMultipartRequest(HttpRequestWrapper request, InputStream in, int postLength) throws IOException {
+    private void handlePostMultipartRequest(HttpRequestWrapper request, InputStream in, int postLength) throws IOException, MalformedInputException {
         String boundary = request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE);
         int boundaryPosition = boundary.toLowerCase().indexOf(BOUNDARY_START);
         if (boundaryPosition > -1) {

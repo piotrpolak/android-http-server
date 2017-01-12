@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.servlet.Cookie;
 import ro.polak.utilities.Utilities;
@@ -17,7 +18,7 @@ public class CookieParserTest {
     private static Parser<Map<String, Cookie>> cookieParser = new CookieParser();
 
     @Test
-    public void shouldParseCookieHavingSpaceInValue() {
+    public void shouldParseCookieHavingSpaceInValue() throws MalformedInputException {
         String value = "value containing spaces";
         Map<String, Cookie> cookies = cookieParser.parse("name=" + value);
         assertThat(cookies, hasKey("name"));
@@ -25,7 +26,7 @@ public class CookieParserTest {
     }
 
     @Test
-    public void shouldParseCookieHavingUrlEncodedValue() {
+    public void shouldParseCookieHavingUrlEncodedValue() throws MalformedInputException {
         String value = "&<>some value";
         Map<String, Cookie> cookies = cookieParser.parse("name=" + Utilities.URLEncode(value));
         assertThat(cookies, hasKey("name"));

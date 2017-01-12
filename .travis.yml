@@ -1,6 +1,8 @@
 language: java
 
+# http/settings.gradle Added here to enable http subproject to be built without the root project
 install:
+  - touch http/settings.gradle
   - cd http; ../gradlew assemble; cd ..
 script:
   - cd http && ../gradlew check && cd ..

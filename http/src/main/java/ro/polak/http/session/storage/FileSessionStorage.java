@@ -44,7 +44,7 @@ public class FileSessionStorage implements SessionStorage {
     @Override
     public void persistSession(HttpSessionWrapper session) throws IOException {
         if (!isSessionIdValid(session.getId())) {
-            throw new IllegalArgumentException("Session ID can not be empty");
+            throw new IllegalArgumentException("Session ID can not be empty and must be composed of 32 characters");
         }
 
         File file = new File(getSessionStoragePath(session.getId()));

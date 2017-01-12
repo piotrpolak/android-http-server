@@ -21,4 +21,10 @@ public class RequestStatusParserTest {
         assertThat(requestStatus.getUri(), is("/home"));
         assertThat(requestStatus.getProtocol(), is("HTTP/1.1"));
     }
+
+    @Test(expected = MalformedInputException.class)
+    public void shouldThrowMalformedInputExceptionOnInvalidStatus() throws MalformedInputException {
+        Parser<RequestStatus> requestStatusParser = new RequestStatusParser();
+        RequestStatus requestStatus = requestStatusParser.parse("GET HTTP/1.1");
+    }
 }

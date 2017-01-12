@@ -65,8 +65,7 @@ public class MultipartHeadersPartParser implements Parser<MultipartHeadersPart> 
                 String name = contentDispositionHeaderValue.substring(nameStartPos + NAME_START.length());
                 int quotationMarkPosition = name.indexOf("\"");
                 if (quotationMarkPosition == -1) {
-                    // TODO throw new MalformedHeaderException();
-                    name = null;
+                    throw new MalformedInputException("Malformed header, unable to detect value beginning");
                 } else {
                     name = name.substring(0, quotationMarkPosition);
                 }
@@ -80,8 +79,7 @@ public class MultipartHeadersPartParser implements Parser<MultipartHeadersPart> 
                 int quotationMark2Position = fileName.indexOf("\"");
 
                 if (quotationMark2Position == -1) {
-                    // TODO throw new MalformedHeaderException();
-                    fileName = null;
+                    throw new MalformedInputException("Malformed header, unable to detect value end");
                 } else {
                     fileName = fileName.substring(0, quotationMark2Position);
                 }

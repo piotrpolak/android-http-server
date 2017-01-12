@@ -96,15 +96,8 @@ public class WebServer extends Thread {
             });
         }
 
-        if (!isNumberOfThreadsSufficient()) {
-            return false;
-        }
-
-        if (!isTempPathWritable()) {
-            return false;
-        }
-
-        if (!bindSocket()) {
+        if (!isNumberOfThreadsSufficient() || !isTempPathWritable() || !bindSocket()) {
+            listen = false;
             return false;
         }
 

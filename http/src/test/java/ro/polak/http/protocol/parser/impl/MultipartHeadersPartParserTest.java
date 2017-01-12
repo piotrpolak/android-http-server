@@ -40,4 +40,14 @@ public class MultipartHeadersPartParserTest {
         assertThat(headers.getName(), is("text"));
         assertThat(headers.getContentType(), is(nullValue()));
     }
+
+    @Test(expected = MalformedInputException.class)
+    public void shouldThrowMalformedInputException() throws MalformedInputException {
+        MultipartHeadersPart headers = multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text\" filename=\"text");
+    }
+
+    @Test(expected = MalformedInputException.class)
+    public void shouldThrowMalformedInputExceptionForMissingClosing() throws MalformedInputException {
+        MultipartHeadersPart headers = multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text");
+    }
 }

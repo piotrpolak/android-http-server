@@ -3,7 +3,7 @@ language: java
 install:
   - cd http; ../gradlew assemble; cd ..
 script:
-  - cd http; .../gradlew check; cd ..
+  - cd http && ../gradlew check && cd ..
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

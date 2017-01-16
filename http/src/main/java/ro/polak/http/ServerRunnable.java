@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
 package ro.polak.http;
@@ -12,11 +12,15 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ro.polak.http.error.HttpError400;
-import ro.polak.http.error.HttpError403;
-import ro.polak.http.error.HttpError404;
-import ro.polak.http.error.HttpError405;
-import ro.polak.http.error.HttpError414;
+import ro.polak.http.error.HttpErrorHandler;
+import ro.polak.http.error.impl.HttpError400Handler;
+import ro.polak.http.error.impl.HttpError403Handler;
+import ro.polak.http.error.impl.HttpError404Handler;
+import ro.polak.http.error.impl.HttpError405Handler;
+import ro.polak.http.error.impl.HttpError414Handler;
+import ro.polak.http.error.impl.HttpError500Handler;
+import ro.polak.http.exception.AccessDeniedException;
+import ro.polak.http.exception.NotFoundException;
 import ro.polak.http.protocol.exception.ProtocolException;
 import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
 import ro.polak.http.protocol.exception.UriTooLongProtocolException;
@@ -54,70 +58,86 @@ public class ServerRunnable implements Runnable {
 
     @Override
     public void run() {
+        HttpResponseWrapper response = null;
+
         try {
-
-            HttpResponseWrapper response = HttpResponseWrapper.createFromSocket(socket);
-
-            HttpRequestWrapper request;
             try {
-                request = requestFactory.createFromSocket(socket);
-            } catch (ProtocolException e) {
-                handleProtocolException(e, response);
-                socket.close();
-                return;
-            }
+                response = HttpResponseWrapper.createFromSocket(socket);
+                HttpRequestWrapper request = requestFactory.createFromSocket(socket);
 
-            LOGGER.log(Level.INFO, "Handling request {0} {1}", new Object[]{
-                    request.getMethod(), request.getRequestURI()
-            });
+                LOGGER.log(Level.INFO, "Handling request {0} {1}", new Object[]{
+                        request.getMethod(), request.getRequestURI()
+                });
 
-            String path = request.getRequestURI();
+                String path = request.getRequestURI();
 
-            if (isPathIllegal(path)) {
-                (new HttpError403(serverConfig.getErrorDocument403Path())).serve(response);
-                socket.close();
-                return;
-            }
-
-            setDefaultResponseHeaders(request, response);
-
-            if (isMethodSupported(request.getMethod())) {
-                boolean isResourceLoaded = loadResourceByPath(request, response, path);
-                if (!isResourceLoaded) {
-                    isResourceLoaded = loadDirectoryIndexResource(request, response, path);
+                if (isPathIllegal(path)) {
+                    throw new AccessDeniedException();
                 }
-                if (!isResourceLoaded) {
-                    (new HttpError404(serverConfig.getErrorDocument404Path())).serve(response);
+
+                setDefaultResponseHeaders(request, response);
+
+                if (isMethodSupported(request.getMethod())) {
+                    boolean isResourceLoaded = loadResourceByPath(request, response, path);
+                    if (!isResourceLoaded) {
+                        isResourceLoaded = loadDirectoryIndexResource(request, response, path);
+                    }
+                    if (!isResourceLoaded) {
+                        throw new NotFoundException();
+                    }
+                } else {
+                    serveMethodNotAllowed(response);
+                }
+            } catch (RuntimeException e) {
+                if (response != null) {
+                    getHandler(e).serve(response);
+                }
+            } finally {
+                if (socket != null) {
                     socket.close();
-                    return;
                 }
-            } else {
-                serveMethodNotAllowed(response);
             }
-
-            socket.close();
         } catch (IOException e) {
-            LOGGER.log(Level.INFO, "Encountered IOException when handeling request {0}", new Object[]{
+            LOGGER.log(Level.INFO, "Encountered IOException when handling request {0}", new Object[]{
                     e.getMessage()
             });
         }
     }
 
     /**
-     * Handles protocol exception. Writes specified response.
+     * Returns resolved handler for given exception.
      *
      * @param e
-     * @param response
+     * @return
      * @throws IOException
      */
-    private void handleProtocolException(ProtocolException e, HttpResponseWrapper response) throws IOException {
-        if (e instanceof StatusLineTooLongProtocolException) {
-            (new HttpError414()).serve(response);
-        } else if (e instanceof UriTooLongProtocolException) {
-            (new HttpError414()).serve(response);
-        } else {
-            (new HttpError400()).serve(response);
+    private HttpErrorHandler getHandler(RuntimeException e) throws IOException {
+        if (e instanceof ProtocolException) {
+            return getProtocolExceptionHandler((ProtocolException) e);
+        } else if (e instanceof AccessDeniedException) {
+            return new HttpError403Handler(serverConfig.getErrorDocument403Path());
+        } else if (e instanceof NotFoundException) {
+            return new HttpError404Handler(serverConfig.getErrorDocument404Path());
         }
+
+        return new HttpError500Handler().setReason(e);
+    }
+
+    /**
+     * Returns resolved handler for given ProtocolException.
+     *
+     * @param e
+     * @return
+     * @throws IOException
+     */
+    private HttpErrorHandler getProtocolExceptionHandler(ProtocolException e) throws IOException {
+        if (e instanceof StatusLineTooLongProtocolException) {
+            return new HttpError414Handler();
+        } else if (e instanceof UriTooLongProtocolException) {
+            return new HttpError414Handler();
+        }
+
+        return new HttpError400Handler();
     }
 
     /**
@@ -172,7 +192,7 @@ public class ServerRunnable implements Runnable {
         }
 
         response.getHeaders().setHeader(Headers.HEADER_ALLOW, sb.toString());
-        (new HttpError405()).serve(response);
+        (new HttpError405Handler()).serve(response);
     }
 
     /**

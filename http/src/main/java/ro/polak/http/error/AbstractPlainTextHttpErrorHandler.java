@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
 package ro.polak.http.error;
@@ -13,19 +13,26 @@ import ro.polak.http.servlet.HttpResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
 
 /**
- * 414 URI Too Long
+ * Abstract Http Error Handler
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @since 201509
+ * @since 201701
  */
-public class HttpError414 implements HttpError {
+public abstract class AbstractPlainTextHttpErrorHandler implements HttpErrorHandler {
+
+    protected final String status;
+    protected final String message;
+
+    public AbstractPlainTextHttpErrorHandler(String status, String message) {
+        this.status = status;
+        this.message = message;
+    }
 
     @Override
     public void serve(HttpResponse response) throws IOException {
-        String msg = "Error 414 - URI Too Long";
-        response.setStatus(HttpResponse.STATUS_URI_TOO_LONG);
+        response.setStatus(status);
         response.setContentType("text/plain");
-        response.getPrintWriter().write(msg);
+        response.getPrintWriter().write(message);
         ((HttpResponseWrapper) response).flush();
     }
 }

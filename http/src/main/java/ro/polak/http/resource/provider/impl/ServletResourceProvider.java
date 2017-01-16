@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ro.polak.http.Headers;
-import ro.polak.http.error.HttpError500;
+import ro.polak.http.exception.ServletException;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponse;
@@ -74,11 +74,8 @@ public class ServletResourceProvider implements ResourceProvider {
                 response.setStatus(HttpResponse.STATUS_OK);
                 servlet.service(request, response);
                 terminate(request, response);
-            } catch (Throwable e) {
-                HttpError500 error500 = new HttpError500();
-                error500.setReason(e);
-                error500.serve(response);
-                LOGGER.log(Level.SEVERE, "Servlet exception", e);
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new ServletException(e);
             }
 
             return true;

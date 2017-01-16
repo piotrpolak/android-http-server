@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ro.polak.http.error.HttpError503;
+import ro.polak.http.error.impl.HttpError503Handler;
 import ro.polak.http.servlet.HttpRequestWrapperFactory;
 import ro.polak.http.servlet.HttpResponseWrapper;
 import ro.polak.utilities.Utilities;
@@ -198,7 +198,7 @@ public class WebServer extends Thread {
             if (r instanceof ServerRunnable) {
                 Socket socket = ((ServerRunnable) r).getSocket();
                 try {
-                    (new HttpError503()).serve(HttpResponseWrapper.createFromSocket(socket));
+                    (new HttpError503Handler()).serve(HttpResponseWrapper.createFromSocket(socket));
                 } catch (IOException e) {
                 }
                 try {

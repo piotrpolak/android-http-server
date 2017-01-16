@@ -9,6 +9,7 @@ package example;
 
 import java.io.IOException;
 
+import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpRequest;
 import ro.polak.http.servlet.HttpResponse;
 import ro.polak.http.servlet.Servlet;
@@ -25,8 +26,7 @@ public class Streaming extends Servlet {
             response.setContentLength(message.length);
             response.getOutputStream().write(message);
         } catch (IOException e) {
-            throw new IllegalStateException("Unable to write to output stream", e);
+            throw new ServletException("Unable to write to output stream", e);
         }
-
     }
 }

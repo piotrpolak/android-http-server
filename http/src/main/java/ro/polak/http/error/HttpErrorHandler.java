@@ -17,7 +17,7 @@ import ro.polak.http.servlet.HttpResponse;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
  */
-public interface HttpError {
+public interface HttpErrorHandler {
 
     /**
      * Serves the error page.

@@ -7,18 +7,18 @@
 
 package example;
 
-import ro.polak.http.exception.AccessDeniedException;
+import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpRequest;
 import ro.polak.http.servlet.HttpResponse;
 import ro.polak.http.servlet.Servlet;
 
 /**
- * Forbidden page example
+ * Internal server error page example page
  */
-public class Forbidden extends Servlet {
+public class InternalServerError extends Servlet {
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {
-        throw new AccessDeniedException();
+        throw new ServletException("Something bad has just happened");
     }
 }

@@ -2,16 +2,13 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
-package ro.polak.http.error;
+package ro.polak.http.error.impl;
 
-import java.io.IOException;
-
-import ro.polak.http.Statistics;
+import ro.polak.http.error.AbstractHtmlErrorHandler;
 import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.HttpResponseWrapper;
 
 /**
  * 500 Internal Server Error HTTP error handler
@@ -19,12 +16,11 @@ import ro.polak.http.servlet.HttpResponseWrapper;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
  */
-public class HttpError500 implements HttpError {
+public class HttpError500Handler extends AbstractHtmlErrorHandler {
 
-    HtmlErrorDocument doc;
-
-    public HttpError500() {
-        doc = new HtmlErrorDocument();
+    public HttpError500Handler() {
+        super(HttpResponse.STATUS_INTERNAL_SERVER_ERROR, "Error 500 - The server made a boo boo",
+                "<p>No further details are provided</p>", null);
     }
 
     /**
@@ -32,7 +28,7 @@ public class HttpError500 implements HttpError {
      *
      * @param e Throwable
      */
-    public void setReason(Throwable e) {
+    public HttpError500Handler setReason(Throwable e) {
 
         String message = "<p style=\"color: red; font-weight: bold;\">";
 
@@ -68,28 +64,8 @@ public class HttpError500 implements HttpError {
 
         message += "</table>\n";
 
-        doc.setMessage(message);
-    }
+        this.explanation = message;
 
-    /**
-     * Sets the reason and generates error message for 500 HTTP error
-     *
-     * @param message Description of an error
-     */
-    public void setReason(String message) {
-        doc.setMessage(message);
-    }
-
-    @Override
-    public void serve(HttpResponse response) throws IOException {
-        Statistics.addError500();
-
-        doc.setTitle("Error 500 - The server made a boo boo");
-        response.setStatus(HttpResponse.STATUS_INTERNAL_SERVER_ERROR);
-        response.setContentType("text/html");
-
-        String msg = doc.toString();
-        response.getPrintWriter().write(msg);
-        ((HttpResponseWrapper) response).flush();
+        return this;
     }
 }

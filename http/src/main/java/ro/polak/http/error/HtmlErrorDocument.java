@@ -13,7 +13,7 @@ package ro.polak.http.error;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
  */
-class HtmlErrorDocument {
+public class HtmlErrorDocument {
 
     private String title = "";
     private String message = "";

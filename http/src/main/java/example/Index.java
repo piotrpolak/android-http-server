@@ -44,6 +44,8 @@ public class Index extends Servlet {
         printWriter.println("<li><a href='Session.dhtml'>Session example</a></li>");
         printWriter.println("<li><a href='Cookies.dhtml'>Cookies example</a></li>");
         printWriter.println("<li><a href='Forbidden.dhtml'>Forbidden page example</a></li>");
+        printWriter.println("<li><a href='NotFound.dhtml'>Not found page example</a></li>");
+        printWriter.println("<li><a href='InternalServerError.dhtml'>Internal server error page example</a></li>");
         printWriter.println("<li><a href='Streaming.dhtml'>Streaming</a></li>");
         printWriter.println("</ul>");
     }

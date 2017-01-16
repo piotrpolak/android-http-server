@@ -10,7 +10,7 @@ package ro.polak.http.protocol.exception;
 /**
  * Generic protocol exception.
  */
-public class ProtocolException extends Exception {
+public class ProtocolException extends RuntimeException {
 
     public ProtocolException(String message) {
         super(message);

@@ -52,7 +52,7 @@ public class HelloWorld extends Servlet {
 }
 ```
 
-More examples can be found in [app/src/main/java/example](./tree/master/app/src/main/java/example).
+More examples can be found in [http/src/main/java/example](./tree/master/http/src/main/java/example).
 
 ## Screens
 

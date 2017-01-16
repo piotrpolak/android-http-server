@@ -87,7 +87,6 @@ public class HttpSessionWrapper implements HttpSession, Serializable {
 
     @Override
     public String getId() {
-//        checkInvalidatedSession();
         return id;
     }
 

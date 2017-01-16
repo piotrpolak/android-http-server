@@ -112,15 +112,23 @@ public class ServerRunnable implements Runnable {
      * @throws IOException
      */
     private HttpErrorHandler getHandler(RuntimeException e) throws IOException {
-        if (e instanceof ProtocolException) {
-            return getProtocolExceptionHandler((ProtocolException) e);
-        } else if (e instanceof AccessDeniedException) {
-            return new HttpError403Handler(serverConfig.getErrorDocument403Path());
-        } else if (e instanceof NotFoundException) {
-            return new HttpError404Handler(serverConfig.getErrorDocument404Path());
+        Throwable fallbackException;
+
+        try {
+            if (e instanceof ProtocolException) {
+                return getProtocolExceptionHandler((ProtocolException) e);
+            } else if (e instanceof AccessDeniedException) {
+                return new HttpError403Handler(serverConfig.getErrorDocument403Path());
+            } else if (e instanceof NotFoundException) {
+                return new HttpError404Handler(serverConfig.getErrorDocument404Path());
+            } else {
+                fallbackException = e;
+            }
+        } catch (Throwable handlingException) {
+            fallbackException = handlingException;
         }
 
-        return new HttpError500Handler().setReason(e);
+        return new HttpError500Handler().setReason(fallbackException);
     }
 
     /**

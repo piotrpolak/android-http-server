@@ -10,6 +10,7 @@ package ro.polak.http.impl;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class ServerConfigImpl implements ServerConfig {
         listenPort = 8080;
         servletMappedExtension = "dhtml";
         maxServerThreads = 10;
-        directoryIndex = new ArrayList();
+        directoryIndex = new ArrayList(Arrays.asList("Index.dhtml", "index.html", "index.htm"));
     }
 
     /**

@@ -36,7 +36,7 @@ public abstract class AbstractHtmlErrorHandler extends AbstractPlainTextHttpErro
 
     @Override
     public void serve(HttpResponse response) throws IOException {
-        response.setStatus(HttpResponse.STATUS_ACCESS_DENIED);
+        response.setStatus(status);
         response.setContentType("text/html");
 
         if (errorDocumentPath == null || errorDocumentPath.equals("")) {

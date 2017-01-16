@@ -78,7 +78,7 @@ public class ServletContextWrapperTest {
     @Test
     public void shouldRemoveExpiredSession() throws IOException {
         HttpSessionWrapper session = new HttpSessionWrapper("123");
-        session.setLastAccessedTime(System.currentTimeMillis() - session.getMaxInactiveInterval() * 1000);
+        session.setLastAccessedTime(System.currentTimeMillis() - session.getMaxInactiveInterval() * 1000 - 1);
         when(sessionStorage.getSession("123")).thenReturn(session);
         HttpSessionWrapper sessionRead = servletContext.getSession("123");
         verify(sessionStorage, times(1)).removeSession(session);

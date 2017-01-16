@@ -19,6 +19,6 @@ import ro.polak.http.servlet.HttpResponse;
 public class HttpError503Handler extends AbstractPlainTextHttpErrorHandler {
 
     public HttpError503Handler() {
-        super(HttpResponse.STATUS_INTERNAL_SERVER_ERROR, "Error 503 - Service Unavailable");
+        super(HttpResponse.STATUS_SERVICE_UNAVAILABLE, "Error 503 - Service Unavailable");
     }
 }

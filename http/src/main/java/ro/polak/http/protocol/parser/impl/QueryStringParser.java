@@ -33,19 +33,12 @@ public class QueryStringParser implements Parser<Map<String, String>> {
         if (queryParametersArray.length > 0) {
             for (int i = 0; i < queryParametersArray.length; i++) {
                 String parameterPair[] = queryParametersArray[i].split("=", 2);
-                if (parameterPair.length == 0) {
-                    continue;
-                }
 
                 if (parameterPair[0].length() == 0) {
                     continue;
                 }
 
-                if (parameterPair.length > 1) {
-                    parameters.put(parameterPair[0], ro.polak.utilities.Utilities.urlDecode(parameterPair[1]));
-                } else {
-                    parameters.put(parameterPair[0], "");
-                }
+                parameters.put(parameterPair[0], ro.polak.utilities.Utilities.urlDecode(parameterPair[1]));
             }
         }
 

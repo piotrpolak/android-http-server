@@ -30,4 +30,24 @@ public class QueryStringParserTest {
         assertThat(parameters.get("param3"), is("ABC=DEF"));
         assertThat(parameters.get("param4"), is("A B = % *"));
     }
+
+    @Test
+    public void shouldParseIncompleteFields() throws MalformedInputException {
+
+        String data = "=&param1="
+                + "&param1="
+                + "&param2=ABCD2"
+                + "&param3=ABC=DEF"
+                + "&param4=A%20B%20%3D%20%25%20*";
+
+        Parser<Map<String, String>> parser = new QueryStringParser();
+        Map<String, String> parameters = parser.parse(data);
+
+        assertThat(parameters.size(), is(4));
+
+        assertThat(parameters.get("param1"), is(""));
+        assertThat(parameters.get("param2"), is("ABCD2"));
+        assertThat(parameters.get("param3"), is("ABC=DEF"));
+        assertThat(parameters.get("param4"), is("A B = % *"));
+    }
 }

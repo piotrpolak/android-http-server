@@ -32,4 +32,28 @@ public class CookieParserTest {
         assertThat(cookies, hasKey("name"));
         assertThat(cookies.get("name").getValue(), is(value));
     }
+
+    @Test
+    public void shouldTrimCookieNameValue() throws MalformedInputException {
+        Map<String, Cookie> cookies = cookieParser.parse(" name =");
+        assertThat(cookies, hasKey("name"));
+    }
+
+    @Test
+    public void shouldParseEmptyValue() throws MalformedInputException {
+        Map<String, Cookie> cookies = cookieParser.parse("");
+        assertThat(cookies.size(), is(0));
+    }
+
+    @Test
+    public void shouldReturnZeroSizeForInvalidValue() throws MalformedInputException {
+        Map<String, Cookie> cookies = cookieParser.parse("name");
+        assertThat(cookies.size(), is(0));
+    }
+
+    @Test
+    public void shouldParseMalformedEmptyValue() throws MalformedInputException {
+        Map<String, Cookie> cookies = cookieParser.parse(" ; ");
+        assertThat(cookies.size(), is(0));
+    }
 }

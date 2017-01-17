@@ -10,7 +10,9 @@ import java.nio.charset.StandardCharsets;
 
 import ro.polak.http.protocol.parser.MalformedInputException;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.fail;
 
 public class MultipartRequestHandlerTest {
@@ -50,11 +52,11 @@ public class MultipartRequestHandlerTest {
             fail("Should not throw IOException: " + e.getMessage());
         }
 
-        assertEquals(3, mrh.getPost().size());
+        assertThat(mrh.getPost().size(), is(3));
 
-        assertEquals("A123", mrh.getPost().get("field_1"));
-        assertEquals("B123", mrh.getPost().get("field_2"));
-        assertEquals("C123", mrh.getPost().get("field_3"));
+        assertThat(mrh.getPost().get("field_1"), is("A123"));
+        assertThat(mrh.getPost().get("field_2"), is("B123"));
+        assertThat(mrh.getPost().get("field_3"), is("C123"));
     }
 
     @Test
@@ -83,11 +85,11 @@ public class MultipartRequestHandlerTest {
         }
 
 
-        assertEquals(3, mrh.getPost().size());
+        assertThat(mrh.getPost().size(), is(3));
 
-        assertEquals("--------------BOUNDAR", mrh.getPost().get("field_0"));
-        assertEquals("------------BOUNDARY", mrh.getPost().get("field_1"));
-        assertEquals("------------BOUNDARY-", mrh.getPost().get("field_2"));
+        assertThat(mrh.getPost().get("field_0"), is("--------------BOUNDAR"));
+        assertThat(mrh.getPost().get("field_1"), is("------------BOUNDARY"));
+        assertThat(mrh.getPost().get("field_2"), is("------------BOUNDARY-"));
     }
 
     @Test
@@ -111,11 +113,11 @@ public class MultipartRequestHandlerTest {
             fail("Should not throw IOException: " + e.getMessage());
         }
 
-        assertEquals(1, mrh.getPost().size());
+        assertThat(mrh.getPost().size(), is(1));
 
-        assertEquals("A123", mrh.getPost().get("field_1"));
-        assertEquals(1, mrh.getUploadedFiles().size());
-        assertEquals(4, mrh.getUploadedFiles().get(0).getFile().length());
+        assertThat(mrh.getPost().get("field_1"), is("A123"));
+        assertThat(mrh.getUploadedFiles().size(), is(1));
+        assertThat(mrh.getUploadedFiles().get(0).getFile().length(), is(4l));
         // TODO Check file content
     }
 
@@ -177,18 +179,108 @@ public class MultipartRequestHandlerTest {
             fail("Should not throw IOException: " + e.getMessage());
         }
 
-        assertEquals("A", mrh.getPost().get("field_01"));
-        assertEquals("BB", mrh.getPost().get("field_02"));
-        assertEquals("CCC", mrh.getPost().get("field_03"));
-        assertEquals("DDDD", mrh.getPost().get("field_04"));
-        assertEquals("EEEEE", mrh.getPost().get("field_05"));
-        assertEquals("FFFFFF", mrh.getPost().get("field_06"));
-        assertEquals("GGGGGGG", mrh.getPost().get("field_07"));
-        assertEquals("HHHHHHHH", mrh.getPost().get("field_08"));
-        assertEquals("IIIIIIIII", mrh.getPost().get("field_09"));
-        assertEquals("JJJJJJJJJJ", mrh.getPost().get("field_10"));
-        assertEquals("KKKKKKKKKKK", mrh.getPost().get("field_11"));
+        assertThat(mrh.getPost().get("field_01"), is("A"));
+        assertThat(mrh.getPost().get("field_02"), is("BB"));
+        assertThat(mrh.getPost().get("field_03"), is("CCC"));
+        assertThat(mrh.getPost().get("field_04"), is("DDDD"));
+        assertThat(mrh.getPost().get("field_05"), is("EEEEE"));
+        assertThat(mrh.getPost().get("field_06"), is("FFFFFF"));
+        assertThat(mrh.getPost().get("field_07"), is("GGGGGGG"));
+        assertThat(mrh.getPost().get("field_08"), is("HHHHHHHH"));
+        assertThat(mrh.getPost().get("field_09"), is("IIIIIIIII"));
+        assertThat(mrh.getPost().get("field_10"), is("JJJJJJJJJJ"));
+        assertThat(mrh.getPost().get("field_11"), is("KKKKKKKKKKK"));
     }
+
+    @Test(expected = IllegalStateException.class)
+    public void shouldBeHandledOnceOnly() throws MalformedInputException {
+        String data =
+                "--" + boundary + nl +
+                        "Content-Disposition: form-data; name=\"field_1\"" + nl +
+                        nl +
+                        "A123" + nl +
+                        "--" + boundary + nl +
+                        "Content-Disposition: form-data; name=\"field_2\"" + nl +
+                        nl +
+                        "B123" + nl +
+                        "--" + boundary + nl +
+                        "Content-Disposition: form-data; name=\"field_3\"" + nl +
+                        nl +
+                        "C123" + nl +
+                        "--" + boundary + nl + nl;
+
+        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data), data.length(), boundary, temporaryUploadsDirectory);
+
+        try {
+            mrh.handle();
+            mrh.handle();
+        } catch (IOException e) {
+            fail("Should not throw IOException: " + e.getMessage());
+        }
+    }
+
+    @Test(expected = IOException.class)
+    public void shouldThrowIOExceptionOnEndedBoundary() throws MalformedInputException, IOException {
+        String data =
+                "--123";
+
+        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data), data.length() * 2, boundary, temporaryUploadsDirectory);
+
+        mrh.handle();
+    }
+
+    @Test
+    public void shouldStopParsingOnWrongContentLengthInBeforeBoundary() throws MalformedInputException {
+        String data = "----------------------------------------------------------" + boundary + nl +
+                "Content-Disposition: form-data; name=\"field_1\"" + nl +
+                nl +
+                "A123" + nl +
+                "--" + boundary + nl + nl;
+
+        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data), 5, boundary, temporaryUploadsDirectory);
+
+        try {
+            mrh.handle();
+        } catch (IOException e) {
+            fail("Should not throw IOException: " + e.getMessage());
+        }
+
+        assertThat(mrh.getPost().size(), is(0));
+    }
+
+
+//    @Test
+//    public void shouldStopParsingOnWrongContentLengthInBody() throws MalformedInputException {
+//        String begin = "--" + boundary + nl +
+//                "Content-Disposition: form-data; name=\"field_1\"" + nl +
+//                nl +
+//                "A123" + nl;
+//
+//        String data = begin +
+//                "--" + boundary + nl +
+//                "Content-Disposition: form-data; name=\"field_2\"" + nl +
+//                nl +
+//                "B123" + nl +
+//                "--" + boundary + nl +
+//                "Content-Disposition: form-data; name=\"field_3\"" + nl +
+//                nl +
+//                "C123" + nl +
+//                "--" + boundary + nl + nl;
+//
+//        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data), begin.length(), boundary, temporaryUploadsDirectory);
+//
+//        try {
+//            mrh.handle();
+//        } catch (IOException e) {
+//            fail("Should not throw IOException: " + e.getMessage());
+//        }
+//
+//        assertThat(mrh.getPost().size(), is(3));
+//
+//        assertThat(mrh.getPost().get("field_1"), is("A123"));
+//        assertThat(mrh.getPost().get("field_2"), is(nullValue()));
+//        assertThat(mrh.getPost().get("field_3"), is(nullValue()));
+//    }
 
     private InputStream getStreamOutOfString(String data) {
         return new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));

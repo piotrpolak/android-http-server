@@ -1,9 +1,11 @@
 package ro.polak.http.servlet;
 
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import ro.polak.http.ServerConfig;
 import ro.polak.http.session.storage.SessionStorage;
@@ -29,6 +31,7 @@ public class ServletContextWrapperTest {
         ServerConfig serverConfig = mock(ServerConfig.class);
         sessionStorage = mock(SessionStorage.class);
         servletContext = new ServletContextWrapper(serverConfig, sessionStorage);
+        servletContext.setAttribute("attribute", "value");
     }
 
     @Test
@@ -90,5 +93,20 @@ public class ServletContextWrapperTest {
         HttpSessionWrapper session = servletContext.createNewSession();
         assertThat(session, is(not(nullValue())));
         assertThat(session.getServletContext(), is((ServletContext) servletContext));
+    }
+
+    @Test
+    public void shouldGraduallyRemoveAttributeByOverwritingByNull() {
+        assertThat((String) servletContext.getAttribute("attribute"), Matchers.is("value"));
+        servletContext.setAttribute("attribute", null);
+        assertThat(servletContext.getAttribute("attribute"), Matchers.is(Matchers.nullValue()));
+    }
+
+    @Test
+    public void shouldReturnEnumerationOfAttributeNames() {
+        assertThat(Collections.list(servletContext.getAttributeNames()).size(), Matchers.is(1));
+        assertThat((String) Collections.list(servletContext.getAttributeNames()).get(0), Matchers.is("attribute"));
+        servletContext.setAttribute("attribute", null);
+        assertThat(Collections.list(servletContext.getAttributeNames()).size(), Matchers.is(0));
     }
 }

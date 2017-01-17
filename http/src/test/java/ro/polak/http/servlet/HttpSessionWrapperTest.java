@@ -53,6 +53,8 @@ public class HttpSessionWrapperTest {
     public void shouldReturnEnumerationOfAttributeNames() {
         assertThat(Collections.list(session.getAttributeNames()).size(), is(1));
         assertThat((String) Collections.list(session.getAttributeNames()).get(0), is("attribute"));
+        session.setAttribute("attribute", null);
+        assertThat(Collections.list(session.getAttributeNames()).size(), is(0));
     }
 
     @Test

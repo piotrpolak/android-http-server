@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
 
-package ro.polak.utilities;
+package ro.polak.http.utilities;
 
 import java.util.Random;
 

@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 import ro.polak.http.error.impl.HttpError503Handler;
 import ro.polak.http.servlet.HttpRequestWrapperFactory;
 import ro.polak.http.servlet.HttpResponseWrapper;
-import ro.polak.utilities.Utilities;
+import ro.polak.http.utilities.Utilities;
 
 /**
  * Web server main class.

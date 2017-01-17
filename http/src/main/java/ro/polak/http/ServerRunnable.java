@@ -181,9 +181,9 @@ public class ServerRunnable implements Runnable {
      * @throws IOException
      */
     private boolean loadDirectoryIndexResource(HttpRequestWrapper request, HttpResponseWrapper response, String path) throws IOException {
-        path = getNormalizedDirectoryPath(path);
+        String normalizedDirectoryPath = getNormalizedDirectoryPath(path);
         for (String index : serverConfig.getDirectoryIndex()) {
-            if (loadResourceByPath(request, response, path + index)) {
+            if (loadResourceByPath(request, response, normalizedDirectoryPath + index)) {
                 return true;
             }
         }

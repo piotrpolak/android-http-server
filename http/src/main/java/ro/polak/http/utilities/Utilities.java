@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
 
-package ro.polak.utilities;
+package ro.polak.http.utilities;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -46,16 +46,16 @@ public class Utilities {
             return null;
         }
 
-        filename = filename.toLowerCase();
+        String filenameNormalized = filename.toLowerCase();
         String ext = "";
         int pos;
 
-        if ((pos = filename.lastIndexOf('/')) != -1) {
-            filename = filename.substring(pos + 1);
+        if ((pos = filenameNormalized.lastIndexOf('/')) != -1) {
+            filenameNormalized = filenameNormalized.substring(pos + 1);
         }
 
-        if ((pos = filename.lastIndexOf('.')) != -1) {
-            ext = filename.substring(pos + 1);
+        if ((pos = filenameNormalized.lastIndexOf('.')) != -1) {
+            ext = filenameNormalized.substring(pos + 1);
         }
 
         return ext;

@@ -13,7 +13,7 @@ import java.util.Map;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.servlet.Cookie;
-import ro.polak.utilities.Utilities;
+import ro.polak.http.utilities.Utilities;
 
 /**
  * Cookie parser utility.

@@ -19,7 +19,7 @@ public class FileSessionStorageTest {
     private static String tempPath = System.getProperty("java.io.tmpdir") + "/";
 
     @BeforeClass
-    public static void setup() {
+    public static void setUp() {
         fileSessionStorage = new FileSessionStorage(tempPath);
     }
 

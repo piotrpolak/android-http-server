@@ -84,7 +84,6 @@ public class HttpSessionWrapperTest {
 
     @Test(expected = IllegalStateException.class)
     public void shouldThrowExceptionWhenPuttingIntoInvalidatedSession() {
-        ;
         session.invalidate();
         session.setAttribute("attribute", "value");
     }
@@ -97,7 +96,6 @@ public class HttpSessionWrapperTest {
 
     @Test(expected = IllegalStateException.class)
     public void shouldThrowExceptionWhenReadingAttributeNamesInvalidatedSession() {
-
         session.invalidate();
         session.getAttributeNames();
     }

@@ -17,8 +17,8 @@ import java.util.logging.Logger;
 
 import ro.polak.http.ServerConfig;
 import ro.polak.http.session.storage.SessionStorage;
-import ro.polak.utilities.RandomStringGenerator;
-import ro.polak.utilities.Utilities;
+import ro.polak.http.utilities.RandomStringGenerator;
+import ro.polak.http.utilities.Utilities;
 
 /**
  * Servlet context implementation.

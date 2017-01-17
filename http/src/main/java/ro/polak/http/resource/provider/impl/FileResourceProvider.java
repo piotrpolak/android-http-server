@@ -16,7 +16,7 @@ import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
-import ro.polak.utilities.Utilities;
+import ro.polak.http.utilities.Utilities;
 
 /**
  * File system asset resource provider

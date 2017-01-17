@@ -10,7 +10,7 @@ import java.util.Date;
 
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.servlet.Cookie;
-import ro.polak.utilities.Utilities;
+import ro.polak.http.utilities.Utilities;
 
 /**
  * Serializes cookie to text representation.

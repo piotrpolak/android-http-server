@@ -1,4 +1,4 @@
-package ro.polak.utilities;
+package ro.polak.http.utilities;
 
 import org.junit.Test;
 

@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.utilities;
+package ro.polak.http.utilities;
 
 import java.io.BufferedReader;
 import java.io.IOException;

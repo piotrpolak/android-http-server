@@ -20,7 +20,7 @@ public class AbstractIT {
     protected final int PORT = 8080;
 
     @BeforeClass
-    public static void setup() throws IOException {
+    public static void setUp() throws IOException {
         if (serverSocket == null) {
             serverSocket = new ServerSocket();
             WebServer webServer = new WebServer(serverSocket, getServerConfig());

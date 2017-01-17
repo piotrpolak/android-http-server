@@ -17,7 +17,7 @@ import ro.polak.http.ServerConfig;
 import ro.polak.http.servlet.HttpRequest;
 import ro.polak.http.servlet.HttpResponse;
 import ro.polak.http.servlet.Servlet;
-import ro.polak.utilities.Utilities;
+import ro.polak.http.utilities.Utilities;
 
 public class GetFile extends Servlet {
 

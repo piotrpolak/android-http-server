@@ -14,7 +14,7 @@ import ro.polak.http.servlet.FileUpload;
 import ro.polak.http.servlet.HttpRequest;
 import ro.polak.http.servlet.HttpResponse;
 import ro.polak.http.servlet.Servlet;
-import ro.polak.utilities.Utilities;
+import ro.polak.http.utilities.Utilities;
 
 public class UpdateConfiguration extends Servlet {
 

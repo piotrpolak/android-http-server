@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.Date;
 
 import ro.polak.http.servlet.Cookie;
-import ro.polak.utilities.Utilities;
+import ro.polak.http.utilities.Utilities;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
@@ -20,7 +20,7 @@ public class CookieHeaderSerializerTest {
     private static CookieHeaderSerializer cookieHeaderSerializer;
 
     @BeforeClass
-    public static void setup() {
+    public static void setUp() {
         cookieHeaderSerializer = new CookieHeaderSerializer();
     }
 

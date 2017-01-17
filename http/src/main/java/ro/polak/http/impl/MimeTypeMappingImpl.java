@@ -65,9 +65,9 @@ public class MimeTypeMappingImpl implements MimeTypeMapping {
     @Override
     public String getMimeTypeByExtension(String extension) {
         if (extension != null) {
-            extension = extension.toLowerCase();
-            if (mapping.containsKey(extension)) {
-                return mapping.get(extension.toLowerCase());
+            String extensionNormalized = extension.toLowerCase();
+            if (mapping.containsKey(extensionNormalized)) {
+                return mapping.get(extensionNormalized.toLowerCase());
             }
         }
 

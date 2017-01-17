@@ -23,7 +23,7 @@ import ro.polak.http.servlet.ServletConfigWrapper;
 import ro.polak.http.servlet.ServletContextWrapper;
 import ro.polak.http.servlet.loader.ClassPathServletLoader;
 import ro.polak.http.servlet.loader.ServletLoader;
-import ro.polak.utilities.Utilities;
+import ro.polak.http.utilities.Utilities;
 
 /**
  * Servlet resource provider

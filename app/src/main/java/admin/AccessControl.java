@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 import ro.polak.http.ServerConfig;
 import ro.polak.http.servlet.HttpSessionWrapper;
-import ro.polak.utilities.ConfigReader;
+import ro.polak.http.utilities.ConfigReader;
 
 public class AccessControl {
 

@@ -18,7 +18,7 @@ import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.utilities.ConfigReader;
+import ro.polak.http.utilities.ConfigReader;
 
 /**
  * Server configuration

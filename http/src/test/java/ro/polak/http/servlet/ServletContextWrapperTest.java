@@ -27,7 +27,7 @@ public class ServletContextWrapperTest {
     private ServletContextWrapper servletContext;
 
     @Before
-    public void setup() {
+    public void setUp() {
         ServerConfig serverConfig = mock(ServerConfig.class);
         sessionStorage = mock(SessionStorage.class);
         servletContext = new ServletContextWrapper(serverConfig, sessionStorage);

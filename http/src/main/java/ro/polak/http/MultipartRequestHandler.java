@@ -21,7 +21,7 @@ import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
 import ro.polak.http.servlet.UploadedFile;
-import ro.polak.utilities.RandomStringGenerator;
+import ro.polak.http.utilities.RandomStringGenerator;
 
 /**
  * Multipart request handler

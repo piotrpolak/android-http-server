@@ -36,10 +36,10 @@ public class ServerStats extends Servlet {
 
         doc.writeln("<table class=\"table\">");
         doc.writeln("<tr>");
-        doc.writeln("   <td>Data received</td><td>" + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.http.Statistics.getBytesReceived()) + "</td>");
+        doc.writeln("   <td>Data received</td><td>" + ro.polak.http.utilities.Utilities.fileSizeUnits(ro.polak.http.Statistics.getBytesReceived()) + "</td>");
         doc.writeln("</tr>");
         doc.writeln("<tr>");
-        doc.writeln("   <td>Data sent</td><td>" + ro.polak.utilities.Utilities.fileSizeUnits(ro.polak.http.Statistics.getBytesSend()) + "</td>");
+        doc.writeln("   <td>Data sent</td><td>" + ro.polak.http.utilities.Utilities.fileSizeUnits(ro.polak.http.Statistics.getBytesSend()) + "</td>");
         doc.writeln("</tr>");
         doc.writeln("<tr>");
         doc.writeln("   <td>Requests handled</td><td>" + ro.polak.http.Statistics.getRequests() + "</td>");

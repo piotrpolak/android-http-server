@@ -211,9 +211,62 @@ public class ProtocolIT extends AbstractIT {
         // TODO implement
     }
 
+
     @Test
-    public void shouldReturn411LengthRequired() {
-        // TODO implement
+    public void shouldReturn411LengthRequiredForPost() throws IOException {
+        String requestBody = RequestBuilder.defaultBuilder()
+                .method("POST", "/example/") // Connect is not yet implemented
+                .withCloseConnection()
+                .toString();
+
+        Socket socket = null;
+        OutputStream out;
+        socket = getSocket();
+        out = socket.getOutputStream();
+        out.write(requestBody.getBytes());
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line;
+        int numberOfLinesRead = 0;
+        while ((line = in.readLine()) != null) {
+            if (++numberOfLinesRead == 1) {
+                assertThat(line, startsWith("HTTP/1.1 411"));
+            }
+        }
+
+        if (numberOfLinesRead == 0) {
+            fail("No server response was read");
+        }
+
+        socket.close();
+    }
+
+    @Test
+    public void shouldReturn411LengthRequiredForPostMultiPart() throws IOException {
+        String requestBody = RequestBuilder.defaultBuilder()
+                .method("POST", "/example/") // Connect is not yet implemented
+                .withHeader("Content-Type", "multipart/mixed; boundary=s9xksnd72SSHu")
+                .withCloseConnection()
+                .toString();
+
+        Socket socket = null;
+        OutputStream out;
+        socket = getSocket();
+        out = socket.getOutputStream();
+        out.write(requestBody.getBytes());
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line;
+        int numberOfLinesRead = 0;
+        while ((line = in.readLine()) != null) {
+            if (++numberOfLinesRead == 1) {
+                assertThat(line, startsWith("HTTP/1.1 411"));
+            }
+        }
+
+        if (numberOfLinesRead == 0) {
+            fail("No server response was read");
+        }
+
+        socket.close();
     }
 
     @Test
@@ -319,12 +372,61 @@ public class ProtocolIT extends AbstractIT {
     }
 
     @Test
-    public void shouldReturn500InternalServerError() {
-        // TODO implement
+    public void shouldReturn500InternalServerError() throws IOException {
+        String requestBody = RequestBuilder.defaultBuilder()
+                .get("/example/InternalServerError.dhtml")
+                .withHost(HOST + ":" + PORT)
+                .withCloseConnection()
+                .toString();
+
+        Socket socket = null;
+        OutputStream out = null;
+        try {
+            socket = getSocket();
+            out = socket.getOutputStream();
+            out.write(requestBody.getBytes());
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String line;
+            int numberOfLinesRead = 0;
+            while ((line = in.readLine()) != null) {
+                if (++numberOfLinesRead == 1) {
+                    assertThat(line, startsWith("HTTP/1.1 500"));
+                }
+            }
+
+        } catch (IOException e) {
+            fail("The test failed too early due IOException" + e.getMessage());
+        }
+
+        socket.close();
     }
 
-    @Test
-    public void shouldReturn505HTTPVersionNotSupported() {
-        // TODO implement
-    }
+//    @Test
+//    public void shouldReturn505HTTPVersionNotSupported() {
+//        String requestBody = RequestBuilder.defaultBuilder()
+//                .get("SomeUrl.html")
+//                .withHost(HOST + ":" + PORT)
+//                .withProtocol("HTTP/9.0")
+//                .withCloseConnection()
+//                .toString();
+//
+//        Socket socket = null;
+//        OutputStream out = null;
+//        try {
+//            socket = getSocket();
+//            out = socket.getOutputStream();
+//            out.write(requestBody.getBytes());
+//            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//            String line;
+//            int numberOfLinesRead = 0;
+//            while ((line = in.readLine()) != null) {
+//                if (++numberOfLinesRead == 1) {
+//                    assertThat(line, startsWith("HTTP/1.1 503"));
+//                }
+//            }
+//
+//        } catch (IOException e) {
+//            fail("The test failed too early due IOException" + e.getMessage());
+//        }
+//    }
 }

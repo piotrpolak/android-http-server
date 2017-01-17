@@ -8,6 +8,7 @@ public class RequestBuilder {
     private final String NEW_LINE = "\r\n";
     private String method;
     private String uri;
+    private String protocol = "HTTP/1.1";
     private Headers headers = new Headers();
     private Serializer<Headers> headersSerializer = new HeadersSerializer();
 
@@ -18,6 +19,11 @@ public class RequestBuilder {
 
     public RequestBuilder get(String uri) {
         return method("GET", uri);
+    }
+
+    public RequestBuilder withProtocol(String protocol) {
+        this.protocol = protocol;
+        return this;
     }
 
     public RequestBuilder method(String method, String uri) {
@@ -48,7 +54,7 @@ public class RequestBuilder {
                 .append(" ")
                 .append(uri)
                 .append(" ")
-                .append("HTTP/1.1")
+                .append(protocol)
                 .append(NEW_LINE)
                 .append(headersSerializer.serialize(headers))
                 .toString();

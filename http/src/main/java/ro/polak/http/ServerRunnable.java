@@ -20,11 +20,13 @@ import ro.polak.http.error.impl.HttpError405Handler;
 import ro.polak.http.error.impl.HttpError414Handler;
 import ro.polak.http.error.impl.HttpError500Handler;
 import ro.polak.http.exception.AccessDeniedException;
+import ro.polak.http.exception.MethodNotAllowedException;
 import ro.polak.http.exception.NotFoundException;
 import ro.polak.http.protocol.exception.ProtocolException;
 import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
 import ro.polak.http.protocol.exception.UriTooLongProtocolException;
 import ro.polak.http.resource.provider.ResourceProvider;
+import ro.polak.http.servlet.HttpRequest;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpRequestWrapperFactory;
 import ro.polak.http.servlet.HttpResponseWrapper;
@@ -77,17 +79,16 @@ public class ServerRunnable implements Runnable {
 
                 setDefaultResponseHeaders(request, response);
 
-                if (isMethodSupported(request.getMethod())) {
-                    boolean isResourceLoaded = loadResourceByPath(request, response, path);
-                    if (!isResourceLoaded) {
-                        isResourceLoaded = loadDirectoryIndexResource(request, response, path);
-                    }
-                    if (!isResourceLoaded) {
-                        throw new NotFoundException();
-                    }
-                } else {
-                    serveMethodNotAllowed(response);
+                validateRequest(request);
+
+                boolean isResourceLoaded = loadResourceByPath(request, response, path);
+                if (!isResourceLoaded) {
+                    isResourceLoaded = loadDirectoryIndexResource(request, response, path);
                 }
+                if (!isResourceLoaded) {
+                    throw new NotFoundException();
+                }
+
             } catch (RuntimeException e) {
                 if (response != null) {
                     getHandler(e).serve(response);
@@ -121,6 +122,8 @@ public class ServerRunnable implements Runnable {
                 return new HttpError403Handler(serverConfig.getErrorDocument403Path());
             } else if (e instanceof NotFoundException) {
                 return new HttpError404Handler(serverConfig.getErrorDocument404Path());
+            } else if (e instanceof MethodNotAllowedException) {
+                return new HttpError405Handler(getAllowedMethods());
             } else {
                 fallbackException = e;
             }
@@ -184,23 +187,21 @@ public class ServerRunnable implements Runnable {
     }
 
     /**
-     * Server Method Not Allowed error page.
+     * Returns coma separated allowed methods
      *
-     * @param response
-     * @throws IOException
+     * @return
      */
-    private void serveMethodNotAllowed(HttpResponseWrapper response) throws IOException {
-        StringBuilder sb = new StringBuilder();
+    private String getAllowedMethods() {
+        StringBuilder stringBuilder = new StringBuilder();
         String[] supportedMethods = serverConfig.getSupportedMethods();
         for (int i = 0; i < supportedMethods.length; i++) {
-            sb.append(supportedMethods[i]);
+            stringBuilder.append(supportedMethods[i]);
             if (i != supportedMethods.length - 1) {
-                sb.append(", ");
+                stringBuilder.append(", ");
             }
         }
 
-        response.getHeaders().setHeader(Headers.HEADER_ALLOW, sb.toString());
-        (new HttpError405Handler()).serve(response);
+        return stringBuilder.toString();
     }
 
     /**
@@ -243,6 +244,17 @@ public class ServerRunnable implements Runnable {
             path += "/";
         }
         return path;
+    }
+
+    /**
+     * Throws exception in case of invalid request.
+     *
+     * @param request
+     */
+    private void validateRequest(HttpRequest request) {
+        if (!isMethodSupported(request.getMethod())) {
+            throw new MethodNotAllowedException();
+        }
     }
 
     /**

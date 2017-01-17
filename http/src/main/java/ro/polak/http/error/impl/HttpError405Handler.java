@@ -7,6 +7,9 @@
 
 package ro.polak.http.error.impl;
 
+import java.io.IOException;
+
+import ro.polak.http.Headers;
 import ro.polak.http.error.AbstractHtmlErrorHandler;
 import ro.polak.http.servlet.HttpResponse;
 
@@ -18,9 +21,19 @@ import ro.polak.http.servlet.HttpResponse;
  */
 public class HttpError405Handler extends AbstractHtmlErrorHandler {
 
-    public HttpError405Handler() {
+    private String allowedMethods;
+
+    public HttpError405Handler(String allowedMethods) {
         super(HttpResponse.STATUS_METHOD_NOT_ALLOWED, "Error 405 - Method Not Allowed",
                 "<p>The method specified in the Request-Line is not allowed for the resource " +
                         "identified by the Request-URI.</p>", null);
+        this.allowedMethods = allowedMethods;
+    }
+
+
+    @Override
+    public void serve(HttpResponse response) throws IOException {
+        response.getHeaders().setHeader(Headers.HEADER_ALLOW, allowedMethods);
+        super.serve(response);
     }
 }

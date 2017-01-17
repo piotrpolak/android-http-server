@@ -32,6 +32,7 @@ public interface HttpResponse {
     String STATUS_NOT_IMPLEMENTED = "HTTP/1.1 501 Not Implemented";
     String STATUS_URI_TOO_LONG = "HTTP/1.1 414 URI Too Long";
     String STATUS_BAD_REQUEST = "HTTP/1.1 400 Bad Request";
+    String STATUS_LENGTH_REQUIRED = "HTTP/1.1 411 Length Required";
 
     /**
      * Adds a cookie.

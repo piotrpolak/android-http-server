@@ -20,6 +20,7 @@ import ro.polak.http.Headers;
 import ro.polak.http.MultipartRequestHandler;
 import ro.polak.http.RequestStatus;
 import ro.polak.http.Statistics;
+import ro.polak.http.protocol.exception.LengthRequiredException;
 import ro.polak.http.protocol.exception.MalformedOrUnsupporedMethodProtocolException;
 import ro.polak.http.protocol.exception.MalformedStatusLineException;
 import ro.polak.http.protocol.exception.ProtocolException;
@@ -221,7 +222,10 @@ public class HttpRequestWrapperFactory {
             try {
                 postLength = Integer.parseInt(request.getHeaders().getHeader(request.getHeaders().HEADER_CONTENT_LENGTH));
             } catch (NumberFormatException e) {
+                throw new MalformedInputException(e.getMessage());
             }
+        } else {
+            throw new LengthRequiredException();
         }
 
         // Only if post length is greater than 0

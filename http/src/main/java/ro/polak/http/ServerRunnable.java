@@ -17,11 +17,13 @@ import ro.polak.http.error.impl.HttpError400Handler;
 import ro.polak.http.error.impl.HttpError403Handler;
 import ro.polak.http.error.impl.HttpError404Handler;
 import ro.polak.http.error.impl.HttpError405Handler;
+import ro.polak.http.error.impl.HttpError411Handler;
 import ro.polak.http.error.impl.HttpError414Handler;
 import ro.polak.http.error.impl.HttpError500Handler;
 import ro.polak.http.exception.AccessDeniedException;
 import ro.polak.http.exception.MethodNotAllowedException;
 import ro.polak.http.exception.NotFoundException;
+import ro.polak.http.protocol.exception.LengthRequiredException;
 import ro.polak.http.protocol.exception.ProtocolException;
 import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
 import ro.polak.http.protocol.exception.UriTooLongProtocolException;
@@ -146,6 +148,8 @@ public class ServerRunnable implements Runnable {
             return new HttpError414Handler();
         } else if (e instanceof UriTooLongProtocolException) {
             return new HttpError414Handler();
+        } else if (e instanceof LengthRequiredException) {
+            return new HttpError411Handler();
         }
 
         return new HttpError400Handler();

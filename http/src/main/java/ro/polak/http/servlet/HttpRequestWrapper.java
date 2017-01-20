@@ -83,23 +83,15 @@ public class HttpRequestWrapper implements HttpRequest {
 
     @Override
     public StringBuilder getRequestURL() {
-        String host;
-        if (headers.containsHeader(Headers.HEADER_HOST)) {
-            // Strip port number
-            host = headers.getHeader(Headers.HEADER_HOST).split(":")[0];
-        } else {
-            host = getLocalAddr();
-        }
-
         StringBuilder url = new StringBuilder();
-        url.append(getScheme()).append(host);
+        url.append(getScheme()).append("://").append(getHost());
 
         int port = getServerPort();
         if (port != 80 && port != 433) {
             url.append(':').append(port);
         }
-
         url.append(status.getUri());
+
         return url;
     }
 
@@ -110,6 +102,10 @@ public class HttpRequestWrapper implements HttpRequest {
 
     @Override
     public int getIntHeader(String name) {
+        if (!headers.containsHeader(name)) {
+            return -1;
+        }
+
         try {
             return Integer.valueOf(getHeader(name));
         } catch (NumberFormatException e) {
@@ -182,6 +178,9 @@ public class HttpRequestWrapper implements HttpRequest {
 
     @Override
     public int getContentLength() {
+        if (!headers.containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
+            return -1;
+        }
         return getIntHeader(Headers.HEADER_CONTENT_LENGTH);
     }
 
@@ -428,5 +427,21 @@ public class HttpRequestWrapper implements HttpRequest {
 
     public void setSecure(boolean secure) {
         isSecure = secure;
+    }
+
+    /**
+     * Returns requested host name.
+     *
+     * @return
+     */
+    private String getHost() {
+        String host;
+        if (headers.containsHeader(Headers.HEADER_HOST)) {
+            // Strip port number
+            host = headers.getHeader(Headers.HEADER_HOST).split(":")[0];
+        } else {
+            host = getLocalAddr();
+        }
+        return host;
     }
 }

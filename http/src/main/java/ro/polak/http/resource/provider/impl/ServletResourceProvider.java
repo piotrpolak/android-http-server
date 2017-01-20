@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
 package ro.polak.http.resource.provider.impl;
@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import ro.polak.http.Headers;
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponse;
@@ -54,17 +55,9 @@ public class ServletResourceProvider implements ResourceProvider {
 
     @Override
     public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
-        String extension = Utilities.getExtension(uri);
-
-        // Check whether the extension is of Servlet type
-        if (extension.equals(servletMappedExtension)) {
+        if (isServletExtension(uri) && servletLoader.canLoadServlet(uri)) {
             try {
-                Servlet servlet;
-                try {
-                    servlet = servletLoader.loadServlet(uri);
-                } catch (ClassNotFoundException e) {
-                    return false;
-                }
+                Servlet servlet = servletLoader.loadServlet(uri);
 
                 ServletConfigWrapper servletConfig = new ServletConfigWrapper();
                 request.setServletContext(servletContext);
@@ -74,7 +67,7 @@ public class ServletResourceProvider implements ResourceProvider {
                 response.setStatus(HttpResponse.STATUS_OK);
                 servlet.service(request, response);
                 terminate(request, response);
-            } catch (InstantiationException | IllegalAccessException e) {
+            } catch (ServletInitializationException e) {
                 throw new ServletException(e);
             }
 
@@ -82,6 +75,10 @@ public class ServletResourceProvider implements ResourceProvider {
         }
 
         return false;
+    }
+
+    private boolean isServletExtension(String uri) {
+        return Utilities.getExtension(uri).equals(servletMappedExtension);
     }
 
     /**

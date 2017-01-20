@@ -7,8 +7,7 @@
 
 package ro.polak.http.servlet.loader;
 
-import java.io.IOException;
-
+import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.servlet.Servlet;
 
 /**
@@ -19,35 +18,50 @@ import ro.polak.http.servlet.Servlet;
  */
 abstract public class AbstractServletLoader implements ServletLoader {
 
+
     @Override
-    public Servlet loadServlet(String servletPath) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
+    public boolean canLoadServlet(String servletPath) {
+        return servletExists(getServletCanonicalName(servletPath));
+    }
+
+    @Override
+    public Servlet loadServlet(String servletPath) throws ServletInitializationException {
+        return instantiateServlet(getServletCanonicalName(servletPath));
+    }
+
+    private String getServletCanonicalName(String servletPath) {
         int lastSlashPos = servletPath.lastIndexOf('/');
 
         // Detecting servlet name and servlet directory (package)
         // IMPORTANT! This imposes a constraint that all the servlets must be in a package
-        String servletName = servletPath.substring(lastSlashPos + 1);
+        String classCanonicalName = servletPath.substring(lastSlashPos + 1);
         String servletDir = servletPath.substring(0, lastSlashPos + 1);
 
         // Removing extension if needed
-        int extensionSeparatorPos = servletName.lastIndexOf('.');
+        int extensionSeparatorPos = classCanonicalName.lastIndexOf('.');
         if (extensionSeparatorPos > -1) {
-            servletName = servletName.substring(0, extensionSeparatorPos);
+            classCanonicalName = classCanonicalName.substring(0, extensionSeparatorPos);
         }
 
         // Generating class name and instantiating servlet
-        servletName = servletDir.substring(1).replaceAll("/", ".") + servletName;
-        return instantiateServlet(servletName);
+        classCanonicalName = servletDir.substring(1).replaceAll("/", ".") + classCanonicalName;
+        return classCanonicalName;
     }
+
+    /**
+     * Tells whether servlet for the given parameter exists.
+     *
+     * @param classCanonicalName
+     * @return
+     */
+    abstract protected boolean servletExists(String classCanonicalName);
 
     /**
      * Returns instantiated servlet.
      *
      * @param classCanonicalName
      * @return
-     * @throws ClassNotFoundException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     * @throws IOException
+     * @throws ServletInitializationException
      */
-    abstract protected Servlet instantiateServlet(String classCanonicalName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException;
+    abstract protected Servlet instantiateServlet(String classCanonicalName) throws ServletInitializationException;
 }

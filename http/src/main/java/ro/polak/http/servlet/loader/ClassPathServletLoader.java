@@ -7,8 +7,7 @@
 
 package ro.polak.http.servlet.loader;
 
-import java.io.IOException;
-
+import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.servlet.Servlet;
 
 /**
@@ -21,7 +20,22 @@ import ro.polak.http.servlet.Servlet;
 public class ClassPathServletLoader extends AbstractServletLoader {
 
     @Override
-    protected Servlet instantiateServlet(String classCanonicalName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
-        return (Servlet) Class.forName(classCanonicalName).newInstance();
+    protected boolean servletExists(String classCanonicalName) {
+        try {
+            Class.forName(classCanonicalName);
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    protected Servlet instantiateServlet(String classCanonicalName) throws ServletInitializationException {
+        try {
+            return (Servlet) Class.forName(classCanonicalName).newInstance();
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            throw new ServletInitializationException(e);
+        }
     }
 }

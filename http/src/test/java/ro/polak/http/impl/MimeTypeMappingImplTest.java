@@ -18,28 +18,31 @@ public class MimeTypeMappingImplTest {
     public void shouldSuportMultivaluedLine() throws IOException {
         String input = "image/jpeg jpeg jpg jpe";
         InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-        MimeTypeMapping mapping = MimeTypeMappingImpl.createFromStream(stream);
-        assertThat(mapping.getMimeTypeByExtension("jpg"), is("image/jpeg"));
-        assertThat(mapping.getMimeTypeByExtension("jpeg"), is("image/jpeg"));
-        assertThat(mapping.getMimeTypeByExtension("jpe"), is("image/jpeg"));
+        MimeTypeMapping mimeTypeMapping = MimeTypeMappingImpl.createFromStream(stream);
+        assertThat(mimeTypeMapping.getMimeTypeByExtension("jpg"), is("image/jpeg"));
+        assertThat(mimeTypeMapping.getMimeTypeByExtension("jpeg"), is("image/jpeg"));
+        assertThat(mimeTypeMapping.getMimeTypeByExtension("jpe"), is("image/jpeg"));
+        stream.close();
     }
 
     @Test
     public void shouldNormalizeLetterCase() throws IOException {
         String input = "image/jpeg jPEG jPG jPE";
         InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-        MimeTypeMapping mapping = MimeTypeMappingImpl.createFromStream(stream);
-        assertThat(mapping.getMimeTypeByExtension("Jpg"), is("image/jpeg"));
-        assertThat(mapping.getMimeTypeByExtension("Jpeg"), is("image/jpeg"));
-        assertThat(mapping.getMimeTypeByExtension("Jpe"), is("image/jpeg"));
+        MimeTypeMapping mimeTypeMapping = MimeTypeMappingImpl.createFromStream(stream);
+        assertThat(mimeTypeMapping.getMimeTypeByExtension("Jpg"), is("image/jpeg"));
+        assertThat(mimeTypeMapping.getMimeTypeByExtension("Jpeg"), is("image/jpeg"));
+        assertThat(mimeTypeMapping.getMimeTypeByExtension("Jpe"), is("image/jpeg"));
+        stream.close();
     }
 
     @Test
     public void shouldReturnDefaultMimeType() throws IOException {
         String input = "image/jpeg jPEG jPG jPE";
         InputStream stream = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8));
-        MimeTypeMapping mapping = MimeTypeMappingImpl.createFromStream(stream, "default/default");
-        assertThat(mapping.getMimeTypeByExtension("any"), is("default/default"));
-        assertThat(mapping.getMimeTypeByExtension(null), is("default/default"));
+        MimeTypeMapping mimeTypeMapping = MimeTypeMappingImpl.createFromStream(stream, "default/default");
+        assertThat(mimeTypeMapping.getMimeTypeByExtension("any"), is("default/default"));
+        assertThat(mimeTypeMapping.getMimeTypeByExtension(null), is("default/default"));
+        stream.close();
     }
 }

@@ -107,7 +107,9 @@ public class ServerConfigImpl implements ServerConfig {
                     defaultMimeType = config.get("DefaultMimeType");
                 }
 
-                serverConfig.mimeTypeMapping = MimeTypeMappingImpl.createFromStream(new FileInputStream(basePath + config.get("MimeType")), defaultMimeType);
+                FileInputStream fileInputStream = new FileInputStream(basePath + config.get("MimeType"));
+                serverConfig.mimeTypeMapping = MimeTypeMappingImpl.createFromStream(fileInputStream, defaultMimeType);
+                fileInputStream.close();
             } catch (IOException e) {
             }
         }

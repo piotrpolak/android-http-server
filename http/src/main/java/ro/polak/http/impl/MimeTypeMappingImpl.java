@@ -24,7 +24,7 @@ import ro.polak.http.MimeTypeMapping;
  */
 public class MimeTypeMappingImpl implements MimeTypeMapping {
 
-    public String defaultMimeType;
+    private String defaultMimeType;
     private Map<String, String> mapping;
 
     /**
@@ -36,30 +36,33 @@ public class MimeTypeMappingImpl implements MimeTypeMapping {
     }
 
     /**
+     * Creates mime type mapping from provided input stream.
+     *
      * @param in
      * @param defaultMimeType
      */
     public static MimeTypeMapping createFromStream(InputStream in, String defaultMimeType) throws IOException {
-        MimeTypeMappingImpl mtm = (MimeTypeMappingImpl) createFromStream(in);
-        mtm.defaultMimeType = defaultMimeType;
-        return mtm;
+        MimeTypeMappingImpl mimeTypeMapping = (MimeTypeMappingImpl) createFromStream(in);
+        mimeTypeMapping.defaultMimeType = defaultMimeType;
+        return mimeTypeMapping;
     }
 
     /**
+     * Creates mime type mapping from provided input stream.
+     *
      * @param in
      */
     public static MimeTypeMapping createFromStream(InputStream in) throws IOException {
-        MimeTypeMappingImpl mtm = new MimeTypeMappingImpl();
+        MimeTypeMappingImpl mimeTypeMapping = new MimeTypeMappingImpl();
         BufferedReader input = new BufferedReader(new InputStreamReader(in));
         String line;
         while ((line = input.readLine()) != null) {
             String mime[] = line.split(" ");
             for (int i = 1; i < mime.length; i++) {
-                mtm.mapping.put(mime[i].toLowerCase(), mime[0]);
+                mimeTypeMapping.mapping.put(mime[i].toLowerCase(), mime[0]);
             }
         }
-        input.close();
-        return mtm;
+        return mimeTypeMapping;
     }
 
     @Override

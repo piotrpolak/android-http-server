@@ -21,7 +21,7 @@ import ro.polak.http.MultipartRequestHandler;
 import ro.polak.http.RequestStatus;
 import ro.polak.http.Statistics;
 import ro.polak.http.protocol.exception.LengthRequiredException;
-import ro.polak.http.protocol.exception.MalformedOrUnsupporedMethodProtocolException;
+import ro.polak.http.protocol.exception.MalformedOrUnsupportedMethodProtocolException;
 import ro.polak.http.protocol.exception.MalformedStatusLineException;
 import ro.polak.http.protocol.exception.ProtocolException;
 import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
@@ -158,7 +158,7 @@ public class HttpRequestWrapperFactory {
     }
 
     private String getStatusLine(InputStream in)
-            throws IOException, StatusLineTooLongProtocolException, MalformedOrUnsupporedMethodProtocolException {
+            throws IOException, StatusLineTooLongProtocolException, MalformedOrUnsupportedMethodProtocolException {
         StringBuilder statusLine = new StringBuilder();
         byte[] buffer = new byte[1];
         int length = 0;
@@ -177,11 +177,11 @@ public class HttpRequestWrapperFactory {
                     wasMethodRead = true;
                     String method = statusLine.substring(0, statusLine.length() - 1).toUpperCase();
                     if (!RECOGNIZED_METHODS_LIST.contains(method)) {
-                        throw new MalformedOrUnsupporedMethodProtocolException("Method " + method + " is not supported");
+                        throw new MalformedOrUnsupportedMethodProtocolException("Method " + method + " is not supported");
                     }
                 } else {
                     if (length > METHOD_MAX_LENGTH) {
-                        throw new MalformedOrUnsupporedMethodProtocolException("Method name is longer than expected");
+                        throw new MalformedOrUnsupportedMethodProtocolException("Method name is longer than expected");
                     }
                 }
             }

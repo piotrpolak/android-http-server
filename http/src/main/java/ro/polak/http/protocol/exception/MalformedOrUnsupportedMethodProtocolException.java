@@ -10,9 +10,9 @@ package ro.polak.http.protocol.exception;
 /**
  * Method too long or unknown (not supported).
  */
-public class MalformedOrUnsupporedMethodProtocolException extends ProtocolException {
+public class MalformedOrUnsupportedMethodProtocolException extends ProtocolException {
 
-    public MalformedOrUnsupporedMethodProtocolException(String message) {
+    public MalformedOrUnsupportedMethodProtocolException(String message) {
         super(message);
     }
 }

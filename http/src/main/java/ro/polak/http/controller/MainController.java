@@ -24,6 +24,8 @@ import ro.polak.http.gui.ServerGui;
  */
 public class MainController implements Controller {
 
+    private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
+
     private WebServer webServer;
     private ServerGui gui;
     private ServerConfigFactory serverConfigFactory;
@@ -60,12 +62,17 @@ public class MainController implements Controller {
 
     @Override
     public void start() {
+        ServerSocket serverSocket;
         try {
-            webServer = new WebServer(new ServerSocket(), serverConfigFactory.getServerConfig());
-            if (webServer.startServer()) {
-                gui.start();
-            }
+            serverSocket = new ServerSocket();
         } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Unable to create server socket ", e);
+            return;
+        }
+
+        webServer = new WebServer(serverSocket, serverConfigFactory.getServerConfig());
+        if (webServer.startServer()) {
+            gui.start();
         }
     }
 

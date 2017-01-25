@@ -10,6 +10,7 @@ package ro.polak.http.resource.provider.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.resource.provider.ResourceProvider;
@@ -59,7 +60,13 @@ public class FileResourceProvider implements ResourceProvider {
             // Serving file for all the request but for HEAD
             // TODO This should be moved out into the parent class
             if (!request.getMethod().equals(HttpRequestWrapper.METHOD_HEAD)) {
-                response.serveStream(new FileInputStream(file));
+                InputStream fileInputStream = new FileInputStream(file);
+                response.serveStream(fileInputStream);
+
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                }
             }
 
             response.flush();

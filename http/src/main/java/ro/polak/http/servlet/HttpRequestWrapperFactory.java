@@ -272,7 +272,7 @@ public class HttpRequestWrapperFactory {
                 mrh.handle();
 
                 request.setPostParameters(mrh.getPost());
-                request.setFileUpload(new FileUpload(mrh.getUploadedFiles()));
+                request.setUploadedFiles(mrh.getUploadedFiles());
             }
         }
     }

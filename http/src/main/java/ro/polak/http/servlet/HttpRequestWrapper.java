@@ -9,9 +9,11 @@ package ro.polak.http.servlet;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 
@@ -47,7 +49,7 @@ public class HttpRequestWrapper implements HttpRequest {
     private String remoteAddr;
 
     private Map<String, Cookie> cookies;
-    private FileUpload fileUpload;
+    private Collection<UploadedFile> uploadedFiles;
     private HttpSessionWrapper session;
     private boolean sessionWasRequested = false;
     private ServletContextWrapper servletContext;
@@ -72,7 +74,7 @@ public class HttpRequestWrapper implements HttpRequest {
         Statistics.addRequest();
         postParameters = new HashMap<>();
         getParameters = new HashMap<>();
-        fileUpload = new FileUpload();
+        uploadedFiles = new HashSet<>();
         attributes = new HashMap<>();
     }
 
@@ -304,8 +306,8 @@ public class HttpRequestWrapper implements HttpRequest {
     }
 
     @Override
-    public FileUpload getFileUpload() {
-        return fileUpload;
+    public Collection<UploadedFile> getUploadedFiles() {
+        return uploadedFiles;
     }
 
     @Override
@@ -369,8 +371,8 @@ public class HttpRequestWrapper implements HttpRequest {
         this.headers = headers;
     }
 
-    public void setFileUpload(FileUpload fileUpload) {
-        this.fileUpload = fileUpload;
+    public void setUploadedFiles(Collection<UploadedFile> uploadedFiles) {
+        this.uploadedFiles = uploadedFiles;
     }
 
     public void setGetParameters(Map<String, String> getParameters) {

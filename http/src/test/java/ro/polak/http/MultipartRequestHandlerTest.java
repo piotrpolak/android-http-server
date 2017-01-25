@@ -116,7 +116,7 @@ public class MultipartRequestHandlerTest {
 
         assertThat(mrh.getPost().get("field_1"), is("A123"));
         assertThat(mrh.getUploadedFiles().size(), is(1));
-        assertThat(mrh.getUploadedFiles().get(0).getFile().length(), is(4l));
+        assertThat(mrh.getUploadedFiles().iterator().next().getFile().length(), is(4l));
         // TODO Check file content
     }
 

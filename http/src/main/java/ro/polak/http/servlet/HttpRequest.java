@@ -9,6 +9,7 @@ package ro.polak.http.servlet;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
@@ -305,9 +306,9 @@ public interface HttpRequest {
     String getRemoteAddr();
 
     /**
-     * @return FileUpload for multipart request
+     * @return collection of UploadedFiles for multipart request
      */
-    FileUpload getFileUpload();
+    Collection<UploadedFile> getUploadedFiles();
 
 
     // -- Extensions

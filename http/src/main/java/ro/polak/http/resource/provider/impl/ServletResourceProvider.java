@@ -8,6 +8,7 @@
 package ro.polak.http.resource.provider.impl;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,6 +23,7 @@ import ro.polak.http.servlet.HttpSessionWrapper;
 import ro.polak.http.servlet.Servlet;
 import ro.polak.http.servlet.ServletConfigWrapper;
 import ro.polak.http.servlet.ServletContextWrapper;
+import ro.polak.http.servlet.UploadedFile;
 import ro.polak.http.servlet.loader.ClassPathServletLoader;
 import ro.polak.http.servlet.loader.ServletLoader;
 import ro.polak.http.utilities.Utilities;
@@ -89,7 +91,7 @@ public class ServletResourceProvider implements ResourceProvider {
      * @throws IOException
      */
     private void terminate(HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
-        request.getFileUpload().freeResources();
+        freeUploadedUnprocessedFiles(request.getUploadedFiles());
 
         HttpSessionWrapper session = request.getSession(false);
         if (session != null) {
@@ -110,5 +112,11 @@ public class ServletResourceProvider implements ResourceProvider {
         }
 
         response.flush();
+    }
+
+    private void freeUploadedUnprocessedFiles(Collection<UploadedFile> uploadedFiles) {
+        for (UploadedFile uploadedFile : uploadedFiles) {
+            uploadedFile.destroy();
+        }
     }
 }

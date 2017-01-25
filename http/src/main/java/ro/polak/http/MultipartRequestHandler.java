@@ -13,8 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import ro.polak.http.protocol.parser.MalformedInputException;
@@ -48,7 +48,7 @@ public class MultipartRequestHandler {
     private String beginBoundary;
     private String temporaryUploadsDirectory;
     private MultipartHeadersPart multipartHeadersPart;
-    private List<UploadedFile> uploadedFiles;
+    private Collection<UploadedFile> uploadedFiles;
     private Map<String, String> post;
     private boolean wasHandledBefore;
 
@@ -118,7 +118,7 @@ public class MultipartRequestHandler {
      *
      * @return
      */
-    public List<UploadedFile> getUploadedFiles() {
+    public Collection<UploadedFile> getUploadedFiles() {
         return uploadedFiles;
     }
 

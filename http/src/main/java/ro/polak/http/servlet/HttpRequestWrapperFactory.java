@@ -264,6 +264,7 @@ public class HttpRequestWrapperFactory {
     private void handlePostMultipartRequest(HttpRequestWrapper request, InputStream in, int postLength) throws IOException, MalformedInputException {
         String boundary = request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE);
         int boundaryPosition = boundary.toLowerCase().indexOf(BOUNDARY_START);
+        request.setMultipart(true);
         if (boundaryPosition > -1) {
             int boundaryStartPos = boundaryPosition + BOUNDARY_START.length();
             if (boundaryStartPos < boundary.length()) {

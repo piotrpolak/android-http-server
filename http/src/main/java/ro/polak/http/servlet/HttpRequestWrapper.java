@@ -238,9 +238,13 @@ public class HttpRequestWrapper implements HttpRequest {
 
     @Override
     public String[] getParameterValues(String name) {
-        String[] values = new String[getParameterMap().size()];
-        getParameterMap().values().toArray(values);
-        return values;
+
+        // TODO Implement parsing array query strings, like ?a[]=1&a[]=2
+        throw new IllegalStateException("Not implemented");
+
+//        String[] values = new String[getParameterMap().size()];
+//        getParameterMap().values().toArray(values);
+//        return values;
     }
 
     @Override
@@ -429,6 +433,10 @@ public class HttpRequestWrapper implements HttpRequest {
 
     public void setSecure(boolean secure) {
         isSecure = secure;
+    }
+
+    public void setMultipart(boolean multipart) {
+        isMultipart = multipart;
     }
 
     /**

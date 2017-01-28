@@ -144,9 +144,7 @@ public class ServerRunnable implements Runnable {
      * @throws IOException
      */
     private HttpErrorHandler getProtocolExceptionHandler(ProtocolException e) throws IOException {
-        if (e instanceof StatusLineTooLongProtocolException) {
-            return new HttpError414Handler();
-        } else if (e instanceof UriTooLongProtocolException) {
+        if (e instanceof UriTooLongProtocolException || e instanceof StatusLineTooLongProtocolException) {
             return new HttpError414Handler();
         } else if (e instanceof LengthRequiredException) {
             return new HttpError411Handler();

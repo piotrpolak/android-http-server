@@ -192,9 +192,39 @@ public class ProtocolIT extends AbstractIT {
     }
 
     @Test
+    public void shouldReturn414StatusTooLong() throws IOException {
+        String requestBody = RequestBuilder.defaultBuilder()
+                .get(getTooLongUri(2047))
+                .withCloseConnection()
+                .withProtocol("HTTTTTTTTTTTTTP/4.4")
+                .toString();
+
+        Socket socket = null;
+        OutputStream out;
+        socket = getSocket();
+        out = socket.getOutputStream();
+        out.write(requestBody.getBytes());
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line;
+        int numberOfLinesRead = 0;
+        while ((line = in.readLine()) != null) {
+            if (++numberOfLinesRead == 1) {
+                assertThat(line, startsWith("HTTP/1.1 414"));
+                break;
+            }
+        }
+
+        if (numberOfLinesRead == 0) {
+            fail("No server response was read");
+        }
+
+        socket.close();
+    }
+
+    @Test
     public void shouldReturn414URITooLong() throws IOException {
         String requestBody = RequestBuilder.defaultBuilder()
-                .get(getTooLongUri())
+                .get(getTooLongUri(2048))
                 .withCloseConnection()
                 .toString();
 
@@ -220,10 +250,9 @@ public class ProtocolIT extends AbstractIT {
         socket.close();
     }
 
-    private String getTooLongUri() {
+    private String getTooLongUri(int length) {
         // 2048 characters seems reasonable
         // see http://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
-        int length = 2048;
         char[] uri = new char[length + 1];
         uri[0] = '/';
         for (int i = 1; i <= length; i++) {

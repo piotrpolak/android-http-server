@@ -28,29 +28,32 @@ public class AbstractIT {
         if (serverSocket == null) {
             serverSocket = new ServerSocket();
 
-
-            httpdConfigFile = new File("/tmp/webserver/httpd.conf");
-            httpdConfigFile.createNewFile();
-
-            ServerConfig serverConfig = getServerConfig();
-
-            File documentRoot = new File(serverConfig.getDocumentRootPath());
-            if (!documentRoot.exists()) {
-                documentRoot.mkdir();
-            }
-
-            staticFile = new File(serverConfig.getDocumentRootPath() + "staticfile.html");
-            staticFile.createNewFile();
-
-            WebServer webServer = new WebServer(serverSocket, serverConfig);
+            WebServer webServer = new WebServer(serverSocket, getPreparedConfig());
             if (!webServer.startServer()) {
                 fail("Unable to start server");
             }
         }
     }
 
-    @AfterClass
-    public static void tearDown() {
+    private static ServerConfig getPreparedConfig() throws IOException {
+        String tempPath = System.getProperty("java.io.tmpdir") + File.separator + "webserver" + File.separator;
+        httpdConfigFile = new File(tempPath + "httpd.conf");
+        httpdConfigFile.createNewFile();
+
+        ServerConfig serverConfig = getServerConfig();
+
+        File documentRoot = new File(serverConfig.getDocumentRootPath());
+        if (!documentRoot.exists()) {
+            documentRoot.mkdir();
+        }
+
+        staticFile = new File(serverConfig.getDocumentRootPath() + "staticfile.html");
+        staticFile.createNewFile();
+
+        return serverConfig;
+    }
+
+    public static void cleanUp() {
         if (staticFile != null) {
             staticFile.delete();
         }

@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static java.net.URLDecoder.decode;
+import static java.net.URLEncoder.encode;
 import static java.util.TimeZone.getTimeZone;
 
 /**
@@ -26,13 +28,9 @@ public class Utilities {
 
     // TODO This class should be split into dedicated ones
 
-    private static final SimpleDateFormat simpleDateFormat;
     public static final String CHARSET_NAME = "UTF-8";
 
-    static {
-        simpleDateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US);
-        simpleDateFormat.setTimeZone(getTimeZone("GMT"));
-    }
+    public static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
 
     /**
      * Returns the extension sting for a given file path
@@ -41,7 +39,6 @@ public class Utilities {
      * @return the extension part for a given file path
      */
     public static String getExtension(String filename) {
-
         if (filename == null) {
             return null;
         }
@@ -82,9 +79,9 @@ public class Utilities {
      */
     public static String urlEncode(String text) {
         try {
-            return java.net.URLEncoder.encode(text, CHARSET_NAME);
+            return encode(text, CHARSET_NAME);
         } catch (UnsupportedEncodingException e) {
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -96,9 +93,9 @@ public class Utilities {
      */
     public static String urlDecode(String text) {
         try {
-            return java.net.URLDecoder.decode(text, CHARSET_NAME);
+            return decode(text, CHARSET_NAME);
         } catch (UnsupportedEncodingException e) {
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -106,7 +103,7 @@ public class Utilities {
      * Returns user friendly representation of file size
      *
      * @param length size of a file
-     * @return formated size of the file using B, KB, MB, GB
+     * @return formatted size of the file using B, KB, MB, GB
      */
     public static String fileSizeUnits(long length) {
         if (length < 1024) {
@@ -132,6 +129,13 @@ public class Utilities {
      * @return
      */
     public static String dateFormat(Date date) {
-        return simpleDateFormat.format(date);
+        return getNewDateFormat().format(date);
+    }
+
+    private static SimpleDateFormat getNewDateFormat() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+        simpleDateFormat.setTimeZone(getTimeZone("GMT"));
+
+        return simpleDateFormat;
     }
 }

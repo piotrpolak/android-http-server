@@ -13,6 +13,28 @@ public class CookieTest {
     }
 
     @Test
+    public void shouldWorkGettersAndSetters() {
+        Cookie cookie = new Cookie("someName", "someValue");
+        cookie.setComment("comment");
+        cookie.setDomain("example.com");
+        cookie.setPath("/somepath");
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        assertThat(cookie.getName(), is("someName"));
+        assertThat(cookie.getValue(), is("someValue"));
+        cookie.setValue("SomeValue2");
+        assertThat(cookie.getValue(), is("SomeValue2"));
+        assertThat(cookie.getComment(), is("comment"));
+        assertThat(cookie.getDomain(), is("example.com"));
+        assertThat(cookie.getPath(), is("/somepath"));
+        assertThat(cookie.isSecure(), is(true));
+        assertThat(cookie.isHttpOnly(), is(true));
+        assertThat(cookie.getMaxAge(), is(-1));
+        cookie.setMaxAge(125);
+        assertThat(cookie.getMaxAge(), is(125));
+    }
+
+    @Test
     public void shouldAllowBooleanValues() {
         Cookie cookie = new Cookie("someName", true);
         assertThat(cookie.getValue(), is("true"));

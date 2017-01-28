@@ -298,6 +298,64 @@ public class ProtocolIT extends AbstractIT {
     }
 
     @Test
+    public void shouldReturn400WhenLengthMalformedForPost() throws IOException {
+        String requestBody = RequestBuilder.defaultBuilder()
+                .method("POST", "/example/") // Connect is not yet implemented
+                .withHeader(Headers.HEADER_CONTENT_LENGTH, "Illegal value")
+                .withCloseConnection()
+                .toString();
+
+        Socket socket = null;
+        OutputStream out;
+        socket = getSocket();
+        out = socket.getOutputStream();
+        out.write(requestBody.getBytes());
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line;
+        int numberOfLinesRead = 0;
+        while ((line = in.readLine()) != null) {
+            if (++numberOfLinesRead == 1) {
+                assertThat(line, startsWith("HTTP/1.1 400"));
+            }
+        }
+
+        if (numberOfLinesRead == 0) {
+            fail("No server response was read");
+        }
+
+        socket.close();
+    }
+
+    @Test
+    public void shouldAcceptPostWithZeroLength() throws IOException {
+        String requestBody = RequestBuilder.defaultBuilder()
+                .method("POST", "/example/") // Connect is not yet implemented
+                .withHeader(Headers.HEADER_CONTENT_LENGTH, "0")
+                .withCloseConnection()
+                .toString();
+
+        Socket socket = null;
+        OutputStream out;
+        socket = getSocket();
+        out = socket.getOutputStream();
+        out.write(requestBody.getBytes());
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line;
+        int numberOfLinesRead = 0;
+        while ((line = in.readLine()) != null) {
+            if (++numberOfLinesRead == 1) {
+                assertThat(line, startsWith("HTTP/1.1 200"));
+            }
+        }
+
+        if (numberOfLinesRead == 0) {
+            fail("No server response was read");
+        }
+
+        socket.close();
+    }
+
+    @Test
     public void shouldReturn411LengthRequiredForPostMultiPart() throws IOException {
         String requestBody = RequestBuilder.defaultBuilder()
                 .method("POST", "/example/") // Connect is not yet implemented

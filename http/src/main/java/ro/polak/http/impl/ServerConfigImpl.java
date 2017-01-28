@@ -80,6 +80,8 @@ public class ServerConfigImpl implements ServerConfig {
 
         if (config.containsKey("DocumentRoot")) {
             serverConfig.documentRootPath = basePath + config.get("DocumentRoot");
+        } else {
+            serverConfig.documentRootPath = basePath + "www/";
         }
 
         if (config.containsKey("MaxThreads")) {

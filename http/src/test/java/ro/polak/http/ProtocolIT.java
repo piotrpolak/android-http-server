@@ -78,6 +78,34 @@ public class ProtocolIT extends AbstractIT {
     }
 
     @Test
+    public void shouldServeStaticFile() throws IOException, InterruptedException {
+        String requestBody = RequestBuilder.defaultBuilder()
+                .get("/staticfile.html")
+                .withHost(HOST + ":" + PORT)
+                .withCloseConnection()
+                .toString();
+
+        Socket socket = null;
+        OutputStream out = null;
+        try {
+            socket = getSocket();
+            out = socket.getOutputStream();
+            out.write(requestBody.getBytes());
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String line;
+            int numberOfLinesRead = 0;
+            while ((line = in.readLine()) != null) {
+                if (++numberOfLinesRead == 1) {
+                    assertThat(line, startsWith("HTTP/1.1 200"));
+                }
+            }
+
+        } catch (IOException e) {
+            fail("The test failed too early due IOException" + e.getMessage());
+        }
+    }
+
+    @Test
     public void shouldReturn404NotFound() throws IOException, InterruptedException {
         String requestBody = RequestBuilder.defaultBuilder()
                 .get("/43524938257493852435/SOMEUNKNOWNURL.html")

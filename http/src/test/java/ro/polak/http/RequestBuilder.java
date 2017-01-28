@@ -50,13 +50,21 @@ public class RequestBuilder {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        return sb.append(method)
-                .append(" ")
-                .append(uri)
-                .append(" ")
-                .append(protocol)
-                .append(NEW_LINE)
-                .append(headersSerializer.serialize(headers))
-                .toString();
+        if (method != null) {
+            sb.append(method)
+                    .append(" ");
+        }
+        if (uri != null) {
+            sb.append(uri)
+                    .append(" ");
+        }
+        if (protocol != null) {
+            sb.append(protocol);
+        }
+        sb.append(NEW_LINE)
+                .append(headersSerializer.serialize(headers));
+
+
+        return sb.toString();
     }
 }

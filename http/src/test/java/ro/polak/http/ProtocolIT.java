@@ -25,10 +25,9 @@ public class ProtocolIT extends AbstractIT {
                 .withCloseConnection()
                 .toString();
 
-        Socket socket = null;
         OutputStream out = null;
         try {
-            socket = getSocket();
+            Socket socket = getSocket();
             out = socket.getOutputStream();
             out.write(requestBody.getBytes());
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -51,395 +50,135 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldServeDirectoryIndex() throws IOException, InterruptedException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .get("/example/")
                 .withHost(HOST + ":" + PORT)
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out = null;
-        try {
-            socket = getSocket();
-            out = socket.getOutputStream();
-            out.write(requestBody.getBytes());
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String line;
-            int numberOfLinesRead = 0;
-            while ((line = in.readLine()) != null) {
-                if (++numberOfLinesRead == 1) {
-                    assertThat(line, startsWith("HTTP/1.1 200"));
-                }
-            }
-
-        } catch (IOException e) {
-            fail("The test failed too early due IOException" + e.getMessage());
-        }
+        expectCode(requestBuilder, 200);
     }
 
     @Test
     public void shouldServeStaticFile() throws IOException, InterruptedException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .get("/staticfile.html")
                 .withHost(HOST + ":" + PORT)
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out = null;
-        try {
-            socket = getSocket();
-            out = socket.getOutputStream();
-            out.write(requestBody.getBytes());
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String line;
-            int numberOfLinesRead = 0;
-            while ((line = in.readLine()) != null) {
-                if (++numberOfLinesRead == 1) {
-                    assertThat(line, startsWith("HTTP/1.1 200"));
-                }
-            }
-
-        } catch (IOException e) {
-            fail("The test failed too early due IOException" + e.getMessage());
-        }
+        expectCode(requestBuilder, 200);
     }
 
     @Test
     public void shouldReturn404NotFound() throws IOException, InterruptedException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .get("/43524938257493852435/SOMEUNKNOWNURL.html")
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out;
-
-        socket = getSocket();
-        out = socket.getOutputStream();
-        out.write(requestBody.getBytes());
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String line;
-        int numberOfLinesRead = 0;
-        while ((line = in.readLine()) != null) {
-            if (++numberOfLinesRead == 1) {
-                assertThat(line, startsWith("HTTP/1.1 404"));
-            }
-        }
-
-        if (numberOfLinesRead == 0) {
-            fail("No server response was read");
-        }
-
-        socket.close();
+        expectCode(requestBuilder, 404);
     }
 
     @Test
     public void shouldReturn403ForbiddenOnIllegalPath() throws IOException, InterruptedException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .get("../../../index.html")
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out;
-
-        socket = getSocket();
-        out = socket.getOutputStream();
-        out.write(requestBody.getBytes());
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String line;
-        int numberOfLinesRead = 0;
-        while ((line = in.readLine()) != null) {
-            if (++numberOfLinesRead == 1) {
-                assertThat(line, startsWith("HTTP/1.1 403"));
-            }
-        }
-
-        if (numberOfLinesRead == 0) {
-            fail("No server response was read");
-        }
-
-        socket.close();
+        expectCode(requestBuilder, 403);
     }
 
     @Test
     public void shouldReturn405MethodNotAllowed() throws IOException, InterruptedException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .method("CONNECT", "/") // Connect is not yet implemented
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out;
-        socket = getSocket();
-        out = socket.getOutputStream();
-        out.write(requestBody.getBytes());
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String line;
-        int numberOfLinesRead = 0;
-        while ((line = in.readLine()) != null) {
-            if (++numberOfLinesRead == 1) {
-                assertThat(line, startsWith("HTTP/1.1 405"));
-            }
-        }
+        expectCode(requestBuilder, 405);
+    }
 
-        if (numberOfLinesRead == 0) {
-            fail("No server response was read");
-        }
 
-        socket.close();
+    @Test
+    public void shouldReturn400OnMalformedStatus() throws IOException {
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
+                .get(null)
+                .withCloseConnection();
+
+        expectCode(requestBuilder, 400);
     }
 
     @Test
     public void shouldReturn414StatusTooLong() throws IOException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .get(getTooLongUri(2047))
                 .withCloseConnection()
-                .withProtocol("HTTTTTTTTTTTTTP/4.4")
-                .toString();
+                .withProtocol("HTTTTTTTTTTTTTP/4.4");
 
-        Socket socket = null;
-        OutputStream out;
-        socket = getSocket();
-        out = socket.getOutputStream();
-        out.write(requestBody.getBytes());
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String line;
-        int numberOfLinesRead = 0;
-        while ((line = in.readLine()) != null) {
-            if (++numberOfLinesRead == 1) {
-                assertThat(line, startsWith("HTTP/1.1 414"));
-                break;
-            }
-        }
-
-        if (numberOfLinesRead == 0) {
-            fail("No server response was read");
-        }
-
-        socket.close();
+        expectCode(requestBuilder, 414);
     }
 
     @Test
     public void shouldReturn414URITooLong() throws IOException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .get(getTooLongUri(2048))
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out;
-        socket = getSocket();
-        out = socket.getOutputStream();
-        out.write(requestBody.getBytes());
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String line;
-        int numberOfLinesRead = 0;
-        while ((line = in.readLine()) != null) {
-            if (++numberOfLinesRead == 1) {
-                assertThat(line, startsWith("HTTP/1.1 414"));
-                break;
-            }
-        }
-
-        if (numberOfLinesRead == 0) {
-            fail("No server response was read");
-        }
-
-        socket.close();
+        expectCode(requestBuilder, 414);
     }
-
-    private String getTooLongUri(int length) {
-        // 2048 characters seems reasonable
-        // see http://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
-        char[] uri = new char[length + 1];
-        uri[0] = '/';
-        for (int i = 1; i <= length; i++) {
-            uri[i] = 'a';
-        }
-
-        return new String(uri);
-    }
-
-    @Test
-    public void shouldReturn413PayloadTooLarge() {
-        // maxPostSize 2mb
-        // TODO implement
-    }
-
 
     @Test
     public void shouldReturn411LengthRequiredForPost() throws IOException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .method("POST", "/example/") // Connect is not yet implemented
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out;
-        socket = getSocket();
-        out = socket.getOutputStream();
-        out.write(requestBody.getBytes());
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String line;
-        int numberOfLinesRead = 0;
-        while ((line = in.readLine()) != null) {
-            if (++numberOfLinesRead == 1) {
-                assertThat(line, startsWith("HTTP/1.1 411"));
-            }
-        }
-
-        if (numberOfLinesRead == 0) {
-            fail("No server response was read");
-        }
-
-        socket.close();
+        expectCode(requestBuilder, 411);
     }
 
     @Test
     public void shouldReturn400WhenLengthMalformedForPost() throws IOException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .method("POST", "/example/") // Connect is not yet implemented
                 .withHeader(Headers.HEADER_CONTENT_LENGTH, "Illegal value")
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out;
-        socket = getSocket();
-        out = socket.getOutputStream();
-        out.write(requestBody.getBytes());
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String line;
-        int numberOfLinesRead = 0;
-        while ((line = in.readLine()) != null) {
-            if (++numberOfLinesRead == 1) {
-                assertThat(line, startsWith("HTTP/1.1 400"));
-            }
-        }
-
-        if (numberOfLinesRead == 0) {
-            fail("No server response was read");
-        }
-
-        socket.close();
+        expectCode(requestBuilder, 400);
     }
 
     @Test
     public void shouldAcceptPostWithZeroLength() throws IOException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .method("POST", "/example/") // Connect is not yet implemented
                 .withHeader(Headers.HEADER_CONTENT_LENGTH, "0")
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out;
-        socket = getSocket();
-        out = socket.getOutputStream();
-        out.write(requestBody.getBytes());
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String line;
-        int numberOfLinesRead = 0;
-        while ((line = in.readLine()) != null) {
-            if (++numberOfLinesRead == 1) {
-                assertThat(line, startsWith("HTTP/1.1 200"));
-            }
-        }
-
-        if (numberOfLinesRead == 0) {
-            fail("No server response was read");
-        }
-
-        socket.close();
+        expectCode(requestBuilder, 200);
     }
 
     @Test
     public void shouldReturn411LengthRequiredForPostMultiPart() throws IOException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .method("POST", "/example/") // Connect is not yet implemented
                 .withHeader("Content-Type", "multipart/mixed; boundary=s9xksnd72SSHu")
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out;
-        socket = getSocket();
-        out = socket.getOutputStream();
-        out.write(requestBody.getBytes());
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String line;
-        int numberOfLinesRead = 0;
-        while ((line = in.readLine()) != null) {
-            if (++numberOfLinesRead == 1) {
-                assertThat(line, startsWith("HTTP/1.1 411"));
-            }
-        }
-
-        if (numberOfLinesRead == 0) {
-            fail("No server response was read");
-        }
-
-        socket.close();
+        expectCode(requestBuilder, 411);
     }
 
     @Test
     public void shouldReturn400BadRequestOnUnrecognizedMethod() throws IOException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .method("ABC", "/")
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out;
-        socket = getSocket();
-        out = socket.getOutputStream();
-        out.write(requestBody.getBytes());
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String line;
-        int numberOfLinesRead = 0;
-        while ((line = in.readLine()) != null) {
-            if (++numberOfLinesRead == 1) {
-                assertThat(line, startsWith("HTTP/1.1 400"));
-                break;
-            }
-        }
-
-        if (numberOfLinesRead == 0) {
-            fail("No server response was read");
-        }
-
-        socket.close();
+        expectCode(requestBuilder, 400);
     }
 
     @Test
     public void shouldReturn400BadRequestOnTooLongMethod() throws IOException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .method("ABCABCABCABCABC", "/")
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out;
-        socket = getSocket();
-        out = socket.getOutputStream();
-        out.write(requestBody.getBytes());
-        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String line;
-        int numberOfLinesRead = 0;
-        while ((line = in.readLine()) != null) {
-            if (++numberOfLinesRead == 1) {
-                assertThat(line, startsWith("HTTP/1.1 400"));
-                break;
-            }
-        }
-
-        if (numberOfLinesRead == 0) {
-            fail("No server response was read");
-        }
-
-        socket.close();
+        expectCode(requestBuilder, 400);
     }
 
     @Test
@@ -449,11 +188,8 @@ public class ProtocolIT extends AbstractIT {
                 .withCloseConnection()
                 .toString();
 
-        Socket socket = null;
-        OutputStream out;
-
-        socket = getSocket();
-        out = socket.getOutputStream();
+        Socket socket = getSocket();
+        OutputStream out = socket.getOutputStream();
         out.write(requestBody.getBytes());
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         String line;
@@ -472,76 +208,76 @@ public class ProtocolIT extends AbstractIT {
     }
 
     @Test
-    public void shouldReturn400BadRequest() {
-        // TODO implement
-    }
-
-    @Test
-    public void shouldReturn416RangeNotSatisfiable() {
-        // TODO implement
-    }
-
-    @Test
-    public void shouldReturn431RequestHeaderFieldsTooLarge() {
-        // TODO implement
-    }
-
-    @Test
     public void shouldReturn500InternalServerError() throws IOException {
-        String requestBody = RequestBuilder.defaultBuilder()
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .get("/example/InternalServerError.dhtml")
                 .withHost(HOST + ":" + PORT)
-                .withCloseConnection()
-                .toString();
+                .withCloseConnection();
 
-        Socket socket = null;
-        OutputStream out = null;
-        try {
-            socket = getSocket();
-            out = socket.getOutputStream();
-            out.write(requestBody.getBytes());
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String line;
-            int numberOfLinesRead = 0;
-            while ((line = in.readLine()) != null) {
-                if (++numberOfLinesRead == 1) {
-                    assertThat(line, startsWith("HTTP/1.1 500"));
-                }
-            }
-
-        } catch (IOException e) {
-            fail("The test failed too early due IOException" + e.getMessage());
-        }
-
-        socket.close();
+        expectCode(requestBuilder, 500);
     }
 
 //    @Test
+//    public void shouldReturn416RangeNotSatisfiable() {
+//        // TODO implement
+//    }
+//
+//    @Test
+//    public void shouldReturn431RequestHeaderFieldsTooLarge() {
+//        // TODO implement
+//    }
+//
+//    @Test
+//    public void shouldReturn413PayloadTooLarge() {
+//        // maxPostSize 2mb
+//        // TODO implement
+//    }
+//    @Test
 //    public void shouldReturn505HTTPVersionNotSupported() {
-//        String requestBody = RequestBuilder.defaultBuilder()
+//        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
 //                .get("SomeUrl.html")
 //                .withHost(HOST + ":" + PORT)
 //                .withProtocol("HTTP/9.0")
-//                .withCloseConnection()
-//                .toString();
+//                .withCloseConnection();
 //
-//        Socket socket = null;
-//        OutputStream out = null;
-//        try {
-//            socket = getSocket();
-//            out = socket.getOutputStream();
-//            out.write(requestBody.getBytes());
-//            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//            String line;
-//            int numberOfLinesRead = 0;
-//            while ((line = in.readLine()) != null) {
-//                if (++numberOfLinesRead == 1) {
-//                    assertThat(line, startsWith("HTTP/1.1 503"));
-//                }
-//            }
-//
-//        } catch (IOException e) {
-//            fail("The test failed too early due IOException" + e.getMessage());
-//        }
+//        expectCode(requestBuilder, 503);
 //    }
+
+    private void expectCode(RequestBuilder requestBuilder, int code) throws IOException {
+        String requestBody = requestBuilder.toString();
+
+        Socket socket = getSocket();
+        OutputStream out = socket.getOutputStream();
+        out.write(requestBody.getBytes());
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String line;
+        int numberOfLinesRead = 0;
+        while ((line = in.readLine()) != null) {
+            if (++numberOfLinesRead == 1) {
+                assertThat(line, startsWith("HTTP/1.1 " + code));
+                break;
+            }
+        }
+
+        if (numberOfLinesRead == 0) {
+            fail("No server response was read");
+        }
+
+        try {
+            socket.close();
+        } catch (IOException e) {
+        }
+    }
+
+    private String getTooLongUri(int length) {
+        // 2048 characters seems reasonable
+        // see http://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+        char[] uri = new char[length + 1];
+        uri[0] = '/';
+        for (int i = 1; i <= length; i++) {
+            uri[i] = 'a';
+        }
+
+        return new String(uri);
+    }
 }

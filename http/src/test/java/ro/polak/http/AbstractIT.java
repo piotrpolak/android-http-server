@@ -1,6 +1,5 @@
 package ro.polak.http;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import java.io.File;
@@ -37,6 +36,12 @@ public class AbstractIT {
 
     private static ServerConfig getPreparedConfig() throws IOException {
         String tempPath = System.getProperty("java.io.tmpdir") + File.separator + "webserver" + File.separator;
+
+        File workingDirectory = new File(tempPath);
+        if (!workingDirectory.exists()) {
+            workingDirectory.mkdir();
+        }
+
         httpdConfigFile = new File(tempPath + "httpd.conf");
         httpdConfigFile.createNewFile();
 

@@ -77,10 +77,9 @@ public interface HttpRequest {
     /**
      * Returns enumeration representing header names.
      *
-     * @param name
      * @return
      */
-    Enumeration getHeaderNames(String name);
+    Enumeration getHeaderNames();
 
     /**
      * Returns cookies array.

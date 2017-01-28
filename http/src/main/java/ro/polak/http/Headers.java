@@ -29,6 +29,7 @@ public class Headers {
     public static final String HEADER_CONNECTION = "Connection";
     public static final String HEADER_SET_COOKIE = "Set-Cookie";
     public static final String HEADER_CACHE_CONTROL = "Cache-Control";
+    public static final String HEADER_ACCEPT_LANGUAGE = "Accept-Language";
     public static final String HEADER_PRAGMA = "Pragma";
     public static final String HEADER_COOKIE = "Cookie";
     public static final String HEADER_TRANSFER_ENCODING = "Transfer-Encoding";

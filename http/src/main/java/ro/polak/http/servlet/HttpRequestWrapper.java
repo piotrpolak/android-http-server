@@ -9,8 +9,11 @@ package ro.polak.http.servlet;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,6 +23,8 @@ import java.util.Map;
 import ro.polak.http.Headers;
 import ro.polak.http.RequestStatus;
 import ro.polak.http.Statistics;
+
+import static java.util.TimeZone.getTimeZone;
 
 /**
  * HTTP request wrapper
@@ -66,6 +71,7 @@ public class HttpRequestWrapper implements HttpRequest {
     private String serverName;
     private String scheme;
     private boolean isSecure;
+    public static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
 
     /**
      * Default constructor
@@ -132,11 +138,22 @@ public class HttpRequestWrapper implements HttpRequest {
 
     @Override
     public long getDateHeader(String name) {
-        throw new IllegalStateException("Not implemented");
+        if (!headers.containsHeader(name)) {
+            return -1;
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
+        simpleDateFormat.setTimeZone(getTimeZone("GMT"));
+        try {
+            Date date = simpleDateFormat.parse(headers.getHeader(name));
+            return date.getTime();
+        } catch (ParseException e) {
+            return -1;
+        }
     }
 
     @Override
-    public Enumeration getHeaderNames(String name) {
+    public Enumeration getHeaderNames() {
         return Collections.enumeration(headers.keySet());
     }
 

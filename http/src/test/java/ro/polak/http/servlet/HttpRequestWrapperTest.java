@@ -17,6 +17,7 @@ import ro.polak.http.Headers;
 import ro.polak.http.RequestStatus;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -24,6 +25,7 @@ import static org.hamcrest.collection.IsMapContaining.hasKey;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
 import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class HttpRequestWrapperTest {
 
@@ -49,6 +51,7 @@ public class HttpRequestWrapperTest {
 
         Map<String, Cookie> cookies = new HashMap<>();
         headers = new Headers();
+        headers.setHeader(Headers.HEADER_ACCEPT_LANGUAGE, "pl-PL,pl;q=0.8,en-US;q=0.6,en;q=0.4,ro;q=0.2,ru;q=0.2");
 
         inputStream = new InputStream() {
             @Override
@@ -116,6 +119,7 @@ public class HttpRequestWrapperTest {
         assertThat(httpRequestWrapper.getCookies(), is(Matchers.<Cookie>emptyArray()));
         assertThat(httpRequestWrapper.getUploadedFiles().size(), is(0));
         assertThat(httpRequestWrapper.getHeaders(), is(headers));
+        assertThat((List<String>) (Collections.list(httpRequestWrapper.getHeaderNames())), hasItems(Headers.HEADER_ACCEPT_LANGUAGE));
     }
 
     @Test
@@ -193,4 +197,33 @@ public class HttpRequestWrapperTest {
         assertThat(httpRequestWrapper.getCookie("inexistingName"), is(nullValue()));
     }
 
+    @Test
+    public void shouldParseDateHeader() {
+        Headers headers = new Headers();
+        headers.setHeader("If-Modified-Since", "Thu, 15 Jan 2015 16:30:13 GMT");
+        headers.setHeader("If-Modified-Since-MALFORMED", "Malformed Value");
+        httpRequestWrapper.setHeaders(headers);
+        assertThat(httpRequestWrapper.getDateHeader("If-Modified-Since"), is(1421339413000L));
+        assertThat(httpRequestWrapper.getDateHeader("If-Modified-Since-MALFORMED"), is(-1L));
+        assertThat(httpRequestWrapper.getDateHeader("Inexisting"), is(-1L));
+    }
+
+    @Test
+    public void shouldReturnSession() {
+        Map<String, Cookie> cookies = new HashMap<>();
+        Cookie sessionCookie = new Cookie(HttpSessionWrapper.COOKIE_NAME, "sessionId");
+        cookies.put(HttpSessionWrapper.COOKIE_NAME, sessionCookie);
+        httpRequestWrapper.setCookies(cookies);
+        httpRequestWrapper.setServletContext(servletContext);
+        when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionWrapper("sessionId"));
+        assertThat(httpRequestWrapper.getSession(), is(instanceOf(HttpSessionWrapper.class)));
+    }
+
+    @Test
+    public void shouldParseUrlFromHost() {
+        Headers headers = new Headers();
+        headers.setHeader(Headers.HEADER_HOST, "example.com:3366");
+        httpRequestWrapper.setHeaders(headers);
+        assertThat(httpRequestWrapper.getRequestURL().toString(), is("http://example.com:8080/someuri"));
+    }
 }

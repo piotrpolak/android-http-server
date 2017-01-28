@@ -52,6 +52,12 @@ public class CookieParserTest {
     }
 
     @Test
+    public void shouldReturnZeroSizeForInvalidKey() throws MalformedInputException {
+        Map<String, Cookie> cookies = cookieParser.parse(" = value");
+        assertThat(cookies.size(), is(0));
+    }
+
+    @Test
     public void shouldParseMalformedEmptyValue() throws MalformedInputException {
         Map<String, Cookie> cookies = cookieParser.parse(" ; ");
         assertThat(cookies.size(), is(0));

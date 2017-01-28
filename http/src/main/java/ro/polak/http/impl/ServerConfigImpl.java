@@ -28,7 +28,11 @@ import ro.polak.http.utilities.ConfigReader;
  */
 public class ServerConfigImpl implements ServerConfig {
 
-    public static final String[] SUPPORTED_METHODS = new String[]{HttpRequestWrapper.METHOD_GET, HttpRequestWrapper.METHOD_POST, HttpRequestWrapper.METHOD_HEAD};
+    public static final String[] SUPPORTED_METHODS = new String[]{
+            HttpRequestWrapper.METHOD_GET,
+            HttpRequestWrapper.METHOD_POST,
+            HttpRequestWrapper.METHOD_HEAD
+    };
     public List<String> directoryIndex;
     private String basePath;
     private String documentRootPath;
@@ -40,7 +44,7 @@ public class ServerConfigImpl implements ServerConfig {
     private boolean keepAlive;
     private String errorDocument404Path;
     private String errorDocument403Path;
-    private ResourceProvider[] resourceProviders;
+    private ResourceProvider[] resourceProviders = {};
 
     public ServerConfigImpl() {
         this("/httpd/temp/");
@@ -101,7 +105,6 @@ public class ServerConfigImpl implements ServerConfig {
 
         if (config.containsKey("MimeType")) {
             try {
-
                 String defaultMimeType = "text/plain";
                 if (config.containsKey("DefaultMimeType")) {
                     defaultMimeType = config.get("DefaultMimeType");
@@ -115,9 +118,11 @@ public class ServerConfigImpl implements ServerConfig {
         }
 
         // Generating index files
-        String directoryIndexLine[] = config.get("DirectoryIndex").split(" ");
-        for (int i = 0; i < directoryIndexLine.length; i++) {
-            serverConfig.directoryIndex.add(directoryIndexLine[i]);
+        if (config.containsKey("DirectoryIndex")) {
+            String directoryIndexLine[] = config.get("DirectoryIndex").split(" ");
+            for (int i = 0; i < directoryIndexLine.length; i++) {
+                serverConfig.directoryIndex.add(directoryIndexLine[i]);
+            }
         }
 
 

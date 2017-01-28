@@ -3,6 +3,7 @@ package ro.polak.http.session.storage;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 import ro.polak.http.servlet.HttpSessionWrapper;
@@ -43,5 +44,24 @@ public class FileSessionStorageTest {
     public void shouldValidateSessionName() throws IOException {
         HttpSessionWrapper sessionWrapper = new HttpSessionWrapper("abcX8");
         fileSessionStorage.persistSession(sessionWrapper);
+    }
+
+    @Test
+    public void shouldReturnNullOnInvalidSessionName() throws IOException {
+        assertThat(fileSessionStorage.getSession(null), is(nullValue()));
+        assertThat(fileSessionStorage.getSession("abcX8"), is(nullValue()));
+        assertThat(fileSessionStorage.getSession("/asdfghjklzxasdfghjklzxasdfghjklzxz"), is(nullValue()));
+    }
+
+
+    @Test
+    public void shouldFailSilentlyOnInvalidFileContents() throws IOException {
+        String sid = "asdfghjklzxasdfghjklzxasdfghjklz";
+        File sessionFile = new File(tempPath + sid + "_session");
+        if (sessionFile.exists()) {
+            sessionFile.delete();
+        }
+        sessionFile.createNewFile();
+        fileSessionStorage.getSession(sid);
     }
 }

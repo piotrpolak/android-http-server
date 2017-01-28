@@ -1,6 +1,5 @@
 package ro.polak.http;
 
-import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -17,11 +16,6 @@ import static org.junit.Assert.assertThat;
  * @url https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
  */
 public class ProtocolIT extends AbstractIT {
-
-    @AfterClass
-    public static void tearDown() {
-        cleanUp();
-    }
 
     @Test(expected = IOException.class)
     public void shouldCloseSocketAfterCloseConnectionRequest() throws IOException, InterruptedException {

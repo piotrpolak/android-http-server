@@ -43,6 +43,9 @@ public class AbstractIT {
         }
 
         httpdConfigFile = new File(tempPath + "httpd.conf");
+        if (httpdConfigFile.exists()) {
+            httpdConfigFile.delete();
+        }
         httpdConfigFile.createNewFile();
 
         ServerConfig serverConfig = getServerConfig();
@@ -53,18 +56,12 @@ public class AbstractIT {
         }
 
         staticFile = new File(serverConfig.getDocumentRootPath() + "staticfile.html");
+        if (staticFile.exists()) {
+            staticFile.delete();
+        }
         staticFile.createNewFile();
 
         return serverConfig;
-    }
-
-    protected static void cleanUp() {
-        if (staticFile != null) {
-            staticFile.delete();
-        }
-        if (httpdConfigFile != null) {
-            httpdConfigFile.delete();
-        }
     }
 
     private static ServerConfig getServerConfig() {

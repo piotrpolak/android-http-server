@@ -53,7 +53,7 @@ public class AbstractIT {
         return serverConfig;
     }
 
-    public static void cleanUp() {
+    protected static void cleanUp() {
         if (staticFile != null) {
             staticFile.delete();
         }

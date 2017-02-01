@@ -23,6 +23,7 @@ import ro.polak.http.Statistics;
 import ro.polak.http.protocol.exception.LengthRequiredException;
 import ro.polak.http.protocol.exception.MalformedOrUnsupportedMethodProtocolException;
 import ro.polak.http.protocol.exception.MalformedStatusLineException;
+import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
 import ro.polak.http.protocol.exception.ProtocolException;
 import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
 import ro.polak.http.protocol.exception.UnsupportedProtocolException;
@@ -44,6 +45,7 @@ public class HttpRequestWrapperFactory {
 
     private static final String BOUNDARY_START = "boundary=";
     private static final int URI_MAX_LENGTH = 2048;
+    private static final int POST_MAX_LENGTH = 50 * 1024 * 1024;
     private static final int STATUS_MAX_LENGTH = 8 + URI_MAX_LENGTH + 9; // CONNECT + space + URI + space + HTTP/1.0
     private static final String[] RECOGNIZED_METHODS = {"OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT"};
     private static final int METHOD_MAX_LENGTH;
@@ -226,7 +228,7 @@ public class HttpRequestWrapperFactory {
     }
 
     private void handlePostRequest(HttpRequestWrapper request, InputStream in) throws IOException, MalformedInputException {
-        int postLength = 0;
+        int postLength;
         if (request.getHeaders().containsHeader(request.getHeaders().HEADER_CONTENT_LENGTH)) {
             try {
                 postLength = Integer.parseInt(request.getHeaders().getHeader(request.getHeaders().HEADER_CONTENT_LENGTH));
@@ -241,6 +243,10 @@ public class HttpRequestWrapperFactory {
         // Keep 0 value - makes no sense to parse the data
         if (postLength < 1) {
             return;
+        }
+
+        if (postLength > POST_MAX_LENGTH) {
+            throw new PayloadTooLargeProtocolException("Payload of " + postLength + "b exceeds the limit of " + POST_MAX_LENGTH + "b");
         }
 
         if (isMultipartRequest(request)) {
@@ -262,8 +268,7 @@ public class HttpRequestWrapperFactory {
         while (in.read(buffer, 0, buffer.length) != -1) {
             postLine.append((char) buffer[0]);
             if (postLine.length() >= postLength) {
-                // Forced "the end"
-                break;
+                throw new PayloadTooLargeProtocolException("Payload of too large");
             }
         }
         request.setPostParameters(queryStringParser.parse(postLine.toString()));

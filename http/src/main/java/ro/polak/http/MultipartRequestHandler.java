@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
@@ -162,7 +163,7 @@ public class MultipartRequestHandler {
 
         while ((numberOfBytesRead = in.read(buffer, 0, buffer.length)) != -1) {
             if (allBytesRead >= expectedPostLength) {
-                break; // TODO Throw exception
+                throw new PayloadTooLargeProtocolException("Payload of too large");
             }
 
             allBytesRead += numberOfBytesRead;

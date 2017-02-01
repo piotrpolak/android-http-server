@@ -301,7 +301,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(responseBodyString, containsString("InternalServerError.java"));
     }
 
-//    @Test
+    //    @Test
 //    public void shouldReturn416RangeNotSatisfiable() {
 //        // TODO implement
 //    }
@@ -311,11 +311,17 @@ public class ProtocolIT extends AbstractIT {
 //        // TODO implement
 //    }
 //
-//    @Test
-//    public void shouldReturn413PayloadTooLarge() {
-//        // maxPostSize 2mb
-//        // TODO implement
-//    }
+    @Test
+    public void shouldReturn413PayloadTooLarge() throws IOException {
+        int length = 50 * 1024 * 1024 + 1;
+
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
+                .method("POST", "/example/")
+                .withHeader(Headers.HEADER_CONTENT_LENGTH, Integer.toString(length))
+                .withCloseConnection();
+
+        expectCode(requestBuilder, 413);
+    }
 
     @Test
     public void shouldReturn505HTTPVersionNotSupported() throws IOException {

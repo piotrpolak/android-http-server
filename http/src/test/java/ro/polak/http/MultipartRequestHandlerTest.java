@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -228,7 +229,7 @@ public class MultipartRequestHandlerTest {
         mrh.handle();
     }
 
-    @Test
+    @Test(expected = PayloadTooLargeProtocolException.class)
     public void shouldStopParsingOnWrongContentLengthInBeforeBoundary() throws MalformedInputException {
         String data = "----------------------------------------------------------" + boundary + nl +
                 "Content-Disposition: form-data; name=\"field_1\"" + nl +
@@ -243,8 +244,6 @@ public class MultipartRequestHandlerTest {
         } catch (IOException e) {
             fail("Should not throw IOException: " + e.getMessage());
         }
-
-        assertThat(mrh.getPost().size(), is(0));
     }
 
 

@@ -75,8 +75,15 @@ public class CookieHeaderSerializerTest {
     }
 
     private String getExpiresValue(String serializedCookie) {
-        int expiresStart = serializedCookie.indexOf("Expires=") + 8;
-        return serializedCookie.substring(expiresStart, expiresStart + 29);
+        String expiresStartString = "Expires=";
+        int expiresStart = serializedCookie.indexOf(expiresStartString) + expiresStartString.length();
+        String expiredToken = serializedCookie.substring(expiresStart);
+        int semicolonPos = expiredToken.indexOf(';');
+        if (semicolonPos > -1) {
+            return expiredToken.substring(0, semicolonPos).trim();
+        }
+
+        return expiredToken.trim();
     }
 
     private String[] getCookieParts(String serializedCookie) {

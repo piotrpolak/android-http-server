@@ -4,6 +4,7 @@ import org.junit.BeforeClass;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -34,6 +35,10 @@ public class AbstractIT {
         }
     }
 
+    protected String getFullUrl(String path) {
+        return "http://" + HOST + ":" + PORT + path;
+    }
+
     private static ServerConfig getPreparedConfig() throws IOException {
         String tempPath = System.getProperty("java.io.tmpdir") + File.separator + "webserver" + File.separator;
 
@@ -60,6 +65,10 @@ public class AbstractIT {
             staticFile.delete();
         }
         staticFile.createNewFile();
+
+        PrintWriter writer = new PrintWriter(staticFile, "UTF-8");
+        writer.print("Static file");
+        writer.close();
 
         return serverConfig;
     }

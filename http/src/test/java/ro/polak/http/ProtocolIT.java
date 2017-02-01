@@ -8,8 +8,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 import static junit.framework.TestCase.fail;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -49,36 +58,69 @@ public class ProtocolIT extends AbstractIT {
     }
 
     @Test
-    public void shouldServeDirectoryIndex() throws IOException, InterruptedException {
-        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-                .get("/example/")
-                .withHost(HOST + ":" + PORT)
-                .withCloseConnection();
+    public void shouldServeDirectoryIndex() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl("/example/"))
+                .get()
+                .build();
 
-        expectCode(requestBuilder, 200);
+        Request request2 = new Request.Builder()
+                .url(getFullUrl("/example/Index.dhtml"))
+                .get()
+                .build();
+
+        String commonValue = "<h1>Hello World!</h1>";
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(true));
+        assertThat(response.code(), is(200));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, containsString(commonValue));
+
+        Response response2 = client.newCall(request2).execute();
+        assertThat(response2.isSuccessful(), is(true));
+        assertThat(response2.code(), is(200));
+        String response2BodyString = response2.body().string();
+        assertThat(response2BodyString, not(isEmptyOrNullString()));
+        assertThat(response2BodyString, containsString(commonValue));
     }
 
     @Test
-    public void shouldServeStaticFile() throws IOException, InterruptedException {
-        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-                .get("/staticfile.html")
-                .withHost(HOST + ":" + PORT)
-                .withCloseConnection();
+    public void shouldServeStaticFile() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl("/staticfile.html"))
+                .get()
+                .build();
 
-        expectCode(requestBuilder, 200);
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(true));
+        assertThat(response.code(), is(200));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is("Static file"));
     }
 
     @Test
-    public void shouldReturn404NotFound() throws IOException, InterruptedException {
-        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-                .get("/43524938257493852435/SOMEUNKNOWNURL.html")
-                .withCloseConnection();
+    public void shouldReturn404NotFound() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl("/43524938257493852435/SOMEUNKNOWNURL.html"))
+                .get()
+                .build();
 
-        expectCode(requestBuilder, 404);
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(false));
+        assertThat(response.code(), is(404));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, containsString("File Not Found"));
     }
 
     @Test
-    public void shouldReturn403ForbiddenOnIllegalPath() throws IOException, InterruptedException {
+    public void shouldReturn403ForbiddenOnIllegalPath() throws IOException {
         RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .get("../../../index.html")
                 .withCloseConnection();
@@ -87,12 +129,21 @@ public class ProtocolIT extends AbstractIT {
     }
 
     @Test
-    public void shouldReturn405MethodNotAllowed() throws IOException, InterruptedException {
-        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-                .method("CONNECT", "/") // Connect is not yet implemented
-                .withCloseConnection();
+    public void shouldReturn405MethodNotAllowed() throws IOException {
+        // Connect is not yet implemented
 
-        expectCode(requestBuilder, 405);
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl("/"))
+                .method("CONNECT", null)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(false));
+        assertThat(response.code(), is(405));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, containsString("Method Not Allowed"));
     }
 
 
@@ -117,17 +168,24 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn414URITooLong() throws IOException {
-        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-                .get(getTooLongUri(2048))
-                .withCloseConnection();
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl(getTooLongUri(2048)))
+                .get()
+                .build();
 
-        expectCode(requestBuilder, 414);
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(false));
+        assertThat(response.code(), is(414));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, containsString("URI Too Long"));
     }
 
     @Test
     public void shouldReturn411LengthRequiredForPost() throws IOException {
         RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-                .method("POST", "/example/") // Connect is not yet implemented
+                .method("POST", "/example/")
                 .withCloseConnection();
 
         expectCode(requestBuilder, 411);
@@ -136,7 +194,7 @@ public class ProtocolIT extends AbstractIT {
     @Test
     public void shouldReturn400WhenLengthMalformedForPost() throws IOException {
         RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-                .method("POST", "/example/") // Connect is not yet implemented
+                .method("POST", "/example/")
                 .withHeader(Headers.HEADER_CONTENT_LENGTH, "Illegal value")
                 .withCloseConnection();
 
@@ -145,19 +203,24 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldAcceptPostWithZeroLength() throws IOException {
-        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-                .method("POST", "/example/") // Connect is not yet implemented
-                .withHeader(Headers.HEADER_CONTENT_LENGTH, "0")
-                .withCloseConnection();
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl("/example/"))
+                .addHeader(Headers.HEADER_CONTENT_LENGTH, "0")
+                .post(new FormBody.Builder().build())
+                .build();
 
-        expectCode(requestBuilder, 200);
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(true));
+        assertThat(response.code(), is(200));
+        assertThat(response.body().string(), not(isEmptyOrNullString()));
     }
 
     @Test
     public void shouldReturn411LengthRequiredForPostMultiPart() throws IOException {
         RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-                .method("POST", "/example/") // Connect is not yet implemented
-                .withHeader("Content-Type", "multipart/mixed; boundary=s9xksnd72SSHu")
+                .method("POST", "/example/")
+                .withHeader(Headers.HEADER_CONTENT_TYPE, "multipart/mixed; boundary=s9xksnd72SSHu")
                 .withCloseConnection();
 
         expectCode(requestBuilder, 411);
@@ -165,24 +228,38 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn400BadRequestOnUnrecognizedMethod() throws IOException {
-        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-                .method("ABC", "/")
-                .withCloseConnection();
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl("/"))
+                .method("ABC", null)
+                .build();
 
-        expectCode(requestBuilder, 400);
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(false));
+        assertThat(response.code(), is(400));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, containsString("Bad Request"));
     }
 
     @Test
     public void shouldReturn400BadRequestOnTooLongMethod() throws IOException {
-        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-                .method("ABCABCABCABCABC", "/")
-                .withCloseConnection();
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl("/"))
+                .method("ABCABCABCABCABC", null)
+                .build();
 
-        expectCode(requestBuilder, 400);
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(false));
+        assertThat(response.code(), is(400));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, containsString("Bad Request"));
     }
 
     @Test
-    public void shouldHangSilentlyOnClosingSocket() throws IOException, InterruptedException {
+    public void shouldHangSilentlyOnClosingSocket() throws IOException {
         String requestBody = RequestBuilder.defaultBuilder()
                 .get("/43524938257493852435/SOMEUNKNOWNURL.html")
                 .withCloseConnection()
@@ -209,12 +286,19 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn500InternalServerError() throws IOException {
-        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-                .get("/example/InternalServerError.dhtml")
-                .withHost(HOST + ":" + PORT)
-                .withCloseConnection();
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl("/example/InternalServerError.dhtml"))
+                .get()
+                .build();
 
-        expectCode(requestBuilder, 500);
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(false));
+        assertThat(response.code(), is(500));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, containsString("Error 500"));
+        assertThat(responseBodyString, containsString("InternalServerError.java"));
     }
 
 //    @Test

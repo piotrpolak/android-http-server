@@ -316,16 +316,17 @@ public class ProtocolIT extends AbstractIT {
 //        // maxPostSize 2mb
 //        // TODO implement
 //    }
-//    @Test
-//    public void shouldReturn505HTTPVersionNotSupported() {
-//        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
-//                .get("SomeUrl.html")
-//                .withHost(HOST + ":" + PORT)
-//                .withProtocol("HTTP/9.0")
-//                .withCloseConnection();
-//
-//        expectCode(requestBuilder, 503);
-//    }
+
+    @Test
+    public void shouldReturn505HTTPVersionNotSupported() throws IOException {
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
+                .get("SomeUrl.html")
+                .withHost(HOST + ":" + PORT)
+                .withProtocol("HTTP/9.0")
+                .withCloseConnection();
+
+        expectCode(requestBuilder, 505);
+    }
 
     private void expectCode(RequestBuilder requestBuilder, int code) throws IOException {
         String requestBody = requestBuilder.toString();

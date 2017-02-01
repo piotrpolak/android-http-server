@@ -25,6 +25,7 @@ import ro.polak.http.protocol.exception.MalformedOrUnsupportedMethodProtocolExce
 import ro.polak.http.protocol.exception.MalformedStatusLineException;
 import ro.polak.http.protocol.exception.ProtocolException;
 import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
+import ro.polak.http.protocol.exception.UnsupportedProtocolException;
 import ro.polak.http.protocol.exception.UriTooLongProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
@@ -99,6 +100,10 @@ public class HttpRequestWrapperFactory {
             throw new UriTooLongProtocolException("Uri length exceeded max length with" + uriLengthExceededWith + " characters");
         }
 
+        if (!isValidProtocol(status.getProtocol())) {
+            throw new UnsupportedProtocolException("Protocol " + status.getProtocol() + " is not supported");
+        }
+
         request.setInputStream(in);
         assignSocketMetadata(socket, request);
         request.setStatus(status);
@@ -133,6 +138,10 @@ public class HttpRequestWrapperFactory {
         return request;
     }
 
+    private boolean isValidProtocol(String protocol) {
+        return protocol.equalsIgnoreCase("HTTP/1.0") || protocol.equalsIgnoreCase("HTTP/1.1");
+    }
+
     private void assignSocketMetadata(Socket socket, HttpRequestWrapper request) {
         request.setSecure(false);
         request.setScheme("http");
@@ -151,7 +160,7 @@ public class HttpRequestWrapperFactory {
             try {
                 return cookieParser.parse(headers.getHeader(Headers.HEADER_COOKIE));
             } catch (MalformedInputException e) {
-                // Return empty map
+                // Returns an empty map
             }
         }
         return new HashMap<>();

@@ -22,6 +22,17 @@ public class RequestStatusParserTest {
         assertThat(requestStatus.getProtocol(), is("HTTP/1.1"));
     }
 
+    @Test
+    public void shouldIgnoreTrailingCharacters() throws MalformedInputException {
+        Parser<RequestStatus> requestStatusParser = new RequestStatusParser();
+        RequestStatus requestStatus = requestStatusParser.parse("GET /home?param1=ABC&param2=123 HTTP/1.1\r\n");
+
+        assertThat(requestStatus.getMethod(), is("GET"));
+        assertThat(requestStatus.getQueryString(), is("param1=ABC&param2=123"));
+        assertThat(requestStatus.getUri(), is("/home"));
+        assertThat(requestStatus.getProtocol(), is("HTTP/1.1"));
+    }
+
     @Test(expected = MalformedInputException.class)
     public void shouldThrowMalformedInputExceptionOnInvalidStatus() throws MalformedInputException {
         Parser<RequestStatus> requestStatusParser = new RequestStatusParser();

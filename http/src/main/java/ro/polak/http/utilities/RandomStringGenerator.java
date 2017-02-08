@@ -17,6 +17,10 @@ import java.util.Random;
  */
 public class RandomStringGenerator {
 
+    private RandomStringGenerator() {
+        // Make it impossible to initialize this utility class
+    }
+
     /**
      * Generates random string of lower case chars of length 32
      *

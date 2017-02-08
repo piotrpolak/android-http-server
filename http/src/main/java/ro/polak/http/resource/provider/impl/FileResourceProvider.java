@@ -2,17 +2,24 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2016
+ * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
 package ro.polak.http.resource.provider.impl;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
+import ro.polak.http.Headers;
 import ro.polak.http.MimeTypeMapping;
+import ro.polak.http.protocol.exception.ProtocolException;
+import ro.polak.http.protocol.parser.MalformedInputException;
+import ro.polak.http.protocol.parser.impl.Range;
+import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponse;
@@ -31,6 +38,7 @@ public class FileResourceProvider implements ResourceProvider {
 
     private MimeTypeMapping mimeTypeMapping;
     private String basePath;
+    private static RangeParser rangeParser = new RangeParser();
 
     /**
      * Default constructor.
@@ -49,31 +57,64 @@ public class FileResourceProvider implements ResourceProvider {
         File file = new File(basePath + uri);
 
         if (file.exists() && file.isFile()) {
+
             String fileExtension = Utilities.getExtension(file.getName());
-
-            response.setStatus(HttpResponse.STATUS_OK);
             response.setContentType(mimeTypeMapping.getMimeTypeByExtension(fileExtension));
-            response.setContentLength(file.length());
 
-            response.flushHeaders();
+            // A server MUST ignore a Range header field received with a request method other than GET.
+            boolean isGetRequest = request.getMethod().equals(HttpRequestWrapper.METHOD_GET);
 
-            // Serving file for all the request but for HEAD
-            // TODO This should be moved out into the parent class
-            if (!request.getMethod().equals(HttpRequestWrapper.METHOD_HEAD)) {
-                InputStream fileInputStream = new FileInputStream(file);
-                response.serveStream(fileInputStream);
-
-                try {
-                    fileInputStream.close();
-                } catch (IOException e) {
-                }
+            if (isGetRequest && request.getHeaders().containsHeader(Headers.HEADER_RANGE)) {
+                loadPartialContent(request, response, file);
+            } else {
+                loadCompleteContent(request, response, file);
             }
-
-            response.flush();
 
             return true;
         }
 
         return false;
+    }
+
+    private void loadCompleteContent(HttpRequestWrapper request, HttpResponseWrapper response, File file) throws IOException {
+        response.setStatus(HttpResponse.STATUS_OK);
+        response.setContentLength(file.length());
+        response.getHeaders().setHeader("Accept-Ranges", "bytes");
+        response.flushHeaders();
+
+        if (!request.getMethod().equals(HttpRequestWrapper.METHOD_HEAD)) {
+            InputStream fileInputStream = new FileInputStream(file);
+            response.serveStream(fileInputStream);
+
+            try {
+                fileInputStream.close();
+            } catch (IOException e) {
+            }
+        }
+
+        response.flush();
+    }
+
+    private void loadPartialContent(HttpRequestWrapper request, HttpResponseWrapper response, File file) throws IOException {
+        List<Range> ranges;
+        try {
+            ranges = rangeParser.parse(request.getHeader(Headers.HEADER_RANGE));
+        } catch (MalformedInputException e) {
+            throw new ProtocolException("Malformed range header", e);
+        }
+
+        response.setStatus(HttpResponse.STATUS_PARTIAL_CONTENT);
+        response.setContentLength(Range.getTotalLength(ranges));
+        response.flushHeaders();
+
+        BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream(file));
+        response.serveStream(fileInputStream, ranges);
+
+        try {
+            fileInputStream.close();
+        } catch (IOException e) {
+        }
+
+        response.flush();
     }
 }

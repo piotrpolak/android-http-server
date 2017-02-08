@@ -23,6 +23,7 @@ It can be used as a standalone web server for static content or as a remote appl
 * Full support for mime types (uses Apache mime.type)
 * Supports buffered file upload (multipart requests)
 * Exposes compact API for handling sessions
+* Supports serving partial content (ranges)
 
 ## Building application
 

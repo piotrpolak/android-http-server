@@ -22,6 +22,7 @@ import ro.polak.http.Headers;
 public interface HttpResponse {
 
     String STATUS_OK = "HTTP/1.1 200 OK";
+    String STATUS_PARTIAL_CONTENT = "HTTP/1.1 206 Partial Content";
     String STATUS_NOT_FOUND = "HTTP/1.1 404 Not Found";
     String STATUS_SERVICE_UNAVAILABLE = "HTTP/1.1 503 Service Unavailable";
     String HTTP_VERSION_NOT_SUPPORTED = "HTTP/1.1 505 HTTP Version Not Supported";

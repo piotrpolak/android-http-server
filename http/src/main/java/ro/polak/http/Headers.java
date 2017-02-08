@@ -34,6 +34,7 @@ public class Headers {
     public static final String HEADER_COOKIE = "Cookie";
     public static final String HEADER_TRANSFER_ENCODING = "Transfer-Encoding";
     public static final String HEADER_HOST = "Host";
+    public static final String HEADER_RANGE = "Range";
 
     private Map<String, String> headers = new HashMap<>();
     private Map<String, String> namesMap = new HashMap<>();

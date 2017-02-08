@@ -19,6 +19,7 @@ import java.util.List;
 import ro.polak.http.Headers;
 import ro.polak.http.OutputStreamWrapper;
 import ro.polak.http.Statistics;
+import ro.polak.http.protocol.parser.impl.Range;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.protocol.serializer.impl.CookieHeaderSerializer;
 import ro.polak.http.protocol.serializer.impl.HeadersSerializer;
@@ -38,6 +39,7 @@ public class HttpResponseWrapper implements HttpResponse {
 
     private static Charset charset = Charset.forName("UTF-8");
     private static Serializer<Headers> headersSerializer = new HeadersSerializer();
+    private static final StreamHelper streamHelper = new StreamHelper();
     private static final CookieHeaderSerializer cookieHeaderSerializer = new CookieHeaderSerializer();
 
     private Headers headers;
@@ -171,22 +173,24 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     /**
-     * Server an asset
+     * Serve an asset
      *
      * @param inputStream
      * @throws IOException
      */
     public void serveStream(InputStream inputStream) throws IOException {
-        // TODO for best results move it to an external helper
-        int numberOfBufferReadBytes;
-        byte[] buffer = new byte[512];
+        streamHelper.serveStream(inputStream, outputStream);
+    }
 
-        while ((numberOfBufferReadBytes = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, numberOfBufferReadBytes);
-            outputStream.flush();
-
-            Statistics.addBytesSend(numberOfBufferReadBytes);
-        }
+    /**
+     * Serve an asset
+     *
+     * @param inputStream
+     * @param rangeList
+     * @throws IOException
+     */
+    public void serveStream(InputStream inputStream, List<Range> rangeList) throws IOException {
+        streamHelper.serveStream(inputStream, outputStream, rangeList);
     }
 
     /**

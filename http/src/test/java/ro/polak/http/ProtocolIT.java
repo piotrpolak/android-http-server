@@ -301,11 +301,58 @@ public class ProtocolIT extends AbstractIT {
         assertThat(responseBodyString, containsString("InternalServerError.java"));
     }
 
-    //    @Test
-//    public void shouldReturn416RangeNotSatisfiable() {
-//        // TODO implement
-//    }
+    @Test
+    public void shouldReturn206AndServeRangesOfStaticFileForOneRange() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl("/staticfile.html"))
+                .header("Range", "bytes=0-6")
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(true));
+        assertThat(response.code(), is(206));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is("Static"));
+    }
+
+    @Test
+    public void shouldReturn206AndServeRangesOfStaticFileForMultipleRanges() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl("/staticfile.html"))
+                .header("Range", "bytes=0-6,7-4")
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(true));
+        assertThat(response.code(), is(206));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is("Staticfile"));
+    }
+
+//    @Test
+//    public void shouldReturn416RangeNotSatisfiable() throws IOException {
+//        OkHttpClient client = new OkHttpClient();
+//        Request request = new Request.Builder()
+//                .url(getFullUrl("/staticfile.html"))
+//                .header("Range", "bytes=128=128")
+//                .get()
+//                .build();
 //
+//        Response response = client.newCall(request).execute();
+//        assertThat(response.isSuccessful(), is(false));
+//        assertThat(response.code(), is(416));
+//        String responseBodyString = response.body().string();
+//        assertThat(responseBodyString, not(isEmptyOrNullString()));
+//        assertThat(responseBodyString, is("XXX"));
+//    }
+
+    //
 //    @Test
 //    public void shouldReturn431RequestHeaderFieldsTooLarge() {
 //        // TODO implement

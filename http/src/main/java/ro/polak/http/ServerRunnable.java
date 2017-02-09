@@ -12,22 +12,24 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ro.polak.http.error.HttpErrorHandler;
-import ro.polak.http.error.impl.HttpError400Handler;
-import ro.polak.http.error.impl.HttpError403Handler;
-import ro.polak.http.error.impl.HttpError404Handler;
-import ro.polak.http.error.impl.HttpError405Handler;
-import ro.polak.http.error.impl.HttpError411Handler;
-import ro.polak.http.error.impl.HttpError413Handler;
-import ro.polak.http.error.impl.HttpError414Handler;
-import ro.polak.http.error.impl.HttpError500Handler;
-import ro.polak.http.error.impl.HttpError505Handler;
+import ro.polak.http.errorhandler.HttpErrorHandler;
+import ro.polak.http.errorhandler.impl.HttpError400Handler;
+import ro.polak.http.errorhandler.impl.HttpError403Handler;
+import ro.polak.http.errorhandler.impl.HttpError404Handler;
+import ro.polak.http.errorhandler.impl.HttpError405Handler;
+import ro.polak.http.errorhandler.impl.HttpError411Handler;
+import ro.polak.http.errorhandler.impl.HttpError413Handler;
+import ro.polak.http.errorhandler.impl.HttpError414Handler;
+import ro.polak.http.errorhandler.impl.HttpError416Handler;
+import ro.polak.http.errorhandler.impl.HttpError500Handler;
+import ro.polak.http.errorhandler.impl.HttpError505Handler;
 import ro.polak.http.exception.AccessDeniedException;
 import ro.polak.http.exception.MethodNotAllowedException;
 import ro.polak.http.exception.NotFoundException;
 import ro.polak.http.protocol.exception.LengthRequiredException;
 import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
 import ro.polak.http.protocol.exception.ProtocolException;
+import ro.polak.http.protocol.exception.RequestedRangeNotSatisfiableProtocolException;
 import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
 import ro.polak.http.protocol.exception.UnsupportedProtocolException;
 import ro.polak.http.protocol.exception.UriTooLongProtocolException;
@@ -156,6 +158,8 @@ public class ServerRunnable implements Runnable {
             return new HttpError505Handler();
         } else if (e instanceof PayloadTooLargeProtocolException) {
             return new HttpError413Handler();
+        } else if (e instanceof RequestedRangeNotSatisfiableProtocolException) {
+            return new HttpError416Handler();
         }
 
         return new HttpError400Handler();

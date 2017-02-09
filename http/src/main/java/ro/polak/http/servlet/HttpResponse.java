@@ -36,6 +36,7 @@ public interface HttpResponse {
     String REQUEST_ENTITY_TOO_LARGE = "HTTP/1.1 413 Request Entity Too Large";
     String STATUS_BAD_REQUEST = "HTTP/1.1 400 Bad Request";
     String STATUS_LENGTH_REQUIRED = "HTTP/1.1 411 Length Required";
+    String STATUS_REQUESTED_RANGE_NOT_SATISFIABLE = "HTTP/1.1 416 Requested Range Not Satisfiable";
 
     /**
      * Adds a cookie.

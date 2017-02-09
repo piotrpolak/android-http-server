@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http.error;
+package ro.polak.http.errorhandler;
 
 /**
  * HTML Error document representation

@@ -5,20 +5,20 @@
  * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
-package ro.polak.http.error.impl;
+package ro.polak.http.errorhandler.impl;
 
-import ro.polak.http.error.AbstractPlainTextHttpErrorHandler;
+import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
 import ro.polak.http.servlet.HttpResponse;
 
 /**
- * 503 Service Unavailable HTTP error handler
+ * 411 Length required
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
  */
-public class HttpError503Handler extends AbstractPlainTextHttpErrorHandler {
+public class HttpError411Handler extends AbstractPlainTextHttpErrorHandler {
 
-    public HttpError503Handler() {
-        super(HttpResponse.STATUS_SERVICE_UNAVAILABLE, "Error 503 - Service Unavailable");
+    public HttpError411Handler() {
+        super(HttpResponse.STATUS_LENGTH_REQUIRED, "Error 411 - Length Required");
     }
 }

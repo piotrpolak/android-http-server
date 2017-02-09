@@ -56,4 +56,21 @@ public class Range {
         }
         return totalLength;
     }
+
+    /**
+     * Tells whether the ranges are satisfiable for the given stream length
+     *
+     * @param ranges
+     * @param streamLength
+     * @return
+     */
+    public static boolean isSatisfiable(List<Range> ranges, long streamLength) {
+        for (Range range : ranges) {
+            if (range.getFrom() + range.getLength() > streamLength) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

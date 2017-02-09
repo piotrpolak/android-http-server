@@ -5,9 +5,9 @@
  * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
-package ro.polak.http.error.impl;
+package ro.polak.http.errorhandler.impl;
 
-import ro.polak.http.error.AbstractHtmlErrorHandler;
+import ro.polak.http.errorhandler.AbstractHtmlErrorHandler;
 import ro.polak.http.servlet.HttpResponse;
 
 /**

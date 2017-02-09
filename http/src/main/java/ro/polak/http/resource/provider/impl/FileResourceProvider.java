@@ -17,6 +17,7 @@ import java.util.List;
 import ro.polak.http.Headers;
 import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.protocol.exception.ProtocolException;
+import ro.polak.http.protocol.exception.RequestedRangeNotSatisfiableProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.impl.Range;
 import ro.polak.http.protocol.parser.impl.RangeParser;
@@ -53,7 +54,6 @@ public class FileResourceProvider implements ResourceProvider {
 
     @Override
     public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
-
         File file = new File(basePath + uri);
 
         if (file.exists() && file.isFile()) {
@@ -79,7 +79,7 @@ public class FileResourceProvider implements ResourceProvider {
     private void loadCompleteContent(HttpRequestWrapper request, HttpResponseWrapper response, File file) throws IOException {
         response.setStatus(HttpResponse.STATUS_OK);
         response.setContentLength(file.length());
-        response.getHeaders().setHeader("Accept-Ranges", "bytes");
+        response.getHeaders().setHeader(Headers.HEADER_ACCEPT_RANGES, "bytes");
         response.flushHeaders();
 
         if (!request.getMethod().equals(HttpRequestWrapper.METHOD_HEAD)) {
@@ -101,6 +101,10 @@ public class FileResourceProvider implements ResourceProvider {
             ranges = rangeParser.parse(request.getHeader(Headers.HEADER_RANGE));
         } catch (MalformedInputException e) {
             throw new ProtocolException("Malformed range header", e);
+        }
+
+        if (!Range.isSatisfiable(ranges, file.length())) {
+            throw new RequestedRangeNotSatisfiableProtocolException();
         }
 
         response.setStatus(HttpResponse.STATUS_PARTIAL_CONTENT);

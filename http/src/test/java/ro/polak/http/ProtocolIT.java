@@ -323,7 +323,7 @@ public class ProtocolIT extends AbstractIT {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/staticfile.html"))
-                .header("Range", "bytes=0-6,7-4")
+                .header(Headers.HEADER_RANGE, "bytes=0-6,7-4")
                 .get()
                 .build();
 
@@ -335,22 +335,22 @@ public class ProtocolIT extends AbstractIT {
         assertThat(responseBodyString, is("Staticfile"));
     }
 
-//    @Test
-//    public void shouldReturn416RangeNotSatisfiable() throws IOException {
-//        OkHttpClient client = new OkHttpClient();
-//        Request request = new Request.Builder()
-//                .url(getFullUrl("/staticfile.html"))
-//                .header("Range", "bytes=128=128")
-//                .get()
-//                .build();
-//
-//        Response response = client.newCall(request).execute();
-//        assertThat(response.isSuccessful(), is(false));
-//        assertThat(response.code(), is(416));
-//        String responseBodyString = response.body().string();
-//        assertThat(responseBodyString, not(isEmptyOrNullString()));
-//        assertThat(responseBodyString, is("XXX"));
-//    }
+    @Test
+    public void shouldReturn416RangeNotSatisfiable() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl("/staticfile.html"))
+                .header(Headers.HEADER_RANGE, "bytes=128-128")
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(false));
+        assertThat(response.code(), is(416));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, containsString("Range Not Satisfiable"));
+    }
 
     //
 //    @Test

@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
-package ro.polak.http.error;
+package ro.polak.http.errorhandler;
 
 import java.io.File;
 import java.io.FileInputStream;

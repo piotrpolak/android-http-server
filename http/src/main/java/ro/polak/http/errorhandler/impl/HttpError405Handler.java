@@ -5,12 +5,12 @@
  * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
-package ro.polak.http.error.impl;
+package ro.polak.http.errorhandler.impl;
 
 import java.io.IOException;
 
 import ro.polak.http.Headers;
-import ro.polak.http.error.AbstractHtmlErrorHandler;
+import ro.polak.http.errorhandler.AbstractHtmlErrorHandler;
 import ro.polak.http.servlet.HttpResponse;
 
 /**

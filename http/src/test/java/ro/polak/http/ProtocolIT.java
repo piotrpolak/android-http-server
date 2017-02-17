@@ -390,25 +390,6 @@ public class ProtocolIT extends AbstractIT {
         assertThat(responseBodyString, containsString("Range Not Satisfiable"));
     }
 
-    @Test
-    public void shouldXX() throws IOException {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url("http://www.example.com/")
-                .header(Headers.HEADER_RANGE, "bytes=0-4,5-9")
-                .get()
-                .build();
-
-        Response response = client.newCall(request).execute();
-        assertThat(response.isSuccessful(), is(true));
-        assertThat(response.code(), is(206));
-        assertThat(response.header(Headers.HEADER_CONTENT_TYPE), Matchers.startsWith("multipart/byteranges; boundary="));
-        String responseBodyString = response.body().string();
-        assertThat(response.header(Headers.HEADER_CONTENT_LENGTH), is(Integer.toString(responseBodyString.length())));
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
-        assertThat(responseBodyString, containsString("Range Not Satisfiable"));
-    }
-
     //
 //    @Test
 //    public void shouldReturn431RequestHeaderFieldsTooLarge() {

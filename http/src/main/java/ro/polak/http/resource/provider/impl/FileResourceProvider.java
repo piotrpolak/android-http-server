@@ -17,14 +17,16 @@ import java.util.List;
 import ro.polak.http.Headers;
 import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.protocol.exception.ProtocolException;
-import ro.polak.http.protocol.exception.RequestedRangeNotSatisfiableProtocolException;
+import ro.polak.http.protocol.exception.RangeNotSatisfiableProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
+import ro.polak.http.protocol.parser.RangeHelper;
 import ro.polak.http.protocol.parser.impl.Range;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.utilities.RandomStringGenerator;
 import ro.polak.http.utilities.Utilities;
 
 /**
@@ -39,7 +41,8 @@ public class FileResourceProvider implements ResourceProvider {
 
     private MimeTypeMapping mimeTypeMapping;
     private String basePath;
-    private static RangeParser rangeParser = new RangeParser();
+    private static final RangeParser rangeParser = new RangeParser();
+    private static final RangeHelper rangeHelper = new RangeHelper();
 
     /**
      * Default constructor.
@@ -58,15 +61,13 @@ public class FileResourceProvider implements ResourceProvider {
 
         if (file.exists() && file.isFile()) {
 
-            String fileExtension = Utilities.getExtension(file.getName());
-            response.setContentType(mimeTypeMapping.getMimeTypeByExtension(fileExtension));
-
             // A server MUST ignore a Range header field received with a request method other than GET.
             boolean isGetRequest = request.getMethod().equals(HttpRequestWrapper.METHOD_GET);
 
             if (isGetRequest && request.getHeaders().containsHeader(Headers.HEADER_RANGE)) {
                 loadPartialContent(request, response, file);
             } else {
+                response.setContentType(mimeTypeMapping.getMimeTypeByExtension(Utilities.getExtension(file.getName())));
                 loadCompleteContent(request, response, file);
             }
 
@@ -103,16 +104,35 @@ public class FileResourceProvider implements ResourceProvider {
             throw new ProtocolException("Malformed range header", e);
         }
 
-        if (!Range.isSatisfiable(ranges, file.length())) {
-            throw new RequestedRangeNotSatisfiableProtocolException();
+        if (!rangeHelper.isSatisfiable(ranges, file.length())) {
+            throw new RangeNotSatisfiableProtocolException();
         }
 
+        // TODO https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range
+        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/206
+        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Range
         response.setStatus(HttpResponse.STATUS_PARTIAL_CONTENT);
-        response.setContentLength(Range.getTotalLength(ranges));
+        response.getHeaders().setHeader(Headers.HEADER_CONTENT_RANGE, "bytes " + getRanges(ranges) + "/" + file.length());
+
+        String contentType = mimeTypeMapping.getMimeTypeByExtension(Utilities.getExtension(file.getName()));
+
+        String boundary = null;
+        if (ranges.size() == 1) {
+            response.setContentLength(rangeHelper.getTotalLength(ranges));
+            response.setContentType(contentType);
+        } else {
+            boundary = RandomStringGenerator.generate();
+            response.setContentType("multipart/byteranges; boundary=" + boundary);
+        }
         response.flushHeaders();
 
+
         BufferedInputStream fileInputStream = new BufferedInputStream(new FileInputStream(file));
-        response.serveStream(fileInputStream, ranges);
+        if (ranges.size() == 1) {
+            response.serveStream(fileInputStream, ranges.get(0));
+        } else {
+            response.serveStream(fileInputStream, ranges, boundary, contentType, file.length());
+        }
 
         try {
             fileInputStream.close();
@@ -120,5 +140,17 @@ public class FileResourceProvider implements ResourceProvider {
         }
 
         response.flush();
+    }
+
+    private String getRanges(List<Range> ranges) {
+        StringBuilder rangesString = new StringBuilder();
+        int counter = 0;
+        for (Range range : ranges) {
+            rangesString.append(range.getFrom()).append("-").append(range.getTo());
+            if (++counter < ranges.size()) {
+                rangesString.append(",");
+            }
+        }
+        return rangesString.toString();
     }
 }

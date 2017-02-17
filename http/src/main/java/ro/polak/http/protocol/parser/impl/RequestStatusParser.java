@@ -30,7 +30,6 @@ public class RequestStatusParser implements Parser<RequestStatus> {
      */
     @Override
     public RequestStatus parse(String input) throws MalformedInputException {
-
         RequestStatus status = new RequestStatus();
         status.setQueryString("");
         String uri;

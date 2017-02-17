@@ -1,0 +1,46 @@
+/**************************************************
+ * Android Web Server
+ * Based on JavaLittleWebServer (2008)
+ * <p/>
+ * Copyright (c) Piotr Polak 2017-2017
+ **************************************************/
+package ro.polak.http;
+
+import ro.polak.http.protocol.parser.impl.Range;
+
+/**
+ * Represents range part header.
+ *
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @since 201702
+ */
+public class RangePartHeader {
+
+    private Range range;
+    private String boundary;
+    private String contentType;
+    private long totalLength;
+
+    public RangePartHeader(Range range, String boundary, String contentType, long totalLength) {
+        this.range = range;
+        this.boundary = boundary;
+        this.contentType = contentType;
+        this.totalLength = totalLength;
+    }
+
+    public Range getRange() {
+        return range;
+    }
+
+    public String getBoundary() {
+        return boundary;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public long getTotalLength() {
+        return totalLength;
+    }
+}

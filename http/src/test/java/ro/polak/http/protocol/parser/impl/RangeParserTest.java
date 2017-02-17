@@ -17,7 +17,7 @@ public class RangeParserTest {
         List<Range> rageList = rangeParser.parse("bytes=1-100");
         assertThat(rageList.size(), is(1));
         assertThat(rageList.get(0).getFrom(), is(1L));
-        assertThat(rageList.get(0).getLength(), is(100L));
+        assertThat(rageList.get(0).getTo(), is(100L));
     }
 
     @Test
@@ -26,9 +26,20 @@ public class RangeParserTest {
         List<Range> rageList = rangeParser.parse("bytes=1-100,200-301");
         assertThat(rageList.size(), is(2));
         assertThat(rageList.get(0).getFrom(), is(1L));
-        assertThat(rageList.get(0).getLength(), is(100L));
+        assertThat(rageList.get(0).getTo(), is(100L));
         assertThat(rageList.get(1).getFrom(), is(200L));
-        assertThat(rageList.get(1).getLength(), is(301L));
+        assertThat(rageList.get(1).getTo(), is(301L));
+    }
+
+    @Test
+    public void shouldParseMultipleValuesSpaceSeparated() throws MalformedInputException {
+        RangeParser rangeParser = new RangeParser();
+        List<Range> rageList = rangeParser.parse("bytes=1-100, 200-301");
+        assertThat(rageList.size(), is(2));
+        assertThat(rageList.get(0).getFrom(), is(1L));
+        assertThat(rageList.get(0).getTo(), is(100L));
+        assertThat(rageList.get(1).getFrom(), is(200L));
+        assertThat(rageList.get(1).getTo(), is(301L));
     }
 
     @Test(expected = MalformedInputException.class)

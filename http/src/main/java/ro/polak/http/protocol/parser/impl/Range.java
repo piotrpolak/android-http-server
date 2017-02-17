@@ -6,8 +6,6 @@
  **************************************************/
 package ro.polak.http.protocol.parser.impl;
 
-import java.util.List;
-
 /**
  * Represents HTTP range.
  *
@@ -17,14 +15,14 @@ import java.util.List;
 public class Range {
 
     private long from;
-    private long length;
+    private long to;
 
     public Range() {
     }
 
-    public Range(long from, long length) {
+    public Range(long from, long to) {
         this.from = from;
-        this.length = length;
+        this.to = to;
     }
 
     public long getFrom() {
@@ -35,42 +33,11 @@ public class Range {
         this.from = from;
     }
 
-    public long getLength() {
-        return length;
+    public long getTo() {
+        return to;
     }
 
-    public void setLength(long length) {
-        this.length = length;
-    }
-
-    /**
-     * Computes total length of the provided ranges.
-     *
-     * @param ranges
-     * @return
-     */
-    public static long getTotalLength(List<Range> ranges) {
-        int totalLength = 0;
-        for (Range range : ranges) {
-            totalLength += range.getLength();
-        }
-        return totalLength;
-    }
-
-    /**
-     * Tells whether the ranges are satisfiable for the given stream length
-     *
-     * @param ranges
-     * @param streamLength
-     * @return
-     */
-    public static boolean isSatisfiable(List<Range> ranges, long streamLength) {
-        for (Range range : ranges) {
-            if (range.getFrom() + range.getLength() > streamLength) {
-                return false;
-            }
-        }
-
-        return true;
+    public void setTo(long to) {
+        this.to = to;
     }
 }

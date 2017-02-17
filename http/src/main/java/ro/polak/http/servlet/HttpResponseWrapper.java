@@ -18,7 +18,6 @@ import java.util.List;
 
 import ro.polak.http.Headers;
 import ro.polak.http.OutputStreamWrapper;
-import ro.polak.http.Statistics;
 import ro.polak.http.protocol.parser.impl.Range;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.protocol.serializer.impl.CookieHeaderSerializer;
@@ -173,7 +172,7 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     /**
-     * Serve an asset
+     * Serves stream.
      *
      * @param inputStream
      * @throws IOException
@@ -183,14 +182,28 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     /**
-     * Serve an asset
+     * Serves a single range of a stream.
+     *
+     * @param inputStream
+     * @param range
+     * @throws IOException
+     */
+    public void serveStream(InputStream inputStream, Range range) throws IOException {
+        streamHelper.serveStream(inputStream, outputStream, range);
+    }
+
+    /**
+     * Serve multiple ranges of a stream.
      *
      * @param inputStream
      * @param rangeList
+     * @param boundary
+     * @param contentType
+     * @param totalLength
      * @throws IOException
      */
-    public void serveStream(InputStream inputStream, List<Range> rangeList) throws IOException {
-        streamHelper.serveStream(inputStream, outputStream, rangeList);
+    public void serveStream(InputStream inputStream, List<Range> rangeList, String boundary, String contentType, long totalLength) throws IOException {
+        streamHelper.serveStream(inputStream, outputStream, rangeList, boundary, contentType, totalLength);
     }
 
     /**

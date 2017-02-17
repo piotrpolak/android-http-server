@@ -29,7 +29,7 @@ import ro.polak.http.exception.NotFoundException;
 import ro.polak.http.protocol.exception.LengthRequiredException;
 import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
 import ro.polak.http.protocol.exception.ProtocolException;
-import ro.polak.http.protocol.exception.RequestedRangeNotSatisfiableProtocolException;
+import ro.polak.http.protocol.exception.RangeNotSatisfiableProtocolException;
 import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
 import ro.polak.http.protocol.exception.UnsupportedProtocolException;
 import ro.polak.http.protocol.exception.UriTooLongProtocolException;
@@ -158,7 +158,7 @@ public class ServerRunnable implements Runnable {
             return new HttpError505Handler();
         } else if (e instanceof PayloadTooLargeProtocolException) {
             return new HttpError413Handler();
-        } else if (e instanceof RequestedRangeNotSatisfiableProtocolException) {
+        } else if (e instanceof RangeNotSatisfiableProtocolException) {
             return new HttpError416Handler();
         }
 

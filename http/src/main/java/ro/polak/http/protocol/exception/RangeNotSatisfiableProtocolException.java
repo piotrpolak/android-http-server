@@ -10,9 +10,9 @@ package ro.polak.http.protocol.exception;
 /**
  * Exception thrown when range is not satisfiable and can not be served.
  */
-public class RequestedRangeNotSatisfiableProtocolException extends ProtocolException {
+public class RangeNotSatisfiableProtocolException extends ProtocolException {
 
-    public RequestedRangeNotSatisfiableProtocolException() {
+    public RangeNotSatisfiableProtocolException() {
         super("Range not satisfiable");
     }
 }

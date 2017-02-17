@@ -36,6 +36,7 @@ public class Headers {
     public static final String HEADER_HOST = "Host";
     public static final String HEADER_RANGE = "Range";
     public static final String HEADER_ACCEPT_RANGES = "Accept-Ranges";
+    public static final String HEADER_CONTENT_RANGE = "Content-Range";
 
     private Map<String, String> headers = new HashMap<>();
     private Map<String, String> namesMap = new HashMap<>();

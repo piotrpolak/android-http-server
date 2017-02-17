@@ -1,5 +1,6 @@
 package ro.polak.http;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -25,6 +26,8 @@ import static org.junit.Assert.assertThat;
  * @url https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
  */
 public class ProtocolIT extends AbstractIT {
+
+    private static final String NEW_LINE = "\r\n";
 
     @Test(expected = IOException.class)
     public void shouldCloseSocketAfterCloseConnectionRequest() throws IOException, InterruptedException {
@@ -98,6 +101,7 @@ public class ProtocolIT extends AbstractIT {
         Response response = client.newCall(request).execute();
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.code(), is(200));
+        assertThat(response.header(Headers.HEADER_CONTENT_LENGTH), is("11"));
         String responseBodyString = response.body().string();
         assertThat(responseBodyString, not(isEmptyOrNullString()));
         assertThat(responseBodyString, is("Static file"));
@@ -306,13 +310,15 @@ public class ProtocolIT extends AbstractIT {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/staticfile.html"))
-                .header("Range", "bytes=0-6")
+                .header("Range", "bytes=0-5")
                 .get()
                 .build();
 
         Response response = client.newCall(request).execute();
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.code(), is(206));
+        assertThat(response.header(Headers.HEADER_CONTENT_RANGE), is("bytes 0-5/11"));
+        assertThat(response.header(Headers.HEADER_CONTENT_LENGTH), is("6"));
         String responseBodyString = response.body().string();
         assertThat(responseBodyString, not(isEmptyOrNullString()));
         assertThat(responseBodyString, is("Static"));
@@ -323,16 +329,48 @@ public class ProtocolIT extends AbstractIT {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/staticfile.html"))
-                .header(Headers.HEADER_RANGE, "bytes=0-6,7-4")
+                .header(Headers.HEADER_RANGE, "bytes=0-5,7-10")
                 .get()
                 .build();
 
         Response response = client.newCall(request).execute();
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.code(), is(206));
+        String boundaryBegin = "multipart/byteranges; boundary=";
+        assertThat(response.header(Headers.HEADER_CONTENT_TYPE), Matchers.startsWith(boundaryBegin));
+        assertThat(response.header(Headers.HEADER_CONTENT_RANGE), is("bytes 0-5,7-10/11"));
+
+        String boundary = response.header(Headers.HEADER_CONTENT_TYPE).substring(boundaryBegin.length());
+
+        String responseStr = NEW_LINE
+                + "--"
+                + boundary
+                + NEW_LINE
+                + "Content-Type: text/html"
+                + NEW_LINE
+                + "Content-Range: 0-5/11"
+                + NEW_LINE
+                + NEW_LINE
+                + "Static"
+                + NEW_LINE
+                + "--"
+                + boundary
+                + NEW_LINE
+                + "Content-Type: text/html"
+                + NEW_LINE
+                + "Content-Range: 7-10/11"
+                + NEW_LINE
+                + NEW_LINE
+                + "file"
+                + NEW_LINE
+                + "--"
+                + boundary
+                + NEW_LINE;
+
         String responseBodyString = response.body().string();
+//        assertThat(response.header(Headers.HEADER_CONTENT_LENGTH), is(Integer.toString(responseBodyString.length())));
         assertThat(responseBodyString, not(isEmptyOrNullString()));
-        assertThat(responseBodyString, is("Staticfile"));
+        assertThat(responseBodyString, is(responseStr));
     }
 
     @Test
@@ -348,6 +386,25 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(false));
         assertThat(response.code(), is(416));
         String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, containsString("Range Not Satisfiable"));
+    }
+
+    @Test
+    public void shouldXX() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("http://www.example.com/")
+                .header(Headers.HEADER_RANGE, "bytes=0-4,5-9")
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(true));
+        assertThat(response.code(), is(206));
+        assertThat(response.header(Headers.HEADER_CONTENT_TYPE), Matchers.startsWith("multipart/byteranges; boundary="));
+        String responseBodyString = response.body().string();
+        assertThat(response.header(Headers.HEADER_CONTENT_LENGTH), is(Integer.toString(responseBodyString.length())));
         assertThat(responseBodyString, not(isEmptyOrNullString()));
         assertThat(responseBodyString, containsString("Range Not Satisfiable"));
     }

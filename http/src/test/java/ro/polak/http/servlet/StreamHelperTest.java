@@ -7,30 +7,37 @@ import org.mockito.internal.matchers.ArrayEquals;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import ro.polak.http.RangePartHeader;
 import ro.polak.http.protocol.parser.RangeHelper;
 import ro.polak.http.protocol.parser.impl.Range;
+import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
-
 public class StreamHelperTest {
 
-    public static final String BOUNDARY = "";
+    public static final String BOUNDARY = "someboundary";
     public static final String CONTENT_TYPE = "application/pdf";
     public static final int TOTAL_LENGTH = 0;
+    private static final Charset CHARSET = Charset.forName("UTF-8");
+    public static final String NEW_LINE = "\r\n";
+
     private ByteArrayInputStream inputStream;
     private ByteArrayOutputStream outputStream;
     private byte[] inputBytes;
     private final StreamHelper streamHelper = new StreamHelper();
     private final RangeHelper rangeHelper = new RangeHelper();
+    private final RangePartHeaderSerializer rangePartHeaderSerializer = new RangePartHeaderSerializer();
+    private final SliceHelper sliceHelper = new SliceHelper();
 
     @Before
     public void setup() {
@@ -42,7 +49,7 @@ public class StreamHelperTest {
 
     @Test
     public void shouldServeTheSameBytes() throws IOException {
-        streamHelper.serveStream(inputStream, outputStream);
+        streamHelper.serveMultiRangeStream(inputStream, outputStream);
         byte[] out = outputStream.toByteArray();
         assertThat(out.length, is(greaterThan(0)));
         assertThat(out, new ArrayEquals(inputBytes));
@@ -52,9 +59,9 @@ public class StreamHelperTest {
     public void shouldServeTheSameBytesForSingeRangeSmallerThanTheBuffer() throws IOException {
         Range range = new Range(3, 200);
 
-        byte[] inputBytesSliced = getSliceForRanges(inputBytes, Arrays.asList(range));
+        byte[] inputBytesSliced = sliceHelper.getSliceForRanges(inputBytes, Arrays.asList(range));
 
-        streamHelper.serveStream(inputStream, outputStream, range);
+        streamHelper.serveMultiRangeStream(inputStream, outputStream, range);
 
         byte[] out = outputStream.toByteArray();
         assertThat(out.length, is(equalTo((int) rangeHelper.getTotalLength(Arrays.asList(range)))));
@@ -66,9 +73,9 @@ public class StreamHelperTest {
     public void shouldServeTheSameBytesForSingeRangeGreaterThanTheBuffer() throws IOException {
         Range range = new Range(3, 1024);
 
-        byte[] inputBytesSliced = getSliceForRanges(inputBytes, Arrays.asList(range));
+        byte[] inputBytesSliced = sliceHelper.getSliceForRanges(inputBytes, Arrays.asList(range));
 
-        streamHelper.serveStream(inputStream, outputStream, range);
+        streamHelper.serveMultiRangeStream(inputStream, outputStream, range);
 
         byte[] out = outputStream.toByteArray();
         assertThat(out.length, is(equalTo((int) rangeHelper.getTotalLength(Arrays.asList(range)))));
@@ -82,12 +89,12 @@ public class StreamHelperTest {
         ranges.add(new Range(0, 2));
         ranges.add(new Range(2, 2));
 
-        byte[] inputBytesSliced = getSliceForRanges(inputBytes, ranges);
+        byte[] inputBytesSliced = sliceHelper.getSliceForRanges(inputBytes, ranges);
 
-        streamHelper.serveStream(inputStream, outputStream, ranges, BOUNDARY, CONTENT_TYPE, 0);
+        streamHelper.serveMultiRangeStream(inputStream, outputStream, ranges, BOUNDARY, CONTENT_TYPE, 0);
 
         byte[] out = outputStream.toByteArray();
-        assertThat(out.length, is(equalTo((int) rangeHelper.getTotalLength(ranges))));
+        assertThat(out.length, is(equalTo(inputBytesSliced.length)));
 
         assertThat(out, new ArrayEquals(inputBytesSliced));
     }
@@ -98,12 +105,12 @@ public class StreamHelperTest {
         ranges.add(new Range(0, 49));
         ranges.add(new Range(40, 59));
 
-        byte[] inputBytesSliced = getSliceForRanges(inputBytes, ranges);
+        byte[] inputBytesSliced = sliceHelper.getSliceForRanges(inputBytes, ranges);
 
-        streamHelper.serveStream(inputStream, outputStream, ranges, BOUNDARY, CONTENT_TYPE, TOTAL_LENGTH);
+        streamHelper.serveMultiRangeStream(inputStream, outputStream, ranges, BOUNDARY, CONTENT_TYPE, TOTAL_LENGTH);
 
         byte[] out = outputStream.toByteArray();
-        assertThat(out.length, is(equalTo((int) rangeHelper.getTotalLength(ranges))));
+        assertThat(out.length, is(equalTo(inputBytesSliced.length)));
 
         assertThat(out, new ArrayEquals(inputBytesSliced));
     }
@@ -114,13 +121,14 @@ public class StreamHelperTest {
         ranges.add(new Range(0, 550));
         ranges.add(new Range(1024, 1623));
 
-        byte[] inputBytesSliced = getSliceForRanges(inputBytes, ranges);
+        byte[] inputBytesSliced = sliceHelper.getSliceForRanges(inputBytes, ranges);
 
-        streamHelper.serveStream(inputStream, outputStream, ranges, BOUNDARY, CONTENT_TYPE, TOTAL_LENGTH);
+
+        streamHelper.serveMultiRangeStream(inputStream, outputStream, ranges, BOUNDARY, CONTENT_TYPE, TOTAL_LENGTH);
 
         byte[] out = outputStream.toByteArray();
-        assertThat(out.length, is(equalTo((int) rangeHelper.getTotalLength(ranges))));
 
+        assertThat(out.length, is(equalTo(inputBytesSliced.length)));
         assertThat(out, new ArrayEquals(inputBytesSliced));
     }
 
@@ -128,21 +136,57 @@ public class StreamHelperTest {
     public void selfTest() {
         byte[] sample = {0, 1, 2, 3, 4};
         List<Range> ranges = new ArrayList<>();
-        ranges.add(new Range(0, 1));
         ranges.add(new Range(2, 4));
-        assertThat(getSliceForRanges(sample, ranges), new ArrayEquals(sample));
+        assertThat(sliceHelper.getSliceForRanges(sample, ranges), new ArrayEquals(new byte[]{
+                2, 3, 4
+        }));
     }
 
-    private byte[] getSliceForRanges(byte[] input, List<Range> ranges) {
-        byte[] output = new byte[(int) rangeHelper.getTotalLength(ranges)];
 
-        int destPos = 0;
-        for (Range range : ranges) {
-            byte[] slice = Arrays.copyOfRange(input, (int) range.getFrom(), (int) range.getTo()+1);
-            System.arraycopy(slice, 0, output, destPos, slice.length);
-            destPos += slice.length;
+    private class SliceHelper {
+        public byte[] getSliceForRanges(byte[] input, List<Range> ranges) {
+            long totalLength = rangeHelper.getTotalLength(ranges);
+            long headersPartLength = rangePartHeaderSerializer.getPartHeadersLength(ranges, BOUNDARY, CONTENT_TYPE, TOTAL_LENGTH);
+
+            byte[] output = new byte[(int) (totalLength + headersPartLength)];
+            new Random().nextBytes(output);
+
+            int destPos = 0;
+
+            for (Range range : ranges) {
+                if (ranges.size() > 1) {
+                    destPos = appendRangePartHeader(output, destPos, range);
+                }
+                destPos = appendRangeSlice(input, output, destPos, range);
+            }
+
+            if (ranges.size() > 1) {
+                appendLastBoundaryDeliminator(output, destPos);
+            }
+
+            return output;
         }
 
-        return output;
+        private int appendRangeSlice(byte[] input, byte[] output, int destPos, Range range) {
+            byte[] slice = Arrays.copyOfRange(input, (int) range.getFrom(), (int) range.getTo() + 1);
+            System.arraycopy(slice, 0, output, destPos, slice.length);
+            destPos += slice.length;
+            return destPos;
+        }
+
+        private int appendRangePartHeader(byte[] output, int destPos, Range range) {
+            RangePartHeader rangePartHeader = new RangePartHeader(range, BOUNDARY, CONTENT_TYPE, TOTAL_LENGTH);
+            byte[] slice = (NEW_LINE + rangePartHeaderSerializer.serialize(rangePartHeader)).getBytes(CHARSET);
+            System.arraycopy(slice, 0, output, destPos, slice.length);
+            destPos += slice.length;
+            return destPos;
+        }
+
+        private int appendLastBoundaryDeliminator(byte[] output, int destPos) {
+            byte[] slice = (NEW_LINE + rangePartHeaderSerializer.serializeLastBoundaryDeliminator(BOUNDARY)).getBytes(CHARSET);
+            System.arraycopy(slice, 0, output, destPos, slice.length);
+            destPos += slice.length;
+            return destPos;
+        }
     }
 }

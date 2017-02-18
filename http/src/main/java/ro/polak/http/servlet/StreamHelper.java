@@ -28,6 +28,9 @@ import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 public class StreamHelper {
 
     public static final int BUFFER_SIZE = 512;
+    public static final String NEW_LINE = "\r\n";
+    public static final Charset CHARSET = Charset.forName("UTF-8");
+
     private final RangeHelper rangeHelper = new RangeHelper();
     private final RangePartHeaderSerializer rangePartHeaderSerializer = new RangePartHeaderSerializer();
 
@@ -38,7 +41,7 @@ public class StreamHelper {
      * @param outputStream
      * @throws IOException
      */
-    public void serveStream(InputStream inputStream, OutputStream outputStream) throws IOException {
+    public void serveMultiRangeStream(InputStream inputStream, OutputStream outputStream) throws IOException {
         int numberOfBufferReadBytes;
         byte[] buffer = new byte[BUFFER_SIZE];
 
@@ -58,11 +61,10 @@ public class StreamHelper {
      * @param range
      * @throws IOException
      */
-    private void doServeStream(InputStream inputStream, OutputStream outputStream, Range range) throws IOException {
+    private void doServeRangeStream(InputStream inputStream, OutputStream outputStream, Range range) throws IOException {
         int numberOfBufferReadBytes;
         byte[] buffer = new byte[BUFFER_SIZE];
         long numberOfBytesServedForRange = 0;
-
 
         inputStream.reset();
         inputStream.skip(range.getFrom());
@@ -98,19 +100,23 @@ public class StreamHelper {
      * @param totalLength
      * @throws IOException
      */
-    public void serveStream(InputStream inputStream, OutputStream outputStream, List<Range> rangeList, String boundary, String contentType, long totalLength) throws IOException {
+    public void serveMultiRangeStream(InputStream inputStream, OutputStream outputStream, List<Range> rangeList, String boundary, String contentType, long totalLength) throws IOException {
         inputStream.mark(0);
 
-        serveStream(new ByteArrayInputStream("\r\n".getBytes(Charset.forName("UTF-8"))), outputStream);
+        serveMultiRangeStream(new ByteArrayInputStream(NEW_LINE.getBytes(CHARSET)), outputStream);
         for (Range range : rangeList) {
-            RangePartHeader rangePartHeader = new RangePartHeader(range, boundary, contentType, totalLength);
-            byte[] rangePartHeaderBytes = rangePartHeaderSerializer.serialize(rangePartHeader).getBytes(Charset.forName("UTF-8"));
-
-            serveStream(new ByteArrayInputStream(rangePartHeaderBytes), outputStream);
-            doServeStream(inputStream, outputStream, range);
-            serveStream(new ByteArrayInputStream("\r\n".getBytes(Charset.forName("UTF-8"))), outputStream);
+            doServeRangePartHeader(outputStream, boundary, contentType, totalLength, range);
+            doServeRangeStream(inputStream, outputStream, range);
+            serveMultiRangeStream(new ByteArrayInputStream(NEW_LINE.getBytes(CHARSET)), outputStream);
         }
-        serveStream(new ByteArrayInputStream(("--" + boundary + "\r\n").getBytes(Charset.forName("UTF-8"))), outputStream);
+        serveMultiRangeStream(new ByteArrayInputStream(rangePartHeaderSerializer.serializeLastBoundaryDeliminator(boundary).getBytes(CHARSET)), outputStream);
+    }
+
+    private void doServeRangePartHeader(OutputStream outputStream, String boundary, String contentType, long totalLength, Range range) throws IOException {
+        RangePartHeader rangePartHeader = new RangePartHeader(range, boundary, contentType, totalLength);
+        byte[] rangePartHeaderBytes = rangePartHeaderSerializer.serialize(rangePartHeader).getBytes(CHARSET);
+
+        serveMultiRangeStream(new ByteArrayInputStream(rangePartHeaderBytes), outputStream);
     }
 
     /**
@@ -121,8 +127,8 @@ public class StreamHelper {
      * @param range
      * @throws IOException
      */
-    public void serveStream(InputStream inputStream, OutputStream outputStream, Range range) throws IOException {
+    public void serveMultiRangeStream(InputStream inputStream, OutputStream outputStream, Range range) throws IOException {
         inputStream.mark(0);
-        doServeStream(inputStream, outputStream, range);
+        doServeRangeStream(inputStream, outputStream, range);
     }
 }

@@ -22,6 +22,7 @@ import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.RangeHelper;
 import ro.polak.http.protocol.parser.impl.Range;
 import ro.polak.http.protocol.parser.impl.RangeParser;
+import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponse;
@@ -43,6 +44,7 @@ public class FileResourceProvider implements ResourceProvider {
     private String basePath;
     private static final RangeParser rangeParser = new RangeParser();
     private static final RangeHelper rangeHelper = new RangeHelper();
+    private static final RangePartHeaderSerializer rangePartHeaderSerializer = new RangePartHeaderSerializer();
 
     /**
      * Default constructor.
@@ -63,11 +65,11 @@ public class FileResourceProvider implements ResourceProvider {
 
             // A server MUST ignore a Range header field received with a request method other than GET.
             boolean isGetRequest = request.getMethod().equals(HttpRequestWrapper.METHOD_GET);
+            boolean isPartialRequest = isGetRequest && request.getHeaders().containsHeader(Headers.HEADER_RANGE);
 
-            if (isGetRequest && request.getHeaders().containsHeader(Headers.HEADER_RANGE)) {
+            if (isPartialRequest) {
                 loadPartialContent(request, response, file);
             } else {
-                response.setContentType(mimeTypeMapping.getMimeTypeByExtension(Utilities.getExtension(file.getName())));
                 loadCompleteContent(request, response, file);
             }
 
@@ -78,6 +80,7 @@ public class FileResourceProvider implements ResourceProvider {
     }
 
     private void loadCompleteContent(HttpRequestWrapper request, HttpResponseWrapper response, File file) throws IOException {
+        response.setContentType(mimeTypeMapping.getMimeTypeByExtension(Utilities.getExtension(file.getName())));
         response.setStatus(HttpResponse.STATUS_OK);
         response.setContentLength(file.length());
         response.getHeaders().setHeader(Headers.HEADER_ACCEPT_RANGES, "bytes");
@@ -108,20 +111,21 @@ public class FileResourceProvider implements ResourceProvider {
             throw new RangeNotSatisfiableProtocolException();
         }
 
-        // TODO https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Range
-        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/206
-        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-Range
         response.setStatus(HttpResponse.STATUS_PARTIAL_CONTENT);
         response.getHeaders().setHeader(Headers.HEADER_CONTENT_RANGE, "bytes " + getRanges(ranges) + "/" + file.length());
 
         String contentType = mimeTypeMapping.getMimeTypeByExtension(Utilities.getExtension(file.getName()));
 
+        long rangeLength = rangeHelper.getTotalLength(ranges);
+
         String boundary = null;
         if (ranges.size() == 1) {
-            response.setContentLength(rangeHelper.getTotalLength(ranges));
+            response.setContentLength(rangeLength);
             response.setContentType(contentType);
         } else {
             boundary = RandomStringGenerator.generate();
+            response.setContentLength(rangePartHeaderSerializer.getPartHeadersLength(ranges, boundary, contentType, file.length()) + rangeLength);
+
             response.setContentType("multipart/byteranges; boundary=" + boundary);
         }
         response.flushHeaders();

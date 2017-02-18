@@ -33,6 +33,14 @@ public class RangeHelperTest {
     }
 
     @Test
+    public void shouldComputeTotalLengthForLargerValues() {
+        List<Range> ranges = new ArrayList<>();
+        ranges.add(new Range(0, 550));
+        ranges.add(new Range(1024, 1623));
+        assertThat(rangeHelper.getTotalLength(ranges), is(1151L));
+    }
+
+    @Test
     public void shouldComputeTotalLengthX() {
         List<Range> ranges = new ArrayList<>();
         ranges.add(new Range(0, 1));

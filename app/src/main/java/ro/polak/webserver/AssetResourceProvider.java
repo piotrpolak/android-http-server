@@ -28,8 +28,8 @@ import ro.polak.http.servlet.HttpResponseWrapper;
  */
 public class AssetResourceProvider implements ResourceProvider {
 
-    private AssetManager assetManager;
-    private String basePath;
+    private final AssetManager assetManager;
+    private final String basePath;
 
     /**
      * Default constructor.

@@ -35,8 +35,8 @@ public class HttpResponseWrapper implements HttpResponse {
     private static final String TRANSFER_ENCODING_CHUNKED = "chunked";
     private static final String CONNECTION_KEEP_ALIVE = "keep-alive";
     private static final String CONNECTION_CLOSE = "close";
+    private static final Charset CHARSET = Charset.forName("UTF-8");
 
-    private static Charset charset = Charset.forName("UTF-8");
     private static Serializer<Headers> headersSerializer = new HeadersSerializer();
     private static final StreamHelper streamHelper = new StreamHelper();
     private static final CookieHeaderSerializer cookieHeaderSerializer = new CookieHeaderSerializer();
@@ -162,7 +162,7 @@ public class HttpResponseWrapper implements HttpResponse {
             headers.setHeader(Headers.HEADER_SET_COOKIE, cookieHeaderSerializer.serialize(cookie));
         }
 
-        byte[] head = (getStatus() + NEW_LINE + headersSerializer.serialize(headers)).getBytes(charset);
+        byte[] head = (getStatus() + NEW_LINE + headersSerializer.serialize(headers)).getBytes(CHARSET);
         InputStream inputStream = new ByteArrayInputStream(head);
         serveStream(inputStream);
         try {
@@ -178,7 +178,7 @@ public class HttpResponseWrapper implements HttpResponse {
      * @throws IOException
      */
     public void serveStream(InputStream inputStream) throws IOException {
-        streamHelper.serveStream(inputStream, outputStream);
+        streamHelper.serveMultiRangeStream(inputStream, outputStream);
     }
 
     /**
@@ -189,7 +189,7 @@ public class HttpResponseWrapper implements HttpResponse {
      * @throws IOException
      */
     public void serveStream(InputStream inputStream, Range range) throws IOException {
-        streamHelper.serveStream(inputStream, outputStream, range);
+        streamHelper.serveMultiRangeStream(inputStream, outputStream, range);
     }
 
     /**
@@ -203,7 +203,7 @@ public class HttpResponseWrapper implements HttpResponse {
      * @throws IOException
      */
     public void serveStream(InputStream inputStream, List<Range> rangeList, String boundary, String contentType, long totalLength) throws IOException {
-        streamHelper.serveStream(inputStream, outputStream, rangeList, boundary, contentType, totalLength);
+        streamHelper.serveMultiRangeStream(inputStream, outputStream, rangeList, boundary, contentType, totalLength);
     }
 
     /**

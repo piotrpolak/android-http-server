@@ -1,6 +1,5 @@
 package ro.polak.http;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -24,10 +23,12 @@ import static org.junit.Assert.assertThat;
 
 /**
  * @url https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+ * @url https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
  */
 public class ProtocolIT extends AbstractIT {
 
     private static final String NEW_LINE = "\r\n";
+    public static final String DASH_DASH = "--";
 
     @Test(expected = IOException.class)
     public void shouldCloseSocketAfterCloseConnectionRequest() throws IOException, InterruptedException {
@@ -326,51 +327,61 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn206AndServeRangesOfStaticFileForMultipleRanges() throws IOException {
+        String fileLength = "11";
+        String ranges = "0-5,7-10";
+        String boundaryBegin = "multipart/byteranges; boundary=";
+
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/staticfile.html"))
-                .header(Headers.HEADER_RANGE, "bytes=0-5,7-10")
+                .header(Headers.HEADER_RANGE, "bytes=" + ranges)
                 .get()
                 .build();
 
         Response response = client.newCall(request).execute();
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.code(), is(206));
-        String boundaryBegin = "multipart/byteranges; boundary=";
-        assertThat(response.header(Headers.HEADER_CONTENT_TYPE), Matchers.startsWith(boundaryBegin));
-        assertThat(response.header(Headers.HEADER_CONTENT_RANGE), is("bytes 0-5,7-10/11"));
 
-        String boundary = response.header(Headers.HEADER_CONTENT_TYPE).substring(boundaryBegin.length());
+        assertThat(response.header(Headers.HEADER_CONTENT_TYPE), startsWith(boundaryBegin));
+        assertThat(response.header(Headers.HEADER_CONTENT_RANGE),
+                is("bytes " + ranges + "/" + fileLength));
 
-        String responseStr = NEW_LINE
-                + "--"
+        String boundary = response.header(Headers.HEADER_CONTENT_TYPE)
+                .substring(boundaryBegin.length());
+
+        String expectedResponseStr = NEW_LINE
+                + DASH_DASH
                 + boundary
                 + NEW_LINE
                 + "Content-Type: text/html"
                 + NEW_LINE
-                + "Content-Range: 0-5/11"
+                + "Content-Range: bytes 0-5/" + fileLength
                 + NEW_LINE
                 + NEW_LINE
                 + "Static"
                 + NEW_LINE
-                + "--"
+                + DASH_DASH
                 + boundary
                 + NEW_LINE
                 + "Content-Type: text/html"
                 + NEW_LINE
-                + "Content-Range: 7-10/11"
+                + "Content-Range: bytes 7-10/" + fileLength
                 + NEW_LINE
                 + NEW_LINE
                 + "file"
                 + NEW_LINE
-                + "--"
+                + DASH_DASH
                 + boundary
+                + DASH_DASH
                 + NEW_LINE;
 
+//        assertThat(Integer.valueOf(response.header(Headers.HEADER_CONTENT_LENGTH)),
+//                is(expectedResponseStr.length()));
+
         String responseBodyString = response.body().string();
-//        assertThat(response.header(Headers.HEADER_CONTENT_LENGTH), is(Integer.toString(responseBodyString.length())));
         assertThat(responseBodyString, not(isEmptyOrNullString()));
-        assertThat(responseBodyString, is(responseStr));
+        assertThat(responseBodyString, is(expectedResponseStr));
+
     }
 
     @Test

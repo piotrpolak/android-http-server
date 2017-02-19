@@ -15,6 +15,7 @@ import java.util.List;
 
 import ro.polak.http.RangePartHeader;
 import ro.polak.http.Statistics;
+import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.protocol.parser.RangeHelper;
 import ro.polak.http.protocol.parser.impl.Range;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
@@ -67,7 +68,9 @@ public class StreamHelper {
         long numberOfBytesServedForRange = 0;
 
         inputStream.reset();
-        inputStream.skip(range.getFrom());
+        if (inputStream.skip(range.getFrom()) != range.getFrom()) {
+            throw new UnexpectedSituationException("Failed to skip bytes from input stream.");
+        }
 
         while ((numberOfBufferReadBytes = inputStream.read(buffer)) != -1) {
             int numberOfBytesToServe = numberOfBufferReadBytes;

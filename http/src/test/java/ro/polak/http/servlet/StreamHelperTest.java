@@ -155,9 +155,9 @@ public class StreamHelperTest {
 
             for (Range range : ranges) {
                 if (ranges.size() > 1) {
-                    destPos = appendRangePartHeader(output, destPos, range);
+                    destPos += appendRangePartHeader(output, destPos, range);
                 }
-                destPos = appendRangeSlice(input, output, destPos, range);
+                destPos += appendRangeSlice(input, output, destPos, range);
             }
 
             if (ranges.size() > 1) {
@@ -170,23 +170,21 @@ public class StreamHelperTest {
         private int appendRangeSlice(byte[] input, byte[] output, int destPos, Range range) {
             byte[] slice = Arrays.copyOfRange(input, (int) range.getFrom(), (int) range.getTo() + 1);
             System.arraycopy(slice, 0, output, destPos, slice.length);
-            destPos += slice.length;
-            return destPos;
+            ;
+            return slice.length;
         }
 
         private int appendRangePartHeader(byte[] output, int destPos, Range range) {
             RangePartHeader rangePartHeader = new RangePartHeader(range, BOUNDARY, CONTENT_TYPE, TOTAL_LENGTH);
             byte[] slice = (NEW_LINE + rangePartHeaderSerializer.serialize(rangePartHeader)).getBytes(CHARSET);
             System.arraycopy(slice, 0, output, destPos, slice.length);
-            destPos += slice.length;
-            return destPos;
+            return slice.length;
         }
 
         private int appendLastBoundaryDeliminator(byte[] output, int destPos) {
             byte[] slice = (NEW_LINE + rangePartHeaderSerializer.serializeLastBoundaryDeliminator(BOUNDARY)).getBytes(CHARSET);
             System.arraycopy(slice, 0, output, destPos, slice.length);
-            destPos += slice.length;
-            return destPos;
+            return slice.length;
         }
     }
 }

@@ -130,7 +130,7 @@ public class ProtocolIT extends AbstractIT {
                 .get("../../../index.html")
                 .withCloseConnection();
 
-        expectCode(requestBuilder, 403);
+        assertResponsesWithHttpCode(requestBuilder, 403);
     }
 
     @Test
@@ -158,7 +158,7 @@ public class ProtocolIT extends AbstractIT {
                 .get(null)
                 .withCloseConnection();
 
-        expectCode(requestBuilder, 400);
+        assertResponsesWithHttpCode(requestBuilder, 400);
     }
 
     @Test
@@ -168,7 +168,7 @@ public class ProtocolIT extends AbstractIT {
                 .withCloseConnection()
                 .withProtocol("HTTTTTTTTTTTTTP/4.4");
 
-        expectCode(requestBuilder, 414);
+        assertResponsesWithHttpCode(requestBuilder, 414);
     }
 
     @Test
@@ -193,7 +193,7 @@ public class ProtocolIT extends AbstractIT {
                 .method("POST", "/example/")
                 .withCloseConnection();
 
-        expectCode(requestBuilder, 411);
+        assertResponsesWithHttpCode(requestBuilder, 411);
     }
 
     @Test
@@ -203,7 +203,7 @@ public class ProtocolIT extends AbstractIT {
                 .withHeader(Headers.HEADER_CONTENT_LENGTH, "Illegal value")
                 .withCloseConnection();
 
-        expectCode(requestBuilder, 400);
+        assertResponsesWithHttpCode(requestBuilder, 400);
     }
 
     @Test
@@ -228,7 +228,7 @@ public class ProtocolIT extends AbstractIT {
                 .withHeader(Headers.HEADER_CONTENT_TYPE, "multipart/mixed; boundary=s9xksnd72SSHu")
                 .withCloseConnection();
 
-        expectCode(requestBuilder, 411);
+        assertResponsesWithHttpCode(requestBuilder, 411);
     }
 
     @Test
@@ -375,8 +375,8 @@ public class ProtocolIT extends AbstractIT {
                 + DASH_DASH
                 + NEW_LINE;
 
-//        assertThat(Integer.valueOf(response.header(Headers.HEADER_CONTENT_LENGTH)),
-//                is(expectedResponseStr.length()));
+        assertThat(Integer.valueOf(response.header(Headers.HEADER_CONTENT_LENGTH)),
+                is(expectedResponseStr.length()));
 
         String responseBodyString = response.body().string();
         assertThat(responseBodyString, not(isEmptyOrNullString()));
@@ -416,7 +416,7 @@ public class ProtocolIT extends AbstractIT {
                 .withHeader(Headers.HEADER_CONTENT_LENGTH, Integer.toString(length))
                 .withCloseConnection();
 
-        expectCode(requestBuilder, 413);
+        assertResponsesWithHttpCode(requestBuilder, 413);
     }
 
     @Test
@@ -427,10 +427,10 @@ public class ProtocolIT extends AbstractIT {
                 .withProtocol("HTTP/9.0")
                 .withCloseConnection();
 
-        expectCode(requestBuilder, 505);
+        assertResponsesWithHttpCode(requestBuilder, 505);
     }
 
-    private void expectCode(RequestBuilder requestBuilder, int code) throws IOException {
+    private void assertResponsesWithHttpCode(RequestBuilder requestBuilder, int code) throws IOException {
         String requestBody = requestBuilder.toString();
 
         Socket socket = getSocket();

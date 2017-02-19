@@ -62,6 +62,6 @@ public class FileSessionStorageTest {
             sessionFile.delete();
         }
         sessionFile.createNewFile();
-        fileSessionStorage.getSession(sid);
+        assertThat(fileSessionStorage.getSession(sid), is(nullValue()));
     }
 }

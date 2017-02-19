@@ -104,8 +104,7 @@ public class FileSessionStorage implements SessionStorage {
             } catch (IOException e) {
             }
         } catch (IOException | ClassNotFoundException e) {
-            LOGGER.log(Level.WARNING,
-                    "Unable to read session " + id + " under " + tempPath, e);
+            LOGGER.log(Level.WARNING, "Unable to read session " + id + " under " + tempPath, e);
         }
         return session;
     }

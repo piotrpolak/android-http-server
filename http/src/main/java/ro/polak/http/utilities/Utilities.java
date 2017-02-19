@@ -14,6 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import ro.polak.http.exception.UnexpectedSituationException;
+
 import static java.net.URLDecoder.decode;
 import static java.net.URLEncoder.encode;
 import static java.util.TimeZone.getTimeZone;
@@ -81,7 +83,7 @@ public class Utilities {
         try {
             return encode(text, CHARSET_NAME);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            throw new UnexpectedSituationException(CHARSET_NAME + " is not supported.", e);
         }
     }
 
@@ -95,7 +97,7 @@ public class Utilities {
         try {
             return decode(text, CHARSET_NAME);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            throw new UnexpectedSituationException(CHARSET_NAME + " is not supported.", e);
         }
     }
 

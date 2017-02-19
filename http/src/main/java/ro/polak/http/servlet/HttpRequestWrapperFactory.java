@@ -229,9 +229,9 @@ public class HttpRequestWrapperFactory {
 
     private void handlePostRequest(HttpRequestWrapper request, InputStream in) throws IOException, MalformedInputException {
         int postLength;
-        if (request.getHeaders().containsHeader(request.getHeaders().HEADER_CONTENT_LENGTH)) {
+        if (request.getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
             try {
-                postLength = Integer.parseInt(request.getHeaders().getHeader(request.getHeaders().HEADER_CONTENT_LENGTH));
+                postLength = Integer.parseInt(request.getHeaders().getHeader(Headers.HEADER_CONTENT_LENGTH));
             } catch (NumberFormatException e) {
                 throw new MalformedInputException(e.getMessage());
             }

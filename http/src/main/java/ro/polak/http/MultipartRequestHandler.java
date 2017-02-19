@@ -35,8 +35,8 @@ public class MultipartRequestHandler {
 
     private static final String NEW_LINE = "\r\n";
     private static final String BOUNDARY_BEGIN_MARK = "--";
-    private static Parser<MultipartHeadersPart> multipartHeadersPartParser = new MultipartHeadersPartParser();
-    private final String headersDeliminator = NEW_LINE + NEW_LINE;
+    private static final Parser<MultipartHeadersPart> multipartHeadersPartParser = new MultipartHeadersPartParser();
+    private static final String headersDeliminator = NEW_LINE + NEW_LINE;
     private InputStream in;
     private File currentFile;
     private FileOutputStream fileOutputStream;

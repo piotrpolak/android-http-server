@@ -19,8 +19,8 @@ import ro.polak.http.servlet.Servlet;
  */
 public class Cookies extends Servlet {
 
-    private final String PAGE_HITS_COOKIE_NAME = "page_hits";
-    private final String FIRST_VISITED_AT_COOKIE_NAME = "first_visited_at";
+    private final static String PAGE_HITS_COOKIE_NAME = "page_hits";
+    private final static String FIRST_VISITED_AT_COOKIE_NAME = "first_visited_at";
 
     @Override
     public void service(HttpRequest request, HttpResponse response) {

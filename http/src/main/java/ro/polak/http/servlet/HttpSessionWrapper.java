@@ -21,6 +21,8 @@ import java.util.Map;
  */
 public class HttpSessionWrapper implements HttpSession, Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     public transient static final String COOKIE_NAME = "JSSSESSIONID";
     private transient boolean isInvalidated = false;
     private transient ServletContext servletContext;

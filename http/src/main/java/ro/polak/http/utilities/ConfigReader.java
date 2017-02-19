@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +23,8 @@ import java.util.Map;
  */
 public class ConfigReader {
 
+    private static final Charset CHARSET = Charset.forName("UTF-8");
+
     /**
      * Reads config from the input stream.
      *
@@ -31,7 +34,7 @@ public class ConfigReader {
      */
     public Map<String, String> read(InputStream in) throws IOException {
         HashMap<String, String> values = new HashMap<>();
-        InputStreamReader inputStreamReader = new InputStreamReader(in);
+        InputStreamReader inputStreamReader = new InputStreamReader(in, CHARSET);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         String line;
 

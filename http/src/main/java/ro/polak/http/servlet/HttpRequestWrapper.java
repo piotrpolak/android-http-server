@@ -115,7 +115,7 @@ public class HttpRequestWrapper implements HttpRequest {
         }
 
         try {
-            return Integer.valueOf(getHeader(name));
+            return Integer.parseInt(getHeader(name));
         } catch (NumberFormatException e) {
             return 0;
         }

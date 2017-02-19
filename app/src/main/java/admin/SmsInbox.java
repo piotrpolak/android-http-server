@@ -25,8 +25,6 @@ import ro.polak.http.servlet.Servlet;
 
 public class SmsInbox extends Servlet {
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
     @Override
     public void service(HttpRequest request, HttpResponse response) {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
@@ -49,6 +47,8 @@ public class SmsInbox extends Servlet {
         HTMLDocument doc = new HTMLDocument("SMS inbox");
         doc.setOwnerClass(getClass().getSimpleName());
 
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
         if (whereString == null) {
             doc.writeln("<div class=\"page-header\"><h1>SMS inbox</h1></div>");
 
@@ -62,14 +62,14 @@ public class SmsInbox extends Servlet {
                 date.setTime(Long.parseLong((String) sms.get("date")));
                 doc.writeln("<div class=\"panel-heading\">" + sms.get("address") + "</div>");
                 doc.writeln("<div class=\"panel-body " + ((sms.get("type").equals("1")) ? "text-left" : "text-right bg-success") + "\">");
-                doc.writeln("<p><b>" + DATE_FORMAT.format(date) + "</b></p>");
+                doc.writeln("<p><b>" + simpleDateFormat.format(date) + "</b></p>");
                 doc.writeln("<p>" + sms.get("body") + "</p>");
                 doc.writeln("<p><a class=\"btn btn-primary\" href=\"/admin/SmsInbox.dhtml?thread_id=" + sms.get("thread_id") + "\">Open thread <span class=\"badge\">" + thread.size() + "</span></a></p>");
                 doc.writeln("</div>");
                 doc.writeln("</div>");
             }
         } else {
-            Vector thread = threads.get(new Integer(threadId));
+            Vector thread = threads.get(Integer.parseInt(threadId));
 
             if (thread != null && thread.size() > 0) {
                 Iterator i = thread.iterator();
@@ -92,7 +92,7 @@ public class SmsInbox extends Servlet {
                     Date date = new Date();
                     date.setTime(Long.parseLong((String) sms.get("date")));
                     doc.writeln("<div class=\"" + ((sms.get("type").equals("1")) ? "text-left" : "text-right bg-success") + "\">");
-                    doc.writeln("<p><b>" + DATE_FORMAT.format(date) + "</b></p>");
+                    doc.writeln("<p><b>" + simpleDateFormat.format(date) + "</b></p>");
                     doc.writeln("<p>" + sms.get("body") + "</p>");
                     doc.writeln("</div>");
                 }
@@ -130,13 +130,13 @@ public class SmsInbox extends Servlet {
                 }
             }
 
-            Integer threadId = -1;
+            int threadId = -1;
 
             if (sms.get("thread_id") != null && !sms.get("thread_id").equals("")) {
-                threadId = (new Integer((String) sms.get("thread_id")));
+                threadId = Integer.parseInt((String) sms.get("thread_id"));
             }
 
-            Vector thread = (Vector) threads.get(threadId);
+            Vector thread = threads.get(threadId);
 
             if (thread == null) {
                 thread = new Vector();

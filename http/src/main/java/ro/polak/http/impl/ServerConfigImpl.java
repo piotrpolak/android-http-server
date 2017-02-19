@@ -29,7 +29,7 @@ import ro.polak.http.utilities.ConfigReader;
  */
 public class ServerConfigImpl implements ServerConfig {
 
-    public static final String[] SUPPORTED_METHODS = new String[]{
+    private static final String[] SUPPORTED_METHODS = new String[]{
             HttpRequestWrapper.METHOD_GET,
             HttpRequestWrapper.METHOD_POST,
             HttpRequestWrapper.METHOD_HEAD

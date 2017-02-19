@@ -47,9 +47,7 @@ public class RequestStatusParser implements Parser<RequestStatus> {
         uri = statusArray[1];
 
         // Protocol is the thrid part of the status line
-        if (statusArray.length > 2) {
-            status.setProtocol(statusArray[2].trim());
-        }
+        status.setProtocol(statusArray[2].trim());
 
         int questionMarkPosition = uri.indexOf("?");
         if (questionMarkPosition > -1) {

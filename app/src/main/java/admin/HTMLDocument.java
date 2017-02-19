@@ -8,7 +8,7 @@
 package admin;
 
 import java.util.LinkedHashMap;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * HTML document builder
@@ -94,7 +94,7 @@ public class HTMLDocument {
         out += "</head>\n";
         out += "<body>\n";
 
-        LinkedHashMap menuElements = new LinkedHashMap<String, String>(10);
+        LinkedHashMap<String, String> menuElements = new LinkedHashMap<>(10);
 
         menuElements.put("Index", "About");
         menuElements.put("Management", "Management");
@@ -119,9 +119,8 @@ public class HTMLDocument {
             out += "    <div id=\"navbar\" class=\"collapse navbar-collapse\">\n";
             out += "        <ul class=\"nav navbar-nav\">\n";
 
-            Set<String> keys = menuElements.keySet();
-            for (String key : keys) {
-                out += "<li" + (ownerClass.equals(key) ? " class=\"active\"" : "") + "><a href=\"/admin/" + key + ".dhtml\">" + menuElements.get(key) + "</a></li>\n";
+            for (Map.Entry<String, String> entry : menuElements.entrySet()) {
+                out += "<li" + (ownerClass.equals(entry.getKey()) ? " class=\"active\"" : "") + "><a href=\"/admin/" + entry.getKey() + ".dhtml\">" + entry.getValue() + "</a></li>\n";
             }
 
             out += "        </ul>\n";

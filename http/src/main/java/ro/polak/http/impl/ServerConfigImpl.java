@@ -9,6 +9,7 @@ package ro.polak.http.impl;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,11 +69,18 @@ public class ServerConfigImpl implements ServerConfig {
      */
     public static ServerConfigImpl createFromPath(String basePath, String tempPath) throws IOException {
         ConfigReader reader = new ConfigReader();
-        Map<String, String> config = reader.read(new FileInputStream(basePath + "httpd.conf"));
+        InputStream configInputStream = new FileInputStream(basePath + "httpd.conf");
+        Map<String, String> config = reader.read(configInputStream);
+        try {
+            configInputStream.close();
+        } catch (IOException e) {
+            // Close silently
+        }
 
         ServerConfigImpl serverConfig = new ServerConfigImpl();
         serverConfig.basePath = basePath;
         serverConfig.tempPath = tempPath;
+        serverConfig.documentRootPath = basePath + "www/";
 
         if (config.containsKey("Listen")) {
             serverConfig.listenPort = Integer.parseInt(config.get("Listen"));
@@ -80,8 +88,6 @@ public class ServerConfigImpl implements ServerConfig {
 
         if (config.containsKey("DocumentRoot")) {
             serverConfig.documentRootPath = basePath + config.get("DocumentRoot");
-        } else {
-            serverConfig.documentRootPath = basePath + "www/";
         }
 
         if (config.containsKey("MaxThreads")) {
@@ -104,18 +110,19 @@ public class ServerConfigImpl implements ServerConfig {
         }
 
         // Initializing mime mapping
-
         if (config.containsKey("MimeType")) {
-            try {
-                String defaultMimeType = "text/plain";
-                if (config.containsKey("DefaultMimeType")) {
-                    defaultMimeType = config.get("DefaultMimeType");
-                }
+            String defaultMimeType = "text/plain";
+            if (config.containsKey("DefaultMimeType")) {
+                defaultMimeType = config.get("DefaultMimeType");
+            }
 
-                FileInputStream fileInputStream = new FileInputStream(basePath + config.get("MimeType"));
-                serverConfig.mimeTypeMapping = MimeTypeMappingImpl.createFromStream(fileInputStream, defaultMimeType);
-                fileInputStream.close();
+            InputStream mimeInputStream = new FileInputStream(basePath + config.get("MimeType"));
+            serverConfig.mimeTypeMapping = MimeTypeMappingImpl.createFromStream(mimeInputStream, defaultMimeType);
+
+            try {
+                mimeInputStream.close();
             } catch (IOException e) {
+                // Close silently
             }
         }
 
@@ -126,7 +133,6 @@ public class ServerConfigImpl implements ServerConfig {
                 serverConfig.directoryIndex.add(directoryIndexLine[i]);
             }
         }
-
 
         if (serverConfig.mimeTypeMapping == null) {
             // Initializing an empty mime type mapping to prevent null pointer exceptions

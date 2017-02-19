@@ -31,10 +31,11 @@ public class ConfigReader {
      */
     public Map<String, String> read(InputStream in) throws IOException {
         HashMap<String, String> values = new HashMap<>();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        InputStreamReader inputStreamReader = new InputStreamReader(in);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
         String line;
 
-        while ((line = reader.readLine()) != null) {
+        while ((line = bufferedReader.readLine()) != null) {
             if (isEmptyLine(line)) {
                 continue;
             }
@@ -44,8 +45,14 @@ public class ConfigReader {
         }
 
         try {
-            reader.close();
+            bufferedReader.close();
         } catch (IOException e) {
+            // Close silently
+        }
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            // Close silently
         }
 
         return values;

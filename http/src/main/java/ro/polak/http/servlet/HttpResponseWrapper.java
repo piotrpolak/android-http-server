@@ -235,10 +235,8 @@ public class HttpResponseWrapper implements HttpResponse {
      */
     public void flush() throws IOException {
         // It makes no sense to set chunked encoding if there is no print writer
-        if (printWriter != null) {
-            if (!getHeaders().containsHeader(Headers.HEADER_TRANSFER_ENCODING) && !getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
-                getHeaders().setHeader(Headers.HEADER_TRANSFER_ENCODING, TRANSFER_ENCODING_CHUNKED);
-            }
+        if (printWriter != null && canBeChunkedTransferEncoding()) {
+            getHeaders().setHeader(Headers.HEADER_TRANSFER_ENCODING, TRANSFER_ENCODING_CHUNKED);
         }
 
         if (!isCommitted()) {
@@ -253,5 +251,15 @@ public class HttpResponseWrapper implements HttpResponse {
         }
 
         outputStream.flush();
+    }
+
+    /**
+     * Tells whether the transfer is not chunked yet or does not have a fixed content length.
+     *
+     * @return
+     */
+    private boolean canBeChunkedTransferEncoding() {
+        return !getHeaders().containsHeader(Headers.HEADER_TRANSFER_ENCODING)
+                && !getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH);
     }
 }

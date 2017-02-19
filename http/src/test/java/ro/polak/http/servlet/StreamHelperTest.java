@@ -40,7 +40,7 @@ public class StreamHelperTest {
     private final SliceHelper sliceHelper = new SliceHelper();
 
     @Before
-    public void setup() {
+    public void setUp() {
         inputBytes = new byte[1024 * 5];
         new Random().nextBytes(inputBytes);
         inputStream = new ByteArrayInputStream(inputBytes);
@@ -170,7 +170,6 @@ public class StreamHelperTest {
         private int appendRangeSlice(byte[] input, byte[] output, int destPos, Range range) {
             byte[] slice = Arrays.copyOfRange(input, (int) range.getFrom(), (int) range.getTo() + 1);
             System.arraycopy(slice, 0, output, destPos, slice.length);
-            ;
             return slice.length;
         }
 

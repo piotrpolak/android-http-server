@@ -401,6 +401,23 @@ public class ProtocolIT extends AbstractIT {
         assertThat(responseBodyString, containsString("Range Not Satisfiable"));
     }
 
+    @Test
+    public void shouldReturn400OnMalformedRange() throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(getFullUrl("/staticfile.html"))
+                .header(Headers.HEADER_RANGE, "bytes=128-abcd")
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(false));
+        assertThat(response.code(), is(400));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, containsString("Bad Request"));
+    }
+
     //
 //    @Test
 //    public void shouldReturn431RequestHeaderFieldsTooLarge() {

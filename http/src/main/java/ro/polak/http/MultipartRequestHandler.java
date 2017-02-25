@@ -35,8 +35,8 @@ public class MultipartRequestHandler {
 
     private static final String NEW_LINE = "\r\n";
     private static final String BOUNDARY_BEGIN_MARK = "--";
+    private static final String HEADERS_DELIMINATOR = NEW_LINE + NEW_LINE;
     private static final Parser<MultipartHeadersPart> multipartHeadersPartParser = new MultipartHeadersPartParser();
-    private static final String headersDeliminator = NEW_LINE + NEW_LINE;
     private InputStream in;
     private File currentFile;
     private FileOutputStream fileOutputStream;
@@ -134,8 +134,8 @@ public class MultipartRequestHandler {
 
             allBytesRead += numberOfBytesRead;
 
-            if (allBytesRead >= expectedPostLength) {
-                break; // TODO Throw exception
+            if (allBytesRead > expectedPostLength) {
+                throw new PayloadTooLargeProtocolException("Payload of too large");
             }
 
             if (beginBoundary.charAt(charPosition) == smallBuffer[0]) {
@@ -159,14 +159,15 @@ public class MultipartRequestHandler {
         byte[] buffer = new byte[bufferLength];
         byte[] tempBuffer = new byte[endBoundary.length()];
 
-        String currentDeliminator = headersDeliminator;
+        String currentDeliminator = HEADERS_DELIMINATOR;
 
         while ((numberOfBytesRead = in.read(buffer, 0, buffer.length)) != -1) {
-            if (allBytesRead >= expectedPostLength) {
-                throw new PayloadTooLargeProtocolException("Payload of too large");
-            }
 
             allBytesRead += numberOfBytesRead;
+
+            if (allBytesRead > expectedPostLength) {
+                throw new PayloadTooLargeProtocolException("Payload of too large");
+            }
 
             start = 0;
 
@@ -234,7 +235,7 @@ public class MultipartRequestHandler {
             return endBoundary;
         } else {
             pushBufferOnEndOfStateBody(bytes, start, end);
-            return headersDeliminator;
+            return HEADERS_DELIMINATOR;
         }
     }
 
@@ -258,7 +259,8 @@ public class MultipartRequestHandler {
         }
     }
 
-    private void pushBufferOnEndOfStateHeaders(byte[] bytes, int start, int end) throws FileNotFoundException, MalformedInputException {
+    private void pushBufferOnEndOfStateHeaders(byte[] bytes, int start, int end)
+            throws FileNotFoundException, MalformedInputException {
         for (int i = start; i < end; i++) {
             headersStringBuffered.append((char) bytes[i]);
         }

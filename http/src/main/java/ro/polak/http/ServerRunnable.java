@@ -130,6 +130,7 @@ public class ServerRunnable implements Runnable {
             } else if (e instanceof AccessDeniedException) {
                 return new HttpError403Handler(serverConfig.getErrorDocument403Path());
             } else if (e instanceof NotFoundException) {
+                Statistics.addError404();
                 return new HttpError404Handler(serverConfig.getErrorDocument404Path());
             } else if (e instanceof MethodNotAllowedException) {
                 return new HttpError405Handler(getAllowedMethods());
@@ -140,6 +141,7 @@ public class ServerRunnable implements Runnable {
             fallbackException = handlingException;
         }
 
+        Statistics.addError500();
         return new HttpError500Handler().setReason(fallbackException);
     }
 

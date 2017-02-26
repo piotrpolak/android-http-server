@@ -48,7 +48,7 @@ public class StreamHelper {
             outputStream.write(buffer, 0, numberOfBufferReadBytes);
             outputStream.flush();
 
-            Statistics.addBytesSend(numberOfBufferReadBytes);
+            Statistics.addBytesSent(numberOfBufferReadBytes);
         }
     }
 
@@ -80,7 +80,7 @@ public class StreamHelper {
 
             outputStream.write(buffer, 0, numberOfBytesToServe);
             outputStream.flush();
-            Statistics.addBytesSend(numberOfBytesToServe);
+            Statistics.addBytesSent(numberOfBytesToServe);
 
             numberOfBytesServedForRange += numberOfBytesToServe;
 

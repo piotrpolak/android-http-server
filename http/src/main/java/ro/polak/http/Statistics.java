@@ -14,52 +14,94 @@ package ro.polak.http;
  */
 public class Statistics {
 
-    // TODO Add comments
-    // TODO Remove static calls
-
     private static long bytesSend = 0;
     private static long bytesReceived = 0;
     private static long requests = 0;
     private static long errors404 = 0;
     private static long errors500 = 0;
 
+    /**
+     * Increments bytes received counter.
+     *
+     * @param bytes
+     */
     public static synchronized void addBytesReceived(long bytes) {
-        Statistics.bytesReceived += bytes;
+        bytesReceived += bytes;
     }
 
-    public static synchronized void addBytesSend(long bytes) {
-        Statistics.bytesSend += bytes;
+    /**
+     * Increments bytes sent counter.
+     *
+     * @param bytes
+     */
+    public static synchronized void addBytesSent(long bytes) {
+        bytesSend += bytes;
     }
 
+    /**
+     * Increments requests received counter.
+     */
     public static synchronized void addRequest() {
-        ++Statistics.requests;
+        ++requests;
     }
 
+    /**
+     * Increments 404 errors counter.
+     */
     public static synchronized void addError404() {
-        ++Statistics.errors404;
+        ++errors404;
     }
 
+    /**
+     * Increments 500 errors counter.
+     */
     public static synchronized void addError500() {
-        ++Statistics.errors500;
+        ++errors500;
     }
 
-    public static long getBytesSend() {
-        return Statistics.bytesSend;
+    /**
+     * Returns number of bytes sent.
+     *
+     * @return
+     */
+    public static synchronized long getBytesSent() {
+        return bytesSend;
     }
 
-    public static long getBytesReceived() {
-        return Statistics.bytesReceived;
+    /**
+     * Returns number of bytes received.
+     *
+     * @return
+     */
+    public static synchronized long getBytesReceived() {
+        return bytesReceived;
     }
 
-    public static long getRequests() {
-        return Statistics.requests;
+    /**
+     * Returns number of requests handled.
+     *
+     * @return
+     */
+    public static synchronized long getRequests() {
+        return requests;
     }
 
-    public static long getError404s() {
-        return Statistics.errors404;
+    /**
+     * Returns number of 404 errors encountered.
+     *
+     * @return
+     */
+    public static synchronized long getError404s() {
+        return errors404;
     }
 
-    public static long getError500s() {
-        return Statistics.errors500;
+
+    /**
+     * Returns number of 500 errors encountered.
+     *
+     * @return
+     */
+    public static synchronized long getError500s() {
+        return errors500;
     }
 }

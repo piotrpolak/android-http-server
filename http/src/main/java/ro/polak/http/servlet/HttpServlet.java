@@ -24,12 +24,6 @@ public interface HttpServlet {
     void init(ServletConfig servletConfig);
 
     /**
-     * The servlet destroy method. The reusable resources should be destoroyed
-     * in the destroy method.
-     */
-    void destroy();
-
-    /**
      * The main method of the servlet. Must be overridden, contains the servlet
      * body.
      */

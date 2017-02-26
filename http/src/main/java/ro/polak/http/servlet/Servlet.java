@@ -22,11 +22,6 @@ public abstract class Servlet implements HttpServlet {
         this.servletConfig = servletConfig;
     }
 
-    @Override
-    public void destroy() {
-        // To be implemented
-    }
-
     /**
      * Returns servlet context.
      *

@@ -30,16 +30,17 @@ public class QueryStringParser implements Parser<Map<String, String>> {
     public Map<String, String> parse(String queryString) {
         Map<String, String> parameters = new HashMap<>();
         String queryParametersArray[] = queryString.split("&");
-        if (queryParametersArray.length > 0) {
-            for (int i = 0; i < queryParametersArray.length; i++) {
-                String parameterPair[] = queryParametersArray[i].split("=", 2);
-
-                if (parameterPair[0].length() == 0) {
-                    continue;
-                }
-
-                parameters.put(parameterPair[0], ro.polak.http.utilities.Utilities.urlDecode(parameterPair[1]));
+        for (int i = 0; i < queryParametersArray.length; i++) {
+            if (queryParametersArray[i].length() == 0) {
+                continue;
             }
+
+            String parameterPair[] = queryParametersArray[i].split("=", 2);
+            if (parameterPair[0].length() == 0) {
+                continue;
+            }
+
+            parameters.put(parameterPair[0], ro.polak.http.utilities.Utilities.urlDecode(parameterPair[1]));
         }
 
         return parameters;

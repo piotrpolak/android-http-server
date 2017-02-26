@@ -14,7 +14,6 @@ public class QueryStringParserTest {
 
     @Test
     public void shouldParseFields() throws MalformedInputException {
-
         String data = "&param1=ABCD1"
                 + "&param2=ABCD2"
                 + "&param3=ABC=DEF"
@@ -32,9 +31,18 @@ public class QueryStringParserTest {
     }
 
     @Test
-    public void shouldParseIncompleteFields() throws MalformedInputException {
+    public void shouldParseEmptyFields() throws MalformedInputException {
+        String data = "";
+        Parser<Map<String, String>> parser = new QueryStringParser();
+        Map<String, String> parameters = parser.parse(data);
 
+        assertThat(parameters.size(), is(0));
+    }
+
+    @Test
+    public void shouldParseIncompleteFields() throws MalformedInputException {
         String data = "=&param1="
+                + "&&"
                 + "&param1="
                 + "&param2=ABCD2"
                 + "&param3=ABC=DEF"

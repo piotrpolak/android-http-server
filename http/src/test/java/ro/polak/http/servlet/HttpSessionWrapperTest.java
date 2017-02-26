@@ -64,7 +64,13 @@ public class HttpSessionWrapperTest {
     }
 
     @Test
-    public void shouldBInvalidateSession() {
+    public void shouldNotBeNewIfAccessTimeIsTheSameAsCreationTime() {
+        session.setLastAccessedTime(session.getCreationTime() + 30);
+        assertThat(session.isNew(), is(false));
+    }
+
+    @Test
+    public void shouldInvalidateSession() {
         assertThat(session.isInvalidated(), is(false));
         session.invalidate();
         assertThat(session.isInvalidated(), is(true));

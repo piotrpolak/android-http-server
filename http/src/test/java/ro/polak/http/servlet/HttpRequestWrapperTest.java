@@ -123,7 +123,7 @@ public class HttpRequestWrapperTest {
     }
 
     @Test
-    public void shouldReturnGetRequestParametersMap() {
+    public void shouldReturnGetRequestParametersMapOnGetMethod() {
         requestStatus.setMethod(HttpRequestWrapper.METHOD_GET);
         assertThat(httpRequestWrapper.getParameter("getKey"), is("getValue"));
         assertThat(((Map<String, String>) httpRequestWrapper.getParameterMap()), hasKey("getKey"));
@@ -134,8 +134,19 @@ public class HttpRequestWrapperTest {
     }
 
     @Test
-    public void shouldReturnPostRequestParametersMap() {
+    public void shouldReturnPostRequestParametersMapOnPostMethod() {
         requestStatus.setMethod(HttpRequestWrapper.METHOD_POST);
+        assertThat(httpRequestWrapper.getPostParameter("postKey"), is("postValue"));
+        assertThat(((Map<String, String>) httpRequestWrapper.getParameterMap()), hasKey("postKey"));
+        assertThat(((Map<String, String>) httpRequestWrapper.getParameterMap()), not(hasKey("getKey")));
+        assertThat((List<String>) (Collections.list(httpRequestWrapper.getParameterNames())), hasSize(1));
+        assertThat((List<String>) (Collections.list(httpRequestWrapper.getParameterNames())), hasItems("postKey"));
+        assertThat((List<String>) (Collections.list(httpRequestWrapper.getParameterNames())), not(hasItems("getKey")));
+    }
+
+    @Test
+    public void shouldReturnPostRequestParametersMapOnPutMethod() {
+        requestStatus.setMethod(HttpRequestWrapper.METHOD_PUT);
         assertThat(httpRequestWrapper.getPostParameter("postKey"), is("postValue"));
         assertThat(((Map<String, String>) httpRequestWrapper.getParameterMap()), hasKey("postKey"));
         assertThat(((Map<String, String>) httpRequestWrapper.getParameterMap()), not(hasKey("getKey")));
@@ -217,6 +228,18 @@ public class HttpRequestWrapperTest {
         httpRequestWrapper.setServletContext(servletContext);
         when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionWrapper("sessionId"));
         assertThat(httpRequestWrapper.getSession(), is(instanceOf(HttpSessionWrapper.class)));
+    }
+
+    @Test
+    public void shouldReturnTheSameSessionForConsecutiveCalls() {
+        Map<String, Cookie> cookies = new HashMap<>();
+        Cookie sessionCookie = new Cookie(HttpSessionWrapper.COOKIE_NAME, "sessionId");
+        cookies.put(HttpSessionWrapper.COOKIE_NAME, sessionCookie);
+        httpRequestWrapper.setCookies(cookies);
+        httpRequestWrapper.setServletContext(servletContext);
+        when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionWrapper("sessionId"));
+        assertThat(httpRequestWrapper.getSession(), is(instanceOf(HttpSessionWrapper.class)));
+        assertThat(httpRequestWrapper.getSession().equals(httpRequestWrapper.getSession()), is(true));
     }
 
     @Test

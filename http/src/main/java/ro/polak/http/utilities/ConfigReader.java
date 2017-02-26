@@ -47,16 +47,8 @@ public class ConfigReader {
             values.put(parameter[0].trim(), parameter[1].trim());
         }
 
-        try {
-            bufferedReader.close();
-        } catch (IOException e) {
-            // Close silently
-        }
-        try {
-            inputStreamReader.close();
-        } catch (IOException e) {
-            // Close silently
-        }
+        IOUtilities.closeSilently(bufferedReader);
+        IOUtilities.closeSilently(inputStreamReader);
 
         return values;
     }

@@ -22,6 +22,7 @@ import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
 import ro.polak.http.servlet.UploadedFile;
+import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.RandomStringGenerator;
 
 /**
@@ -245,7 +246,7 @@ public class MultipartRequestHandler {
             if (len > 0) {
                 fileOutputStream.write(bytes, start, len);
             }
-            fileOutputStream.close();
+            IOUtilities.closeSilently(fileOutputStream);
 
             uploadedFiles.add(new UploadedFile(multipartHeadersPart.getName(), multipartHeadersPart.getFileName(), currentFile));
             currentFile = null;

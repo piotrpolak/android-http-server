@@ -20,6 +20,7 @@ import ro.polak.http.ServerConfig;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.utilities.ConfigReader;
+import ro.polak.http.utilities.IOUtilities;
 
 /**
  * Server configuration
@@ -71,11 +72,8 @@ public class ServerConfigImpl implements ServerConfig {
         ConfigReader reader = new ConfigReader();
         InputStream configInputStream = new FileInputStream(basePath + "httpd.conf");
         Map<String, String> config = reader.read(configInputStream);
-        try {
-            configInputStream.close();
-        } catch (IOException e) {
-            // Close silently
-        }
+
+        IOUtilities.closeSilently(configInputStream);
 
         ServerConfigImpl serverConfig = new ServerConfigImpl();
         serverConfig.basePath = basePath;

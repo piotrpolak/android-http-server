@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import ro.polak.http.errorhandler.impl.HttpError503Handler;
 import ro.polak.http.servlet.HttpRequestWrapperFactory;
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.Utilities;
 
 /**
@@ -67,10 +68,7 @@ public class WebServer extends Thread {
             }
         }
 
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-        }
+        IOUtilities.closeSilently(serverSocket);
 
         threadPoolExecutor.shutdown();
     }
@@ -160,10 +158,7 @@ public class WebServer extends Thread {
     public void stopServer() {
         listen = false;
         if (serverSocket != null) {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-            }
+            IOUtilities.closeSilently(serverSocket);
         }
         LOGGER.info("Server has been stopped.");
     }
@@ -201,10 +196,7 @@ public class WebServer extends Thread {
                     (new HttpError503Handler()).serve(HttpResponseWrapper.createFromSocket(socket));
                 } catch (IOException e) {
                 }
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                }
+                IOUtilities.closeSilently(socket);
             }
         }
     }

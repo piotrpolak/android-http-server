@@ -27,6 +27,7 @@ import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.RandomStringGenerator;
 import ro.polak.http.utilities.Utilities;
 
@@ -90,10 +91,7 @@ public class FileResourceProvider implements ResourceProvider {
             InputStream fileInputStream = new FileInputStream(file);
             response.serveStream(fileInputStream);
 
-            try {
-                fileInputStream.close();
-            } catch (IOException e) {
-            }
+            IOUtilities.closeSilently(fileInputStream);
         }
 
         response.flush();
@@ -138,10 +136,7 @@ public class FileResourceProvider implements ResourceProvider {
             response.serveStream(fileInputStream, ranges, boundary, contentType, file.length());
         }
 
-        try {
-            fileInputStream.close();
-        } catch (IOException e) {
-        }
+        IOUtilities.closeSilently(fileInputStream);
 
         response.flush();
     }

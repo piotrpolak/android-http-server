@@ -21,6 +21,7 @@ import ro.polak.http.OutputStreamWrapper;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.protocol.serializer.impl.CookieHeaderSerializer;
 import ro.polak.http.protocol.serializer.impl.HeadersSerializer;
+import ro.polak.http.utilities.IOUtilities;
 
 /**
  * Represents HTTP response
@@ -164,10 +165,8 @@ public class HttpResponseWrapper implements HttpResponse {
         byte[] head = (getStatus() + NEW_LINE + headersSerializer.serialize(headers)).getBytes(CHARSET);
         InputStream inputStream = new ByteArrayInputStream(head);
         serveStream(inputStream);
-        try {
-            inputStream.close();
-        } catch (IOException e) {
-        }
+
+        IOUtilities.closeSilently(inputStream);
     }
 
     /**

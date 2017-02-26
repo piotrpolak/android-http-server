@@ -38,6 +38,7 @@ import ro.polak.http.servlet.HttpRequest;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpRequestWrapperFactory;
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.utilities.IOUtilities;
 
 /**
  * Server thread.
@@ -103,7 +104,7 @@ public class ServerRunnable implements Runnable {
                 }
             } finally {
                 if (socket != null) {
-                    socket.close();
+                    IOUtilities.closeSilently(socket);
                 }
             }
         } catch (IOException e) {

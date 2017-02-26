@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ro.polak.http.MimeTypeMapping;
+import ro.polak.http.utilities.IOUtilities;
 
 /**
  * Mime type mapping
@@ -68,11 +69,7 @@ public class MimeTypeMappingImpl implements MimeTypeMapping {
                 mimeTypeMapping.mapping.put(mime[i].toLowerCase(), mime[0]);
             }
         }
-        try {
-            inputStreamReader.close();
-        } catch (IOException e) {
-            // Close silently
-        }
+        IOUtilities.closeSilently(inputStreamReader);
         return mimeTypeMapping;
     }
 

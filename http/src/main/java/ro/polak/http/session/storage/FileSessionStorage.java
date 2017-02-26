@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import ro.polak.http.servlet.HttpSessionWrapper;
+import ro.polak.http.utilities.IOUtilities;
 
 /**
  * Filesystem session storage.
@@ -98,11 +99,9 @@ public class FileSessionStorage implements SessionStorage {
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             session = (HttpSessionWrapper) objectInputStream.readObject();
 
-            try {
-                objectInputStream.close();
-                fileInputStream.close();
-            } catch (IOException e) {
-            }
+            IOUtilities.closeSilently(objectInputStream);
+            IOUtilities.closeSilently(fileInputStream);
+
         } catch (IOException | ClassNotFoundException e) {
             LOGGER.log(Level.WARNING, "Unable to read session " + id + " under " + tempPath, e);
         }
@@ -113,12 +112,9 @@ public class FileSessionStorage implements SessionStorage {
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(session);
-
-        try {
-            objectOutputStream.close();
-            fileOutputStream.close();
-        } catch (IOException e) {
-        }
+        
+        IOUtilities.closeSilently(objectOutputStream);
+        IOUtilities.closeSilently(fileOutputStream);
     }
 
     private String getSessionStoragePath(String id) {

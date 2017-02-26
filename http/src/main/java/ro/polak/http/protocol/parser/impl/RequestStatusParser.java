@@ -46,7 +46,7 @@ public class RequestStatusParser implements Parser<RequestStatus> {
         // Second element of the array is the HTTP queryString
         uri = statusArray[1];
 
-        // Protocol is the thrid part of the status line
+        // Protocol is the third part of the status line
         status.setProtocol(statusArray[2].trim());
 
         int questionMarkPosition = uri.indexOf("?");

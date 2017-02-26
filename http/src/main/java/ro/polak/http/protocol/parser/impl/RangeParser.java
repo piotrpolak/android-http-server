@@ -11,6 +11,7 @@ import java.util.List;
 
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
+import ro.polak.http.servlet.Range;
 
 /**
  * Parses range headers.

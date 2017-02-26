@@ -18,7 +18,6 @@ import java.util.List;
 
 import ro.polak.http.Headers;
 import ro.polak.http.OutputStreamWrapper;
-import ro.polak.http.protocol.parser.impl.Range;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.protocol.serializer.impl.CookieHeaderSerializer;
 import ro.polak.http.protocol.serializer.impl.HeadersSerializer;

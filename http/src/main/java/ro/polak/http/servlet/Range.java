@@ -4,7 +4,7 @@
  * <p/>
  * Copyright (c) Piotr Polak 2017-2017
  **************************************************/
-package ro.polak.http.protocol.parser.impl;
+package ro.polak.http.servlet;
 
 /**
  * Represents HTTP range.

@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Random;
 
 import ro.polak.http.RangePartHeader;
-import ro.polak.http.protocol.parser.RangeHelper;
-import ro.polak.http.protocol.parser.impl.Range;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 
 import static org.hamcrest.MatcherAssert.assertThat;

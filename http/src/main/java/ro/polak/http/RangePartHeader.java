@@ -6,7 +6,7 @@
  **************************************************/
 package ro.polak.http;
 
-import ro.polak.http.protocol.parser.impl.Range;
+import ro.polak.http.servlet.Range;
 
 /**
  * Represents range part header.

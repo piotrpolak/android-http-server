@@ -4,11 +4,11 @@
  * <p/>
  * Copyright (c) Piotr Polak 2017-2017
  **************************************************/
-package ro.polak.http.protocol.parser;
+package ro.polak.http.servlet;
 
 import java.util.List;
 
-import ro.polak.http.protocol.parser.impl.Range;
+import ro.polak.http.servlet.Range;
 
 /**
  * Range utilities.

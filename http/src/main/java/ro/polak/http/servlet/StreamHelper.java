@@ -16,8 +16,6 @@ import java.util.List;
 import ro.polak.http.RangePartHeader;
 import ro.polak.http.Statistics;
 import ro.polak.http.exception.UnexpectedSituationException;
-import ro.polak.http.protocol.parser.RangeHelper;
-import ro.polak.http.protocol.parser.impl.Range;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 
 /**

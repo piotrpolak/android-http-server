@@ -11,7 +11,7 @@ import java.util.List;
 
 import ro.polak.http.Headers;
 import ro.polak.http.RangePartHeader;
-import ro.polak.http.protocol.parser.impl.Range;
+import ro.polak.http.servlet.Range;
 import ro.polak.http.protocol.serializer.Serializer;
 
 /**

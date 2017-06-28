@@ -7,18 +7,22 @@
 
 package ro.polak.http;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
- * Statistics class used to gather statistical data for the GUI
+ * Statistics class used to gather statistical data for the GUI.
+ *
+ * The implementation relies on AtomicLong and it is thread safe.
  *
  * @author Piotr Polak
  */
 public class Statistics {
 
-    private static long bytesSend = 0;
-    private static long bytesReceived = 0;
-    private static long requests = 0;
-    private static long errors404 = 0;
-    private static long errors500 = 0;
+    private static AtomicLong bytesSend = new AtomicLong();
+    private static AtomicLong bytesReceived = new AtomicLong();
+    private static AtomicLong requestsHandled = new AtomicLong();
+    private static AtomicLong errors404 = new AtomicLong();
+    private static AtomicLong errors500 = new AtomicLong();
 
     /**
      * Increments bytes received counter.
@@ -26,7 +30,7 @@ public class Statistics {
      * @param bytes
      */
     public static synchronized void addBytesReceived(long bytes) {
-        bytesReceived += bytes;
+        bytesReceived.addAndGet(bytes);
     }
 
     /**
@@ -35,28 +39,28 @@ public class Statistics {
      * @param bytes
      */
     public static synchronized void addBytesSent(long bytes) {
-        bytesSend += bytes;
+        bytesSend.addAndGet(bytes);
     }
 
     /**
-     * Increments requests received counter.
+     * Increments requests handled counter.
      */
-    public static synchronized void addRequest() {
-        ++requests;
+    public static synchronized void incrementRequestHandled() {
+        requestsHandled.incrementAndGet();
     }
 
     /**
      * Increments 404 errors counter.
      */
-    public static synchronized void addError404() {
-        ++errors404;
+    public static synchronized void incrementError404() {
+        errors404.incrementAndGet();
     }
 
     /**
      * Increments 500 errors counter.
      */
-    public static synchronized void addError500() {
-        ++errors500;
+    public static synchronized void incrementError500() {
+        errors500.incrementAndGet();
     }
 
     /**
@@ -65,7 +69,7 @@ public class Statistics {
      * @return
      */
     public static synchronized long getBytesSent() {
-        return bytesSend;
+        return bytesSend.get();
     }
 
     /**
@@ -74,16 +78,16 @@ public class Statistics {
      * @return
      */
     public static synchronized long getBytesReceived() {
-        return bytesReceived;
+        return bytesReceived.get();
     }
 
     /**
-     * Returns number of requests handled.
+     * Returns number of requestsHandled handled.
      *
      * @return
      */
-    public static synchronized long getRequests() {
-        return requests;
+    public static synchronized long getRequestsHandled() {
+        return requestsHandled.get();
     }
 
     /**
@@ -92,7 +96,7 @@ public class Statistics {
      * @return
      */
     public static synchronized long getError404s() {
-        return errors404;
+        return errors404.get();
     }
 
 
@@ -102,6 +106,6 @@ public class Statistics {
      * @return
      */
     public static synchronized long getError500s() {
-        return errors500;
+        return errors500.get();
     }
 }

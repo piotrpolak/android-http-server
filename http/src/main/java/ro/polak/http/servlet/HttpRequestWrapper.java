@@ -77,7 +77,7 @@ public class HttpRequestWrapper implements HttpRequest {
      * Default constructor
      */
     public HttpRequestWrapper() {
-        Statistics.addRequest();
+        Statistics.incrementRequestHandled();
         postParameters = new HashMap<>();
         getParameters = new HashMap<>();
         uploadedFiles = new HashSet<>();

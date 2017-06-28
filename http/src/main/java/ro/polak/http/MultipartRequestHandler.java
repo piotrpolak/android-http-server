@@ -130,6 +130,7 @@ public class MultipartRequestHandler {
         while (true) {
             int numberOfBytesRead = in.read(smallBuffer);
             if (numberOfBytesRead == -1) {
+                Statistics.addBytesReceived(allBytesRead);
                 throw new IOException("Premature end of stream before reaching the end of the first boundary");
             }
 
@@ -167,6 +168,7 @@ public class MultipartRequestHandler {
             allBytesRead += numberOfBytesRead;
 
             if (allBytesRead > expectedPostLength) {
+                Statistics.addBytesReceived(allBytesRead);
                 throw new PayloadTooLargeProtocolException("Payload of too large");
             }
 

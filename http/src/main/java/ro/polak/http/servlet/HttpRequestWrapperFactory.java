@@ -55,6 +55,7 @@ public class HttpRequestWrapperFactory {
     private static final Parser<Map<String, String>> queryStringParser = new QueryStringParser();
     private static final Parser<RequestStatus> statusParser = new RequestStatusParser();
     private static final Parser<Map<String, Cookie>> cookieParser = new CookieParser();
+    public static final String DEFAULT_SCHEME = "http";
 
     static {
         int maxMethodLength = 0;
@@ -146,7 +147,7 @@ public class HttpRequestWrapperFactory {
 
     private void assignSocketMetadata(Socket socket, HttpRequestWrapper request) {
         request.setSecure(false);
-        request.setScheme("http");
+        request.setScheme(DEFAULT_SCHEME);
         request.setRemoteAddr(socket.getInetAddress().getHostAddress());
         request.setRemotePort(((InetSocketAddress) socket.getRemoteSocketAddress()).getPort());
         request.setRemoteHost(((InetSocketAddress) socket.getRemoteSocketAddress()).getHostName());
@@ -188,20 +189,23 @@ public class HttpRequestWrapperFactory {
                     wasMethodRead = true;
                     String method = statusLine.substring(0, statusLine.length() - 1).toUpperCase();
                     if (!RECOGNIZED_METHODS_LIST.contains(method)) {
+                        Statistics.addBytesReceived(length);
                         throw new MalformedOrUnsupportedMethodProtocolException("Method " + method + " is not supported");
                     }
                 } else {
                     if (length > METHOD_MAX_LENGTH) {
+                        Statistics.addBytesReceived(length);
                         throw new MalformedOrUnsupportedMethodProtocolException("Method name is longer than expected");
                     }
                 }
             }
 
             if (length > STATUS_MAX_LENGTH) {
+                Statistics.addBytesReceived(length);
                 throw new StatusLineTooLongProtocolException("Exceeded max size of " + STATUS_MAX_LENGTH);
             }
         }
-        Statistics.addBytesReceived(statusLine.length() + 1);
+        Statistics.addBytesReceived(length);
 
         return statusLine.toString();
     }
@@ -268,11 +272,12 @@ public class HttpRequestWrapperFactory {
         while (in.read(buffer, 0, buffer.length) != -1) {
             postLine.append((char) buffer[0]);
             if (postLine.length() >= postLength) {
+                Statistics.addBytesReceived(postLine.length());
                 throw new PayloadTooLargeProtocolException("Payload of too large");
             }
         }
-        request.setPostParameters(queryStringParser.parse(postLine.toString()));
         Statistics.addBytesReceived(postLine.length());
+        request.setPostParameters(queryStringParser.parse(postLine.toString()));
     }
 
     private void handlePostMultipartRequest(HttpRequestWrapper request, InputStream in, int postLength) throws IOException, MalformedInputException {

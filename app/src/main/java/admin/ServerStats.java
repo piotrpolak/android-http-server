@@ -42,7 +42,7 @@ public class ServerStats extends Servlet {
         doc.writeln("   <td>Data sent</td><td>" + ro.polak.http.utilities.Utilities.fileSizeUnits(ro.polak.http.Statistics.getBytesSent()) + "</td>");
         doc.writeln("</tr>");
         doc.writeln("<tr>");
-        doc.writeln("   <td>Requests handled</td><td>" + ro.polak.http.Statistics.getRequests() + "</td>");
+        doc.writeln("   <td>Requests handled</td><td>" + ro.polak.http.Statistics.getRequestsHandled() + "</td>");
         doc.writeln("</tr>");
         doc.writeln("<tr>");
         doc.writeln("   <td>404 errors</td><td>" + ro.polak.http.Statistics.getError404s() + "</td>");

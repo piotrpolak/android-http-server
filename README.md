@@ -33,6 +33,14 @@ Provided Gradle wrapper should be used to build the application:
 ./gradlew build
 ```
 
+## Testing `http` subproject
+
+The `http` subproject is independent on Android platform and can be tested in the following way:
+
+```
+cd http && ../gradlew clean check && cd ..
+```
+
 ## Sample code
 
 Hello World servlet

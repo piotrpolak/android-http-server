@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -29,7 +30,37 @@ public class HeadersTest {
     }
 
     @Test
+    public void shouldSetAndGetHeadersCaseInsensitive() {
+        headers.setHeader("Cookie", "ABCD");
+        assertThat(headers.getHeader("COOKIE"), is("ABCD"));
+    }
+
+    @Test
+    public void shouldSetAndContainHeadersCaseInsensitive() {
+        headers.setHeader("Cookie", "ABCD");
+        assertThat(headers.containsHeader("COOKIE"), is(true));
+    }
+
+    @Test
     public void shouldReturnNullValueForInexistentHeader() {
         assertThat(headers.getHeader("Non-existent"), is(nullValue()));
+    }
+
+    @Test
+    public void shouldHaveHeaderNamesCaseInsensitive() {
+        headers.setHeader("Cookie", "ABCD");
+        assertThat(headers.keySet().size(), is(1));
+        headers.setHeader("COOKIE", "1234");
+        assertThat(headers.keySet().size(), is(1));
+        assertThat(headers.keySet(), contains("Cookie"));
+    }
+
+    @Test
+    public void shouldSetLatestValueToTheHeader() {
+        headers.setHeader("Cookie", "ABCD");
+        assertThat(headers.keySet().size(), is(1));
+        headers.setHeader("COOKIE", "1234");
+        assertThat(headers.keySet().size(), is(1));
+        assertThat(headers.getHeader("Cookie"), is("1234"));
     }
 }

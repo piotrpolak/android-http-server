@@ -7,9 +7,9 @@
 
 package ro.polak.http;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * HTTP headers representation
@@ -38,8 +38,8 @@ public class Headers {
     public static final String HEADER_ACCEPT_RANGES = "Accept-Ranges";
     public static final String HEADER_CONTENT_RANGE = "Content-Range";
 
-    private Map<String, String> headers = new HashMap<>();
-    private Map<String, String> namesMap = new HashMap<>();
+    // TreeMap is used to obtain case insensitive map
+    private Map<String, String> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     /**
      * Sets a header.
@@ -48,7 +48,6 @@ public class Headers {
      * @param value header value
      */
     public void setHeader(String name, String value) {
-        namesMap.put(name.toLowerCase(), name);
         headers.put(name, value);
     }
 
@@ -59,7 +58,7 @@ public class Headers {
      * @return header's value
      */
     public String getHeader(String name) {
-        return headers.get(namesMap.get(name.toLowerCase()));
+        return headers.get(name);
     }
 
     /**
@@ -78,6 +77,6 @@ public class Headers {
      * @return
      */
     public boolean containsHeader(String name) {
-        return namesMap.containsKey(name.toLowerCase());
+        return headers.containsKey(name);
     }
 }

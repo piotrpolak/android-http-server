@@ -19,7 +19,6 @@ import java.io.IOException;
 public final class IOUtilities {
 
     private IOUtilities() {
-
     }
 
     /**

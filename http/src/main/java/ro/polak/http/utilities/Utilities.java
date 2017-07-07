@@ -26,13 +26,16 @@ import static java.util.TimeZone.getTimeZone;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200804
  */
-public class Utilities {
+public final class Utilities {
 
     // TODO This class should be split into dedicated ones
 
     public static final String CHARSET_NAME = "UTF-8";
-
     public static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
+
+    private Utilities() {
+
+    }
 
     /**
      * Returns the extension sting for a given file path

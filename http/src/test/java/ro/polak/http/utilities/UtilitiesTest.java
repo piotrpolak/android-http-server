@@ -8,6 +8,13 @@ import static org.junit.Assert.assertThat;
 
 public class UtilitiesTest {
 
+    @Test(expected = java.lang.IllegalAccessException.class)
+    public void testValidatesThatClassFooIsNotInstantiable() throws ClassNotFoundException,
+            IllegalAccessException, InstantiationException {
+        Class cls = Class.forName(Utilities.class.getCanonicalName());
+        cls.newInstance();
+    }
+
     @Test
     public void shouldReturnValidExtension() {
         assertThat(Utilities.getExtension("file.ext"), is("ext"));

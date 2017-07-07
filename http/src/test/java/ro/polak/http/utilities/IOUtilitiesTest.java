@@ -11,6 +11,13 @@ import static org.mockito.Mockito.mock;
 
 public class IOUtilitiesTest {
 
+    @Test(expected = java.lang.IllegalAccessException.class)
+    public void testValidatesThatClassFooIsNotInstantiable() throws ClassNotFoundException,
+            IllegalAccessException, InstantiationException {
+        Class cls = Class.forName(IOUtilities.class.getCanonicalName());
+        cls.newInstance();
+    }
+
     @Test
     public void shouldCloseClosableSilently() throws IOException {
         Closeable closeable = mock(Closeable.class);

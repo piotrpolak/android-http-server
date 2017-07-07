@@ -15,10 +15,9 @@ import java.util.Random;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class RandomStringGenerator {
+public final class RandomStringGenerator {
 
     private RandomStringGenerator() {
-        // Make it impossible to initialize this utility class
     }
 
     /**

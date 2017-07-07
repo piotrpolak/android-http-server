@@ -26,6 +26,7 @@ public class HttpSessionWrapper implements HttpSession, Serializable {
     public transient static final String COOKIE_NAME = "JSSSESSIONID";
     private transient boolean isInvalidated = false;
     private transient ServletContext servletContext;
+
     private long creationTime;
     private long lastAccessedTime;
     private int maxInactiveInterval = 3600;

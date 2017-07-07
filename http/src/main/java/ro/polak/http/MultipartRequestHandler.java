@@ -38,20 +38,23 @@ public class MultipartRequestHandler {
     private static final String BOUNDARY_BEGIN_MARK = "--";
     private static final String HEADERS_DELIMINATOR = NEW_LINE + NEW_LINE;
     private static final Parser<MultipartHeadersPart> multipartHeadersPartParser = new MultipartHeadersPartParser();
-    private InputStream in;
+
+    private final InputStream in;
+    private final int expectedPostLength;
+    private final int bufferLength;
+    private final String temporaryUploadsDirectory;
+    private final Map<String, String> post;
+
     private File currentFile;
     private FileOutputStream fileOutputStream;
     private int allBytesRead = 0;
-    private int expectedPostLength = 0;
-    private int bufferLength = 2048;
     private StringBuilder headersStringBuffered;
     private StringBuilder valueStringBuffered;
     private String endBoundary;
     private String beginBoundary;
-    private String temporaryUploadsDirectory;
     private MultipartHeadersPart multipartHeadersPart;
     private Collection<UploadedFile> uploadedFiles;
-    private Map<String, String> post;
+
     private boolean wasHandledBefore;
 
     /**
@@ -62,7 +65,22 @@ public class MultipartRequestHandler {
      * @param boundary
      * @param temporaryUploadsDirectory
      */
-    public MultipartRequestHandler(InputStream in, int expectedPostLength, String boundary, String temporaryUploadsDirectory) {
+    public MultipartRequestHandler(final InputStream in, final int expectedPostLength,
+                                   final String boundary, final String temporaryUploadsDirectory) {
+        this(in, expectedPostLength, boundary, temporaryUploadsDirectory, 2048);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param in
+     * @param expectedPostLength
+     * @param boundary
+     * @param temporaryUploadsDirectory
+     */
+    public MultipartRequestHandler(final InputStream in, final int expectedPostLength,
+                                   final String boundary, final String temporaryUploadsDirectory,
+                                   final int bufferLength) {
         this.in = in;
         this.expectedPostLength = expectedPostLength;
         this.temporaryUploadsDirectory = temporaryUploadsDirectory;
@@ -76,18 +94,6 @@ public class MultipartRequestHandler {
         valueStringBuffered = new StringBuilder();
         uploadedFiles = new ArrayList<>();
         post = new HashMap<>();
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param in
-     * @param expectedPostLength
-     * @param boundary
-     * @param temporaryUploadsDirectory
-     */
-    public MultipartRequestHandler(InputStream in, int expectedPostLength, String boundary, String temporaryUploadsDirectory, int bufferLength) {
-        this(in, expectedPostLength, boundary, temporaryUploadsDirectory);
         this.bufferLength = bufferLength;
     }
 

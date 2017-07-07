@@ -29,13 +29,6 @@ public interface Controller {
     void stop();
 
     /**
-     * Sets server GUI
-     *
-     * @param gui
-     */
-    void setGui(final ServerGui gui);
-
-    /**
      * Returns webserver instance.
      *
      * @return

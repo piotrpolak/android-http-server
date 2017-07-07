@@ -17,10 +17,10 @@ import java.io.File;
  */
 public class UploadedFile {
 
-    private String postFieldName;
-    private String fileName;
-    private File file;
-    private String initialPath;
+    private final String postFieldName;
+    private final String fileName;
+    private final File file;
+    private final String initialPath;
 
     /**
      * Constructor

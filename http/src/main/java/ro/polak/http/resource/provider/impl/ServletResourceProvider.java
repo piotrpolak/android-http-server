@@ -41,6 +41,7 @@ public class ServletResourceProvider implements ResourceProvider {
     private static final Logger LOGGER = Logger.getLogger(ServletResourceProvider.class.getName());
 
     private static final ServletLoader servletLoader = new ClassPathServletLoader();
+
     private final ServletContextWrapper servletContext;
     private final String servletMappedExtension;
 
@@ -61,9 +62,8 @@ public class ServletResourceProvider implements ResourceProvider {
             try {
                 Servlet servlet = servletLoader.loadServlet(uri);
 
-                ServletConfigWrapper servletConfig = new ServletConfigWrapper();
+                ServletConfigWrapper servletConfig = new ServletConfigWrapper(servletContext);
                 request.setServletContext(servletContext);
-                servletConfig.setServletContext(servletContext);
 
                 servlet.init(servletConfig);
                 response.setStatus(HttpResponse.STATUS_OK);

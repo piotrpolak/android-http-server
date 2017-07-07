@@ -16,10 +16,10 @@ import ro.polak.http.servlet.Range;
  */
 public class RangePartHeader {
 
-    private Range range;
-    private String boundary;
-    private String contentType;
-    private long totalLength;
+    private final Range range;
+    private final String boundary;
+    private final String contentType;
+    private final long totalLength;
 
     public RangePartHeader(Range range, String boundary, String contentType, long totalLength) {
         this.range = range;

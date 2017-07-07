@@ -13,8 +13,7 @@ public class ServletConfigWrapperTest {
     @Test
     public void shouldWorkSetterAndGetter() {
         ServletContextWrapper servletContextWrapper = mock(ServletContextWrapper.class);
-        ServletConfigWrapper servletConfigWrapper = new ServletConfigWrapper();
-        servletConfigWrapper.setServletContext(servletContextWrapper);
+        ServletConfigWrapper servletConfigWrapper = new ServletConfigWrapper(servletContextWrapper);
         assertThat(servletConfigWrapper.getServletContext(), is(not(nullValue())));
     }
 }

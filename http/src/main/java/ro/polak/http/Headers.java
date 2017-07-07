@@ -39,7 +39,7 @@ public class Headers {
     public static final String HEADER_CONTENT_RANGE = "Content-Range";
 
     // TreeMap is used to obtain case insensitive map
-    private Map<String, String> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private final Map<String, String> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     /**
      * Sets a header.

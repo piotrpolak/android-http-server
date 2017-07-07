@@ -18,7 +18,6 @@ import ro.polak.http.servlet.Servlet;
  */
 abstract public class AbstractServletLoader implements ServletLoader {
 
-
     @Override
     public boolean canLoadServlet(String servletPath) {
         return servletExists(getServletCanonicalName(servletPath));

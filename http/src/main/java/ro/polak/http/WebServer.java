@@ -40,15 +40,16 @@ public class WebServer extends Thread {
     public static final String VERSION = "0.1.5-dev";
     public static final String SIGNATURE = NAME + "/" + VERSION;
 
+    private final ServerSocket serverSocket;
+    private final ServerConfig serverConfig;
+
     private boolean listen;
-    private ServerSocket serverSocket;
-    private ServerConfig serverConfig;
 
     /**
      * @param serverSocket
      * @param serverConfig
      */
-    public WebServer(ServerSocket serverSocket, final ServerConfig serverConfig) {
+    public WebServer(final ServerSocket serverSocket, final ServerConfig serverConfig) {
         this.serverSocket = serverSocket;
         this.serverConfig = serverConfig;
     }

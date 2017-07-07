@@ -18,14 +18,13 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class Statistics {
 
-    private static AtomicLong bytesSend = new AtomicLong();
-    private static AtomicLong bytesReceived = new AtomicLong();
-    private static AtomicLong requestsHandled = new AtomicLong();
-    private static AtomicLong errors404 = new AtomicLong();
-    private static AtomicLong errors500 = new AtomicLong();
+    private static final AtomicLong bytesSend = new AtomicLong();
+    private static final AtomicLong bytesReceived = new AtomicLong();
+    private static final AtomicLong requestsHandled = new AtomicLong();
+    private static final AtomicLong errors404 = new AtomicLong();
+    private static final AtomicLong errors500 = new AtomicLong();
 
     private Statistics() {
-
     }
 
     /**

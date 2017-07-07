@@ -26,16 +26,18 @@ public class MainController implements Controller {
 
     private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
 
+    private final ServerGui gui;
+    private final ServerConfigFactory serverConfigFactory;
+
     private WebServer webServer;
-    private ServerGui gui;
-    private ServerConfigFactory serverConfigFactory;
 
     /**
      * Default constructor.
      */
-    public MainController(ServerConfigFactory serverConfigFactory) {
+    public MainController(final ServerConfigFactory serverConfigFactory, final ServerGui gui) {
 
         this.serverConfigFactory = serverConfigFactory;
+        this.gui = gui;
 
         Thread.currentThread().setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
@@ -44,15 +46,6 @@ public class MainController implements Controller {
                 Logger.getLogger(originalClass).log(Level.SEVERE, "Exception", ex);
             }
         });
-    }
-
-    /**
-     * Sets server GUI
-     *
-     * @param gui
-     */
-    public void setGui(final ServerGui gui) {
-        this.gui = gui;
     }
 
     @Override

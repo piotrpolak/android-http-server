@@ -43,6 +43,8 @@ import ro.polak.http.protocol.parser.impl.RequestStatusParser;
  */
 public class HttpRequestWrapperFactory {
 
+    public static final String DEFAULT_SCHEME = "http";
+
     private static final String BOUNDARY_START = "boundary=";
     private static final int URI_MAX_LENGTH = 2048;
     private static final int POST_MAX_LENGTH = 50 * 1024 * 1024;
@@ -55,7 +57,6 @@ public class HttpRequestWrapperFactory {
     private static final Parser<Map<String, String>> queryStringParser = new QueryStringParser();
     private static final Parser<RequestStatus> statusParser = new RequestStatusParser();
     private static final Parser<Map<String, Cookie>> cookieParser = new CookieParser();
-    public static final String DEFAULT_SCHEME = "http";
 
     static {
         int maxMethodLength = 0;

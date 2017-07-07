@@ -15,14 +15,14 @@ package ro.polak.http.servlet;
  */
 public class ServletConfigWrapper implements ServletConfig {
 
-    private ServletContext servletContext;
+    private final ServletContext servletContext;
 
     /**
-     * Sets the servlet context.
+     * Default constructor.
      *
      * @param servletContext
      */
-    public void setServletContext(ServletContextWrapper servletContext) {
+    public ServletConfigWrapper(ServletContextWrapper servletContext) {
         this.servletContext = servletContext;
     }
 

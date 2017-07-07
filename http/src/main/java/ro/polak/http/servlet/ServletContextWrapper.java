@@ -30,9 +30,9 @@ public class ServletContextWrapper implements ServletContext {
 
     private static final Logger LOGGER = Logger.getLogger(ServletContextWrapper.class.getName());
 
-    private ServerConfig serverConfig;
-    private SessionStorage sessionStorage;
-    private Map<String, Object> attributes;
+    private final ServerConfig serverConfig;
+    private final SessionStorage sessionStorage;
+    private final Map<String, Object> attributes;
 
     /**
      * Default constructor.

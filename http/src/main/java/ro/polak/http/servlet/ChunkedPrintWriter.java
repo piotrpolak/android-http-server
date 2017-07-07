@@ -21,8 +21,8 @@ public class ChunkedPrintWriter extends PrintWriter {
 
     // TODO Move this capability to the OutputStreamWrapper
 
-    private static String NEW_LINE = "\r\n";
-    private static String END_LINE = "0\r\n\r\n";
+    private static final String NEW_LINE = "\r\n";
+    private static final String END_LINE = "0\r\n\r\n";
 
     /**
      * Default constructor.

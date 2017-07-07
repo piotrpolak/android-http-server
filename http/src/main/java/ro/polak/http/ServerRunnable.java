@@ -50,9 +50,9 @@ public class ServerRunnable implements Runnable {
 
     private static final Logger LOGGER = Logger.getLogger(ServerRunnable.class.getName());
 
-    private ServerConfig serverConfig;
-    private Socket socket;
-    private HttpRequestWrapperFactory requestFactory;
+    private final ServerConfig serverConfig;
+    private final Socket socket;
+    private final HttpRequestWrapperFactory requestFactory;
 
     /**
      * Default constructor.
@@ -61,7 +61,7 @@ public class ServerRunnable implements Runnable {
      * @param serverConfig
      * @param requestFactory
      */
-    public ServerRunnable(Socket socket, final ServerConfig serverConfig, final HttpRequestWrapperFactory requestFactory) {
+    public ServerRunnable(final Socket socket, final ServerConfig serverConfig, final HttpRequestWrapperFactory requestFactory) {
         this.socket = socket;
         this.serverConfig = serverConfig;
         this.requestFactory = requestFactory;

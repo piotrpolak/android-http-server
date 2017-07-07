@@ -34,7 +34,6 @@ public final class Utilities {
     public static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
 
     private Utilities() {
-
     }
 
     /**

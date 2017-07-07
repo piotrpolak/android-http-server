@@ -49,8 +49,7 @@ public class DefaultCliServerGui implements ServerGui {
                 "/_//_/  /_/    /_/  /_/    /___/ \\__//_/   |___/ \\__//_/   \n");
         System.out.println("https://github.com/piotrpolak/android-http-server");
         System.out.println("");
-        MainController mainController = new MainController(getServerConfigFactory());
-        mainController.setGui(gui);
+        MainController mainController = new MainController(getServerConfigFactory(), gui);
         mainController.start();
     }
 

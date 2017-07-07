@@ -18,7 +18,6 @@ import ro.polak.http.servlet.Servlet;
  */
 public interface ServletLoader {
 
-
     /**
      * Returns true if the given servlet loader can load servlet for the given parameter
      *

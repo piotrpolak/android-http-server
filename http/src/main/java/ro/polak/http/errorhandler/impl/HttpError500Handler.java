@@ -32,7 +32,7 @@ public class HttpError500Handler extends AbstractHtmlErrorHandler {
 
         String message = "<p style=\"color: red; font-weight: bold;\">";
 
-        if (e.getMessage() != null) {
+        if (e.getMessage() != null && e.getMessage() != "") {
             message += e.getMessage() + " ";
         }
 

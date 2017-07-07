@@ -25,6 +25,17 @@ public class Statistics {
     private static AtomicLong errors500 = new AtomicLong();
 
     /**
+     * Resets all statistical values.
+     */
+    public static void reset() {
+        bytesSend.lazySet(0);
+        bytesReceived.lazySet(0);
+        requestsHandled.lazySet(0);
+        errors404.lazySet(0);
+        errors500.lazySet(0);
+    }
+
+    /**
      * Increments bytes received counter.
      *
      * @param bytes

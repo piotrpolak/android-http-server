@@ -29,7 +29,7 @@ public class Statistics {
      *
      * @param bytes
      */
-    public static synchronized void addBytesReceived(long bytes) {
+    public static void addBytesReceived(long bytes) {
         bytesReceived.addAndGet(bytes);
     }
 
@@ -38,28 +38,28 @@ public class Statistics {
      *
      * @param bytes
      */
-    public static synchronized void addBytesSent(long bytes) {
+    public static void addBytesSent(long bytes) {
         bytesSend.addAndGet(bytes);
     }
 
     /**
      * Increments requests handled counter.
      */
-    public static synchronized void incrementRequestHandled() {
+    public static void incrementRequestHandled() {
         requestsHandled.incrementAndGet();
     }
 
     /**
      * Increments 404 errors counter.
      */
-    public static synchronized void incrementError404() {
+    public static void incrementError404() {
         errors404.incrementAndGet();
     }
 
     /**
      * Increments 500 errors counter.
      */
-    public static synchronized void incrementError500() {
+    public static void incrementError500() {
         errors500.incrementAndGet();
     }
 
@@ -68,7 +68,7 @@ public class Statistics {
      *
      * @return
      */
-    public static synchronized long getBytesSent() {
+    public static long getBytesSent() {
         return bytesSend.get();
     }
 
@@ -77,7 +77,7 @@ public class Statistics {
      *
      * @return
      */
-    public static synchronized long getBytesReceived() {
+    public static long getBytesReceived() {
         return bytesReceived.get();
     }
 
@@ -86,7 +86,7 @@ public class Statistics {
      *
      * @return
      */
-    public static synchronized long getRequestsHandled() {
+    public static long getRequestsHandled() {
         return requestsHandled.get();
     }
 
@@ -95,7 +95,7 @@ public class Statistics {
      *
      * @return
      */
-    public static synchronized long getError404s() {
+    public static long getError404s() {
         return errors404.get();
     }
 
@@ -105,7 +105,7 @@ public class Statistics {
      *
      * @return
      */
-    public static synchronized long getError500s() {
+    public static long getError500s() {
         return errors500.get();
     }
 }

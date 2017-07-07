@@ -26,6 +26,19 @@ public class UploadedFileTest {
     }
 
     @Test
+    public void shouldHandleDestoryWhenFileDeletedManually() throws IOException {
+        File file = new File(tempPath + "uploadfile.pdf");
+        file.createNewFile();
+        assertThat(file.exists(), is(true));
+        UploadedFile uploadedFile = new UploadedFile("myfile", "myfile.pdf", file);
+
+        file.delete();
+
+        uploadedFile.destroy();
+        assertThat(uploadedFile.getFile().exists(), is(false));
+    }
+
+    @Test
     public void shouldNotDeleteFileThatWasMoved() throws IOException {
         File file = new File(tempPath + "uploadfile.pdf");
         file.createNewFile();

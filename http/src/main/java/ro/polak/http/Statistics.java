@@ -11,18 +11,22 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Statistics class used to gather statistical data for the GUI.
- *
+ * <p>
  * The implementation relies on AtomicLong and it is thread safe.
  *
  * @author Piotr Polak
  */
-public class Statistics {
+public final class Statistics {
 
     private static AtomicLong bytesSend = new AtomicLong();
     private static AtomicLong bytesReceived = new AtomicLong();
     private static AtomicLong requestsHandled = new AtomicLong();
     private static AtomicLong errors404 = new AtomicLong();
     private static AtomicLong errors500 = new AtomicLong();
+
+    private Statistics() {
+
+    }
 
     /**
      * Resets all statistical values.

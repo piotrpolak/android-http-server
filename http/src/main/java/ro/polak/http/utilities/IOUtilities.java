@@ -16,16 +16,20 @@ import java.io.IOException;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201702
  */
-public class IOUtilities {
+public final class IOUtilities {
+
+    private IOUtilities() {
+
+    }
 
     /**
      * Closes stream silently.
      *
-     * @param stream
+     * @param closeable
      */
-    public static void closeSilently(Closeable stream) {
+    public static void closeSilently(Closeable closeable) {
         try {
-            stream.close();
+            closeable.close();
         } catch (IOException e) {
             // Keep it silent
         }

@@ -7,8 +7,6 @@
 
 package ro.polak.http.exception;
 
-import java.io.UnsupportedEncodingException;
-
 /**
  * Generic unrecoverable runtime exception.
  */
@@ -17,7 +15,7 @@ public class UnexpectedSituationException extends RuntimeException {
         super(message);
     }
 
-    public UnexpectedSituationException(String message, UnsupportedEncodingException e) {
+    public UnexpectedSituationException(String message, Throwable e) {
         super(message, e);
     }
 }

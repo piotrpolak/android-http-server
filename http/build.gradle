@@ -30,3 +30,9 @@ jacocoTestReport {
 }
 
 check.dependsOn jacocoTestReport
+
+jar  {
+    manifest {
+        attributes 'Main-Class': 'ro.polak.http.gui.impl.DefaultCliServerGui'
+    }
+}

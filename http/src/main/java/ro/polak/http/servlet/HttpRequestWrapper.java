@@ -45,6 +45,7 @@ public class HttpRequestWrapper implements HttpServletRequest {
     public final static String METHOD_POST = "POST";
     public final static String METHOD_PUT = "PUT";
     public final static String METHOD_TRACE = "TRACE";
+    public final static String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
 
     private Map<String, String> postParameters;
     private Map<String, String> getParameters;
@@ -72,7 +73,11 @@ public class HttpRequestWrapper implements HttpServletRequest {
     private String serverName;
     private String scheme;
     private boolean isSecure;
-    public static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
+    private String pathTranslated;
+    private String contextPath;
+    private String pathInfo;
+    private String remoteUser;
+    private Principal principal;
 
     /**
      * Default constructor
@@ -351,14 +356,8 @@ public class HttpRequestWrapper implements HttpServletRequest {
     }
 
     @Override
-    public HttpSessionWrapper getSession(boolean create) {
-        if (!sessionWasRequested) {
-            sessionWasRequested = true;
-            String sessionId = getRequestedSessionId();
-            if (sessionId != null) {
-                session = servletContext.getSession(sessionId);
-            }
-        }
+    public HttpSession getSession(boolean create) {
+        getSessionInstance();
 
         if (session == null && create) {
             session = servletContext.createNewSession();
@@ -371,8 +370,20 @@ public class HttpRequestWrapper implements HttpServletRequest {
         return session;
     }
 
+    private HttpSession getSessionInstance() {
+        if (!sessionWasRequested) {
+            sessionWasRequested = true;
+            String sessionId = getRequestedSessionId();
+            if (sessionId != null) {
+                session = servletContext.getSession(sessionId);
+            }
+        }
+
+        return session;
+    }
+
     @Override
-    public HttpSessionWrapper getSession() {
+    public HttpSession getSession() {
         return getSession(true);
     }
 
@@ -383,27 +394,27 @@ public class HttpRequestWrapper implements HttpServletRequest {
 
     @Override
     public String getContextPath() {
-        return "/";
+        return contextPath;
     }
 
     @Override
     public String getPathTranslated() {
-        throw new IllegalStateException("Not implemented");
+        return pathTranslated;
     }
 
     @Override
     public String getPathInfo() {
-        throw new IllegalStateException("Not implemented");
+        return pathInfo;
     }
 
     @Override
     public String getRemoteUser() {
-        throw new IllegalStateException("Not implemented");
+        return remoteUser;
     }
 
     @Override
     public Principal getUserPrincipal() {
-        throw new IllegalStateException("Not implemented");
+        return principal;
     }
 
     @Override
@@ -418,12 +429,12 @@ public class HttpRequestWrapper implements HttpServletRequest {
 
     @Override
     public boolean isRequestedSessionIdValid() {
-        throw new IllegalStateException("Not implemented");
+        return getSessionInstance() != null;
     }
 
     @Override
     public boolean isUserInRole(String role) {
-        throw new IllegalStateException("Not implemented");
+        return false; // Not really implemented
     }
 
     /**
@@ -505,6 +516,26 @@ public class HttpRequestWrapper implements HttpServletRequest {
 
     public void setMultipart(boolean multipart) {
         isMultipart = multipart;
+    }
+
+    public void setPathTranslated(String pathTranslated) {
+        this.pathTranslated = pathTranslated;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    public void setPathInfo(String pathInfo) {
+        this.pathInfo = pathInfo;
+    }
+
+    public void setRemoteUser(String remoteUser) {
+        this.remoteUser = remoteUser;
+    }
+
+    public void setPrincipal(Principal principal) {
+        this.principal = principal;
     }
 
     /**

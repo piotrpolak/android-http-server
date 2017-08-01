@@ -41,6 +41,15 @@ public class Index extends HttpServlet {
         printWriter.println("<p>Request is secure: " + request.isSecure() + "</p>");
         printWriter.println("<p>Request URI: " + request.getRequestURI() + "</p>");
         printWriter.println("<p>Request URL: " + request.getRequestURL() + "</p>");
+        printWriter.println("<p>Auth type: " + request.getAuthType() + "</p>");
+        printWriter.println("<p>Context path: " + request.getContextPath() + "</p>");
+        printWriter.println("<p>Path translated: " + request.getPathTranslated() + "</p>");
+        printWriter.println("<p>Path info: " + request.getPathInfo() + "</p>");
+        printWriter.println("<p>Remote user: " + request.getRemoteUser() + "</p>");
+        printWriter.println("<p>User principal: " + request.getUserPrincipal() + "</p>");
+        printWriter.println("<p>Is requested session id from cookie: " + request.isRequestedSessionIdFromCookie() + "</p>");
+        printWriter.println("<p>Is requested session id from URL: " + request.isRequestedSessionIdFromURL() + "</p>");
+        printWriter.println("<p>Is requested session id valid " + request.isRequestedSessionIdValid() + "</p>");
         printWriter.println("<ul>");
         printWriter.println("<li><a href='Session.dhtml'>Session example</a></li>");
         printWriter.println("<li><a href='Cookies.dhtml'>Cookies example</a></li>");

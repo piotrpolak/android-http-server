@@ -45,6 +45,8 @@ public interface HttpServletRequest extends ServletRequest {
     /**
      * Returns any extra path information associated with the URL the client sent when it made this request.
      *
+     * @see https://stackoverflow.com/questions/4931323/whats-the-difference-between-getrequesturi-and-getpathinfo-methods-in-httpservl
+     *
      * @return
      */
     String getPathInfo();
@@ -176,14 +178,14 @@ public interface HttpServletRequest extends ServletRequest {
      * @param create
      * @return
      */
-    HttpSessionWrapper getSession(boolean create);
+    HttpSession getSession(boolean create);
 
     /**
      * Returns session associated with this request. Creates a new session if missing
      *
      * @return
      */
-    HttpSessionWrapper getSession();
+    HttpSession getSession();
 
     /**
      * @return collection of UploadedFiles for multipart request

@@ -111,6 +111,11 @@ public class HttpServletRequestWrapperFactory {
         request.setInputStream(in);
         assignSocketMetadata(socket, request);
         request.setStatus(status);
+        request.setPathTranslated(getClass().getProtectionDomain().getCodeSource().getLocation().getPath() + request.getRequestURI().substring(1));
+        request.setContextPath("/");
+        request.setPathInfo("");
+        request.setRemoteUser(null);
+        request.setPrincipal(null);
 
         try {
             request.setGetParameters(queryStringParser.parse(status.getQueryString()));

@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ro.polak.http.ServerConfig;
-import ro.polak.http.servlet.HttpSessionWrapper;
+import ro.polak.http.servlet.HttpSession;
 import ro.polak.http.utilities.ConfigReader;
 
 public class AccessControl {
@@ -23,7 +23,7 @@ public class AccessControl {
     private static final Logger LOGGER = Logger.getLogger(AccessControl.class.getName());
 
     private ServerConfig serverConfig;
-    private HttpSessionWrapper session;
+    private HttpSession session;
 
 
     /**
@@ -32,7 +32,7 @@ public class AccessControl {
      * @param serverConfig
      * @param session
      */
-    public AccessControl(ServerConfig serverConfig, HttpSessionWrapper session) {
+    public AccessControl(ServerConfig serverConfig, HttpSession session) {
         this.serverConfig = serverConfig;
         this.session = session;
     }

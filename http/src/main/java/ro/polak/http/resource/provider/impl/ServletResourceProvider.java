@@ -102,7 +102,7 @@ public class ServletResourceProvider implements ResourceProvider {
     private void terminate(HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
         freeUploadedUnprocessedFiles(request.getUploadedFiles());
 
-        HttpSessionWrapper session = request.getSession(false);
+        HttpSessionWrapper session = (HttpSessionWrapper) request.getSession(false);
         if (session != null) {
             try {
                 servletContext.handleSession(session, response);

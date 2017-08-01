@@ -14,7 +14,7 @@ import java.util.Enumeration;
  *
  * @url https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/http/HttpSession.html
  */
-interface HttpSession {
+public interface HttpSession {
 
     /**
      * Sets session attribute.

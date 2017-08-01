@@ -49,15 +49,13 @@ public class HttpResponseWrapper implements HttpServletResponse {
     private boolean isCommitted;
     private List<Cookie> cookies;
     private String status;
+    private int bufferSize = 1024;
 
     /**
      * Default constructor.
      */
     public HttpResponseWrapper() {
-        headers = new Headers();
-        setKeepAlive(false);
-        isCommitted = false;
-        cookies = new ArrayList<>();
+        reset();
     }
 
     @Override
@@ -77,7 +75,11 @@ public class HttpResponseWrapper implements HttpServletResponse {
 
     @Override
     public void reset() {
-        throw new IllegalStateException("Not implemented");
+        headers = new Headers();
+        setKeepAlive(false);
+        isCommitted = false;
+        cookies = new ArrayList<>();
+//        resetBuffer();
     }
 
     @Override
@@ -86,8 +88,8 @@ public class HttpResponseWrapper implements HttpServletResponse {
     }
 
     @Override
-    public void setBufferSize(int size) {
-        throw new IllegalStateException("Not implemented");
+    public void setBufferSize(int bufferSize) {
+        this.bufferSize = bufferSize;
     }
 
     @Override
@@ -118,7 +120,7 @@ public class HttpResponseWrapper implements HttpServletResponse {
 
     @Override
     public int getBufferSize() {
-        throw new IllegalStateException("Not implemented");
+        return bufferSize;
     }
 
     @Override

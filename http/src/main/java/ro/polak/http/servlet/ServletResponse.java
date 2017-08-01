@@ -8,6 +8,7 @@
 package ro.polak.http.servlet;
 
 import java.io.PrintWriter;
+import java.util.Locale;
 
 /**
  * Servlet response
@@ -48,7 +49,7 @@ public interface ServletResponse {
      *
      * @return
      */
-    java.util.Locale getLocale();
+    Locale getLocale();
 
     /**
      * Returns a ServletOutputStream suitable for writing binary data in the response.
@@ -115,5 +116,5 @@ public interface ServletResponse {
      *
      * @param loc
      */
-    void setLocale(java.util.Locale loc);
+    void setLocale(Locale loc);
 }

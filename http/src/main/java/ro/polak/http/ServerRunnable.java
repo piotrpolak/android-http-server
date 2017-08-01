@@ -102,6 +102,9 @@ public class ServerRunnable implements Runnable {
                 if (response != null) {
                     getHandler(e).serve(response);
                 }
+
+                throw e; // Make it logged by the main thread
+
             } finally {
                 if (socket != null) {
                     IOUtilities.closeSilently(socket);

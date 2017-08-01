@@ -7,17 +7,18 @@
 
 package example;
 
-import ro.polak.http.servlet.HttpRequest;
-import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServlet;
 
 /**
  * Session usage example page
  */
-public class Session extends Servlet {
+public class Session extends HttpServlet {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
         // Saving session attribute name in a variable for convenience
         String attributeName = "pageHits";
@@ -38,10 +39,10 @@ public class Session extends Servlet {
         request.getSession().setAttribute(attributeName, Integer.toString(pageHits));
 
         // Printing out the result
-        response.getPrintWriter().println("<p>Session page hits: " + pageHits + "</p>");
-        response.getPrintWriter().println("<p>Session is new: " + request.getSession().isNew() + "</p>");
-        response.getPrintWriter().println("<p>Session creation time: " + request.getSession().getCreationTime() + "</p>");
-        response.getPrintWriter().println("<p>Session last accessed time: " + request.getSession().getLastAccessedTime() + "</p>");
-        response.getPrintWriter().println("<p>Session max inactive interval in seconds: " + request.getSession().getMaxInactiveInterval() + "</p>");
+        response.getWriter().println("<p>Session page hits: " + pageHits + "</p>");
+        response.getWriter().println("<p>Session is new: " + request.getSession().isNew() + "</p>");
+        response.getWriter().println("<p>Session creation time: " + request.getSession().getCreationTime() + "</p>");
+        response.getWriter().println("<p>Session last accessed time: " + request.getSession().getLastAccessedTime() + "</p>");
+        response.getWriter().println("<p>Session max inactive interval in seconds: " + request.getSession().getMaxInactiveInterval() + "</p>");
     }
 }

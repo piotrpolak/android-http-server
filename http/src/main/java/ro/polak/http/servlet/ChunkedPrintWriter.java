@@ -19,7 +19,7 @@ import java.io.PrintWriter;
  */
 public class ChunkedPrintWriter extends PrintWriter {
 
-    // TODO Move this capability to the OutputStreamWrapper
+    // TODO Move this capability to the ServletOutputStreamWrapper
 
     private static final String NEW_LINE = "\r\n";
     private static final String END_LINE = "0\r\n\r\n";

@@ -8,7 +8,7 @@
 package ro.polak.http.errorhandler.impl;
 
 import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 
 /**
  * 416 Requested Range Not Satisfiable
@@ -19,6 +19,6 @@ import ro.polak.http.servlet.HttpResponse;
 public class HttpError416Handler extends AbstractPlainTextHttpErrorHandler {
 
     public HttpError416Handler() {
-        super(HttpResponse.STATUS_RANGE_NOT_SATISFIABLE, "Error 416 Range Not Satisfiable");
+        super(HttpServletResponse.STATUS_RANGE_NOT_SATISFIABLE, "Error 416 Range Not Satisfiable");
     }
 }

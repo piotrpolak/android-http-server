@@ -11,15 +11,16 @@ import java.io.File;
 import java.util.StringTokenizer;
 
 import ro.polak.http.ServerConfig;
-import ro.polak.http.servlet.HttpRequest;
-import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.utilities.Utilities;
 
-public class DriveAccess extends Servlet {
+public class DriveAccess extends HttpServlet {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
         AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
@@ -55,7 +56,7 @@ public class DriveAccess extends Servlet {
             renderAvailableRoots(doc, roots);
         }
 
-        response.getPrintWriter().print(doc.toString());
+        response.getWriter().print(doc.toString());
     }
 
     private void renderPathNotAvailable(HTMLDocument doc) {
@@ -106,10 +107,10 @@ public class DriveAccess extends Servlet {
         }
     }
 
-    private void renderFunctionDisabled(HttpResponse response, HTMLDocument doc) {
+    private void renderFunctionDisabled(HttpServletResponse response, HTMLDocument doc) {
         doc.writeln("<div class=\"alert alert-warning\" role=\"alert\">Drive Access option has been disabled in configuration.</div>");
         doc.writeln("<p>See <b>httpd.conf</b>, parameter <b>_managementEnableDriveAccess</b> must be <b>On</b>.</p>");
-        response.getPrintWriter().print(doc.toString());
+        response.getWriter().print(doc.toString());
     }
 
     private void renderDrives(HTMLDocument doc, File[] roots) {

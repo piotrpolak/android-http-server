@@ -34,9 +34,9 @@ import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
 import ro.polak.http.protocol.exception.UnsupportedProtocolException;
 import ro.polak.http.protocol.exception.UriTooLongProtocolException;
 import ro.polak.http.resource.provider.ResourceProvider;
-import ro.polak.http.servlet.HttpRequest;
+import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpRequestWrapperFactory;
+import ro.polak.http.servlet.HttpServletRequestWrapperFactory;
 import ro.polak.http.servlet.HttpResponseWrapper;
 import ro.polak.http.utilities.IOUtilities;
 
@@ -52,7 +52,7 @@ public class ServerRunnable implements Runnable {
 
     private final ServerConfig serverConfig;
     private final Socket socket;
-    private final HttpRequestWrapperFactory requestFactory;
+    private final HttpServletRequestWrapperFactory requestFactory;
 
     /**
      * Default constructor.
@@ -61,7 +61,7 @@ public class ServerRunnable implements Runnable {
      * @param serverConfig
      * @param requestFactory
      */
-    public ServerRunnable(final Socket socket, final ServerConfig serverConfig, final HttpRequestWrapperFactory requestFactory) {
+    public ServerRunnable(final Socket socket, final ServerConfig serverConfig, final HttpServletRequestWrapperFactory requestFactory) {
         this.socket = socket;
         this.serverConfig = serverConfig;
         this.requestFactory = requestFactory;
@@ -268,7 +268,7 @@ public class ServerRunnable implements Runnable {
      *
      * @param request
      */
-    private void validateRequest(HttpRequest request) {
+    private void validateRequest(HttpServletRequest request) {
         if (!isMethodSupported(request.getMethod())) {
             throw new MethodNotAllowedException();
         }

@@ -8,7 +8,7 @@
 package ro.polak.http.errorhandler.impl;
 
 import ro.polak.http.errorhandler.AbstractHtmlErrorHandler;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 
 /**
  * 500 Internal Server Error HTTP error handler
@@ -19,7 +19,7 @@ import ro.polak.http.servlet.HttpResponse;
 public class HttpError500Handler extends AbstractHtmlErrorHandler {
 
     public HttpError500Handler() {
-        super(HttpResponse.STATUS_INTERNAL_SERVER_ERROR, "Error 500 - The server made a boo boo",
+        super(HttpServletResponse.STATUS_INTERNAL_SERVER_ERROR, "Error 500 - The server made a boo boo",
                 "<p>No further details are provided</p>", null);
     }
 

@@ -8,7 +8,7 @@
 package ro.polak.http.errorhandler.impl;
 
 import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 
 /**
  * 503 Service Unavailable HTTP error handler
@@ -19,6 +19,6 @@ import ro.polak.http.servlet.HttpResponse;
 public class HttpError503Handler extends AbstractPlainTextHttpErrorHandler {
 
     public HttpError503Handler() {
-        super(HttpResponse.STATUS_SERVICE_UNAVAILABLE, "Error 503 - Service Unavailable");
+        super(HttpServletResponse.STATUS_SERVICE_UNAVAILABLE, "Error 503 - Service Unavailable");
     }
 }

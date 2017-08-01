@@ -11,16 +11,17 @@ import java.io.File;
 import java.util.Collection;
 
 import ro.polak.http.ServerConfig;
-import ro.polak.http.servlet.HttpRequest;
-import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.UploadedFile;
 import ro.polak.http.utilities.Utilities;
 
-public class UpdateConfiguration extends Servlet {
+public class UpdateConfiguration extends HttpServlet {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
         AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
@@ -31,10 +32,10 @@ public class UpdateConfiguration extends Servlet {
         String message = handleFileUpload(request);
 
         HTMLDocument doc = renderDocument(message);
-        response.getPrintWriter().print(doc.toString());
+        response.getWriter().print(doc.toString());
     }
 
-    private String handleFileUpload(HttpRequest request) {
+    private String handleFileUpload(HttpServletRequest request) {
         String message;
         UploadedFile uploadedFile = getUploadedFile("file", request.getUploadedFiles());
 

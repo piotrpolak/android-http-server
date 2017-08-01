@@ -15,9 +15,10 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ro.polak.http.Headers;
-import ro.polak.http.OutputStreamWrapper;
+import ro.polak.http.ServletOutputStreamWrapper;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.protocol.serializer.impl.CookieHeaderSerializer;
 import ro.polak.http.protocol.serializer.impl.HeadersSerializer;
@@ -29,7 +30,7 @@ import ro.polak.http.utilities.IOUtilities;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class HttpResponseWrapper implements HttpResponse {
+public class HttpResponseWrapper implements HttpServletResponse {
 
     private static final String NEW_LINE = "\r\n";
     private static final String TRANSFER_ENCODING_CHUNKED = "chunked";
@@ -43,7 +44,7 @@ public class HttpResponseWrapper implements HttpResponse {
 
     private Headers headers;
     private OutputStream outputStream;
-    private OutputStream wrappedOutputStream;
+    private ServletOutputStream wrappedOutputStream;
     private ChunkedPrintWriter printWriter;
     private boolean isCommitted;
     private List<Cookie> cookies;
@@ -75,8 +76,28 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     @Override
+    public void reset() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public void resetBuffer() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public void setBufferSize(int size) {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public void setCharacterEncoding(String charset) {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
     public void sendRedirect(String location) {
-        this.setStatus(HttpResponse.STATUS_MOVED_PERMANENTLY);
+        this.setStatus(HttpServletResponse.STATUS_MOVED_PERMANENTLY);
         headers.setHeader(Headers.HEADER_LOCATION, location);
     }
 
@@ -86,8 +107,33 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     @Override
+    public void setLocale(Locale loc) {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public void flushBuffer() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public int getBufferSize() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public String getCharacterEncoding() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
     public String getContentType() {
         return headers.getHeader(Headers.HEADER_CONTENT_TYPE);
+    }
+
+    @Override
+    public Locale getLocale() {
+        throw new IllegalStateException("Not implemented");
     }
 
     @Override
@@ -116,7 +162,7 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     @Override
-    public PrintWriter getPrintWriter() {
+    public PrintWriter getWriter() {
         if (printWriter == null) {
             printWriter = new ChunkedPrintWriter(wrappedOutputStream);
         }
@@ -125,7 +171,7 @@ public class HttpResponseWrapper implements HttpResponse {
     }
 
     @Override
-    public OutputStream getOutputStream() {
+    public ServletOutputStream getOutputStream() {
         return wrappedOutputStream;
     }
 
@@ -138,7 +184,7 @@ public class HttpResponseWrapper implements HttpResponse {
     public static HttpResponseWrapper createFromSocket(Socket socket) throws IOException {
         HttpResponseWrapper response = new HttpResponseWrapper();
         response.outputStream = socket.getOutputStream();
-        response.wrappedOutputStream = new OutputStreamWrapper(socket.getOutputStream(), response);
+        response.wrappedOutputStream = new ServletOutputStreamWrapper(socket.getOutputStream(), response);
         return response;
     }
 

@@ -8,7 +8,7 @@
 package ro.polak.http.errorhandler.impl;
 
 import ro.polak.http.errorhandler.AbstractHtmlErrorHandler;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 
 /**
  * 404 File Not Found HTTP error handler
@@ -19,7 +19,7 @@ import ro.polak.http.servlet.HttpResponse;
 public class HttpError404Handler extends AbstractHtmlErrorHandler {
 
     public HttpError404Handler(String errorDocumentPath) {
-        super(HttpResponse.STATUS_NOT_FOUND, "Error 404 - File Not Found",
+        super(HttpServletResponse.STATUS_NOT_FOUND, "Error 404 - File Not Found",
                 "<p>The server has not found anything matching the specified URL.</p>",
                 errorDocumentPath);
     }

@@ -12,8 +12,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ro.polak.http.exception.ServletException;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
 import ro.polak.http.utilities.IOUtilities;
 
@@ -36,7 +35,7 @@ public abstract class AbstractHtmlErrorHandler extends AbstractPlainTextHttpErro
     }
 
     @Override
-    public void serve(HttpResponse response) throws IOException {
+    public void serve(HttpServletResponse response) throws IOException {
         response.setStatus(status);
         response.setContentType("text/html");
 
@@ -47,22 +46,22 @@ public abstract class AbstractHtmlErrorHandler extends AbstractPlainTextHttpErro
             if (file.exists()) {
                 serveFile(response, file);
             } else {
-                throw new ServletException(status + " occurred, specified error handler (" + errorDocumentPath + ") was not found.");
+                throw new IOException(status + " occurred, specified error handler (" + errorDocumentPath + ") was not found.");
             }
         }
     }
 
-    private void serveDocument(HttpResponse response) throws IOException {
+    private void serveDocument(HttpServletResponse response) throws IOException {
         HtmlErrorDocument doc = new HtmlErrorDocument();
         doc.setTitle(message);
         doc.setMessage(explanation);
         String msg = doc.toString();
 
-        response.getPrintWriter().write(msg);
+        response.getWriter().write(msg);
         ((HttpResponseWrapper) response).flush();
     }
 
-    private void serveFile(HttpResponse response, File file) throws IOException {
+    private void serveFile(HttpServletResponse response, File file) throws IOException {
         response.setContentLength(file.length());
         ((HttpResponseWrapper) response).flushHeaders();
         InputStream inputStream = new FileInputStream(file);

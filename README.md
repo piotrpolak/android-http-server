@@ -48,15 +48,15 @@ Hello World servlet
 ```java
 package example;
 
-import ro.polak.webserver.servlet.HttpRequest;
-import ro.polak.webserver.servlet.HttpResponse;
-import ro.polak.webserver.servlet.Servlet;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServlet;
 
-public class HelloWorld extends Servlet {
+public class HelloWorld extends HttpServlet {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
-        response.getPrintWriter().print("Hello World!");
+    public void service(HttpServletRequest request, HttpServletResponse response) {
+        response.getWriter().print("Hello World!");
     }
 }
 ```

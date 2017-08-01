@@ -8,17 +8,18 @@
 package example;
 
 import ro.polak.http.exception.AccessDeniedException;
-import ro.polak.http.servlet.HttpRequest;
-import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServlet;
 
 /**
  * Forbidden page example
  */
-public class Forbidden extends Servlet {
+public class Forbidden extends HttpServlet {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         throw new AccessDeniedException();
     }
 }

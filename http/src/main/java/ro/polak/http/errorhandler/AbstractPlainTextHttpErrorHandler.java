@@ -9,7 +9,7 @@ package ro.polak.http.errorhandler;
 
 import java.io.IOException;
 
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
 
 /**
@@ -29,10 +29,10 @@ public abstract class AbstractPlainTextHttpErrorHandler implements HttpErrorHand
     }
 
     @Override
-    public void serve(HttpResponse response) throws IOException {
+    public void serve(HttpServletResponse response) throws IOException {
         response.setStatus(status);
         response.setContentType("text/plain");
-        response.getPrintWriter().write(message);
+        response.getWriter().write(message);
         ((HttpResponseWrapper) response).flush();
     }
 }

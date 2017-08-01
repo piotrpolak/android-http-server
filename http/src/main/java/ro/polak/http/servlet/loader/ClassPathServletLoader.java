@@ -8,7 +8,7 @@
 package ro.polak.http.servlet.loader;
 
 import ro.polak.http.exception.ServletInitializationException;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.servlet.HttpServlet;
 
 /**
  * Loads and rolls servlets on Android.
@@ -31,9 +31,9 @@ public class ClassPathServletLoader extends AbstractServletLoader {
     }
 
     @Override
-    protected Servlet instantiateServlet(String classCanonicalName) throws ServletInitializationException {
+    protected HttpServlet instantiateServlet(String classCanonicalName) throws ServletInitializationException {
         try {
-            return (Servlet) Class.forName(classCanonicalName).newInstance();
+            return (HttpServlet) Class.forName(classCanonicalName).newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             throw new ServletInitializationException(e);
         }

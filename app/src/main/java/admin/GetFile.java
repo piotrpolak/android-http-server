@@ -14,15 +14,16 @@ import java.io.OutputStream;
 
 import ro.polak.http.Headers;
 import ro.polak.http.ServerConfig;
-import ro.polak.http.servlet.HttpRequest;
-import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.utilities.Utilities;
 
-public class GetFile extends Servlet {
+public class GetFile extends HttpServlet {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
         AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
@@ -31,7 +32,7 @@ public class GetFile extends Servlet {
         }
 
         if (!AccessControl.getConfig(serverConfig).get("_managementEnableDriveAccess").equals("On")) {
-            response.getPrintWriter().println("Option disabled in configuration.");
+            response.getWriter().println("Option disabled in configuration.");
             return;
         }
 
@@ -46,12 +47,12 @@ public class GetFile extends Servlet {
         }
 
         if (!fileExists) {
-            response.setStatus(HttpResponse.STATUS_NOT_FOUND);
-            response.getPrintWriter().print("File does not exist.");
+            response.setStatus(HttpServletResponse.STATUS_NOT_FOUND);
+            response.getWriter().print("File does not exist.");
         }
     }
 
-    private void serveFile(File file, HttpResponse response) {
+    private void serveFile(File file, HttpServletResponse response) {
         response.setContentType(getServletContext().getMimeType(file.getName()));
         response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename="
                 + Utilities.urlEncode(file.getName()));

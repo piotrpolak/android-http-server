@@ -11,13 +11,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.ServletOutputStream;
 
 /**
  * Adds possibility flush headers capability to the ordinary output stream.
  *
  * @since 201611
  */
-public class OutputStreamWrapper extends OutputStream {
+public class ServletOutputStreamWrapper extends ServletOutputStream {
 
     private final OutputStream outputStream;
     private final HttpResponseWrapper response;
@@ -28,7 +29,7 @@ public class OutputStreamWrapper extends OutputStream {
      * @param outputStream
      * @param httpResponse
      */
-    public OutputStreamWrapper(final OutputStream outputStream, final HttpResponseWrapper httpResponse) {
+    public ServletOutputStreamWrapper(final OutputStream outputStream, final HttpResponseWrapper httpResponse) {
         this.outputStream = outputStream;
         this.response = httpResponse;
     }

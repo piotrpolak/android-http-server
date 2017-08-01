@@ -15,17 +15,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ro.polak.http.servlet.HttpRequest;
-import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServlet;
 
 /**
  * SMS Inbox method API endpoint
  */
-public class SmsInbox extends Servlet {
+public class SmsInbox extends HttpServlet {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
         // Setting appropriate response type
         response.setContentType("text/json");
@@ -74,7 +75,7 @@ public class SmsInbox extends Servlet {
 
         try {
             String jsonResponse = new APIResponse(APIResponse.CODE_OK, "OK", result).toString();
-            response.getPrintWriter().print(jsonResponse);
+            response.getWriter().print(jsonResponse);
         } catch (JSONException e) {
             // TODO Throw servlet response
         }

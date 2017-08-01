@@ -14,17 +14,18 @@ import android.telephony.SmsManager;
 
 import org.json.JSONException;
 
-import ro.polak.http.servlet.HttpRequest;
-import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServlet;
 
 /**
  * SMS Send method API endpoint
  */
-public class SmsSend extends Servlet {
+public class SmsSend extends HttpServlet {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
         // Setting appropriate response type
         response.setContentType("text/json");
@@ -40,7 +41,7 @@ public class SmsSend extends Servlet {
         if (to == null) {
             try {
                 jsonResponse = new APIResponse(APIResponse.CODE_ERROR, "Post parameter to is not set").toString();
-                response.getPrintWriter().print(jsonResponse);
+                response.getWriter().print(jsonResponse);
             } catch (JSONException e) {
                 // TODO Throw servlet response
             }
@@ -50,7 +51,7 @@ public class SmsSend extends Servlet {
         if (message == null) {
             try {
                 jsonResponse = new APIResponse(APIResponse.CODE_ERROR, "Post parameter message is not set").toString();
-                response.getPrintWriter().print(jsonResponse);
+                response.getWriter().print(jsonResponse);
             } catch (JSONException e) {
                 // TODO Throw servlet response
             }
@@ -61,7 +62,7 @@ public class SmsSend extends Servlet {
         if (message.length() > 160) {
             try {
                 jsonResponse = new APIResponse(APIResponse.CODE_ERROR, "Parameter message too long").toString();
-                response.getPrintWriter().print(jsonResponse);
+                response.getWriter().print(jsonResponse);
             } catch (JSONException e) {
                 // TODO Throw servlet response
             }
@@ -72,7 +73,7 @@ public class SmsSend extends Servlet {
         if (to.length() < 9) {
             try {
                 jsonResponse = new APIResponse(APIResponse.CODE_ERROR, "Parameter to too short").toString();
-                response.getPrintWriter().print(jsonResponse);
+                response.getWriter().print(jsonResponse);
             } catch (JSONException e) {
                 // TODO Throw servlet response
             }
@@ -88,13 +89,13 @@ public class SmsSend extends Servlet {
 
         // Demo, skipping sending the message
         if (test != null && test.equals("1")) {
-            response.getPrintWriter().print(jsonResponse);
+            response.getWriter().print(jsonResponse);
             return;
         }
 
         // Sending a real message
         sendSMS(to, message);
-        response.getPrintWriter().print(jsonResponse);
+        response.getWriter().print(jsonResponse);
     }
 
     private void sendSMS(String phoneNo, String message) {

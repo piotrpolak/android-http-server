@@ -9,6 +9,7 @@ package ro.polak.http.servlet;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -32,7 +33,7 @@ import static java.util.TimeZone.getTimeZone;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class HttpRequestWrapper implements HttpRequest {
+public class HttpRequestWrapper implements HttpServletRequest {
 
     public final static String METHOD_CONNECT = "CONNECT";
     public final static String METHOD_DELETE = "DELETE";
@@ -373,6 +374,56 @@ public class HttpRequestWrapper implements HttpRequest {
     @Override
     public HttpSessionWrapper getSession() {
         return getSession(true);
+    }
+
+    @Override
+    public String getAuthType() {
+        return null;
+    }
+
+    @Override
+    public String getContextPath() {
+        return "/";
+    }
+
+    @Override
+    public String getPathTranslated() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public String getPathInfo() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public String getRemoteUser() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public Principal getUserPrincipal() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public boolean isRequestedSessionIdFromCookie() {
+        return true; // Hardcoded, only cookie implementation exists
+    }
+
+    @Override
+    public boolean isRequestedSessionIdFromURL() {
+        return false; // Hardcoded, only cookie implementation exists
+    }
+
+    @Override
+    public boolean isRequestedSessionIdValid() {
+        throw new IllegalStateException("Not implemented");
+    }
+
+    @Override
+    public boolean isUserInRole(String role) {
+        throw new IllegalStateException("Not implemented");
     }
 
     /**

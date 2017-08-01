@@ -7,8 +7,6 @@
 
 package ro.polak.http.servlet;
 
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.List;
 
 import ro.polak.http.Headers;
@@ -19,7 +17,7 @@ import ro.polak.http.Headers;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201610
  */
-public interface HttpResponse {
+public interface HttpServletResponse extends ServletResponse {
 
     String STATUS_OK = "HTTP/1.1 200 OK";
     String STATUS_PARTIAL_CONTENT = "HTTP/1.1 206 Partial Content";
@@ -51,14 +49,6 @@ public interface HttpResponse {
      * @return
      */
     List<Cookie> getCookies();
-
-    /**
-     * Returns a boolean indicating if the response has been committed. A
-     * committed response has already had its status code and headers written.
-     *
-     * @return a boolean indicating if the response has been committed
-     */
-    boolean isCommitted();
 
     /**
      * Redirects the request to the specified location.
@@ -115,18 +105,4 @@ public interface HttpResponse {
      * @param status status code and message
      */
     void setStatus(String status);
-
-    /**
-     * Returns request print writer
-     *
-     * @return request print writer
-     */
-    PrintWriter getPrintWriter();
-
-    /**
-     * Returns the output stream.
-     *
-     * @return
-     */
-    OutputStream getOutputStream();
 }

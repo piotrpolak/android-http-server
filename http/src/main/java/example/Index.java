@@ -9,18 +9,19 @@ package example;
 
 import java.io.PrintWriter;
 
-import ro.polak.http.servlet.HttpRequest;
-import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServlet;
 
 /**
  * Hello page example page
  */
-public class Index extends Servlet {
+public class Index extends HttpServlet {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
-        PrintWriter printWriter = response.getPrintWriter();
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        PrintWriter printWriter = response.getWriter();
         printWriter.println("<h1>Hello World!</h1>");
         printWriter.println("<p>Demo servlet page.</p>");
         printWriter.println("<p>Character encoding: " + request.getCharacterEncoding() + "</p>");

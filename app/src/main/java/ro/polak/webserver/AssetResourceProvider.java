@@ -15,7 +15,7 @@ import java.io.InputStream;
 
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
 
 /**
@@ -48,7 +48,7 @@ public class AssetResourceProvider implements ResourceProvider {
         try {
             InputStream inputStream = assetManager.open(assetPath);
 
-            response.setStatus(HttpResponse.STATUS_OK);
+            response.setStatus(HttpServletResponse.STATUS_OK);
 
             // This must be done in a separate try catch block as some assets do not have a FD
             try (AssetFileDescriptor afd = assetManager.openFd(assetPath)) {

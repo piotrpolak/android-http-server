@@ -8,7 +8,7 @@
 package ro.polak.http.servlet.loader;
 
 import ro.polak.http.exception.ServletInitializationException;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.servlet.HttpServlet;
 
 /**
  * Provides common methods for servlet service drivers.
@@ -24,7 +24,7 @@ abstract public class AbstractServletLoader implements ServletLoader {
     }
 
     @Override
-    public Servlet loadServlet(String servletPath) throws ServletInitializationException {
+    public HttpServlet loadServlet(String servletPath) throws ServletInitializationException {
         return instantiateServlet(getServletCanonicalName(servletPath));
     }
 
@@ -62,5 +62,5 @@ abstract public class AbstractServletLoader implements ServletLoader {
      * @return
      * @throws ServletInitializationException
      */
-    abstract protected Servlet instantiateServlet(String classCanonicalName) throws ServletInitializationException;
+    abstract protected HttpServlet instantiateServlet(String classCanonicalName) throws ServletInitializationException;
 }

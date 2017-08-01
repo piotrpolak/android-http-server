@@ -8,7 +8,7 @@
 package ro.polak.http.errorhandler.impl;
 
 import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 
 /**
  * 413 Request Entity Too Large
@@ -19,6 +19,6 @@ import ro.polak.http.servlet.HttpResponse;
 public class HttpError413Handler extends AbstractPlainTextHttpErrorHandler {
 
     public HttpError413Handler() {
-        super(HttpResponse.REQUEST_ENTITY_TOO_LARGE, "Error 413 Request Entity Too Large");
+        super(HttpServletResponse.REQUEST_ENTITY_TOO_LARGE, "Error 413 Request Entity Too Large");
     }
 }

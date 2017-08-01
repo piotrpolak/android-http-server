@@ -9,21 +9,22 @@ package example;
 
 import java.util.Date;
 
+import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.Cookie;
-import ro.polak.http.servlet.HttpRequest;
-import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServlet;
 
 /**
  * Cookie usage example page
  */
-public class Cookies extends Servlet {
+public class Cookies extends HttpServlet {
 
     private final static String PAGE_HITS_COOKIE_NAME = "page_hits";
     private final static String FIRST_VISITED_AT_COOKIE_NAME = "first_visited_at";
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         int pageHits = 0;
         if (request.getCookie(PAGE_HITS_COOKIE_NAME) != null) {
             pageHits = Integer.parseInt(request.getCookie(PAGE_HITS_COOKIE_NAME).getValue());
@@ -39,7 +40,7 @@ public class Cookies extends Servlet {
             response.addCookie(new Cookie(FIRST_VISITED_AT_COOKIE_NAME, firstVisitedAt));
         }
 
-        response.getPrintWriter().println("<p>Cookie page hits: " + pageHits + "</p>");
-        response.getPrintWriter().println("<p>First visited at: " + firstVisitedAt + "</p>");
+        response.getWriter().println("<p>Cookie page hits: " + pageHits + "</p>");
+        response.getWriter().println("<p>First visited at: " + firstVisitedAt + "</p>");
     }
 }

@@ -47,7 +47,7 @@ public class HttpResponseWrapperTest {
         Socket socket = mock(Socket.class);
         HttpResponseWrapper httpResponseWrapper = HttpResponseWrapper.createFromSocket(socket);
 
-        assertThat(httpResponseWrapper.getPrintWriter().equals(httpResponseWrapper.getPrintWriter()), is(true));
+        assertThat(httpResponseWrapper.getWriter().equals(httpResponseWrapper.getWriter()), is(true));
     }
 
     @Test

@@ -8,7 +8,7 @@
 package ro.polak.http.errorhandler.impl;
 
 import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 
 /**
  * 400 Bad Request
@@ -19,6 +19,6 @@ import ro.polak.http.servlet.HttpResponse;
 public class HttpError400Handler extends AbstractPlainTextHttpErrorHandler {
 
     public HttpError400Handler() {
-        super(HttpResponse.STATUS_BAD_REQUEST, "Error 400 - Bad Request");
+        super(HttpServletResponse.STATUS_BAD_REQUEST, "Error 400 - Bad Request");
     }
 }

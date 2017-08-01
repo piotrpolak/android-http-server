@@ -22,7 +22,7 @@ public class OutputStreamWrapperTest {
         int data = 1;
 
         HttpResponseWrapper response = mock(HttpResponseWrapper.class);
-        OutputStreamWrapper outW = new OutputStreamWrapper(out, response);
+        ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
         when(response.isCommitted()).thenReturn(false);
         outW.write(data);
         when(response.isCommitted()).thenReturn(true);
@@ -39,7 +39,7 @@ public class OutputStreamWrapperTest {
         byte[] data = "Hello World".getBytes(Charset.defaultCharset());
 
         HttpResponseWrapper response = mock(HttpResponseWrapper.class);
-        OutputStreamWrapper outW = new OutputStreamWrapper(out, response);
+        ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
         when(response.isCommitted()).thenReturn(false);
         outW.write(data);
         when(response.isCommitted()).thenReturn(true);
@@ -56,7 +56,7 @@ public class OutputStreamWrapperTest {
         byte[] data = "Hello World".getBytes(Charset.defaultCharset());
 
         HttpResponseWrapper response = mock(HttpResponseWrapper.class);
-        OutputStreamWrapper outW = new OutputStreamWrapper(out, response);
+        ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
         when(response.isCommitted()).thenReturn(false);
         outW.write(data, 0, 1);
         when(response.isCommitted()).thenReturn(true);
@@ -70,7 +70,7 @@ public class OutputStreamWrapperTest {
     public void shouldForwardFlush() throws IOException {
         OutputStream out = mock(OutputStream.class);
         HttpResponseWrapper response = mock(HttpResponseWrapper.class);
-        OutputStreamWrapper outW = new OutputStreamWrapper(out, response);
+        ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
         outW.flush();
         verify(out, times(1)).flush();
     }
@@ -79,7 +79,7 @@ public class OutputStreamWrapperTest {
     public void shouldForwardClose() throws IOException {
         OutputStream out = mock(OutputStream.class);
         HttpResponseWrapper response = mock(HttpResponseWrapper.class);
-        OutputStreamWrapper outW = new OutputStreamWrapper(out, response);
+        ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
         outW.close();
         verify(out, times(1)).close();
     }

@@ -7,25 +7,39 @@
 
 package ro.polak.http.servlet;
 
+import ro.polak.http.exception.ServletException;
+
 /**
- * Servlet v3 interface, declares service() method
+ * Default abstract servlet.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @since 200902
+ * @since 200802
  */
-public interface HttpServlet {
+public abstract class HttpServlet implements Servlet {
+
+    private ServletConfig servletConfig;
+
+    @Override
+    public void init(ServletConfig servletConfig) throws ServletException {
+        this.servletConfig = servletConfig;
+    }
+
+    @Override
+    public void destroy() {
+
+    }
+
+    @Override
+    public String getServletInfo() {
+        return "";
+    }
 
     /**
-     * The servlet initialization method. The reusable resources should be
-     * initialized in the init method.
+     * Returns servlet context.
      *
-     * @param servletConfig
+     * @return
      */
-    void init(ServletConfig servletConfig);
-
-    /**
-     * The main method of the servlet. Must be overridden, contains the servlet
-     * body.
-     */
-    void service(HttpRequest request, HttpResponse response);
+    public ServletContext getServletContext() {
+        return servletConfig.getServletContext();
+    }
 }

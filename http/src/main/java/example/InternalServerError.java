@@ -8,17 +8,17 @@
 package example;
 
 import ro.polak.http.exception.ServletException;
-import ro.polak.http.servlet.HttpRequest;
-import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServlet;
 
 /**
  * Internal server error page example page
  */
-public class InternalServerError extends Servlet {
+public class InternalServerError extends HttpServlet {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         throw new ServletException("Something bad has just happened");
     }
 }

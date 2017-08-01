@@ -18,4 +18,8 @@ public class UnexpectedSituationException extends RuntimeException {
     public UnexpectedSituationException(String message, Throwable e) {
         super(message, e);
     }
+
+    public UnexpectedSituationException(Throwable e) {
+        super(e);
+    }
 }

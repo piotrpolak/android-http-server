@@ -303,7 +303,7 @@ public class ProtocolIT extends AbstractIT {
         String responseBodyString = response.body().string();
         assertThat(responseBodyString, not(isEmptyOrNullString()));
         assertThat(responseBodyString, containsString("Error 500"));
-        assertThat(responseBodyString, containsString("InternalServerError.java"));
+        assertThat(responseBodyString, containsString("UnexpectedSituationException"));
     }
 
     @Test

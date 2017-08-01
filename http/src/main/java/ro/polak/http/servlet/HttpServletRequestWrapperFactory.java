@@ -41,7 +41,7 @@ import ro.polak.http.protocol.parser.impl.RequestStatusParser;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201611
  */
-public class HttpRequestWrapperFactory {
+public class HttpServletRequestWrapperFactory {
 
     public static final String DEFAULT_SCHEME = "http";
 
@@ -75,7 +75,7 @@ public class HttpRequestWrapperFactory {
      *
      * @param tempPath
      */
-    public HttpRequestWrapperFactory(String tempPath) {
+    public HttpServletRequestWrapperFactory(String tempPath) {
         this.tempPath = tempPath;
     }
 

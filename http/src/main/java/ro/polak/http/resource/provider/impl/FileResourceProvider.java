@@ -25,7 +25,7 @@ import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
 import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.RandomStringGenerator;
@@ -83,7 +83,7 @@ public class FileResourceProvider implements ResourceProvider {
 
     private void loadCompleteContent(HttpRequestWrapper request, HttpResponseWrapper response, File file) throws IOException {
         response.setContentType(mimeTypeMapping.getMimeTypeByExtension(Utilities.getExtension(file.getName())));
-        response.setStatus(HttpResponse.STATUS_OK);
+        response.setStatus(HttpServletResponse.STATUS_OK);
         response.setContentLength(file.length());
         response.getHeaders().setHeader(Headers.HEADER_ACCEPT_RANGES, "bytes");
         response.flushHeaders();
@@ -110,7 +110,7 @@ public class FileResourceProvider implements ResourceProvider {
             throw new RangeNotSatisfiableProtocolException();
         }
 
-        response.setStatus(HttpResponse.STATUS_PARTIAL_CONTENT);
+        response.setStatus(HttpServletResponse.STATUS_PARTIAL_CONTENT);
         response.getHeaders().setHeader(Headers.HEADER_CONTENT_RANGE, "bytes " + getRanges(ranges) + "/" + file.length());
 
         String contentType = mimeTypeMapping.getMimeTypeByExtension(Utilities.getExtension(file.getName()));

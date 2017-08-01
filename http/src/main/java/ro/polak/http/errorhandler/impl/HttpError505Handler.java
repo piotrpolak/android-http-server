@@ -8,7 +8,7 @@
 package ro.polak.http.errorhandler.impl;
 
 import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 
 /**
  * 505 HTTP Version Not Supported error handler
@@ -19,6 +19,6 @@ import ro.polak.http.servlet.HttpResponse;
 public class HttpError505Handler extends AbstractPlainTextHttpErrorHandler {
 
     public HttpError505Handler() {
-        super(HttpResponse.HTTP_VERSION_NOT_SUPPORTED, "Error 505 - HTTP Version Not Supported");
+        super(HttpServletResponse.HTTP_VERSION_NOT_SUPPORTED, "Error 505 - HTTP Version Not Supported");
     }
 }

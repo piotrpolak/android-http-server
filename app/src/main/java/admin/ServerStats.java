@@ -8,14 +8,15 @@
 package admin;
 
 import ro.polak.http.ServerConfig;
-import ro.polak.http.servlet.HttpRequest;
-import ro.polak.http.servlet.HttpResponse;
-import ro.polak.http.servlet.Servlet;
+import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServlet;
 
-public class ServerStats extends Servlet {
+public class ServerStats extends HttpServlet {
 
     @Override
-    public void service(HttpRequest request, HttpResponse response) {
+    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
         AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
@@ -24,7 +25,7 @@ public class ServerStats extends Servlet {
         }
 
         HTMLDocument doc = renderDocument();
-        response.getPrintWriter().print(doc.toString());
+        response.getWriter().print(doc.toString());
     }
 
     private HTMLDocument renderDocument() {

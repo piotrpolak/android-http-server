@@ -8,7 +8,7 @@
 package ro.polak.http.errorhandler.impl;
 
 import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 
 /**
  * 414 URI Too Long
@@ -19,6 +19,6 @@ import ro.polak.http.servlet.HttpResponse;
 public class HttpError414Handler extends AbstractPlainTextHttpErrorHandler {
 
     public HttpError414Handler() {
-        super(HttpResponse.STATUS_URI_TOO_LONG, "Error 414 - URI Too Long");
+        super(HttpServletResponse.STATUS_URI_TOO_LONG, "Error 414 - URI Too Long");
     }
 }

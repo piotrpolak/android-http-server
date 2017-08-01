@@ -8,8 +8,6 @@ package ro.polak.http.servlet;
 
 import java.util.List;
 
-import ro.polak.http.servlet.Range;
-
 /**
  * Range utilities.
  */

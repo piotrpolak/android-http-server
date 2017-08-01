@@ -8,7 +8,7 @@
 package ro.polak.http.errorhandler.impl;
 
 import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 
 /**
  * 411 Length required
@@ -19,6 +19,6 @@ import ro.polak.http.servlet.HttpResponse;
 public class HttpError411Handler extends AbstractPlainTextHttpErrorHandler {
 
     public HttpError411Handler() {
-        super(HttpResponse.STATUS_LENGTH_REQUIRED, "Error 411 - Length Required");
+        super(HttpServletResponse.STATUS_LENGTH_REQUIRED, "Error 411 - Length Required");
     }
 }

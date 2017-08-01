@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ro.polak.http.errorhandler.impl.HttpError503Handler;
-import ro.polak.http.servlet.HttpRequestWrapperFactory;
+import ro.polak.http.servlet.HttpServletRequestWrapperFactory;
 import ro.polak.http.servlet.HttpResponseWrapper;
 import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.Utilities;
@@ -57,7 +57,7 @@ public class WebServer extends Thread {
     @Override
     public void run() {
         ThreadPoolExecutor threadPoolExecutor = getThreadPoolExecutor();
-        HttpRequestWrapperFactory requestWrapperFactory = new HttpRequestWrapperFactory(serverConfig.getTempPath());
+        HttpServletRequestWrapperFactory requestWrapperFactory = new HttpServletRequestWrapperFactory(serverConfig.getTempPath());
 
         while (listen) {
             try {

@@ -9,7 +9,7 @@ package ro.polak.http.errorhandler;
 
 import java.io.IOException;
 
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 
 /**
  * IHTTPError interface defining serve method
@@ -25,5 +25,5 @@ public interface HttpErrorHandler {
      * @param response
      * @throws IOException
      */
-    void serve(HttpResponse response) throws IOException;
+    void serve(HttpServletResponse response) throws IOException;
 }

@@ -15,9 +15,10 @@ import java.util.logging.Logger;
 import ro.polak.http.Headers;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
+import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpResponse;
+import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
 import ro.polak.http.servlet.HttpSessionWrapper;
 import ro.polak.http.servlet.Servlet;
@@ -58,6 +59,9 @@ public class ServletResourceProvider implements ResourceProvider {
 
     @Override
     public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
+
+        // TODO Handling of ServletException should be improved
+
         if (isServletExtension(uri) && servletLoader.canLoadServlet(uri)) {
             try {
                 Servlet servlet = servletLoader.loadServlet(uri);
@@ -66,11 +70,16 @@ public class ServletResourceProvider implements ResourceProvider {
                 request.setServletContext(servletContext);
 
                 servlet.init(servletConfig);
-                response.setStatus(HttpResponse.STATUS_OK);
+
+                response.setStatus(HttpServletResponse.STATUS_OK);
                 servlet.service(request, response);
+
+                servlet.destroy();
                 terminate(request, response);
             } catch (ServletInitializationException e) {
-                throw new ServletException(e);
+                throw new UnexpectedSituationException(e);
+            } catch (ServletException e) {
+                throw new UnexpectedSituationException(e);
             }
 
             return true;

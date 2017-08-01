@@ -2,7 +2,7 @@ language: java
 
 # http/settings.gradle Added here to enable http subproject to be built without the root project
 install:
-  - echo "include ':cli', ':http';" >> settings.gradle
+  - echo "include ':cli', ':http';" > settings.gradle
   - ./gradlew :http:assemble
 script:
   - ./gradlew :http:check -Djava.io.tmpdir=$HOME/.cache/

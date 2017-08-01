@@ -1,1 +1,1 @@
-include ':app', ':http', ':cli';
+include ':cli', ':http';

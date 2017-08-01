@@ -38,13 +38,13 @@ Provided Gradle wrapper should be used to build the application:
 The `http` subproject is independent on Android platform and can be tested in the following way:
 
 ```
-cd http && ../gradlew clean check ; cd ..
+./gradlew :http:clean :http:check
 ```
 
 ## Running standalone server (CLI)
 
 ```
-cd cli && ../gradlew bootRun && cd ..
+./gradlew :cli:bootRun
 ```
 
 ## Sample code

@@ -89,7 +89,9 @@ public class WebServer extends Thread {
     public boolean startServer() {
         listen = true;
 
-        if (!(new File(serverConfig.getDocumentRootPath()).isDirectory())) {
+        if (!(new File(serverConfig.
+                getDocumentRootPath())
+                .isDirectory())) {
             LOGGER.log(Level.WARNING, "DocumentRoot does not exist! PATH {0}", new Object[]{
                     serverConfig.getDocumentRootPath()
             });

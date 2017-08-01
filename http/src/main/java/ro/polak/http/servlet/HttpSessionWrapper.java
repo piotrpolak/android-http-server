@@ -27,7 +27,7 @@ public class HttpSessionWrapper implements HttpSession, Serializable {
     private transient boolean isInvalidated = false;
     private transient ServletContext servletContext;
 
-    private long creationTime;
+    private final long creationTime;
     private long lastAccessedTime;
     private int maxInactiveInterval = 3600;
     private String id;

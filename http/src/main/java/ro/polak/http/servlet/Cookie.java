@@ -164,26 +164,56 @@ public class Cookie {
         return name;
     }
 
+    /**
+     * Returns cookie value.
+     *
+     * @return
+     */
     public String getValue() {
         return value;
     }
 
+    /**
+     * Sets cookie value.
+     *
+     * @param value
+     */
     public void setValue(String value) {
         this.value = value;
     }
 
+    /**
+     * Tells whether the cookie is secure.
+     *
+     * @return
+     */
     public boolean isSecure() {
         return secure;
     }
 
+    /**
+     * Sets whether the cookie is secure.
+     *
+     * @param secure
+     */
     public void setSecure(boolean secure) {
         this.secure = secure;
     }
 
+    /**
+     * Tells whether the cookie is http only.
+     *
+     * @return
+     */
     public boolean isHttpOnly() {
         return httpOnly;
     }
 
+    /**
+     * Sets whether the cookie is http only.
+     *
+     * @param httpOnly
+     */
     public void setHttpOnly(boolean httpOnly) {
         this.httpOnly = httpOnly;
     }

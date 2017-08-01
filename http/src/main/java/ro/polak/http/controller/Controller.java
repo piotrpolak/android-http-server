@@ -21,12 +21,12 @@ public interface Controller {
     /**
      * Starts the server logic
      */
-    void start();
+    void start() throws IllegalStateException;
 
     /**
      * Stops the server logic.
      */
-    void stop();
+    void stop() throws IllegalStateException;
 
     /**
      * Returns webserver instance.

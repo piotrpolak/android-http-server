@@ -54,7 +54,10 @@ public class MainController implements Controller {
     }
 
     @Override
-    public void start() {
+    public void start() throws IllegalStateException {
+        if (webServer != null) {
+            throw new IllegalStateException("Webserver already started!");
+        }
         ServerSocket serverSocket;
         try {
             serverSocket = new ServerSocket();
@@ -66,15 +69,19 @@ public class MainController implements Controller {
         webServer = new WebServer(serverSocket, serverConfigFactory.getServerConfig());
         if (webServer.startServer()) {
             gui.start();
+        } else {
+            webServer = null;
         }
     }
 
     @Override
-    public void stop() {
-        if (webServer != null) {
-            webServer.stopServer();
-            webServer = null;
+    public void stop() throws IllegalStateException {
+        if (webServer == null) {
+            throw new IllegalStateException("Webserver not started!");
         }
+
+        webServer.stopServer();
+        webServer = null;
         gui.stop();
     }
 }

@@ -13,7 +13,9 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class MainControllerTest {
 
@@ -26,7 +28,9 @@ public class MainControllerTest {
         serverConfig = mock(ServerConfig.class);
         serverConfigFactory = mock(ServerConfigFactory.class);
         when(serverConfigFactory.getServerConfig()).thenReturn(serverConfig);
+        when(serverConfig.getMaxServerThreads()).thenReturn(1);
         when(serverConfig.getDocumentRootPath()).thenReturn("/somepath");
+        when(serverConfig.getTempPath()).thenReturn("/tmp");
         serverGui = mock(ServerGui.class);
     }
 
@@ -52,11 +56,24 @@ public class MainControllerTest {
     }
 
     @Test
-    public void shouldNotGetWebServerAfterServerStop() {
+    public void shouldStopProperly() {
         MainController mainController = new MainController(serverConfigFactory, serverGui);
         mainController.start();
         assertThat(mainController.getWebServer(), is(not(nullValue())));
         mainController.stop();
-        assertThat(mainController.getWebServer(), is(nullValue()));
+        verify(serverGui, times(1)).stop();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void shouldThrowExceptionOnIllegalStart() {
+        MainController mainController = new MainController(serverConfigFactory, serverGui);
+        mainController.start();
+        mainController.start();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void shouldThrowExceptionOnIllegalStop() {
+        MainController mainController = new MainController(serverConfigFactory, serverGui);
+        mainController.stop();
     }
 }

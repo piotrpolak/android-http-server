@@ -19,7 +19,7 @@ import java.util.Set;
 
 import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.ServerConfig;
-import ro.polak.http.impl.DefaultServerConfigFactory;
+import ro.polak.http.cli.DefaultServerConfigFactory;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.resource.provider.impl.FileResourceProvider;
 import ro.polak.webserver.AssetResourceProvider;

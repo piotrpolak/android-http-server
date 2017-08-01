@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import ro.polak.http.impl.DefaultServerConfigFactory;
+import ro.polak.http.cli.DefaultServerConfigFactory;
 
 import static junit.framework.TestCase.fail;
 

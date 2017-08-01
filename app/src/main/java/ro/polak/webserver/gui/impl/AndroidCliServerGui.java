@@ -8,7 +8,7 @@
 package ro.polak.webserver.gui.impl;
 
 import ro.polak.http.ServerConfigFactory;
-import ro.polak.http.gui.impl.DefaultCliServerGui;
+import ro.polak.http.cli.DefaultCliServerGui;
 import ro.polak.webserver.resource.provider.impl.AndroidServerConfigFactory;
 
 /**

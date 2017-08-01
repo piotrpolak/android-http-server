@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
-package ro.polak.http.impl;
+package ro.polak.http.cli;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 
 import ro.polak.http.ServerConfig;
 import ro.polak.http.ServerConfigFactory;
+import ro.polak.http.impl.ServerConfigImpl;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.resource.provider.impl.FileResourceProvider;
 import ro.polak.http.resource.provider.impl.ServletResourceProvider;

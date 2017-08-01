@@ -41,6 +41,12 @@ The `http` subproject is independent on Android platform and can be tested in th
 cd http && ../gradlew clean check && cd ..
 ```
 
+## Running standalone server (CLI)
+
+```
+cd cli && ../gradlew bootRun && cd ..
+```
+
 ## Sample code
 
 Hello World servlet

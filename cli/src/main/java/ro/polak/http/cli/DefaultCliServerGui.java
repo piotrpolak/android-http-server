@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http.gui.impl;
+package ro.polak.http.cli;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import ro.polak.http.ServerConfigFactory;
 import ro.polak.http.controller.MainController;
 import ro.polak.http.gui.ServerGui;
-import ro.polak.http.impl.DefaultServerConfigFactory;
 
 /**
  * Server CLI interface along with a runner.

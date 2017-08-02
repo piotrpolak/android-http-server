@@ -1,5 +1,6 @@
 package ro.polak.http;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -15,6 +16,7 @@ import okhttp3.Response;
 
 import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
@@ -29,6 +31,15 @@ public class ProtocolIT extends AbstractIT {
 
     private static final String NEW_LINE = "\r\n";
     public static final String DASH_DASH = "--";
+    private static OkHttpClient client;
+
+    @Before
+    public void init() {
+        client = new OkHttpClient().newBuilder()
+                .followRedirects(false)
+                .followSslRedirects(false)
+                .build();
+    }
 
     @Test(expected = IOException.class)
     public void shouldCloseSocketAfterCloseConnectionRequest() throws IOException, InterruptedException {
@@ -63,7 +74,6 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldServeDirectoryIndex() throws IOException {
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/example/"))
                 .get()
@@ -92,8 +102,20 @@ public class ProtocolIT extends AbstractIT {
     }
 
     @Test
+    public void shouldRedirectToDirectoryIndexOnMissingTrailingSlash() throws IOException {
+        Request request = new Request.Builder()
+                .url(getFullUrl("/example"))
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.code(), is(301));
+        assertThat(response.header("Location"), is(not(nullValue())));
+        assertThat(response.header("Location"), is("/example/"));
+    }
+
+    @Test
     public void shouldServeStaticFile() throws IOException {
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/staticfile.html"))
                 .get()
@@ -110,7 +132,6 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn404NotFound() throws IOException {
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/43524938257493852435/SOMEUNKNOWNURL.html"))
                 .get()
@@ -136,8 +157,6 @@ public class ProtocolIT extends AbstractIT {
     @Test
     public void shouldReturn405MethodNotAllowed() throws IOException {
         // Connect is not yet implemented
-
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/"))
                 .method("CONNECT", null)
@@ -173,7 +192,6 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn414URITooLong() throws IOException {
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl(getTooLongUri(2048)))
                 .get()
@@ -208,7 +226,7 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldAcceptPostWithZeroLength() throws IOException {
-        OkHttpClient client = new OkHttpClient();
+
         Request request = new Request.Builder()
                 .url(getFullUrl("/example/"))
                 .addHeader(Headers.HEADER_CONTENT_LENGTH, "0")
@@ -233,7 +251,6 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn400BadRequestOnUnrecognizedMethod() throws IOException {
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/"))
                 .method("ABC", null)
@@ -249,7 +266,6 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn400BadRequestOnTooLongMethod() throws IOException {
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/"))
                 .method("ABCABCABCABCABC", null)
@@ -291,7 +307,6 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn500InternalServerError() throws IOException {
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/example/InternalServerError.dhtml"))
                 .get()
@@ -308,7 +323,6 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn206AndServeRangesOfStaticFileForOneRange() throws IOException {
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/staticfile.html"))
                 .header("Range", "bytes=0-5")
@@ -331,7 +345,6 @@ public class ProtocolIT extends AbstractIT {
         String ranges = "0-5,7-10";
         String boundaryBegin = "multipart/byteranges; boundary=";
 
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/staticfile.html"))
                 .header(Headers.HEADER_RANGE, "bytes=" + ranges)
@@ -386,7 +399,6 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn416RangeNotSatisfiable() throws IOException {
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/staticfile.html"))
                 .header(Headers.HEADER_RANGE, "bytes=128-128")
@@ -403,7 +415,6 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn400OnMalformedRange() throws IOException {
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(getFullUrl("/staticfile.html"))
                 .header(Headers.HEADER_RANGE, "bytes=128-abcd")

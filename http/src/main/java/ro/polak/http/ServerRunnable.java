@@ -34,10 +34,11 @@ import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
 import ro.polak.http.protocol.exception.UnsupportedProtocolException;
 import ro.polak.http.protocol.exception.UriTooLongProtocolException;
 import ro.polak.http.resource.provider.ResourceProvider;
-import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpServletRequestWrapperFactory;
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletRequestWrapperFactory;
+import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
@@ -80,9 +81,10 @@ public class ServerRunnable implements Runnable {
                         request.getMethod(), request.getRequestURI()
                 });
 
-                String path = request.getRequestURI();
+                String originalPath, destinationPath;
+                originalPath = destinationPath = request.getRequestURI();
 
-                if (isPathIllegal(path)) {
+                if (isPathIllegal(originalPath)) {
                     throw new AccessDeniedException();
                 }
 
@@ -90,14 +92,32 @@ public class ServerRunnable implements Runnable {
 
                 validateRequest(request);
 
-                boolean isResourceLoaded = loadResourceByPath(request, response, path);
-                if (!isResourceLoaded) {
-                    isResourceLoaded = loadDirectoryIndexResource(request, response, path);
-                }
-                if (!isResourceLoaded) {
-                    throw new NotFoundException();
+
+                DirectoryIndexDescriptor directoryIndexDescriptor = null;
+                ResourceProvider resourceProvider = getResourceProvider(originalPath);
+                if (resourceProvider == null) {
+                    directoryIndexDescriptor = loadDirectoryIndexResource(originalPath);
+                    if (directoryIndexDescriptor == null) {
+                        throw new NotFoundException();
+                    }
                 }
 
+                boolean shouldRedirectToDirectoryIndexWithSlash = false;
+                if (directoryIndexDescriptor != null) {
+                    resourceProvider = directoryIndexDescriptor.getResourceProvider();
+                    destinationPath = directoryIndexDescriptor.getDirectoryPath();
+                    if (!originalPath.substring(originalPath.length() - 1).equals("/")) {
+                        shouldRedirectToDirectoryIndexWithSlash = true;
+                    }
+                }
+
+                if (shouldRedirectToDirectoryIndexWithSlash) {
+                    response.setStatus(HttpServletResponse.STATUS_MOVED_PERMANENTLY);
+                    response.getHeaders().setHeader("Location", originalPath + "/");
+                    response.flush();
+                } else {
+                    resourceProvider.load(destinationPath, request, response);
+                }
             } catch (RuntimeException e) {
                 if (response != null) {
                     getHandler(e).serve(response);
@@ -187,23 +207,16 @@ public class ServerRunnable implements Runnable {
         response.getHeaders().setHeader(Headers.HEADER_SERVER, WebServer.SIGNATURE);
     }
 
-    /**
-     * Attempts to load resource by directory path.
-     *
-     * @param request
-     * @param response
-     * @param path
-     * @return
-     * @throws IOException
-     */
-    private boolean loadDirectoryIndexResource(HttpRequestWrapper request, HttpResponseWrapper response, String path) throws IOException {
+    private DirectoryIndexDescriptor loadDirectoryIndexResource(String path) {
         String normalizedDirectoryPath = getNormalizedDirectoryPath(path);
         for (String index : serverConfig.getDirectoryIndex()) {
-            if (loadResourceByPath(request, response, normalizedDirectoryPath + index)) {
-                return true;
+            String directoryPath = normalizedDirectoryPath + index;
+            ResourceProvider resourceProvider = getResourceProvider(directoryPath);
+            if (resourceProvider != null) {
+                return new DirectoryIndexDescriptor(resourceProvider, directoryPath);
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -224,23 +237,14 @@ public class ServerRunnable implements Runnable {
         return stringBuilder.toString();
     }
 
-    /**
-     * Loads resource by path.
-     *
-     * @param request
-     * @param response
-     * @param path
-     * @return
-     * @throws IOException
-     */
-    private boolean loadResourceByPath(HttpRequestWrapper request, HttpResponseWrapper response, String path) throws IOException {
+    private ResourceProvider getResourceProvider(String path) {
         ResourceProvider[] rl = serverConfig.getResourceProviders();
         for (int i = 0; i < rl.length; i++) {
-            if (rl[i].load(path, request, response)) {
-                return true;
+            if (rl[i].canLoad(path)) {
+                return rl[i];
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -299,5 +303,23 @@ public class ServerRunnable implements Runnable {
      */
     protected Socket getSocket() {
         return socket;
+    }
+
+    private static class DirectoryIndexDescriptor {
+        private ResourceProvider resourceProvider;
+        private String directoryPath;
+
+        public DirectoryIndexDescriptor(ResourceProvider resourceProvider, String directoryPath) {
+            this.resourceProvider = resourceProvider;
+            this.directoryPath = directoryPath;
+        }
+
+        public ResourceProvider getResourceProvider() {
+            return resourceProvider;
+        }
+
+        public String getDirectoryPath() {
+            return directoryPath;
+        }
     }
 }

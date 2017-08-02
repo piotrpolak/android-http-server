@@ -21,13 +21,21 @@ import ro.polak.http.servlet.HttpResponseWrapper;
 public interface ResourceProvider {
 
     /**
+     * Tells whether this resource provider can load such a resource.
+     *
+     * @param path
+     * @return
+     */
+    boolean canLoad(String path);
+
+    /**
      * Loads the resource by URI, returns true if the resource was found or an error was served
      *
-     * @param uri
+     * @param path
      * @param request
      * @param response
      * @return
      * @throws IOException
      */
-    boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException;
+    void load(String path, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException;
 }

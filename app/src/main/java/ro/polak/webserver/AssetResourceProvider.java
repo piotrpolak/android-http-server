@@ -9,14 +9,16 @@ package ro.polak.webserver;
 
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.support.annotation.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.utilities.IOUtilities;
 
 /**
  * APK asset resource provider
@@ -43,10 +45,23 @@ public class AssetResourceProvider implements ResourceProvider {
     }
 
     @Override
-    public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) {
-        String assetPath = basePath + uri;
+    public boolean canLoad(String path) {
+        return getInputStream(getAssetPath(path)) != null;
+    }
+
+    private InputStream getInputStream(String assetPath) {
         try {
-            InputStream inputStream = assetManager.open(assetPath);
+            return assetManager.open(assetPath);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void load(String path, HttpRequestWrapper request, HttpResponseWrapper response) {
+        String assetPath = getAssetPath(path);
+        try {
+            InputStream inputStream = getInputStream(path);
 
             response.setStatus(HttpServletResponse.STATUS_OK);
 
@@ -63,16 +78,15 @@ public class AssetResourceProvider implements ResourceProvider {
             response.flushHeaders();
             response.serveStream(inputStream);
 
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-            }
+            IOUtilities.closeSilently(inputStream);
 
-            return true;
         } catch (IOException e) {
 
         }
+    }
 
-        return false;
+    @NonNull
+    private String getAssetPath(String path) {
+        return basePath + path;
     }
 }

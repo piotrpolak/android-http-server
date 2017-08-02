@@ -18,8 +18,8 @@ import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpSessionWrapper;
 import ro.polak.http.servlet.Servlet;
 import ro.polak.http.servlet.ServletConfigWrapper;
@@ -58,34 +58,33 @@ public class ServletResourceProvider implements ResourceProvider {
     }
 
     @Override
-    public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
+    public boolean canLoad(String path) {
+        return isServletExtension(path) && servletLoader.canLoadServlet(path);
+    }
+
+    @Override
+    public void load(String path, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
 
         // TODO Handling of ServletException should be improved
 
-        if (isServletExtension(uri) && servletLoader.canLoadServlet(uri)) {
-            try {
-                Servlet servlet = servletLoader.loadServlet(uri);
+        try {
+            Servlet servlet = servletLoader.loadServlet(path);
 
-                ServletConfigWrapper servletConfig = new ServletConfigWrapper(servletContext);
-                request.setServletContext(servletContext);
+            ServletConfigWrapper servletConfig = new ServletConfigWrapper(servletContext);
+            request.setServletContext(servletContext);
 
-                servlet.init(servletConfig);
+            servlet.init(servletConfig);
 
-                response.setStatus(HttpServletResponse.STATUS_OK);
-                servlet.service(request, response);
+            response.setStatus(HttpServletResponse.STATUS_OK);
+            servlet.service(request, response);
 
-                servlet.destroy();
-                terminate(request, response);
-            } catch (ServletInitializationException e) {
-                throw new UnexpectedSituationException(e);
-            } catch (ServletException e) {
-                throw new UnexpectedSituationException(e);
-            }
-
-            return true;
+            servlet.destroy();
+            terminate(request, response);
+        } catch (ServletInitializationException e) {
+            throw new UnexpectedSituationException(e);
+        } catch (ServletException e) {
+            throw new UnexpectedSituationException(e);
         }
-
-        return false;
     }
 
     private boolean isServletExtension(String uri) {

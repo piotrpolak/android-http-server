@@ -19,14 +19,14 @@ import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.protocol.exception.ProtocolException;
 import ro.polak.http.protocol.exception.RangeNotSatisfiableProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
-import ro.polak.http.servlet.RangeHelper;
-import ro.polak.http.servlet.Range;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.Range;
+import ro.polak.http.servlet.RangeHelper;
 import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.RandomStringGenerator;
 import ro.polak.http.utilities.Utilities;
@@ -60,25 +60,28 @@ public class FileResourceProvider implements ResourceProvider {
     }
 
     @Override
-    public boolean load(String uri, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
-        File file = new File(basePath + uri);
+    public boolean canLoad(String path) {
+        File file = getFile(path);
+        return file.exists() && file.isFile();
+    }
 
-        if (file.exists() && file.isFile()) {
+    @Override
+    public void load(String path, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
+        File file = getFile(path);
 
-            // A server MUST ignore a Range header field received with a request method other than GET.
-            boolean isGetRequest = request.getMethod().equals(HttpRequestWrapper.METHOD_GET);
-            boolean isPartialRequest = isGetRequest && request.getHeaders().containsHeader(Headers.HEADER_RANGE);
+        // A server MUST ignore a Range header field received with a request method other than GET.
+        boolean isGetRequest = request.getMethod().equals(HttpRequestWrapper.METHOD_GET);
+        boolean isPartialRequest = isGetRequest && request.getHeaders().containsHeader(Headers.HEADER_RANGE);
 
-            if (isPartialRequest) {
-                loadPartialContent(request, response, file);
-            } else {
-                loadCompleteContent(request, response, file);
-            }
-
-            return true;
+        if (isPartialRequest) {
+            loadPartialContent(request, response, file);
+        } else {
+            loadCompleteContent(request, response, file);
         }
+    }
 
-        return false;
+    private File getFile(String uri) {
+        return new File(basePath + uri);
     }
 
     private void loadCompleteContent(HttpRequestWrapper request, HttpResponseWrapper response, File file) throws IOException {

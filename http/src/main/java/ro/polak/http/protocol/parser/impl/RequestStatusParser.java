@@ -38,7 +38,8 @@ public class RequestStatusParser implements Parser<RequestStatus> {
         String statusArray[] = input.split(" ", NUMBER_OF_CHUNKS);
 
         if (statusArray.length < NUMBER_OF_CHUNKS) {
-            throw new MalformedInputException("Input status string should be composed out of " + NUMBER_OF_CHUNKS + " chunks");
+            throw new MalformedInputException("Input status string should be composed out of " +
+                    NUMBER_OF_CHUNKS + " chunks. Received " + input);
         }
 
         // First element of the array is the HTTP method

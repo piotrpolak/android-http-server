@@ -120,7 +120,7 @@ public class HttpServletRequestWrapperFactory {
         try {
             request.setGetParameters(queryStringParser.parse(status.getQueryString()));
         } catch (MalformedInputException e) {
-            throw new ProtocolException("Malformed request query string");
+            // This should never happen
         }
 
         String headersString = getHeaders(in);
@@ -277,9 +277,8 @@ public class HttpServletRequestWrapperFactory {
         StringBuilder postLine = new StringBuilder();
         while (in.read(buffer, 0, buffer.length) != -1) {
             postLine.append((char) buffer[0]);
-            if (postLine.length() >= postLength) {
-                Statistics.addBytesReceived(postLine.length());
-                throw new PayloadTooLargeProtocolException("Payload of too large");
+            if (postLine.length() == postLength) {
+                break;
             }
         }
         Statistics.addBytesReceived(postLine.length());

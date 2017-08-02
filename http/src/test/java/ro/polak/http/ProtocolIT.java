@@ -10,8 +10,10 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import okhttp3.FormBody;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static junit.framework.TestCase.fail;
@@ -277,6 +279,25 @@ public class ProtocolIT extends AbstractIT {
         String responseBodyString = response.body().string();
         assertThat(responseBodyString, not(isEmptyOrNullString()));
         assertThat(responseBodyString, containsString("Bad Request"));
+    }
+
+    @Test
+    public void shouldReturn200ForPlainPost() throws IOException {
+        RequestBody formBody = new FormBody.Builder()
+                .add("someParam", "someValue")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(getFullUrl("/example/"))
+                .method("POST", RequestBody.create(null, new byte[0]))
+                .post(formBody)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(true));
+        assertThat(response.code(), is(200));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
     }
 
     @Test

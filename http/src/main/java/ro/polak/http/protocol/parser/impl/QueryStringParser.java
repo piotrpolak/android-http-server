@@ -10,6 +10,7 @@ package ro.polak.http.protocol.parser.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 
 /**
@@ -27,7 +28,7 @@ public class QueryStringParser implements Parser<Map<String, String>> {
      * @return
      */
     @Override
-    public Map<String, String> parse(String queryString) {
+    public Map<String, String> parse(String queryString) throws MalformedInputException {
         Map<String, String> parameters = new HashMap<>();
         String queryParametersArray[] = queryString.split("&");
         for (int i = 0; i < queryParametersArray.length; i++) {

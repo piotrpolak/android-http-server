@@ -12,6 +12,8 @@ import java.net.ServerSocket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ServerSocketFactory;
+
 import ro.polak.http.ServerConfigFactory;
 import ro.polak.http.WebServer;
 import ro.polak.http.gui.ServerGui;
@@ -28,15 +30,19 @@ public class MainController implements Controller {
 
     private final ServerGui gui;
     private final ServerConfigFactory serverConfigFactory;
+    private final ServerSocketFactory serverSocketFactory;
 
     private WebServer webServer;
 
     /**
      * Default constructor.
      */
-    public MainController(final ServerConfigFactory serverConfigFactory, final ServerGui gui) {
+    public MainController(final ServerConfigFactory serverConfigFactory,
+                          final ServerSocketFactory serverSocketFactory,
+                          final ServerGui gui) {
 
         this.serverConfigFactory = serverConfigFactory;
+        this.serverSocketFactory = serverSocketFactory;
         this.gui = gui;
 
         Thread.currentThread().setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
@@ -60,7 +66,7 @@ public class MainController implements Controller {
         }
         ServerSocket serverSocket;
         try {
-            serverSocket = new ServerSocket();
+            serverSocket = serverSocketFactory.createServerSocket();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Unable to create server socket ", e);
             return;

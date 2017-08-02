@@ -27,6 +27,8 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ServerSocketFactory;
+
 import ro.polak.http.R;
 import ro.polak.http.controller.Controller;
 import ro.polak.http.controller.MainController;
@@ -66,7 +68,10 @@ public class MainActivity extends AppCompatActivity implements ServerGui {
 
         status.setText("Initializing");
 
-        controller = new MainController(new AndroidServerConfigFactory(this), this);
+        controller = new MainController(new AndroidServerConfigFactory(this),
+                ServerSocketFactory.getDefault(),
+                this);
+        
         controller.start();
     }
 

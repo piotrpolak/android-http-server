@@ -217,6 +217,10 @@ public class MultipartRequestHandler {
             if (end > start) {
                 pushBufferToDestination(buffer, start, end, isHeadersReadingState);
             }
+
+            if (allBytesRead == expectedPostLength) {
+                break;
+            }
         }
 
         Statistics.addBytesReceived(allBytesRead);

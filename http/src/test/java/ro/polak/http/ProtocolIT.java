@@ -4,12 +4,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.RandomAccessFile;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -34,12 +38,15 @@ public class ProtocolIT extends AbstractIT {
     private static final String NEW_LINE = "\r\n";
     public static final String DASH_DASH = "--";
     private static OkHttpClient client;
+    private static final int TIMEOUT_IN_SECONDS = 600;
 
     @Before
     public void init() {
         client = new OkHttpClient().newBuilder()
                 .followRedirects(false)
                 .followSslRedirects(false)
+                .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+                .writeTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
                 .build();
     }
 
@@ -298,6 +305,56 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.code(), is(200));
         String responseBodyString = response.body().string();
         assertThat(responseBodyString, not(isEmptyOrNullString()));
+    }
+
+    @Test
+    public void shouldReturn200ForMultipartFormPost() throws IOException {
+        // Based on https://stackoverflow.com/questions/24279563/uploading-a-large-file-in-multipart-using-okhttp
+
+        RequestBody formBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("someParam", "someValue")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(getFullUrl("/example/"))
+                .post(formBody)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(true));
+        assertThat(response.code(), is(200));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+    }
+
+    @Test
+    public void shouldReturn200ForMultipartFilePost() throws IOException {
+        File uploadFile = createRandomContentsFile();
+        RequestBody formBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("someParam", "someValue")
+                .addFormDataPart("file", "somefile.dat", RequestBody.create(
+                        MediaType.parse("application/octet-stream"), uploadFile))
+                .build();
+
+        Request request = new Request.Builder()
+                .url(getFullUrl("/example/"))
+                .post(formBody)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(true));
+        assertThat(response.code(), is(200));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+    }
+
+    private File createRandomContentsFile() throws IOException {
+        File file = File.createTempFile("servertest", ".tmp");
+        RandomAccessFile f = new RandomAccessFile(file, "rw");
+        f.setLength(1024);
+        return file;
     }
 
     @Test

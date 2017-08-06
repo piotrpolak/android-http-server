@@ -15,9 +15,9 @@ import android.telephony.SmsManager;
 import org.json.JSONException;
 
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServlet;
 
 /**
  * SMS Send method API endpoint
@@ -36,26 +36,26 @@ public class SmsSend extends HttpServlet {
         String test = request.getPostParameter("test");
 
         // Variable holding the JSON response
-        String jsonResponse = "";
+        String jsonResponse;
 
         if (to == null) {
             try {
                 jsonResponse = new APIResponse(APIResponse.CODE_ERROR, "Post parameter to is not set").toString();
                 response.getWriter().print(jsonResponse);
+                return;
             } catch (JSONException e) {
-                // TODO Throw servlet response
+                throw new ServletException(e);
             }
-            return;
         }
 
         if (message == null) {
             try {
                 jsonResponse = new APIResponse(APIResponse.CODE_ERROR, "Post parameter message is not set").toString();
                 response.getWriter().print(jsonResponse);
+                return;
             } catch (JSONException e) {
-                // TODO Throw servlet response
+                throw new ServletException(e);
             }
-            return;
         }
 
         // Validating message length
@@ -63,10 +63,10 @@ public class SmsSend extends HttpServlet {
             try {
                 jsonResponse = new APIResponse(APIResponse.CODE_ERROR, "Parameter message too long").toString();
                 response.getWriter().print(jsonResponse);
+                return;
             } catch (JSONException e) {
-                // TODO Throw servlet response
+                throw new ServletException(e);
             }
-            return;
         }
 
         // Validating to address length
@@ -74,16 +74,16 @@ public class SmsSend extends HttpServlet {
             try {
                 jsonResponse = new APIResponse(APIResponse.CODE_ERROR, "Parameter to too short").toString();
                 response.getWriter().print(jsonResponse);
+                return;
             } catch (JSONException e) {
-                // TODO Throw servlet response
+                throw new ServletException(e);
             }
-            return;
         }
 
         try {
             jsonResponse = new APIResponse().toString();
         } catch (JSONException e) {
-            // TODO Throw servlet response
+            throw new ServletException(e);
         }
 
 

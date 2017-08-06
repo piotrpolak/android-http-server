@@ -24,7 +24,7 @@ public class HttpError500HandlerTest {
     private static HttpError500Handler httpError500Handler;
 
     @Captor
-    ArgumentCaptor<String> arg = ArgumentCaptor.forClass(String.class);
+    private ArgumentCaptor<String> arg = ArgumentCaptor.forClass(String.class);
 
     @Before
     public void setUp() {

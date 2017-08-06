@@ -26,7 +26,7 @@ public abstract class HttpServlet implements Servlet {
 
     @Override
     public void destroy() {
-
+        // Empty by default, should be overwritten by the implementing servlet
     }
 
     @Override

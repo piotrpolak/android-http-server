@@ -18,18 +18,19 @@ public class OutputStreamWrapperTest {
     @Test
     public void shouldFlushHeadersOnFirstUseForInts() throws IOException {
         OutputStream out = mock(OutputStream.class);
-
         int data = 1;
-
         HttpResponseWrapper response = mock(HttpResponseWrapper.class);
         ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
-        when(response.isCommitted()).thenReturn(false);
-        outW.write(data);
-        when(response.isCommitted()).thenReturn(true);
-        outW.write(data);
-
-        verify(out, times(2)).write(data);
-        verify(response, times(1)).flushHeaders();
+        try {
+            when(response.isCommitted()).thenReturn(false);
+            outW.write(data);
+            when(response.isCommitted()).thenReturn(true);
+            outW.write(data);
+            verify(out, times(2)).write(data);
+            verify(response, times(1)).flushHeaders();
+        } finally {
+            outW.close();
+        }
     }
 
     @Test
@@ -40,13 +41,17 @@ public class OutputStreamWrapperTest {
 
         HttpResponseWrapper response = mock(HttpResponseWrapper.class);
         ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
-        when(response.isCommitted()).thenReturn(false);
-        outW.write(data);
-        when(response.isCommitted()).thenReturn(true);
-        outW.write(data);
+        try {
+            when(response.isCommitted()).thenReturn(false);
+            outW.write(data);
+            when(response.isCommitted()).thenReturn(true);
+            outW.write(data);
 
-        verify(out, times(2)).write(data);
-        verify(response, times(1)).flushHeaders();
+            verify(out, times(2)).write(data);
+            verify(response, times(1)).flushHeaders();
+        } finally {
+            outW.close();
+        }
     }
 
     @Test
@@ -57,13 +62,17 @@ public class OutputStreamWrapperTest {
 
         HttpResponseWrapper response = mock(HttpResponseWrapper.class);
         ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
-        when(response.isCommitted()).thenReturn(false);
-        outW.write(data, 0, 1);
-        when(response.isCommitted()).thenReturn(true);
-        outW.write(data, 0, 1);
+        try {
+            when(response.isCommitted()).thenReturn(false);
+            outW.write(data, 0, 1);
+            when(response.isCommitted()).thenReturn(true);
+            outW.write(data, 0, 1);
 
-        verify(out, times(2)).write(data, 0, 1);
-        verify(response, times(1)).flushHeaders();
+            verify(out, times(2)).write(data, 0, 1);
+            verify(response, times(1)).flushHeaders();
+        } finally {
+            outW.close();
+        }
     }
 
     @Test
@@ -71,8 +80,12 @@ public class OutputStreamWrapperTest {
         OutputStream out = mock(OutputStream.class);
         HttpResponseWrapper response = mock(HttpResponseWrapper.class);
         ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
-        outW.flush();
-        verify(out, times(1)).flush();
+        try {
+            outW.flush();
+            verify(out, times(1)).flush();
+        } finally {
+            outW.close();
+        }
     }
 
     @Test

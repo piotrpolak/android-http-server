@@ -8,13 +8,14 @@
 package admin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 
 import ro.polak.http.ServerConfig;
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.UploadedFile;
 import ro.polak.http.utilities.Utilities;
 
@@ -29,13 +30,18 @@ public class UpdateConfiguration extends HttpServlet {
             return;
         }
 
-        String message = handleFileUpload(request);
+        String message;
+        try {
+            message = handleFileUpload(request);
+        } catch (IOException e) {
+            throw new ServletException(e);
+        }
 
         HTMLDocument doc = renderDocument(message);
         response.getWriter().print(doc.toString());
     }
 
-    private String handleFileUpload(HttpServletRequest request) {
+    private String handleFileUpload(HttpServletRequest request) throws IOException {
         String message;
         UploadedFile uploadedFile = getUploadedFile("file", request.getUploadedFiles());
 
@@ -45,12 +51,20 @@ public class UpdateConfiguration extends HttpServlet {
             String basePath = ((ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName())).getBasePath();
 
             if (Utilities.getExtension(uploadedFile.getFileName()).equals("conf")) {
-
                 File file = uploadedFile.getFile();
                 File dest = new File(basePath + "httpd_test.conf");
                 if (file.renameTo(dest)) {
-                    (new File(basePath + "bakup_httpd.conf")).delete();
-                    (new File(basePath + "httpd.conf")).renameTo(new File(basePath + "bakup_httpd.conf"));
+                    File backup = new File(basePath + "bakup_httpd.conf");
+                    if (backup.exists()) {
+                        if (!backup.delete()) {
+                            throw new IOException("Unable to delete " + backup.getAbsolutePath());
+                        }
+                    }
+
+                    File conf = new File(basePath + "httpd.conf");
+                    if (!conf.renameTo(backup)) {
+                        throw new IOException("Unable to create config backup " + backup.getAbsolutePath());
+                    }
                     if (dest.renameTo((new File(basePath + "httpd.conf")))) {
                         message = "New configuration will be applied after server restart.";
                     } else {

@@ -13,6 +13,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Logger;
 
 import ro.polak.http.exception.UnexpectedSituationException;
 
@@ -29,6 +30,9 @@ import static java.util.TimeZone.getTimeZone;
 public final class Utilities {
 
     // TODO This class should be split into dedicated ones
+
+    private static final Logger LOGGER = Logger.getLogger(Utilities.class.getName());
+
 
     public static final String CHARSET_NAME = "UTF-8";
     public static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
@@ -70,7 +74,9 @@ public final class Utilities {
         File files[] = f.listFiles();
         if (files != null) {
             for (int i = 0; i < files.length; i++) {
-                files[i].delete();
+                if (!files[i].delete()) {
+                    LOGGER.severe("Unable to delete " + files[i].getAbsolutePath());
+                }
             }
         }
     }

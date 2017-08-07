@@ -52,13 +52,17 @@ public class ServerConfigImplTest {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws IOException {
         if (configFile != null) {
-            configFile.delete();
+            if (!configFile.delete()) {
+                throw new IOException("Unable to delete " + configFile.getAbsolutePath());
+            }
         }
 
         if (mimeFile != null) {
-            mimeFile.delete();
+            if (!mimeFile.delete()) {
+                throw new IOException("Unable to delete " + mimeFile.getAbsolutePath());
+            }
         }
     }
 

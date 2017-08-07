@@ -96,9 +96,13 @@ public class FileSessionStorageTest {
         String sid = "asdfghjklzxasdfghjklzxasdfghjklz";
         File sessionFile = new File(tempPath + sid + "_session");
         if (sessionFile.exists()) {
-            sessionFile.delete();
+            if (!sessionFile.delete()) {
+                throw new IOException("Unable to delete file " + sessionFile.getAbsolutePath());
+            }
         }
-        sessionFile.createNewFile();
+        if (!sessionFile.createNewFile()) {
+            throw new IOException("Unable to create new file " + sessionFile.getAbsolutePath());
+        }
         assertThat(fileSessionStorage.getSession(sid), is(nullValue()));
     }
 }

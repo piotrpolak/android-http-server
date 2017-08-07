@@ -93,9 +93,11 @@ public class FileResourceProvider implements ResourceProvider {
 
         if (!request.getMethod().equals(HttpRequestWrapper.METHOD_HEAD)) {
             InputStream fileInputStream = new FileInputStream(file);
-            response.serveStream(fileInputStream);
-
-            IOUtilities.closeSilently(fileInputStream);
+            try {
+                response.serveStream(fileInputStream);
+            } finally {
+                IOUtilities.closeSilently(fileInputStream);
+            }
         }
 
         response.flush();

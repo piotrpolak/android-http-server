@@ -49,10 +49,4 @@ public class HttpResponseWrapperTest {
 
         assertThat(httpResponseWrapper.getWriter().equals(httpResponseWrapper.getWriter()), is(true));
     }
-
-    @Test
-    public void shouldSetTransferChunked() throws IOException {
-        Socket socket = mock(Socket.class);
-        HttpResponseWrapper httpResponseWrapper = HttpResponseWrapper.createFromSocket(socket);
-    }
 }

@@ -9,6 +9,7 @@ package admin;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -17,6 +18,8 @@ import java.util.logging.Logger;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.servlet.HttpSession;
 import ro.polak.http.utilities.ConfigReader;
+
+import static ro.polak.http.utilities.IOUtilities.closeSilently;
 
 public class AccessControl {
 
@@ -102,13 +105,18 @@ public class AccessControl {
      */
     public static Map<String, String> getConfig(ServerConfig serverConfig) {
         Map<String, String> config = null;
+        InputStream fileInputStream = null;
         try {
             ConfigReader reader = new ConfigReader();
             String configPath = serverConfig.getBasePath() + "admin.conf";
-            config = reader.read(new FileInputStream(configPath));
+            fileInputStream = new FileInputStream(configPath);
+            config = reader.read(fileInputStream);
         } catch (IOException e) {
             LOGGER.log(Level.FINE, "Unable to read config", e);
         } finally {
+            if (fileInputStream != null) {
+                closeSilently(fileInputStream);
+            }
             if (config == null) {
                 LOGGER.fine("Creating a default config");
                 config = new HashMap<>();

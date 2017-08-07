@@ -51,7 +51,9 @@ public class FileSessionStorage implements SessionStorage {
 
         File file = new File(getSessionStoragePath(session.getId()));
         if (!file.exists()) {
-            file.createNewFile();
+            if (!file.createNewFile()) {
+                throw new IOException("Unable to create new file " + file.getAbsolutePath());
+            }
         }
         writeSession(session, file);
 
@@ -113,7 +115,7 @@ public class FileSessionStorage implements SessionStorage {
         FileOutputStream fileOutputStream = new FileOutputStream(file);
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(session);
-        
+
         IOUtilities.closeSilently(objectOutputStream);
         IOUtilities.closeSilently(fileOutputStream);
     }

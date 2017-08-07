@@ -6,7 +6,8 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class UploadedFileTest {
 
@@ -15,41 +16,82 @@ public class UploadedFileTest {
     @Test
     public void shouldDeleteFileDestory() throws IOException {
         File file = new File(tempPath + "uploadfile.pdf");
-        file.createNewFile();
-        assertThat(file.exists(), is(true));
-        UploadedFile uploadedFile = new UploadedFile("myfile", "myfile.pdf", file);
-        uploadedFile.destroy();
-        assertThat(uploadedFile.getFile().exists(), is(false));
+        try {
+            if (!file.createNewFile()) {
+                fail("Unable to create new file.");
+            }
+            assertThat(file.exists(), is(true));
+            UploadedFile uploadedFile = new UploadedFile("myfile", "myfile.pdf", file);
+            if (!uploadedFile.destroy()) {
+                fail("Unable to destroy uploaded file.");
+            }
+            assertThat(uploadedFile.getFile().exists(), is(false));
 
-        assertThat(uploadedFile.getFileName(), is("myfile.pdf"));
-        assertThat(uploadedFile.getPostFieldName(), is("myfile"));
+            assertThat(uploadedFile.getFileName(), is("myfile.pdf"));
+            assertThat(uploadedFile.getPostFieldName(), is("myfile"));
+        } finally {
+            cleanupFile(file);
+        }
     }
 
     @Test
     public void shouldHandleDestoryWhenFileDeletedManually() throws IOException {
         File file = new File(tempPath + "uploadfile.pdf");
-        file.createNewFile();
-        assertThat(file.exists(), is(true));
-        UploadedFile uploadedFile = new UploadedFile("myfile", "myfile.pdf", file);
+        try {
+            if (!file.createNewFile()) {
+                fail("Unable to create new file.");
+            }
+            assertThat(file.exists(), is(true));
+            UploadedFile uploadedFile = new UploadedFile("myfile", "myfile.pdf", file);
 
-        file.delete();
+            if (!file.delete()) {
+                fail("Unable to delete file.");
+            }
 
-        uploadedFile.destroy();
-        assertThat(uploadedFile.getFile().exists(), is(false));
+            if (uploadedFile.destroy()) {
+                fail("File should be already deleted.");
+            }
+            assertThat(uploadedFile.getFile().exists(), is(false));
+
+        } finally {
+            cleanupFile(file);
+        }
     }
 
     @Test
     public void shouldNotDeleteFileThatWasMoved() throws IOException {
         File file = new File(tempPath + "uploadfile.pdf");
-        file.createNewFile();
-        assertThat(file.exists(), is(true));
-        UploadedFile uploadedFile = new UploadedFile("myfile", "myfile.pdf", file);
-        File movedFile = new File(tempPath + "uploadfile123.pdf");
-        movedFile.delete();
-        assertThat(movedFile.exists(), is(false));
-        assertThat(uploadedFile.getFile().renameTo(movedFile), is(true));
-        uploadedFile.destroy();
-        assertThat(movedFile.exists(), is(true));
-        movedFile.delete();
+        try {
+            if (!file.createNewFile()) {
+                throw new IOException("Unable to create " + file.getAbsolutePath());
+            }
+
+            assertThat(file.exists(), is(true));
+            UploadedFile uploadedFile = new UploadedFile("myfile", "myfile.pdf", file);
+            File movedFile = new File(tempPath + "uploadfile123.pdf");
+            if (movedFile.exists()) {
+                if (!movedFile.delete()) {
+                    throw new IOException("Unable to delete " + movedFile.getAbsolutePath());
+                }
+            }
+            assertThat(movedFile.exists(), is(false));
+            assertThat(uploadedFile.getFile().renameTo(movedFile), is(true));
+            if (uploadedFile.destroy()) {
+                fail("File should be already moved.");
+            }
+            assertThat(movedFile.exists(), is(true));
+            if (!movedFile.delete()) {
+                throw new IOException("Unable to delete " + movedFile.getAbsolutePath());
+            }
+
+        } finally {
+            cleanupFile(file);
+        }
+    }
+
+    private void cleanupFile(File file) throws IOException {
+        if (file.exists() && !file.delete()) {
+            throw new IOException("Unable to delete " + file.getAbsolutePath());
+        }
     }
 }

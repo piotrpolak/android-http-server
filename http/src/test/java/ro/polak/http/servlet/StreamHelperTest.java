@@ -142,12 +142,14 @@ public class StreamHelperTest {
 
 
     private class SliceHelper {
+        private Random random = new Random();
+
         public byte[] getSliceForRanges(byte[] input, List<Range> ranges) {
             long totalLength = rangeHelper.getTotalLength(ranges);
             long headersPartLength = rangePartHeaderSerializer.getPartHeadersLength(ranges, BOUNDARY, CONTENT_TYPE, TOTAL_LENGTH);
 
             byte[] output = new byte[(int) (totalLength + headersPartLength)];
-            new Random().nextBytes(output);
+            random.nextBytes(output);
 
             int destPos = 0;
 

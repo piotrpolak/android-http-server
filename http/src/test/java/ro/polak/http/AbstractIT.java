@@ -44,27 +44,39 @@ public class AbstractIT {
 
         File workingDirectory = new File(tempPath);
         if (!workingDirectory.exists()) {
-            workingDirectory.mkdir();
+            if (!workingDirectory.mkdir()) {
+                throw new IOException("Unable to mkdir " + workingDirectory.getAbsolutePath());
+            }
         }
 
         httpdConfigFile = new File(tempPath + "httpd.conf");
         if (httpdConfigFile.exists()) {
-            httpdConfigFile.delete();
+            if (!httpdConfigFile.delete()) {
+                throw new IOException("Unable to delete " + httpdConfigFile.getAbsolutePath());
+            }
         }
-        httpdConfigFile.createNewFile();
+        if (!httpdConfigFile.createNewFile()) {
+            throw new IOException("Unable to create " + httpdConfigFile.getAbsolutePath());
+        }
 
         ServerConfig serverConfig = getServerConfig();
 
         File documentRoot = new File(serverConfig.getDocumentRootPath());
         if (!documentRoot.exists()) {
-            documentRoot.mkdir();
+            if (!documentRoot.mkdir()) {
+                throw new IOException("Unable to mkdir " + documentRoot.getAbsolutePath());
+            }
         }
 
         staticFile = new File(serverConfig.getDocumentRootPath() + "staticfile.html");
         if (staticFile.exists()) {
-            staticFile.delete();
+            if (!staticFile.delete()) {
+                throw new IOException("Unable to delete " + staticFile.getAbsolutePath());
+            }
         }
-        staticFile.createNewFile();
+        if (!staticFile.createNewFile()) {
+            throw new IOException("Unable to create " + staticFile.getAbsolutePath());
+        }
 
         PrintWriter writer = new PrintWriter(staticFile, "UTF-8");
         writer.print("Static file");

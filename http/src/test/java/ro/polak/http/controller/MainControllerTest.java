@@ -54,8 +54,7 @@ public class MainControllerTest {
     @Test
     public void shouldAssignDefaultUncaughtExceptionHandler() {
         assertThat(Thread.currentThread().getDefaultUncaughtExceptionHandler(), is(nullValue()));
-        MainController mainController = new MainController(serverConfigFactory, serverSocketFactory,
-                serverGui);
+        new MainController(serverConfigFactory, serverSocketFactory, serverGui);
 
         assertThat(Thread.currentThread().getDefaultUncaughtExceptionHandler(), is(not(nullValue())));
     }

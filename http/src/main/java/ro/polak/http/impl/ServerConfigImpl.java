@@ -71,9 +71,13 @@ public class ServerConfigImpl implements ServerConfig {
     public static ServerConfigImpl createFromPath(String basePath, String tempPath) throws IOException {
         ConfigReader reader = new ConfigReader();
         InputStream configInputStream = new FileInputStream(basePath + "httpd.conf");
-        Map<String, String> config = reader.read(configInputStream);
 
-        IOUtilities.closeSilently(configInputStream);
+        Map<String, String> config;
+        try {
+            config = reader.read(configInputStream);
+        } finally {
+            IOUtilities.closeSilently(configInputStream);
+        }
 
         ServerConfigImpl serverConfig = new ServerConfigImpl();
         serverConfig.basePath = basePath;

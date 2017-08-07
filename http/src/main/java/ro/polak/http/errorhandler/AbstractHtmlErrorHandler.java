@@ -12,8 +12,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
@@ -65,8 +65,11 @@ public abstract class AbstractHtmlErrorHandler extends AbstractPlainTextHttpErro
         response.setContentLength(file.length());
         ((HttpResponseWrapper) response).flushHeaders();
         InputStream inputStream = new FileInputStream(file);
-        ((HttpResponseWrapper) response).serveStream(inputStream);
-        ((HttpResponseWrapper) response).flush();
-        IOUtilities.closeSilently(inputStream);
+        try {
+            ((HttpResponseWrapper) response).serveStream(inputStream);
+            ((HttpResponseWrapper) response).flush();
+        } finally {
+            IOUtilities.closeSilently(inputStream);
+        }
     }
 }

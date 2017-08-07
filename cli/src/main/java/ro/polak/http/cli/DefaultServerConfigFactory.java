@@ -116,7 +116,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
      * @param serverConfig
      * @return
      */
-    private ResourceProvider[] selectActiveResourceProviders(ServerConfig serverConfig) {
+    private  List<ResourceProvider> selectActiveResourceProviders(ServerConfig serverConfig) {
         List<ResourceProvider> resourceProviders = new ArrayList<>();
 
         resourceProviders.add(getFileResourceProvider(serverConfig));
@@ -126,7 +126,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         }
 
         resourceProviders.add(getServletResourceProvider(serverConfig));
-        return resourceProviders.toArray(new ResourceProvider[resourceProviders.size()]);
+        return resourceProviders;
     }
 
     private FileResourceProvider getFileResourceProvider(ServerConfig serverConfig) {

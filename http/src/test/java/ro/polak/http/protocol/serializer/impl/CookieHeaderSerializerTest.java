@@ -38,7 +38,7 @@ public class CookieHeaderSerializerTest {
         Cookie cookie = new Cookie("name", "value");
         cookie.setMaxAge(maxAgeSeconds);
         String serializedCookie = cookieHeaderSerializer.serialize(cookie);
-        Date date = new Date(System.currentTimeMillis() + maxAgeSeconds * 1000);
+        Date date = new Date(System.currentTimeMillis() + Long.valueOf(maxAgeSeconds) * 1000l);
         String expiresValue = Utilities.dateFormat(date);
         assertThat(getExpiresValue(serializedCookie), is(expiresValue));
     }

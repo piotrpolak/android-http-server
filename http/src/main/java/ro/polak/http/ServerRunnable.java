@@ -9,6 +9,7 @@ package ro.polak.http;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -224,10 +225,10 @@ public class ServerRunnable implements Runnable {
      */
     private String getAllowedMethods() {
         StringBuilder stringBuilder = new StringBuilder();
-        String[] supportedMethods = serverConfig.getSupportedMethods();
-        for (int i = 0; i < supportedMethods.length; i++) {
-            stringBuilder.append(supportedMethods[i]);
-            if (i != supportedMethods.length - 1) {
+        List<String> supportedMethods = serverConfig.getSupportedMethods();
+        for (int i = 0; i < supportedMethods.size(); i++) {
+            stringBuilder.append(supportedMethods.get(i));
+            if (i != supportedMethods.size() - 1) {
                 stringBuilder.append(", ");
             }
         }
@@ -236,10 +237,9 @@ public class ServerRunnable implements Runnable {
     }
 
     private ResourceProvider getResourceProvider(String path) {
-        ResourceProvider[] rl = serverConfig.getResourceProviders();
-        for (int i = 0; i < rl.length; i++) {
-            if (rl[i].canLoad(path)) {
-                return rl[i];
+        for (ResourceProvider resourceProvider : serverConfig.getResourceProviders()) {
+            if (resourceProvider.canLoad(path)) {
+                return resourceProvider;
             }
         }
         return null;

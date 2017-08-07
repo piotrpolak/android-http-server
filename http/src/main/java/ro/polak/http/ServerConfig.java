@@ -101,12 +101,12 @@ public interface ServerConfig {
      *
      * @return
      */
-    String[] getSupportedMethods();
+    List<String> getSupportedMethods();
 
     /**
      * Returns available resource providers.
      *
      * @return
      */
-    ResourceProvider[] getResourceProviders();
+    List<ResourceProvider> getResourceProviders();
 }

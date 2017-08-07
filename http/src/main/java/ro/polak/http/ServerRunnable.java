@@ -9,31 +9,13 @@ package ro.polak.http;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ro.polak.http.errorhandler.HttpErrorHandler;
-import ro.polak.http.errorhandler.impl.HttpError400Handler;
-import ro.polak.http.errorhandler.impl.HttpError403Handler;
-import ro.polak.http.errorhandler.impl.HttpError404Handler;
-import ro.polak.http.errorhandler.impl.HttpError405Handler;
-import ro.polak.http.errorhandler.impl.HttpError411Handler;
-import ro.polak.http.errorhandler.impl.HttpError413Handler;
-import ro.polak.http.errorhandler.impl.HttpError414Handler;
-import ro.polak.http.errorhandler.impl.HttpError416Handler;
-import ro.polak.http.errorhandler.impl.HttpError500Handler;
-import ro.polak.http.errorhandler.impl.HttpError505Handler;
+import ro.polak.http.errorhandler.HttpErrorHandlerResolver;
 import ro.polak.http.exception.AccessDeniedException;
 import ro.polak.http.exception.MethodNotAllowedException;
 import ro.polak.http.exception.NotFoundException;
-import ro.polak.http.protocol.exception.LengthRequiredException;
-import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
-import ro.polak.http.protocol.exception.ProtocolException;
-import ro.polak.http.protocol.exception.RangeNotSatisfiableProtocolException;
-import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
-import ro.polak.http.protocol.exception.UnsupportedProtocolException;
-import ro.polak.http.protocol.exception.UriTooLongProtocolException;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponseWrapper;
@@ -55,18 +37,23 @@ public class ServerRunnable implements Runnable {
     private final ServerConfig serverConfig;
     private final Socket socket;
     private final HttpServletRequestWrapperFactory requestFactory;
+    private final HttpErrorHandlerResolver httpErrorHandlerResolver;
 
     /**
      * Default constructor.
-     *
      * @param socket
      * @param serverConfig
      * @param requestFactory
+     * @param httpErrorHandlerResolver
      */
-    public ServerRunnable(final Socket socket, final ServerConfig serverConfig, final HttpServletRequestWrapperFactory requestFactory) {
+    public ServerRunnable(Socket socket,
+                          ServerConfig serverConfig,
+                          HttpServletRequestWrapperFactory requestFactory,
+                          HttpErrorHandlerResolver httpErrorHandlerResolver) {
         this.socket = socket;
         this.serverConfig = serverConfig;
         this.requestFactory = requestFactory;
+        this.httpErrorHandlerResolver = httpErrorHandlerResolver;
     }
 
     @Override
@@ -88,9 +75,9 @@ public class ServerRunnable implements Runnable {
                     throw new AccessDeniedException();
                 }
 
-                setDefaultResponseHeaders(request, response);
-
                 validateRequest(request);
+
+                setDefaultResponseHeaders(request, response);
 
                 ResourceProvider resourceProvider = getResourceProvider(requestedPath);
                 if (resourceProvider == null) {
@@ -110,7 +97,7 @@ public class ServerRunnable implements Runnable {
                 }
             } catch (RuntimeException e) {
                 if (response != null) {
-                    getHandler(e).serve(response);
+                    httpErrorHandlerResolver.getHandler(e).serve(response);
                 }
 
                 throw e; // Make it logged by the main thread
@@ -132,62 +119,8 @@ public class ServerRunnable implements Runnable {
 
     private void sendRedirectToDirectorySlashedPath(HttpResponseWrapper response, String originalPath) throws IOException {
         response.setStatus(HttpServletResponse.STATUS_MOVED_PERMANENTLY);
-        response.getHeaders().setHeader("Location", originalPath + "/");
+        response.getHeaders().setHeader(Headers.HEADER_LOCATION, originalPath + "/");
         response.flush();
-    }
-
-    /**
-     * Returns resolved handler for given exception.
-     *
-     * @param e
-     * @return
-     * @throws IOException
-     */
-    private HttpErrorHandler getHandler(RuntimeException e) throws IOException {
-        Throwable fallbackException;
-
-        try {
-            if (e instanceof ProtocolException) {
-                return getProtocolExceptionHandler((ProtocolException) e);
-            } else if (e instanceof AccessDeniedException) {
-                return new HttpError403Handler(serverConfig.getErrorDocument403Path());
-            } else if (e instanceof NotFoundException) {
-                Statistics.incrementError404();
-                return new HttpError404Handler(serverConfig.getErrorDocument404Path());
-            } else if (e instanceof MethodNotAllowedException) {
-                return new HttpError405Handler(getAllowedMethods());
-            } else {
-                fallbackException = e;
-            }
-        } catch (Throwable handlingException) {
-            fallbackException = handlingException;
-        }
-
-        Statistics.incrementError500();
-        return new HttpError500Handler().setReason(fallbackException);
-    }
-
-    /**
-     * Returns resolved handler for given ProtocolException.
-     *
-     * @param e
-     * @return
-     * @throws IOException
-     */
-    private HttpErrorHandler getProtocolExceptionHandler(ProtocolException e) throws IOException {
-        if (e instanceof UriTooLongProtocolException || e instanceof StatusLineTooLongProtocolException) {
-            return new HttpError414Handler();
-        } else if (e instanceof LengthRequiredException) {
-            return new HttpError411Handler();
-        } else if (e instanceof UnsupportedProtocolException) {
-            return new HttpError505Handler();
-        } else if (e instanceof PayloadTooLargeProtocolException) {
-            return new HttpError413Handler();
-        } else if (e instanceof RangeNotSatisfiableProtocolException) {
-            return new HttpError416Handler();
-        }
-
-        return new HttpError400Handler();
     }
 
     /**
@@ -216,24 +149,6 @@ public class ServerRunnable implements Runnable {
             }
         }
         return null;
-    }
-
-    /**
-     * Returns coma separated allowed methods
-     *
-     * @return
-     */
-    private String getAllowedMethods() {
-        StringBuilder stringBuilder = new StringBuilder();
-        List<String> supportedMethods = serverConfig.getSupportedMethods();
-        for (int i = 0; i < supportedMethods.size(); i++) {
-            stringBuilder.append(supportedMethods.get(i));
-            if (i != supportedMethods.size() - 1) {
-                stringBuilder.append(", ");
-            }
-        }
-
-        return stringBuilder.toString();
     }
 
     private ResourceProvider getResourceProvider(String path) {

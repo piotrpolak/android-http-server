@@ -20,9 +20,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ro.polak.http.errorhandler.HttpErrorHandlerResolver;
 import ro.polak.http.errorhandler.impl.HttpError503Handler;
-import ro.polak.http.servlet.HttpServletRequestWrapperFactory;
+import ro.polak.http.errorhandler.impl.HttpErrorHandlerResolverImpl;
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.HttpServletRequestWrapperFactory;
 import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.Utilities;
 
@@ -58,10 +60,14 @@ public class WebServer extends Thread {
     public void run() {
         ThreadPoolExecutor threadPoolExecutor = getThreadPoolExecutor();
         HttpServletRequestWrapperFactory requestWrapperFactory = new HttpServletRequestWrapperFactory(serverConfig.getTempPath());
+        HttpErrorHandlerResolver httpErrorHandlerResolver = new HttpErrorHandlerResolverImpl(serverConfig);
 
         while (listen) {
             try {
-                threadPoolExecutor.execute(new ServerRunnable(serverSocket.accept(), serverConfig, requestWrapperFactory));
+                threadPoolExecutor.execute(new ServerRunnable(serverSocket.accept(),
+                        serverConfig,
+                        requestWrapperFactory,
+                        httpErrorHandlerResolver));
             } catch (IOException e) {
                 if (listen) {
                     LOGGER.log(Level.SEVERE, "Communication error", e);

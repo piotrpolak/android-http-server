@@ -20,7 +20,6 @@ public class UploadedFile {
     private final String postFieldName;
     private final String fileName;
     private final File file;
-    private final String initialPath;
 
     /**
      * Constructor
@@ -33,7 +32,6 @@ public class UploadedFile {
         this.postFieldName = postFieldName;
         this.fileName = fileName;
         this.file = file;
-        this.initialPath = file.getAbsolutePath();
     }
 
     /**

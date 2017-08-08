@@ -35,7 +35,7 @@ public class UploadedFileTest {
     }
 
     @Test
-    public void shouldHandleDestoryWhenFileDeletedManually() throws IOException {
+    public void shouldHandleDestroyWhenFileDeletedManually() throws IOException {
         File file = new File(tempPath + "uploadfile.pdf");
         try {
             if (!file.createNewFile()) {
@@ -76,6 +76,7 @@ public class UploadedFileTest {
             }
             assertThat(movedFile.exists(), is(false));
             assertThat(uploadedFile.getFile().renameTo(movedFile), is(true));
+            assertThat(uploadedFile.getFile().exists(), is(false));
             if (uploadedFile.destroy()) {
                 fail("File should be already moved.");
             }

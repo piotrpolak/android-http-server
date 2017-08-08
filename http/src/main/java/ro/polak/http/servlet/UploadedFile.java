@@ -42,10 +42,11 @@ public class UploadedFile {
      * @return true if deleted
      */
     public boolean destroy() {
-        if (!file.exists() || isFileMoved()) {
-            return false;
+        if (file.exists()) {
+            return file.delete();
         }
-        return file.delete();
+
+        return false;
     }
 
     /**
@@ -73,9 +74,5 @@ public class UploadedFile {
      */
     public File getFile() {
         return file;
-    }
-
-    private boolean isFileMoved() {
-        return !initialPath.equals(file.getAbsolutePath());
     }
 }

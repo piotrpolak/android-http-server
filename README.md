@@ -16,18 +16,17 @@ It can be used as a standalone web server for static content or as a remote appl
 * Small footprint, requires no external libraries
 * Handles HTTP requests in separate threads
 * Supports dynamic pages via Servlets (own specification)
-* Implements Servlet Pool for memory optimisation and resource reuse
 * Support for GET, POST, HEAD methods
 * Supports chunked transfer type
 * ~~Supports KEEP-ALIVE connections~~
-* Full support for mime types (uses Apache mime.type)
+* Full support for mime types (uses Apache like mime.type)
 * Supports buffered file upload (multipart requests)
 * Exposes compact API for handling sessions
 * Supports serving partial content (ranges)
 
 ## Building application
 
-Provided Gradle wrapper should be used to build the application:
+The provided Gradle wrapper should be used to build the application:
 
 ```
 ./gradlew build

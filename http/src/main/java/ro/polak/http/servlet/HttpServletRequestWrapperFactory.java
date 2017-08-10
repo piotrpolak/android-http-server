@@ -111,7 +111,7 @@ public class HttpServletRequestWrapperFactory {
         request.setInputStream(in);
         assignSocketMetadata(socket, request);
         request.setStatus(status);
-        request.setPathTranslated(getClass().getProtectionDomain().getCodeSource().getLocation().getPath() + request.getRequestURI().substring(1));
+        request.setPathTranslated(request.getRequestURI()); // TODO There is no way to make it work under Android
         request.setContextPath("/");
         request.setPathInfo("");
         request.setRemoteUser(null);

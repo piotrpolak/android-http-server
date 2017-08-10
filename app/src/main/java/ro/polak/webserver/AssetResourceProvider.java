@@ -14,6 +14,7 @@ import android.support.annotation.NonNull;
 import java.io.IOException;
 import java.io.InputStream;
 
+import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponseWrapper;
@@ -46,22 +47,24 @@ public class AssetResourceProvider implements ResourceProvider {
 
     @Override
     public boolean canLoad(String path) {
-        return getInputStream(getAssetPath(path)) != null;
+        try {
+            getInputStream(getAssetPath(path));
+            return true;
+        } catch (IOException e) {
+        }
+
+        return false;
     }
 
-    private InputStream getInputStream(String assetPath) {
-        try {
-            return assetManager.open(assetPath);
-        } catch (IOException e) {
-            return null;
-        }
+    private InputStream getInputStream(String assetPath) throws IOException {
+        return assetManager.open(assetPath);
     }
 
     @Override
     public void load(String path, HttpRequestWrapper request, HttpResponseWrapper response) {
         String assetPath = getAssetPath(path);
         try {
-            InputStream inputStream = getInputStream(path);
+            InputStream inputStream = getInputStream(assetPath);
 
             response.setStatus(HttpServletResponse.STATUS_OK);
 
@@ -69,7 +72,7 @@ public class AssetResourceProvider implements ResourceProvider {
             try (AssetFileDescriptor afd = assetManager.openFd(assetPath)) {
                 response.setContentLength(afd.getLength());
             } catch (IOException e) {
-
+                // There is no asset description or we can't read the length of the asset
             }
 
             // TODO Set mime type
@@ -81,7 +84,7 @@ public class AssetResourceProvider implements ResourceProvider {
             IOUtilities.closeSilently(inputStream);
 
         } catch (IOException e) {
-
+            throw new UnexpectedSituationException(e);
         }
     }
 

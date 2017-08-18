@@ -29,7 +29,7 @@ public interface Controller {
     void stop() throws IllegalStateException;
 
     /**
-     * Returns webserver instance.
+     * Returns web server instance.
      *
      * @return
      */

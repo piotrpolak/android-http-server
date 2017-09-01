@@ -7,12 +7,12 @@
 
 package admin;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ro.polak.http.ServerConfig;
@@ -90,9 +90,8 @@ public class AccessControl {
             } else {
                 LOGGER.fine("Not logging in - wrong password");
             }
-        } catch (NullPointerException e) {
-            logged = false;
-            LOGGER.fine("Not logging in - null pointer exception");
+        } catch (IOException e) {
+            LOGGER.fine("Not logging in - IOException " + e.getMessage());
         }
         return logged;
     }
@@ -103,16 +102,22 @@ public class AccessControl {
      * @param serverConfig
      * @return
      */
-    public static Map<String, String> getConfig(ServerConfig serverConfig) {
+    public static Map<String, String> getConfig(ServerConfig serverConfig) throws IOException {
         Map<String, String> config = null;
         InputStream fileInputStream = null;
+
+        File basePath = new File(serverConfig.getBasePath());
+        if (!basePath.exists()) {
+            if (!basePath.mkdir()) {
+                throw new IOException("Unable to mkdir " + basePath.getAbsolutePath());
+            }
+        }
+
         try {
             ConfigReader reader = new ConfigReader();
             String configPath = serverConfig.getBasePath() + "admin.conf";
             fileInputStream = new FileInputStream(configPath);
             config = reader.read(fileInputStream);
-        } catch (IOException e) {
-            LOGGER.log(Level.FINE, "Unable to read config", e);
         } finally {
             if (fileInputStream != null) {
                 closeSilently(fileInputStream);

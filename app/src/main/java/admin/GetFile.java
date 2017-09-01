@@ -34,9 +34,13 @@ public class GetFile extends HttpServlet {
             return;
         }
 
-        if (!AccessControl.getConfig(serverConfig).get("_managementEnableDriveAccess").equals("On")) {
-            response.getWriter().println("Option disabled in configuration.");
-            return;
+        try {
+            if (!AccessControl.getConfig(serverConfig).get("_managementEnableDriveAccess").equals("On")) {
+                response.getWriter().println("Option disabled in configuration.");
+                return;
+            }
+        } catch (IOException e) {
+            throw new ServletException(e);
         }
 
         boolean fileExists = false;

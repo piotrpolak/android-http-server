@@ -8,13 +8,14 @@
 package admin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.StringTokenizer;
 
 import ro.polak.http.ServerConfig;
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.utilities.Utilities;
 
 public class DriveAccess extends HttpServlet {
@@ -33,9 +34,13 @@ public class DriveAccess extends HttpServlet {
 
         doc.writeln("<div class=\"page-header\"><h1>Drive Access</h1></div>");
 
-        if (!AccessControl.getConfig(serverConfig).get("_managementEnableDriveAccess").equals("On")) {
-            renderFunctionDisabled(response, doc);
-            return;
+        try {
+            if (!AccessControl.getConfig(serverConfig).get("_managementEnableDriveAccess").equals("On")) {
+                renderFunctionDisabled(response, doc);
+                return;
+            }
+        } catch (IOException e) {
+            throw new ServletException(e);
         }
 
         File[] roots = File.listRoots();

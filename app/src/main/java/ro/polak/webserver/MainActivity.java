@@ -7,15 +7,21 @@
 
 package ro.polak.webserver;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +29,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import ro.polak.http.R;
 
@@ -34,14 +43,23 @@ import ro.polak.http.R;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private static final String[] REQUIRED_PERMISSIONS = new String[]{
+            Manifest.permission.INTERNET,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.SEND_SMS,
+            Manifest.permission.READ_SMS,
+            Manifest.permission.ACCESS_WIFI_STATE,
+    };
+
+    private static final int PERMISSIONS_REQUEST_CODE = 5543;
     private TextView status;
     private TextView ipText;
     private TextView consoleText;
     private Button actionButton;
     private Button backgroundButton;
+    private Button requestPermissionsButton;
     private Button quitButton;
     private ImageView imgView;
-
     private MainService mainService;
     private boolean isMainServiceBound = false;
 
@@ -70,8 +88,9 @@ public class MainActivity extends AppCompatActivity {
             isMainServiceBound = true;
 
             if (!mainService.getServiceState().isServicetarted()) {
-                Intent serviceIntent = new Intent(MainActivity.this, MainService.class);
-                startService(serviceIntent);
+                if (getMissingPermissions().length == 0) {
+                    startBackgroundService();
+                }
             }
         }
 
@@ -80,6 +99,12 @@ public class MainActivity extends AppCompatActivity {
             isMainServiceBound = false;
         }
     };
+
+    private void startBackgroundService() {
+        Intent serviceIntent = new Intent(MainActivity.this, MainService.class);
+        startService(serviceIntent);
+        Toast.makeText(getApplicationContext(), "Starting background service", Toast.LENGTH_SHORT).show();
+    }
 
     public void informStateChanged() {
         if (isMainServiceBound) {
@@ -100,8 +125,6 @@ public class MainActivity extends AppCompatActivity {
                 actionButton.setText("Start HTTPD");
             }
         }
-
-
     }
 
     /**
@@ -132,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
         ipText = (TextView) findViewById(R.id.TextView02);
         consoleText = (TextView) findViewById(R.id.textView1);
         actionButton = (Button) findViewById(R.id.Button01);
-        actionButton.setVisibility(View.INVISIBLE);
         actionButton.setOnClickListener(new ButtonListener(this));
 
         backgroundButton = (Button) findViewById(R.id.Button02);
@@ -141,7 +163,93 @@ public class MainActivity extends AppCompatActivity {
         quitButton = (Button) findViewById(R.id.Button03);
         quitButton.setOnClickListener(new ButtonListener(this));
 
+        requestPermissionsButton = (Button) findViewById(R.id.Button04);
+        requestPermissionsButton.setOnClickListener(new ButtonListener(this));
+
         status.setText("Initializing");
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            requestPermissions();
+        }
+    }
+
+    private void requestPermissions() {
+        String[] permissionsNotGrantedYet = getMissingPermissions();
+
+        if (permissionsNotGrantedYet.length > 0) {
+            status.setText("Requesting permissions");
+            actionButton.setVisibility(View.GONE);
+            backgroundButton.setVisibility(View.GONE);
+            ipText.setVisibility(View.GONE);
+
+            // TODO Implement displaying rationale
+            ActivityCompat.requestPermissions(this, permissionsNotGrantedYet, PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    /**
+     * To revoke user permissions please execute adb shell pm reset-permissions
+     *
+     * @return
+     */
+    @NonNull
+    private String[] getMissingPermissions() {
+        Set<String> permissionsNotGrantedYet = new HashSet<>();
+
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsNotGrantedYet.add(permission);
+            }
+        }
+        String[] permissionsNotGrantedYetArray = new String[permissionsNotGrantedYet.size()];
+        permissionsNotGrantedYet.toArray(permissionsNotGrantedYetArray);
+        return permissionsNotGrantedYetArray;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    boolean isAnyPermissionMissing = false;
+                    for (int result : grantResults) {
+                        if (result != PackageManager.PERMISSION_GRANTED) {
+                            isAnyPermissionMissing = true;
+                        }
+                    }
+
+                    if (isAnyPermissionMissing) {
+                        showMustAcceptPermissions();
+                    } else {
+                        backgroundButton.setVisibility(View.VISIBLE);
+                        ipText.setVisibility(View.VISIBLE);
+                        if (isMainServiceBound) {
+                            Handler mainHandler = new Handler(getApplicationContext().getMainLooper());
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (!mainService.getServiceState().isServicetarted()) {
+                                        startBackgroundService();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Service already started!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Background service not bound!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } else {
+                    showMustAcceptPermissions();
+                }
+            }
+        }
+    }
+
+    private void showMustAcceptPermissions() {
+        status.setText("Unable to initialize. Missing permissions.");
+        Toast.makeText(getApplicationContext(), "You must grant all permissions to run the server", Toast.LENGTH_SHORT).show();
+        requestPermissionsButton.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -158,7 +266,10 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             int id = v.getId();
 
-            if (id == backgroundButton.getId()) {
+            if (id == requestPermissionsButton.getId()) {
+                requestPermissions();
+                return;
+            } else if (id == backgroundButton.getId()) {
                 moveTaskToBack(true);
                 return;
             } else if (id == quitButton.getId()) {
@@ -181,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
                                     });
                                     activity.finish();
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "Not bound", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Background service not bound!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })
@@ -200,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
                         mainService.getController().start();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Not bound", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Background service not bound!", Toast.LENGTH_SHORT).show();
                 }
             }
         }

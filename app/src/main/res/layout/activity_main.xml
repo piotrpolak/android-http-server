@@ -33,9 +33,16 @@
         android:layout_marginBottom="40px"></Button>
 
     <Button android:layout_height="wrap_content"
+        android:layout_width="wrap_content" android:text="Grant permissions"
+        android:id="@+id/Button04" android:layout_alignParentLeft="true"
+        android:layout_below="@+id/Button01"
+        android:visibility="gone"></Button>
+
+    <Button android:layout_height="wrap_content"
         android:layout_width="wrap_content" android:text="Run in background"
         android:id="@+id/Button02" android:layout_alignParentLeft="true"
         android:layout_below="@+id/Button01"></Button>
+
     <Button android:layout_height="wrap_content"
         android:layout_width="wrap_content" android:text="Stop and exit"
         android:id="@+id/Button03" android:layout_alignParentRight="true"

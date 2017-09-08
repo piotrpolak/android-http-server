@@ -40,6 +40,15 @@ public class QueryStringParserTest {
     }
 
     @Test
+    public void shouldParseNonValidString() throws MalformedInputException {
+        String data = "/";
+        Parser<Map<String, String>> parser = new QueryStringParser();
+        Map<String, String> parameters = parser.parse(data);
+
+        assertThat(parameters.size(), is(0));
+    }
+
+    @Test
     public void shouldParseIncompleteFields() throws MalformedInputException {
         String data = "=&param1="
                 + "&&"

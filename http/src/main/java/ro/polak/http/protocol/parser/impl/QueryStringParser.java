@@ -41,7 +41,9 @@ public class QueryStringParser implements Parser<Map<String, String>> {
                 continue;
             }
 
-            parameters.put(parameterPair[0], ro.polak.http.utilities.Utilities.urlDecode(parameterPair[1]));
+            if(parameterPair.length > 1) {
+                parameters.put(parameterPair[0], ro.polak.http.utilities.Utilities.urlDecode(parameterPair[1]));
+            }
         }
 
         return parameters;

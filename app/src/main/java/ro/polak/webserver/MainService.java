@@ -61,7 +61,7 @@ public class MainService extends Service implements ServerGui {
     public int onStartCommand(Intent intent, int flags, int startId) {
         isServiceStarted = true;
 
-        controller = new MainController(new AndroidServerConfigFactory(this),
+        controller = new MainController(new AndroidServerConfigFactory(activity),
                 ServerSocketFactory.getDefault(),
                 this
         );

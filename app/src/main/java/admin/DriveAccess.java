@@ -7,10 +7,15 @@
 
 package admin;
 
+import android.os.Environment;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
+import admin.logic.AccessControl;
+import admin.logic.FileIconMapper;
+import admin.logic.HTMLDocument;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpServlet;
@@ -18,14 +23,18 @@ import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.utilities.Utilities;
 
+import static admin.Login.RELOCATE_PARAM_NAME;
+
 public class DriveAccess extends HttpServlet {
+
+    private static FileIconMapper fileIconMapper = new FileIconMapper();
 
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
         AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getRequestURI());
+            response.sendRedirect("/admin/Login.dhtml?"+RELOCATE_PARAM_NAME+"=" + request.getRequestURI()+(!request.getQueryString().equals("") ? "?"+request.getQueryString() : ""));
             return;
         }
 
@@ -43,22 +52,20 @@ public class DriveAccess extends HttpServlet {
             throw new ServletException(e);
         }
 
-        File[] roots = File.listRoots();
-        String path = request.getQueryString();
+        String path = Utilities.urlDecode(request.getQueryString());
 
-        if (!"".equals(path)) {
-            renderDrives(doc, roots);
-            renderBreadcrubms(doc, path);
+        if ("".equals(path)) {
+            path = "/";
+        }
 
-            File file = new File(path);
+        renderBreadcrubms(doc, path);
 
-            if (file.exists() && file.isDirectory()) {
-                renderDirectoryList(doc, path, file);
-            } else {
-                renderPathNotAvailable(doc);
-            }
+        File file = new File(Environment.getExternalStorageDirectory() + path);
+
+        if (file.exists() && file.isDirectory()) {
+            renderDirectoryList(doc, path, file);
         } else {
-            renderAvailableRoots(doc, roots);
+            renderPathNotAvailable(doc);
         }
 
         response.getWriter().print(doc.toString());
@@ -68,48 +75,41 @@ public class DriveAccess extends HttpServlet {
         doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Path does not exist or drive not mounted.</div>");
     }
 
-    private void renderDirectoryList(HTMLDocument doc, String path, File file) {
-        StringBuilder files = new StringBuilder();
+    private void renderDirectoryList(HTMLDocument doc, String path, File baseDirectory) {
+        StringBuilder filesString = new StringBuilder();
         StringBuilder directories = new StringBuilder();
-        String fileNames[] = file.list();
-        File f2;
-        if (fileNames == null) {
+        File files[] = baseDirectory.listFiles();
+        if (files == null) {
             doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Unable to read files.</div>");
         } else {
-            for (int i = 0; i < fileNames.length; i++) {
-                f2 = new File(path + fileNames[i]);
-                if (f2.isDirectory()) {
-                    directories
-                            .append("<p class=\"filemanager\"><img src=\"/assets/img/folder.png\" alt=\"folder\" /> <a href=\"/admin/DriveAccess.dhtml?"
-                                    + Utilities.urlEncode(path
-                                    + fileNames[i])
-                                    + "/\">"
-                                    + fileNames[i] + "</a></p>");
-                } else {
-                    files.append("<p class=\"filemanager\"><img src=\"/assets/img/file.png\" alt=\"file\" /> <a href=\"/admin/GetFile.dhtml?"
-                            + Utilities.urlEncode(path + fileNames[i])
-                            + "\">"
-                            + fileNames[i]
-                            + "</a> "
-                            + Utilities.fileSizeUnits(f2.length())
-                            + "</p>");
+            if(files.length == 0) {
+                doc.writeln("<div class=\"alert alert-info\" role=\"alert\">There are no files in this directory.</div>");
+            }
+            else {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        directories
+                                .append("<p class=\"filemanager\"><img src=\"/assets/img/folder.png\" alt=\"folder\" /> <a href=\"/admin/DriveAccess.dhtml?"
+                                        + Utilities.urlEncode(path
+                                        + file.getName()+"/")
+                                        + "\">"
+                                        + file.getName() + "</a></p>");
+                    } else {
+                        filesString.append("<p class=\"filemanager\"><img src=\"/assets/img/"
+                                + fileIconMapper.getIconRelativePath(Utilities.getExtension(file.getName()))
+                                + "\" alt=\"file\" /> <a href=\"/admin/GetFile.dhtml?"
+                                + Utilities.urlEncode(path + file.getName())
+                                + "\">"
+                                + file.getName()
+                                + "</a> "
+                                + Utilities.fileSizeUnits(file.length())
+                                + "</p>");
+                    }
                 }
             }
         }
         doc.write(directories.toString());
-        doc.write(files.toString());
-    }
-
-    private void renderAvailableRoots(HTMLDocument doc, File[] roots) {
-        for (int i = 0; i < roots.length; i++) {
-            doc.writeln("<p class=\"filemanager\"><img src=\"/assets/img/drive.png\" alt=\"drive\" /> <a href=\"/admin/DriveAccess.dhtml?"
-                    + roots[i].getAbsolutePath()
-                    + "\"><b>"
-                    + roots[i].getAbsolutePath().charAt(0)
-                    + "</b> "
-                    + (roots[i].getTotalSpace() / (1024 * 1024))
-                    + " MB</a></p>");
-        }
+        doc.write(filesString.toString());
     }
 
     private void renderFunctionDisabled(HttpServletResponse response, HTMLDocument doc) {
@@ -118,23 +118,15 @@ public class DriveAccess extends HttpServlet {
         response.getWriter().print(doc.toString());
     }
 
-    private void renderDrives(HTMLDocument doc, File[] roots) {
-        doc.write("<p>Drive: ");
-        for (int i = 0; i < roots.length; i++) {
-            doc.writeln("<a href=\"/admin/DriveAccess.dhtml?" + roots[i].getAbsolutePath() + "\"><b>" + roots[i].getAbsolutePath().charAt(0) + "</b></a> ");
-        }
-        doc.writeln("</p>");
-    }
-
     private void renderBreadcrubms(HTMLDocument doc, String path) {
         doc.writeln("<ol class=\"breadcrumb\">");
+        doc.writeln("<li><a href=\"/admin/DriveAccess.dhtml?"+Utilities.urlEncode("/")+"\"><img src=\"/assets/img/home.png\" alt=\"home\"></a></li>");
         StringTokenizer st = new StringTokenizer(path.replace('\\', '/'), "/");
-        String currentPath = "";
-        String token;
+        String currentPath = "/";
         while (st.hasMoreTokens()) {
-            token = st.nextToken();
-            currentPath += token + "/";
-            doc.writeln("<li><a href=\"/admin/DriveAccess.dhtml?" + currentPath + "\">" + token + "</a></li>");
+            String directory = st.nextToken();
+            currentPath += directory + "/";
+            doc.writeln("<li><a href=\"/admin/DriveAccess.dhtml?" + Utilities.urlEncode(currentPath) + "\">" + directory + "</a></li>");
         }
 
         doc.writeln("</ol>");

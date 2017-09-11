@@ -1,4 +1,4 @@
-package api;
+package api.logic;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -7,7 +7,7 @@ import org.json.JSONObject;
 /**
  * Represents JSON API Response
  */
-class APIResponse {
+public class APIResponse {
 
     public static final int CODE_OK = 200;
     public static final int CODE_ERROR = 400;

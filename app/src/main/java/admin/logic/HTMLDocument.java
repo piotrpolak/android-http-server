@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2015
  **************************************************/
 
-package admin;
+package admin.logic;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -97,7 +97,6 @@ public class HTMLDocument {
         LinkedHashMap<String, String> menuElements = new LinkedHashMap<>(10);
 
         menuElements.put("Index", "About");
-        menuElements.put("Management", "Management");
         menuElements.put("DriveAccess", "Drive Access");
         menuElements.put("ServerStats", "Statistics");
         menuElements.put("SmsInbox", "SMS inbox");

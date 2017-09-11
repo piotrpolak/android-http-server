@@ -9,8 +9,11 @@ package admin;
 
 import java.util.logging.Logger;
 
+import admin.logic.AccessControl;
+import admin.logic.HTMLDocument;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpServlet;
@@ -19,6 +22,7 @@ import ro.polak.http.utilities.Utilities;
 public class Login extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
+    public static final String RELOCATE_PARAM_NAME = "relocate";
 
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
@@ -32,7 +36,7 @@ public class Login extends HttpServlet {
 
         doc.writeln("<h2>HTTP Server Login</h2>");
 
-        if (request.getPostParameter("dologin") != null) {
+        if (request.getMethod().equals(HttpRequestWrapper.METHOD_POST)) {
             if (ac.doLogin(request.getPostParameter("login"), request.getPostParameter("password"))) {
 
                 LOGGER.fine("Successfully logged in");
@@ -49,8 +53,8 @@ public class Login extends HttpServlet {
         }
 
         String location = "/admin/Login.dhtml";
-        if (request.getParameter("relocate") != null) {
-            location += "?relocate=" + Utilities.urlEncode(request.getParameter("relocate"));
+        if (request.getParameter(RELOCATE_PARAM_NAME) != null) {
+            location += "?"+RELOCATE_PARAM_NAME+"=" + Utilities.urlEncode(request.getParameter(RELOCATE_PARAM_NAME));
         }
 
 
@@ -68,6 +72,5 @@ public class Login extends HttpServlet {
         doc.write(form);
         doc.writeln("</div>");
         response.getWriter().print(doc.toString());
-
     }
 }

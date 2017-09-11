@@ -14,6 +14,7 @@ import android.telephony.SmsManager;
 
 import org.json.JSONException;
 
+import api.logic.APIResponse;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;

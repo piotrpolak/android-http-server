@@ -7,6 +7,8 @@
 
 package admin;
 
+import admin.logic.AccessControl;
+import admin.logic.HTMLDocument;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpServletRequest;
@@ -32,8 +34,9 @@ public class Logout extends HttpServlet {
 
         doc.writeln("<div class=\"box-logout\">");
         doc.writeln("<h2>Logged out</h2>");
-        doc.writeln("<p><a href=\"/admin/Index.dhtml\">Go to the main page</a></p>");
+        doc.writeln("<p><a href=\"/admin/Login.dhtml\">Go to the login page</a></p>");
         doc.writeln("</div>");
+        doc.writeln("</script>setTimeout(function() {window.location = '/admin/Login.dhtml';}, 3000);</script>");
         return doc;
     }
 }

@@ -7,11 +7,15 @@
 
 package admin;
 
+import admin.logic.AccessControl;
+import admin.logic.HTMLDocument;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpServlet;
+
+import static admin.Login.RELOCATE_PARAM_NAME;
 
 public class Index extends HttpServlet {
 
@@ -19,7 +23,7 @@ public class Index extends HttpServlet {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
         AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?relocate=" + request.getRequestURI());
+            response.sendRedirect("/admin/Login.dhtml?"+RELOCATE_PARAM_NAME+"=" + request.getRequestURI()+(!request.getQueryString().equals("") ? "?"+request.getQueryString() : ""));
             return;
         }
 

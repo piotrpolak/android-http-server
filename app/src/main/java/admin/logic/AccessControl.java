@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package admin;
+package admin.logic;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +24,7 @@ import static ro.polak.http.utilities.IOUtilities.closeSilently;
 public class AccessControl {
 
     private static final Logger LOGGER = Logger.getLogger(AccessControl.class.getName());
+    public static final String CONFIG_FILENAME = "admin.conf";
 
     private ServerConfig serverConfig;
     private HttpSession session;
@@ -115,7 +116,7 @@ public class AccessControl {
 
         try {
             ConfigReader reader = new ConfigReader();
-            String configPath = serverConfig.getBasePath() + "admin.conf";
+            String configPath = serverConfig.getBasePath() + CONFIG_FILENAME;
             fileInputStream = new FileInputStream(configPath);
             config = reader.read(fileInputStream);
         } finally {

@@ -6,24 +6,22 @@ Small but powerful multithreaded web server written completely in Java SE and th
 [![codecov](https://codecov.io/gh/piotrpolak/android-http-server/branch/master/graph/badge.svg)](https://codecov.io/gh/piotrpolak/android-http-server)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ce45bf2bf46f46fe94e48b22c17dcd2a)](https://www.codacy.com/app/piotrpolak/android-http-server)
 
-The server implements most of the HTTP 1.1 specification.
-Custom servlet API is used to handle dynamic pages. The API is designed after the official `javax.servlet` API yet it is not compatible.
-Dynamic pages support cookies, sessions, file uploads and anything else to build a common web application.
-
-The server can be used as a standalone web server for static body or as a remote application back-office engine that can be accessed from web.
+The server implements most of the HTTP 1.1 specification and provides custom servlet API that can be
+used to handle dynamic pages. The servlet API is designed after the official `javax.servlet` API
+yet it is not compatible. Dynamic pages support cookies, sessions, file uploads and anything else
+to build a common web application.
 
 ## Key features
 
 * Small footprint, requires no external libraries
 * Handles HTTP requests in separate threads
-* Supports dynamic pages via Servlets (own specification)
-* Support for GET, POST, HEAD methods
+* Provides custom servlets API for generating dynamic content
+* Supports GET, POST, HEAD methods (or more, depending on the configuration)
 * Supports chunked transfer type
-* ~~Supports KEEP-ALIVE connections~~
-* Full support for mime types (uses Apache like mime.type)
-* Supports buffered file upload (multipart requests)
-* Exposes compact API for handling sessions
+* Provides full support for mime types (uses Apache like mime.type)
+* Supports buffered file upload (multipart requests), cookies, persisted sessions
 * Supports serving partial body (ranges)
+* Can serve static content both from file system and APK resources
 
 ## Building application
 
@@ -37,12 +35,12 @@ The provided Gradle wrapper should be used to build the application:
 
 The `http` subproject is the heart of the application and it is independent on Android platform.
 
-In fact the Android app was just a way to find a more practical use of a yet another standalone HTTP
-server implementation.
+In fact the Android app was just an attempt to find a more practical use of the experimental HTTP
+protocol implementation.
 
-One of the design goals was to keep it small in size and minimalistic in terms of dependencies -
-it does not require any third party library, all HTTP protocol implementation is based on parsing
-data read from raw TCP sockets.
+One of the design goals was to keep the resulting artifact small in size and minimalistic in terms
+of dependency on other libraries - it does not require any third party component, all HTTP protocol
+implementation is based on parsing data read from raw TCP sockets.
 
 Once the `ro.polak.http` package is mature enough it will be released as an independent artifact.
 
@@ -52,19 +50,19 @@ The subproject can be tested in the following way:
 ./gradlew :http:clean :http:check
 ```
 
-The goal is to keep the core well tested and have 90%+ of code covered.
+The original package code has been refactored and covered with unit and integration tests.
+Code coverage should be kept above 90%.
 
 ## Running standalone server (CLI)
 
-Standalone server can be used to bundle `http` subproject into a runnable server implementation.
-The CLI subproject is also independent on the Android platform. It is not bundled with the main apk.
+Standalone server can be used to bundle the `http` subproject into a runnable server implementation.
+The CLI subproject is also independent on the Android platform, it is not bundled with the main APK.
 
 ```bash
 ./gradlew :cli:bootRun
 ```
 
-You can also build one "uber-jar" that can be used as a standalone server. To generate an "uber-jar"
-you should run:
+It is also possible to build one "uber-jar" and to use it as a standalone application:
 
 ```bash
 ./gradlew :cli:fatJar
@@ -72,7 +70,7 @@ you should run:
 
 The resulting artifact can then be grabbed from `./cli/build/libs/cli-all.jar`.
 
-You can then run the standalone server on any machine with the following command:
+The standalone server jar can be run on any machine with the following command:
 
 ```bash
 java -jar ./cli/build/libs/cli-all.jar

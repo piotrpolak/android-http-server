@@ -11,6 +11,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -150,7 +151,7 @@ public class MainService extends Service implements ServerGui {
      */
     public String getLocalIpAddress() {
         try {
-            WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
             int ipAddress = wifiInfo.getIpAddress();

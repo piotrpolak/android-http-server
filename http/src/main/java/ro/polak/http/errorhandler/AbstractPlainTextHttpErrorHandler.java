@@ -32,6 +32,7 @@ public abstract class AbstractPlainTextHttpErrorHandler implements HttpErrorHand
     public void serve(HttpServletResponse response) throws IOException {
         response.setStatus(status);
         response.setContentType("text/plain");
+        response.setContentLength(message.length());
         response.getWriter().write(message);
         ((HttpResponseWrapper) response).flush();
     }

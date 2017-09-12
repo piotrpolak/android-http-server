@@ -45,7 +45,7 @@ public class HttpResponseWrapper implements HttpServletResponse {
     private Headers headers;
     private OutputStream outputStream;
     private ServletOutputStream wrappedOutputStream;
-    private ChunkedPrintWriter printWriter;
+    private ServletPrintWriter printWriter;
     private boolean isCommitted;
     private List<Cookie> cookies;
     private String status;
@@ -166,7 +166,11 @@ public class HttpResponseWrapper implements HttpServletResponse {
     @Override
     public PrintWriter getWriter() {
         if (printWriter == null) {
-            printWriter = new ChunkedPrintWriter(wrappedOutputStream);
+            if (isTransferChunked()) {
+                printWriter = new ChunkedPrintWriter(wrappedOutputStream);
+            } else {
+                printWriter = new ServletPrintWriter(wrappedOutputStream);
+            }
         }
 
         return printWriter;
@@ -267,7 +271,8 @@ public class HttpResponseWrapper implements HttpServletResponse {
      * @return
      */
     private boolean isTransferChunked() {
-        if (!getHeaders().containsHeader(Headers.HEADER_TRANSFER_ENCODING)) {
+        if (!getHeaders().containsHeader(Headers.HEADER_TRANSFER_ENCODING)
+                || getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
             return false;
         }
 
@@ -281,7 +286,7 @@ public class HttpResponseWrapper implements HttpServletResponse {
      */
     public void flush() throws IOException {
         // It makes no sense to set chunked encoding if there is no print writer
-        if (printWriter != null && canBeChunkedTransferEncoding()) {
+        if (printWriter != null && printWriter instanceof ChunkedPrintWriter) {
             getHeaders().setHeader(Headers.HEADER_TRANSFER_ENCODING, TRANSFER_ENCODING_CHUNKED);
         }
 
@@ -290,22 +295,10 @@ public class HttpResponseWrapper implements HttpServletResponse {
         }
 
         if (printWriter != null) {
-            if (isTransferChunked()) {
-                printWriter.writeEnd();
-            }
+            printWriter.writeEnd();
             printWriter.flush();
         }
 
         outputStream.flush();
-    }
-
-    /**
-     * Tells whether the transfer is not chunked yet or does not have a fixed content length.
-     *
-     * @return
-     */
-    private boolean canBeChunkedTransferEncoding() {
-        return !getHeaders().containsHeader(Headers.HEADER_TRANSFER_ENCODING)
-                && !getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH);
     }
 }

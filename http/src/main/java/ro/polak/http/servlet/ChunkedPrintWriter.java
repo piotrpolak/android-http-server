@@ -8,7 +8,6 @@
 package ro.polak.http.servlet;
 
 import java.io.OutputStream;
-import java.io.PrintWriter;
 
 /**
  * ChunkedPrintWriter
@@ -17,7 +16,7 @@ import java.io.PrintWriter;
  * @url https://en.wikipedia.org/wiki/Chunked_transfer_encoding
  * @since 201010
  */
-public class ChunkedPrintWriter extends PrintWriter {
+public class ChunkedPrintWriter extends ServletPrintWriter {
 
     // TODO Move this capability to the ServletOutputStreamWrapper
 
@@ -52,7 +51,9 @@ public class ChunkedPrintWriter extends PrintWriter {
     /**
      * Writes the end of chunked message.
      */
+    @Override
     public void writeEnd() {
+        super.writeEnd();
         super.write(END_LINE);
     }
 }

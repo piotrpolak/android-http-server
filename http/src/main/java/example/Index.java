@@ -57,6 +57,8 @@ public class Index extends HttpServlet {
         printWriter.println("<li><a href='NotFound.dhtml'>Not found page example</a></li>");
         printWriter.println("<li><a href='InternalServerError.dhtml'>Internal server error page example</a></li>");
         printWriter.println("<li><a href='Streaming.dhtml'>Streaming</a></li>");
+        printWriter.println("<li><a href='Chunked.dhtml'>Chunked</a></li>");
+        printWriter.println("<li><a href='ChunkedWithDelay.dhtml'>Chunked with a delay</a></li>");
         printWriter.println("</ul>");
     }
 }

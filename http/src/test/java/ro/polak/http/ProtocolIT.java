@@ -350,6 +350,20 @@ public class ProtocolIT extends AbstractIT {
         assertThat(responseBodyString, not(isEmptyOrNullString()));
     }
 
+    @Test
+    public void shouldReturn200ChunkedResponse() throws IOException {
+        Request request = new Request.Builder()
+                .url(getFullUrl("/example/Chunked.dhtml"))
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(true));
+        assertThat(response.code(), is(200));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, is("This is an example of chunked transfer type. Chunked transfer type can be used when the final length of the data is not known."));
+    }
+
     private File createRandomContentsFile() throws IOException {
         File file = File.createTempFile("servertest", ".tmp");
         RandomAccessFile f = new RandomAccessFile(file, "rw");

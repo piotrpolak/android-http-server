@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,7 +134,10 @@ public class HttpServletRequestWrapperFactory {
 
             request.setCookies(getCookies(request.getHeaders()));
         } else {
+            // TODO Use a dedicated builder to avoid uninitialized request properties
+            // TODO Write a test that sends a request containing status line only
             request.setHeaders(new Headers()); // Setting implicit empty headers
+            request.setCookies(Collections.<String, Cookie>emptyMap());
         }
 
         if (request.getMethod().equalsIgnoreCase(HttpRequestWrapper.METHOD_POST)) {

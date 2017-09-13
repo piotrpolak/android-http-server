@@ -32,7 +32,7 @@ public class SmsBox {
         Map<Integer, List<Message>> threads = new LinkedHashMap<>();
 
         Cursor cursor = contentResolver
-                .query(Uri.parse("body://sms"), null, whereString, null, "date DESC");
+                .query(Uri.parse("content://sms"), null, whereString, null, "date DESC");
 
         cursor.moveToFirst();
 

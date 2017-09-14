@@ -8,7 +8,6 @@
 package ro.polak.http.controller;
 
 import ro.polak.http.WebServer;
-import ro.polak.http.gui.ServerGui;
 
 /**
  * Defines methods that must be implemented by the server controller

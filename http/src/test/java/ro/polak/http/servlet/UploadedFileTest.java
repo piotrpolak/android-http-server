@@ -69,10 +69,8 @@ public class UploadedFileTest {
             assertThat(file.exists(), is(true));
             UploadedFile uploadedFile = new UploadedFile("myfile", "myfile.pdf", file);
             File movedFile = new File(tempPath + "uploadfile123.pdf");
-            if (movedFile.exists()) {
-                if (!movedFile.delete()) {
-                    throw new IOException("Unable to delete " + movedFile.getAbsolutePath());
-                }
+            if (movedFile.exists() && !movedFile.delete()) {
+                throw new IOException("Unable to delete " + movedFile.getAbsolutePath());
             }
             assertThat(movedFile.exists(), is(false));
             assertThat(uploadedFile.getFile().renameTo(movedFile), is(true));

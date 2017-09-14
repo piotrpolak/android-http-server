@@ -29,7 +29,7 @@ public class FileIconMapper {
 
         if (icons.containsKey(ext)) {
             String iconPathKey = icons.get(ext);
-            if (!iconPathKey.equals("")) {
+            if (!"".equals(iconPathKey)) {
                 return iconPathKey + ICON_EXT;
             }
 

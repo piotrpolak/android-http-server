@@ -57,7 +57,7 @@ public class FileSessionStorageTest {
 
         sessionWrapper = fileSessionStorage.getSession(VALID_SESSION_ID);
         assertThat(sessionWrapper, is(not(nullValue())));
-        assertThat((String) sessionWrapper.getAttribute("attributeName"), is(nullValue()));
+        assertThat(sessionWrapper.getAttribute("attributeName"), is(nullValue()));
         assertThat((String) sessionWrapper.getAttribute("otherName"), is("OtherValue"));
 
         fileSessionStorage.removeSession(sessionWrapper);
@@ -95,10 +95,8 @@ public class FileSessionStorageTest {
     public void shouldFailSilentlyOnInvalidFileContents() throws IOException {
         String sid = "asdfghjklzxasdfghjklzxasdfghjklz";
         File sessionFile = new File(tempPath + sid + "_session");
-        if (sessionFile.exists()) {
-            if (!sessionFile.delete()) {
-                throw new IOException("Unable to delete file " + sessionFile.getAbsolutePath());
-            }
+        if (sessionFile.exists() && !sessionFile.delete()) {
+            throw new IOException("Unable to delete file " + sessionFile.getAbsolutePath());
         }
         if (!sessionFile.createNewFile()) {
             throw new IOException("Unable to create new file " + sessionFile.getAbsolutePath());

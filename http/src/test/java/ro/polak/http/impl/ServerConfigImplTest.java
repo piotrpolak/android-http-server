@@ -51,16 +51,12 @@ public class ServerConfigImplTest {
     }
 
     public void removeFile() throws IOException {
-        if (configFile != null) {
-            if (configFile.exists() && !configFile.delete()) {
-                throw new IOException("Unable to delete " + configFile.getAbsolutePath());
-            }
+        if (configFile != null && configFile.exists() && !configFile.delete()) {
+            throw new IOException("Unable to delete " + configFile.getAbsolutePath());
         }
 
-        if (mimeFile != null) {
-            if (mimeFile.exists() && !mimeFile.delete()) {
-                throw new IOException("Unable to delete " + mimeFile.getAbsolutePath());
-            }
+        if (mimeFile != null && mimeFile.exists() && !mimeFile.delete()) {
+            throw new IOException("Unable to delete " + mimeFile.getAbsolutePath());
         }
     }
 

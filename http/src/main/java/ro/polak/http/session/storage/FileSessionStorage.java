@@ -50,10 +50,8 @@ public class FileSessionStorage implements SessionStorage {
         }
 
         File file = new File(getSessionStoragePath(session.getId()));
-        if (!file.exists()) {
-            if (!file.createNewFile()) {
-                throw new IOException("Unable to create new file " + file.getAbsolutePath());
-            }
+        if (!file.exists() && !file.createNewFile()) {
+            throw new IOException("Unable to create new file " + file.getAbsolutePath());
         }
         writeSession(session, file);
 

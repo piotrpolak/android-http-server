@@ -87,10 +87,10 @@ public class MainActivity extends AppCompatActivity {
             mainService.registerClient(MainActivity.this);
             isMainServiceBound = true;
 
-            if (!mainService.getServiceState().isServicetarted()) {
-                if (getMissingPermissions().length == 0) {
-                    startBackgroundService();
-                }
+            boolean hasAllPermissionsApproved = getMissingPermissions().length == 0;
+
+            if (!mainService.getServiceState().isServicetarted() && hasAllPermissionsApproved) {
+                startBackgroundService();
             }
         }
 
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
-            case PERMISSIONS_REQUEST_CODE: {
+            case PERMISSIONS_REQUEST_CODE:
                 if (grantResults.length > 0) {
                     boolean isAnyPermissionMissing = false;
                     for (int result : grantResults) {
@@ -242,7 +242,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     showMustAcceptPermissions();
                 }
-            }
+                break;
+            default:
+                throw new IllegalStateException("Unknown permission request");
         }
     }
 

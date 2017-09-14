@@ -43,17 +43,13 @@ public class AbstractIT {
         String tempPath = System.getProperty("java.io.tmpdir") + File.separator + "webserver" + File.separator;
 
         File workingDirectory = new File(tempPath);
-        if (!workingDirectory.exists()) {
-            if (!workingDirectory.mkdir()) {
-                throw new IOException("Unable to mkdir " + workingDirectory.getAbsolutePath());
-            }
+        if (!workingDirectory.exists() && !workingDirectory.mkdir()) {
+            throw new IOException("Unable to mkdir " + workingDirectory.getAbsolutePath());
         }
 
         httpdConfigFile = new File(tempPath + "httpd.properties");
-        if (httpdConfigFile.exists()) {
-            if (!httpdConfigFile.delete()) {
-                throw new IOException("Unable to delete " + httpdConfigFile.getAbsolutePath());
-            }
+        if (httpdConfigFile.exists() && !httpdConfigFile.delete()) {
+            throw new IOException("Unable to delete " + httpdConfigFile.getAbsolutePath());
         }
         if (!httpdConfigFile.createNewFile()) {
             throw new IOException("Unable to create " + httpdConfigFile.getAbsolutePath());
@@ -62,17 +58,13 @@ public class AbstractIT {
         ServerConfig serverConfig = getServerConfig();
 
         File documentRoot = new File(serverConfig.getDocumentRootPath());
-        if (!documentRoot.exists()) {
-            if (!documentRoot.mkdir()) {
-                throw new IOException("Unable to mkdir " + documentRoot.getAbsolutePath());
-            }
+        if (!documentRoot.exists() && !documentRoot.mkdir()) {
+            throw new IOException("Unable to mkdir " + documentRoot.getAbsolutePath());
         }
 
         staticFile = new File(serverConfig.getDocumentRootPath() + "staticfile.html");
-        if (staticFile.exists()) {
-            if (!staticFile.delete()) {
-                throw new IOException("Unable to delete " + staticFile.getAbsolutePath());
-            }
+        if (staticFile.exists() && !staticFile.delete()) {
+            throw new IOException("Unable to delete " + staticFile.getAbsolutePath());
         }
         if (!staticFile.createNewFile()) {
             throw new IOException("Unable to create " + staticFile.getAbsolutePath());

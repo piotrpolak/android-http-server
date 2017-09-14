@@ -49,7 +49,7 @@ public class AbstractIT {
             }
         }
 
-        httpdConfigFile = new File(tempPath + "httpd.conf");
+        httpdConfigFile = new File(tempPath + "httpd.properties");
         if (httpdConfigFile.exists()) {
             if (!httpdConfigFile.delete()) {
                 throw new IOException("Unable to delete " + httpdConfigFile.getAbsolutePath());

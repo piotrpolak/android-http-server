@@ -13,13 +13,17 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.format.Formatter;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -31,10 +35,15 @@ import java.util.logging.Logger;
 import javax.net.ServerSocketFactory;
 
 import ro.polak.http.R;
+import ro.polak.http.ServerConfig;
+import ro.polak.http.ServerConfigFactory;
 import ro.polak.http.controller.Controller;
 import ro.polak.http.controller.MainController;
 import ro.polak.http.gui.ServerGui;
+import ro.polak.webserver.logic.AssetUtil;
 import ro.polak.webserver.resource.provider.impl.AndroidServerConfigFactory;
+
+import static ro.polak.http.impl.ServerConfigImpl.PROPERTIES_FILE_NAME;
 
 /**
  * Main application service that holds http server
@@ -62,14 +71,58 @@ public class MainService extends Service implements ServerGui {
     public int onStartCommand(Intent intent, int flags, int startId) {
         isServiceStarted = true;
 
-        controller = new MainController(new AndroidServerConfigFactory(activity),
-                ServerSocketFactory.getDefault(),
-                this
-        );
+        ServerConfigFactory serverConfigFactory = new AndroidServerConfigFactory(activity);
+
+        doFirstRunChecks(serverConfigFactory);
+
+        controller = new MainController(serverConfigFactory, ServerSocketFactory.getDefault(), this);
         controller.start();
 
         return START_STICKY;
     }
+
+    private void doFirstRunChecks(ServerConfigFactory serverConfigFactory) {
+        ServerConfig serverConfig = serverConfigFactory.getServerConfig();
+        String basePath = Environment.getExternalStorageDirectory() + serverConfig.getBasePath();
+        String staticDirPath = Environment.getExternalStorageDirectory() + serverConfig.getDocumentRootPath();
+
+        File baseDir = new File(basePath);
+        if (!baseDir.exists()) {
+            if (!baseDir.mkdirs()) {
+                throw new RuntimeException("Unable to create directory " + baseDir.getAbsolutePath());
+            }
+        }
+
+        File staticDir = new File(staticDirPath);
+        if (!staticDir.exists()) {
+            if (!staticDir.mkdirs()) {
+                throw new RuntimeException("Unable to create directory " + staticDir.getAbsolutePath());
+            }
+        }
+
+        AssetManager assetManager = activity.getResources().getAssets();
+
+        File config = new File(basePath + PROPERTIES_FILE_NAME);
+        if (!config.exists()) {
+            try {
+                config.createNewFile();
+                AssetUtil.copyAssetToFile(assetManager, "conf/" + PROPERTIES_FILE_NAME, config);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        File mimeType = new File(basePath + "mime.type");
+        if (!mimeType.exists()) {
+            try {
+                mimeType.createNewFile();
+                AssetUtil.copyAssetToFile(assetManager, "conf/" + "mime.type", mimeType);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 
     @Override
     public void onDestroy() {

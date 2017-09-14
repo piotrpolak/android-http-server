@@ -8,77 +8,77 @@
 package api;
 
 import android.app.Activity;
-import android.database.Cursor;
-import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
+import admin.logic.SmsBox;
 import api.logic.APIResponse;
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServlet;
 
 /**
  * SMS Inbox method API endpoint
  */
 public class SmsInbox extends HttpServlet {
 
+    private static final String ATTR_MAX_RESULTS = "maxResults";
+
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
-        // Setting appropriate response type
         response.setContentType("text/json");
+        int maxResults = request.getParameter(ATTR_MAX_RESULTS) != null
+                ? Integer.parseInt(request.getParameter(ATTR_MAX_RESULTS)) : 10;
 
-        // Setting max results out of the maxResults query parameter or default value
-        int maxResults = request.getParameter("maxResults") != null
-                ? Integer.parseInt(request.getParameter("maxResults")) : 10;
 
-        // Querying
-        String[] projection = {"address", "body", "date", "date_sent"};
-        Cursor cursor = ((Activity) getServletContext().getAttribute("android.content.Context"))
-                .getContentResolver()
-                .query(Uri.parse("content://sms/inbox"), projection, null, null, "date DESC");
+        SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
+        List<SmsBox.Message> messages = smsBox.readMessages("type=1");
 
-        cursor.moveToFirst();
-
-        // The output object
         JSONArray result = new JSONArray();
-
-        // Counter needed to implement maxResults,
-        // at the same time we need to keep the original value of maxResults
         int counterRemaining = maxResults;
 
-        // Looping
+        int i = 0;
+        int max = messages.size();
         do {
-            // Building message
-            JSONObject message = new JSONObject();
-            for (int idx = 0; idx < cursor.getColumnCount(); idx++) {
-                try {
-                    message.put(cursor.getColumnName(idx), cursor.getString(idx));
-                } catch (JSONException e) {
-                    message = null;
-                }
+            if (i >= max) {
+                break;
+            }
+            JSONObject message;
+            try {
+                message = toMessageDTO(messages.get(i));
+            } catch (JSONException e) {
+                throw new ServletException(e);
             }
 
-            // Inserting message into the queue
-            if (message != null) {
-                result.put(message);
+            result.put(message);
 
-                // Breaking the loop if the limit of requested messages has been reached
-                if (maxResults > 0 && --counterRemaining == 0) {
-                    break;
-                }
+            if (maxResults > 0 && --counterRemaining == 0) {
+                break;
             }
-        } while (cursor.moveToNext());
+        } while (i++ < messages.size());
 
         try {
             String jsonResponse = new APIResponse(APIResponse.CODE_OK, "OK", result).toString();
             response.getWriter().print(jsonResponse);
         } catch (JSONException e) {
-            // TODO Throw servlet response
+            throw new ServletException(e);
         }
+    }
+
+    @NonNull
+    private JSONObject toMessageDTO(SmsBox.Message message) throws JSONException {
+        JSONObject messageDTO = new JSONObject();
+        messageDTO.put("address", message.getAddress());
+        messageDTO.put("body", message.getBody());
+        messageDTO.put("date", message.getDate());
+        messageDTO.put("date_sent", message.getBody());
+        return messageDTO;
     }
 }

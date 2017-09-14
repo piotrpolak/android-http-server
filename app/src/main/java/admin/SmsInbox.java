@@ -10,6 +10,8 @@ package admin;
 import android.app.Activity;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,19 +36,32 @@ public class SmsInbox extends HttpServlet {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
         AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?"+RELOCATE_PARAM_NAME+"=" + request.getRequestURI()+(!request.getQueryString().equals("") ? "?"+request.getQueryString() : ""));
+            response.sendRedirect("/admin/Login.dhtml?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI() + (!request.getQueryString().equals("") ? "?" + request.getQueryString() : ""));
             return;
         }
+        SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
 
         String threadId = request.getParameter(THREAD_ID_PARAM_NAME);
         String whereString = (threadId != null) ? THREAD_ID_PARAM_NAME + "=" + threadId : null;
+        List<SmsBox.Message> messages = smsBox.readMessages(whereString);
 
-        Activity context = ((Activity) getServletContext().getAttribute("android.content.Context"));
-        SmsBox smsBox = new SmsBox(context.getContentResolver());
-        Map<Integer, List<SmsBox.Message>> threads = smsBox.readInbox(whereString);
-
-        HTMLDocument doc = renderDocument(threadId, whereString, threads);
+        HTMLDocument doc = renderDocument(threadId, whereString, getThreadMessageTree(messages));
         response.getWriter().print(doc.toString());
+    }
+
+    private Map<Integer, List<SmsBox.Message>> getThreadMessageTree(List<SmsBox.Message> messages) {
+        Map<Integer, List<SmsBox.Message>> threads = new LinkedHashMap<>();
+        for (SmsBox.Message message : messages) {
+            List thread = threads.get(message.getThreadId());
+            if (thread == null) {
+                thread = new ArrayList();
+            }
+            thread.add(message);
+            if (!threads.containsKey(message.getThreadId())) {
+                threads.put(message.getThreadId(), thread);
+            }
+        }
+        return threads;
     }
 
     private HTMLDocument renderDocument(String threadId, String whereString, Map<Integer, List<SmsBox.Message>> threads) {
@@ -68,7 +83,7 @@ public class SmsInbox extends HttpServlet {
                 doc.writeln("<div class=\"panel-body " + (message.isIncoming() ? "text-left" : "text-right bg-success") + "\">");
                 doc.writeln("<p><b>" + simpleDateFormat.format(message.getDate()) + "</b></p>");
                 doc.writeln("<p>" + message.getBody() + "</p>");
-                doc.writeln("<p><a class=\"btn btn-primary\" href=\"/admin/SmsBox.dhtml?thread_id=" + message.getThreadId() + "\">Open thread <span class=\"badge\">" + messages.size() + "</span></a></p>");
+                doc.writeln("<p><a class=\"btn btn-primary\" href=\"/admin/SmsInbox.dhtml?thread_id=" + message.getThreadId() + "\">Open thread <span class=\"badge\">" + messages.size() + "</span></a></p>");
                 doc.writeln("</div>");
                 doc.writeln("</div>");
             }
@@ -78,7 +93,7 @@ public class SmsInbox extends HttpServlet {
             if (messages != null && messages.size() > 0) {
 
                 doc.writeln("<div class=\"page-header\"><h1>SMS inbox</h1></div>");
-                doc.writeln("<p><a class=\"btn btn-default\" href=\"/admin/SmsBox.dhtml\"><span class=\"glyphicon glyphicon-arrow-left\" aria-hidden=\"true\"></span> Back to the inbox</a></p>");
+                doc.writeln("<p><a class=\"btn btn-default\" href=\"/admin/SmsInbox.dhtml\"><span class=\"glyphicon glyphicon-arrow-left\" aria-hidden=\"true\"></span> Back to the inbox</a></p>");
 
                 doc.writeln("<div class=\"panel panel-default\">");
                 doc.writeln("<div class=\"panel-heading\">" + messages.get(0).getAddress() + "</div>");

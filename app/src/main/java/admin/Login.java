@@ -14,9 +14,9 @@ import admin.logic.HTMLDocument;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpRequestWrapper;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.utilities.Utilities;
 
 public class Login extends HttpServlet {
@@ -54,7 +54,7 @@ public class Login extends HttpServlet {
 
         String location = "/admin/Login.dhtml";
         if (request.getParameter(RELOCATE_PARAM_NAME) != null) {
-            location += "?"+RELOCATE_PARAM_NAME+"=" + Utilities.urlEncode(request.getParameter(RELOCATE_PARAM_NAME));
+            location += "?" + RELOCATE_PARAM_NAME + "=" + Utilities.urlEncode(request.getParameter(RELOCATE_PARAM_NAME));
         }
 
 

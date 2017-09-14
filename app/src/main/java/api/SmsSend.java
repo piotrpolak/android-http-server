@@ -8,12 +8,10 @@
 package api;
 
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.telephony.SmsManager;
 
 import org.json.JSONException;
 
+import admin.logic.SmsBox;
 import api.logic.APIResponse;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpServlet;
@@ -28,82 +26,58 @@ public class SmsSend extends HttpServlet {
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
-        // Setting appropriate response type
         response.setContentType("text/json");
 
-        // Getting parameter value
         String to = request.getPostParameter("to");
         String message = request.getPostParameter("message");
         String test = request.getPostParameter("test");
 
-        // Variable holding the JSON response
         String jsonResponse;
 
         if (to == null) {
-            try {
-                jsonResponse = new APIResponse(APIResponse.CODE_ERROR, "Post parameter to is not set").toString();
-                response.getWriter().print(jsonResponse);
-                return;
-            } catch (JSONException e) {
-                throw new ServletException(e);
-            }
+            sendError(response, "Post parameter to is not set");
+            return;
         }
 
         if (message == null) {
-            try {
-                jsonResponse = new APIResponse(APIResponse.CODE_ERROR, "Post parameter message is not set").toString();
-                response.getWriter().print(jsonResponse);
-                return;
-            } catch (JSONException e) {
-                throw new ServletException(e);
-            }
+            sendError(response, "Post parameter message is not set");
+            return;
         }
 
-        // Validating message length
         if (message.length() > 160) {
-            try {
-                jsonResponse = new APIResponse(APIResponse.CODE_ERROR, "Parameter message too long").toString();
-                response.getWriter().print(jsonResponse);
-                return;
-            } catch (JSONException e) {
-                throw new ServletException(e);
-            }
+            sendError(response, "Parameter message too long");
+            return;
         }
 
-        // Validating to address length
         if (to.length() < 9) {
-            try {
-                jsonResponse = new APIResponse(APIResponse.CODE_ERROR, "Parameter to too short").toString();
-                response.getWriter().print(jsonResponse);
-                return;
-            } catch (JSONException e) {
-                throw new ServletException(e);
-            }
+            sendError(response, "Parameter to too short");
+            return;
         }
 
         try {
             jsonResponse = new APIResponse().toString();
+            
+            // Demo, skipping sending the message
+            if (test != null && test.equals("1")) {
+                response.getWriter().print(jsonResponse);
+                return;
+            }
+
+            SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
+            smsBox.sendMessage(to, message);
+            response.getWriter().print(jsonResponse);
         } catch (JSONException e) {
             throw new ServletException(e);
         }
-
-
-        // Demo, skipping sending the message
-        if (test != null && test.equals("1")) {
-            response.getWriter().print(jsonResponse);
-            return;
-        }
-
-        // Sending a real message
-        sendSMS(to, message);
-        response.getWriter().print(jsonResponse);
     }
 
-    private void sendSMS(String phoneNo, String message) {
-        Activity a = (Activity) getServletContext().getAttribute("android.content.Context");
-
-        PendingIntent pi = PendingIntent.getActivity(a, 0, new Intent(a, a.getClass()), 0);
-        SmsManager sms = SmsManager.getDefault();
-        sms.sendTextMessage(phoneNo, null, message, pi, null);
+    private void sendError(HttpServletResponse response, String errorMessage) throws ServletException {
+        String jsonResponse;
+        try {
+            jsonResponse = new APIResponse(APIResponse.CODE_ERROR, errorMessage).toString();
+            response.getWriter().print(jsonResponse);
+        } catch (JSONException e) {
+            throw new ServletException(e);
+        }
     }
 }

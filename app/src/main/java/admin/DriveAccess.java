@@ -34,7 +34,7 @@ public class DriveAccess extends HttpServlet {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
         AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?"+RELOCATE_PARAM_NAME+"=" + request.getRequestURI()+(!request.getQueryString().equals("") ? "?"+request.getQueryString() : ""));
+            response.sendRedirect("/admin/Login.dhtml?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI() + (!request.getQueryString().equals("") ? "?" + request.getQueryString() : ""));
             return;
         }
 
@@ -82,16 +82,15 @@ public class DriveAccess extends HttpServlet {
         if (files == null) {
             doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Unable to read files.</div>");
         } else {
-            if(files.length == 0) {
+            if (files.length == 0) {
                 doc.writeln("<div class=\"alert alert-info\" role=\"alert\">There are no files in this directory.</div>");
-            }
-            else {
+            } else {
                 for (File file : files) {
                     if (file.isDirectory()) {
                         directories
                                 .append("<p class=\"filemanager\"><img src=\"/assets/img/folder.png\" alt=\"folder\" /> <a href=\"/admin/DriveAccess.dhtml?"
                                         + Utilities.urlEncode(path
-                                        + file.getName()+"/")
+                                        + file.getName() + "/")
                                         + "\">"
                                         + file.getName() + "</a></p>");
                     } else {
@@ -120,7 +119,7 @@ public class DriveAccess extends HttpServlet {
 
     private void renderBreadcrubms(HTMLDocument doc, String path) {
         doc.writeln("<ol class=\"breadcrumb\">");
-        doc.writeln("<li><a href=\"/admin/DriveAccess.dhtml?"+Utilities.urlEncode("/")+"\"><img src=\"/assets/img/home.png\" alt=\"home\"></a></li>");
+        doc.writeln("<li><a href=\"/admin/DriveAccess.dhtml?" + Utilities.urlEncode("/") + "\"><img src=\"/assets/img/home.png\" alt=\"home\"></a></li>");
         StringTokenizer st = new StringTokenizer(path.replace('\\', '/'), "/");
         String currentPath = "/";
         while (st.hasMoreTokens()) {

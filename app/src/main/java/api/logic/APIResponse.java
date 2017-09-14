@@ -11,6 +11,10 @@ public class APIResponse {
 
     public static final int CODE_OK = 200;
     public static final int CODE_ERROR = 400;
+    private static final String ATTR_STATUS = "status";
+    private static final String ATTR_MESSAGE = "message";
+    private static final String ATTR_RESULT = "result";
+    private static final String MESSAGE_OK = "OK";
 
     private JSONObject jsonObject = new JSONObject();
 
@@ -22,24 +26,10 @@ public class APIResponse {
      * @param result
      * @throws JSONException
      */
-    public APIResponse(final int code, final String message, final JSONObject result) throws JSONException {
-        jsonObject.put("status", code);
-        jsonObject.put("message", message);
-        jsonObject.put("result", result);
-    }
-
-    /**
-     * Serializes API Response
-     *
-     * @param code
-     * @param message
-     * @param result
-     * @throws JSONException
-     */
     public APIResponse(final int code, final String message, final JSONArray result) throws JSONException {
-        jsonObject.put("status", code);
-        jsonObject.put("message", message);
-        jsonObject.put("result", result);
+        jsonObject.put(ATTR_STATUS, code);
+        jsonObject.put(ATTR_MESSAGE, message);
+        jsonObject.put(ATTR_RESULT, result);
     }
 
     /**
@@ -48,9 +38,7 @@ public class APIResponse {
      * @throws JSONException
      */
     public APIResponse() throws JSONException {
-        jsonObject.put("status", CODE_OK);
-        jsonObject.put("message", "OK");
-        jsonObject.put("result", null);
+        this(CODE_OK, MESSAGE_OK, null);
     }
 
     /**
@@ -61,9 +49,7 @@ public class APIResponse {
      * @throws JSONException
      */
     public APIResponse(int code, String message) throws JSONException {
-        jsonObject.put("status", code);
-        jsonObject.put("message", message);
-        jsonObject.put("result", null);
+        this(code, message, null);
     }
 
     @Override

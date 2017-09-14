@@ -25,6 +25,7 @@ public class AccessControl {
 
     private static final Logger LOGGER = Logger.getLogger(AccessControl.class.getName());
     public static final String CONFIG_FILENAME = "admin.conf";
+    public static final String ATTR_LOGGEDIN = "loggedin";
 
     private ServerConfig serverConfig;
     private HttpSession session;
@@ -47,15 +48,13 @@ public class AccessControl {
      * @return
      */
     public boolean isLogged() {
-        // There is no session active
         if (session == null) {
             LOGGER.fine("No session, not logged in");
             return false;
         }
 
-        if (session.getAttribute("loggedin") != null) {
-            // There must be an attribute loggedin and it must be equal 1
-            if (session.getAttribute("loggedin").equals("1")) {
+        if (session.getAttribute(ATTR_LOGGEDIN) != null) {
+            if (session.getAttribute(ATTR_LOGGEDIN).equals("1")) {
                 return true;
             } else {
                 LOGGER.fine("Not logging in - session attribute is NOT null");
@@ -71,7 +70,7 @@ public class AccessControl {
      * Logs off the currently logged user
      */
     public void logout() {
-        session.setAttribute("loggedin", null);
+        session.setAttribute(ATTR_LOGGEDIN, null);
     }
 
     /**
@@ -86,7 +85,7 @@ public class AccessControl {
         try {
             Map<String, String> config = getConfig(serverConfig);
             if (config.get("_managementLogin").equals(login) && config.get("_managementPassword").equals(password)) {
-                session.setAttribute("loggedin", "1");
+                session.setAttribute(ATTR_LOGGEDIN, "1");
                 logged = true;
             } else {
                 LOGGER.fine("Not logging in - wrong password");

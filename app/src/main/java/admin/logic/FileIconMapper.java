@@ -14,6 +14,7 @@ public class FileIconMapper {
 
     private static final String ICON_EXT = ".png";
     private static Map<String, String> icons = new HashMap<>();
+
     static {
         icons.put("pdf", "");
         icons.put("jpg", "");
@@ -26,10 +27,9 @@ public class FileIconMapper {
     public String getIconRelativePath(String extension) {
         String ext = extension.toLowerCase();
 
-        if(icons.containsKey(ext)) {
+        if (icons.containsKey(ext)) {
             String iconPathKey = icons.get(ext);
-            if(!iconPathKey.equals(""))
-            {
+            if (!iconPathKey.equals("")) {
                 return iconPathKey + ICON_EXT;
             }
 

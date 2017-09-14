@@ -33,10 +33,6 @@ public class HTMLDocument {
         this.isLogged = isLogged;
     }
 
-    public HTMLDocument() {
-        this("");
-    }
-
     public void setOwnerClass(String ownerClass) {
         this.ownerClass = ownerClass;
     }

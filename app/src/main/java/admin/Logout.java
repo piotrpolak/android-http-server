@@ -11,9 +11,9 @@ import admin.logic.AccessControl;
 import admin.logic.HTMLDocument;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServlet;
 
 public class Logout extends HttpServlet {
 
@@ -25,7 +25,6 @@ public class Logout extends HttpServlet {
 
         HTMLDocument doc = renderDocument();
         response.getWriter().print(doc.toString());
-
     }
 
     private HTMLDocument renderDocument() {

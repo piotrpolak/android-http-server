@@ -7,79 +7,99 @@
 
 package admin.logic;
 
-import android.content.ContentResolver;
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.telephony.SmsManager;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class SmsBox {
 
-    public static final String THREAD_ID = "thread_id";
-    private ContentResolver contentResolver;
+    /* _id:162 thread_id:13 toa:145 address:+48111222333 person:295 date:1441998104000 date_sent:1441998104000
+     protocol:0 read:1 status:-1 type:1 reply_path_present:0 subject:null body:Hello World! sc_toa:0
+     report_date:null service_center:+486555555555 locked:0 sub_id:-1 index_on_sim: callback_number:null
+     priority:0 htc_category:0 cs_timestamp:-1 cs_id:null cs_synced:0 error_code:0 creator:com.htc.sense.mms
+     seen:0 is_cdma_format:0 is_evdo:0 c_type:0 exp:0 gid:0 extra:0 date2:1441998103947 sim_slot:0  */
+    private static final String ATTR_THREAD_ID = "thread_id";
+    private static final String ATTR_ADDRESS = "address";
+    private static final String ATTR_BODY = "body";
+    private static final String ATTR_DATE = "date";
 
-    public SmsBox(ContentResolver contentResolver) {
-        this.contentResolver = contentResolver;
+    // Type 1 - received, Type 2 - sent
+    private static final String ATTR_TYPE = "type";
+    private static final String ATTR_DATE_SENT = "date_sent";
+    private static final String[] PROJECTION = {
+            ATTR_THREAD_ID,
+            ATTR_ADDRESS,
+            ATTR_BODY,
+            ATTR_DATE,
+            ATTR_TYPE,
+            ATTR_DATE_SENT
+    };
+    private static final String URL = "content://sms/inbox";
+
+    private final Activity context;
+
+    public SmsBox(Activity contentResolver) {
+        this.context = contentResolver;
     }
 
-    public Map<Integer, List<Message>> readInbox(String whereString) {
-
-        Map<Integer, List<Message>> threads = new LinkedHashMap<>();
-
-        Cursor cursor = contentResolver
-                .query(Uri.parse("content://sms"), null, whereString, null, "date DESC");
-
+    @NonNull
+    public List<Message> readMessages(String whereString) {
+        Cursor cursor = context.getContentResolver()
+                .query(Uri.parse("content://sms"), PROJECTION, whereString, null, "date DESC");
         cursor.moveToFirst();
 
+        List<Message> messages = new ArrayList();
         do {
-            /* _id:162 thread_id:13 toa:145 address:+48111222333 person:295 date:1441998104000 date_sent:1441998104000
-             protocol:0 read:1 status:-1 type:1 reply_path_present:0 subject:null body:Hello World! sc_toa:0
-             report_date:null service_center:+486555555555 locked:0 sub_id:-1 index_on_sim: callback_number:null
-             priority:0 htc_category:0 cs_timestamp:-1 cs_id:null cs_synced:0 error_code:0 creator:com.htc.sense.mms
-             seen:0 is_cdma_format:0 is_evdo:0 c_type:0 exp:0 gid:0 extra:0 date2:1441998103947 sim_slot:0  */
-
-            // Type 1 - received, Type 2 - sent
-
-
-            Map<String, String> sms = new HashMap<>();
-            for (int idx = 0; idx < cursor.getColumnCount(); idx++) {
-                if (cursor.getColumnName(idx) != null && cursor.getString(idx) != null) {
-                    sms.put(cursor.getColumnName(idx), cursor.getString(idx));
-                }
-            }
-
-            int threadId = -1;
-
-            if (sms.get(THREAD_ID) != null && !sms.get(THREAD_ID).equals("")) {
-                threadId = Integer.parseInt(sms.get(THREAD_ID));
-            }
-
-            List thread = threads.get(threadId);
-
-            if (thread == null) {
-                thread = new ArrayList();
-            }
-
-            Message message = new Message();
-            message.setAddress(sms.get("address"));
-            message.setThreadId(threadId);
-            message.setBody(sms.get("body"));
-            message.setDate(new Date(Long.parseLong(sms.get("date"))));
-            message.setIncoming(sms.get("type").equals("1"));
-
-
-            thread.add(message);
-
-            threads.put(threadId, thread);
-
+            messages.add(toMessage(getStringStringMap(cursor)));
         } while (cursor.moveToNext());
 
-        return threads;
+        return messages;
+    }
+
+    @NonNull
+    private Map<String, String> getStringStringMap(Cursor cursor) {
+        Map<String, String> sms = new HashMap<>();
+        for (int idx = 0; idx < cursor.getColumnCount(); idx++) {
+            if (cursor.getColumnName(idx) != null && cursor.getString(idx) != null) {
+                sms.put(cursor.getColumnName(idx), cursor.getString(idx));
+            }
+        }
+        return sms;
+    }
+
+    @NonNull
+    private Message toMessage(Map<String, String> sms) {
+        int threadId = -1;
+
+        if (sms.get(ATTR_THREAD_ID) != null && !sms.get(ATTR_THREAD_ID).equals("")) {
+            threadId = Integer.parseInt(sms.get(ATTR_THREAD_ID));
+        }
+
+        Message message = new Message();
+        message.setAddress(sms.get(ATTR_ADDRESS));
+        message.setThreadId(threadId);
+        message.setBody(sms.get(ATTR_BODY));
+        message.setDate(new Date(Long.parseLong(sms.get(ATTR_DATE))));
+        message.setDateSent(new Date(Long.parseLong(sms.get(ATTR_DATE_SENT))));
+        message.setIncoming(sms.get(ATTR_TYPE).equals("1"));
+        return message;
+    }
+
+    public void sendMessage(String phoneNumber, String message) {
+        Intent intent = new Intent(context, context.getClass());
+        PendingIntent pi = PendingIntent.getActivity(context, 0, intent, 0);
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(phoneNumber, null, message, pi, null);
     }
 
     public class Message {
@@ -88,6 +108,7 @@ public class SmsBox {
         private boolean isIncoming;
         private String body;
         private Date date;
+        private Date dateSent;
 
         public Integer getThreadId() {
             return threadId;
@@ -127,6 +148,14 @@ public class SmsBox {
 
         public void setDate(Date date) {
             this.date = date;
+        }
+
+        public Date getDateSent() {
+            return dateSent;
+        }
+
+        public void setDateSent(Date dateSent) {
+            this.dateSent = dateSent;
         }
     }
 }

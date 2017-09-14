@@ -7,24 +7,14 @@
 
 package admin.logic;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import ro.polak.http.ServerConfig;
 import ro.polak.http.servlet.HttpSession;
-import ro.polak.http.utilities.ConfigReader;
-
-import static ro.polak.http.utilities.IOUtilities.closeSilently;
 
 public class AccessControl {
 
     private static final Logger LOGGER = Logger.getLogger(AccessControl.class.getName());
-    public static final String CONFIG_FILENAME = "admin.conf";
     public static final String ATTR_LOGGEDIN = "loggedin";
 
     private ServerConfig serverConfig;
@@ -81,52 +71,13 @@ public class AccessControl {
      * @return
      */
     public boolean doLogin(String login, String password) {
-        boolean logged = false;
-        try {
-            Map<String, String> config = getConfig(serverConfig);
-            if (config.get("_managementLogin").equals(login) && config.get("_managementPassword").equals(password)) {
-                session.setAttribute(ATTR_LOGGEDIN, "1");
-                logged = true;
-            } else {
-                LOGGER.fine("Not logging in - wrong password");
-            }
-        } catch (IOException e) {
-            LOGGER.fine("Not logging in - IOException " + e.getMessage());
+        if (serverConfig.getAttribute("admin.login").equals(login)
+                && serverConfig.getAttribute("admin.password").equals(password)) {
+            session.setAttribute(ATTR_LOGGEDIN, "1");
+            return true;
+        } else {
+            LOGGER.fine("Not logging in - wrong password");
         }
-        return logged;
-    }
-
-    /**
-     * Returns server config
-     *
-     * @param serverConfig
-     * @return
-     */
-    public static Map<String, String> getConfig(ServerConfig serverConfig) throws IOException {
-        Map<String, String> config = null;
-        InputStream fileInputStream = null;
-
-        File basePath = new File(serverConfig.getBasePath());
-        if (!basePath.exists()) {
-            if (!basePath.mkdir()) {
-                throw new IOException("Unable to mkdir " + basePath.getAbsolutePath());
-            }
-        }
-
-        try {
-            ConfigReader reader = new ConfigReader();
-            String configPath = serverConfig.getBasePath() + CONFIG_FILENAME;
-            fileInputStream = new FileInputStream(configPath);
-            config = reader.read(fileInputStream);
-        } finally {
-            if (fileInputStream != null) {
-                closeSilently(fileInputStream);
-            }
-            if (config == null) {
-                LOGGER.fine("Creating a default config");
-                config = new HashMap<>();
-            }
-        }
-        return config;
+        return false;
     }
 }

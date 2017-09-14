@@ -19,17 +19,18 @@ import admin.logic.AccessControl;
 import ro.polak.http.Headers;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.impl.ServerConfigImpl;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.Utilities;
 
 import static admin.Login.RELOCATE_PARAM_NAME;
-import static ro.polak.http.utilities.IOUtilities.closeSilently;
 
 public class GetFile extends HttpServlet {
 
-    private static final int BUFFER_SIZE = 4096;
+    private static final String ATTR_ADMIN_DRIVE_ACCESS_ENABLED = "admin.driveAccess.enabled";
 
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
@@ -40,13 +41,9 @@ public class GetFile extends HttpServlet {
             return;
         }
 
-        try {
-            if (!AccessControl.getConfig(serverConfig).get("_managementEnableDriveAccess").equals("On")) {
-                response.getWriter().println("Option disabled in configuration.");
-                return;
-            }
-        } catch (IOException e) {
-            throw new ServletException(e);
+        if (!serverConfig.getAttribute(ATTR_ADMIN_DRIVE_ACCESS_ENABLED).equals(ServerConfigImpl.TRUE)) {
+            response.getWriter().println("Option disabled in configuration.");
+            return;
         }
 
         boolean fileExists = false;
@@ -79,17 +76,11 @@ public class GetFile extends HttpServlet {
         try {
             OutputStream out = response.getOutputStream();
             in = new FileInputStream(file);
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int length;
-            while ((length = in.read(buffer)) > 0) {
-                out.write(buffer, 0, length);
-            }
+            IOUtilities.copyStreams(in, out);
             out.flush();
 
         } finally {
-            if (in != null) {
-                closeSilently(in);
-            }
+            IOUtilities.closeSilently(in);
         }
     }
 }

@@ -29,6 +29,7 @@ import ro.polak.http.servlet.HttpServletResponse;
 public class SmsInbox extends HttpServlet {
 
     private static final String ATTR_MAX_RESULTS = "maxResults";
+    private static final String INCOMING_WHERE_STRING = "type=1";
 
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
@@ -37,9 +38,8 @@ public class SmsInbox extends HttpServlet {
         int maxResults = request.getParameter(ATTR_MAX_RESULTS) != null
                 ? Integer.parseInt(request.getParameter(ATTR_MAX_RESULTS)) : 10;
 
-
         SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
-        List<SmsBox.Message> messages = smsBox.readMessages("type=1");
+        List<SmsBox.Message> messages = smsBox.readMessages(INCOMING_WHERE_STRING);
 
         JSONArray result = new JSONArray();
         int counterRemaining = maxResults;
@@ -50,14 +50,12 @@ public class SmsInbox extends HttpServlet {
             if (i >= max) {
                 break;
             }
-            JSONObject message;
+
             try {
-                message = toMessageDTO(messages.get(i));
+                result.put(toMessageDTO(messages.get(i)));
             } catch (JSONException e) {
                 throw new ServletException(e);
             }
-
-            result.put(message);
 
             if (maxResults > 0 && --counterRemaining == 0) {
                 break;

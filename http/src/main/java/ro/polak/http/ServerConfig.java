@@ -109,4 +109,12 @@ public interface ServerConfig {
      * @return
      */
     List<ResourceProvider> getResourceProviders();
+
+    /**
+     * Returns arbitrary attribute by name.
+     *
+     * @param name
+     * @return
+     */
+    String getAttribute(String name);
 }

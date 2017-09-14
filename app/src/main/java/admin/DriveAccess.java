@@ -10,7 +10,6 @@ package admin;
 import android.os.Environment;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.StringTokenizer;
 
 import admin.logic.AccessControl;
@@ -18,6 +17,7 @@ import admin.logic.FileIconMapper;
 import admin.logic.HTMLDocument;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.impl.ServerConfigImpl;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
@@ -26,6 +26,8 @@ import ro.polak.http.utilities.Utilities;
 import static admin.Login.RELOCATE_PARAM_NAME;
 
 public class DriveAccess extends HttpServlet {
+
+    private static final String ADMIN_DRIVE_ACCESS_ENABLED = "admin.driveAccess.enabled";
 
     private static FileIconMapper fileIconMapper = new FileIconMapper();
 
@@ -43,13 +45,9 @@ public class DriveAccess extends HttpServlet {
 
         doc.writeln("<div class=\"page-header\"><h1>Drive Access</h1></div>");
 
-        try {
-            if (!AccessControl.getConfig(serverConfig).get("_managementEnableDriveAccess").equals("On")) {
-                renderFunctionDisabled(response, doc);
-                return;
-            }
-        } catch (IOException e) {
-            throw new ServletException(e);
+        if (!serverConfig.getAttribute(ADMIN_DRIVE_ACCESS_ENABLED).equals(ServerConfigImpl.TRUE)) {
+            renderFunctionDisabled(response, doc);
+            return;
         }
 
         String path = Utilities.urlDecode(request.getQueryString());
@@ -113,7 +111,7 @@ public class DriveAccess extends HttpServlet {
 
     private void renderFunctionDisabled(HttpServletResponse response, HTMLDocument doc) {
         doc.writeln("<div class=\"alert alert-warning\" role=\"alert\">Drive Access option has been disabled in configuration.</div>");
-        doc.writeln("<p>See <b>httpd.conf</b>, parameter <b>_managementEnableDriveAccess</b> must be <b>On</b>.</p>");
+        doc.writeln("<p>See <b>httpd.properties</b>, parameter <b>_managementEnableDriveAccess</b> must be <b>On</b>.</p>");
         response.getWriter().print(doc.toString());
     }
 

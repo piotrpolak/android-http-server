@@ -14,13 +14,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Properties;
 
 import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.utilities.ConfigReader;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
@@ -37,16 +36,19 @@ public class ServerConfigImpl implements ServerConfig {
             HttpRequestWrapper.METHOD_HEAD
     );
 
-    private static final String ATTRIBUTE_LISTEN = "Listen";
-    private static final String ATTRIBUTE_DOCUMENT_ROOT = "DocumentRoot";
-    private static final String ATTRIBUTE_MAX_THREADS = "MaxThreads";
-    private static final String ATTRIBUTE_KEEP_ALIVE = "KeepAlive";
-    private static final String ATTRIBUTE_ERROR_DOCUMENT_404 = "ErrorDocument404";
-    private static final String ATTRIBUTE_ERROR_DOCUMENT_403 = "ErrorDocument403";
-    private static final String ATTRIBUTE_SERVLET_MAPPED_EXTENSION = "ServletMappedExtension";
-    private static final String ATTRIBUTE_DEFAULT_MIME_TYPE = "DefaultMimeType";
-    private static final String ATTRIBUTE_MIME_TYPE = "MimeType";
-    private static final String ATTRIBUTE_DIRECTORY_INDEX = "DirectoryIndex";
+    public static final String TRUE = "true";
+    public static final String PROPERTIES_FILE_NAME = "httpd.properties";
+
+    private static final String ATTRIBUTE_PORT = "server.port";
+    private static final String ATTRIBUTE_STATIC_PATH = "server.static.path";
+    private static final String ATTRIBUTE_MAX_THREADS = "server.maxThreads";
+    private static final String ATTRIBUTE_KEEP_ALIVE = "server.keepAlive.enabled";
+    private static final String ATTRIBUTE_ERROR_DOCUMENT_404 = "server.errorDocument.404";
+    private static final String ATTRIBUTE_ERROR_DOCUMENT_403 = "server.errorDocument.403";
+    private static final String ATTRIBUTE_SERVLET_MAPPED_EXTENSION = "server.servlets.extension";
+    private static final String ATTRIBUTE_DEFAULT_MIME_TYPE = "server.mimeType.defaultMimeType";
+    private static final String ATTRIBUTE_MIME_TYPE = "server.mimeType.filePath";
+    private static final String ATTRIBUTE_DIRECTORY_INDEX = "server.static.directoryIndex";
 
     private List<String> directoryIndex;
     private String basePath;
@@ -60,6 +62,7 @@ public class ServerConfigImpl implements ServerConfig {
     private String errorDocument404Path;
     private String errorDocument403Path;
     private List<ResourceProvider> resourceProviders = Collections.emptyList();
+    private Properties properties = new Properties();
 
     public ServerConfigImpl() {
         this("/httpd/temp/");
@@ -73,6 +76,7 @@ public class ServerConfigImpl implements ServerConfig {
         servletMappedExtension = "dhtml";
         maxServerThreads = 10;
         directoryIndex = new ArrayList<>(Arrays.asList("Index.dhtml", "index.html", "index.htm"));
+
     }
 
     /**
@@ -82,12 +86,12 @@ public class ServerConfigImpl implements ServerConfig {
      * @throws IOException
      */
     public static ServerConfigImpl createFromPath(String basePath, String tempPath) throws IOException {
-        ConfigReader reader = new ConfigReader();
-        InputStream configInputStream = new FileInputStream(basePath + "httpd.conf");
+        InputStream configInputStream = new FileInputStream(basePath + PROPERTIES_FILE_NAME);
 
-        Map<String, String> config;
+        Properties properties = new Properties();
+        properties.load(configInputStream);
         try {
-            config = reader.read(configInputStream);
+            properties.load(configInputStream);
         } finally {
             IOUtilities.closeSilently(configInputStream);
         }
@@ -96,42 +100,46 @@ public class ServerConfigImpl implements ServerConfig {
         serverConfig.basePath = basePath;
         serverConfig.tempPath = tempPath;
         serverConfig.documentRootPath = basePath + "www/";
+        serverConfig.properties = properties;
 
-        if (config.containsKey(ATTRIBUTE_LISTEN)) {
-            serverConfig.listenPort = Integer.parseInt(config.get(ATTRIBUTE_LISTEN));
+        if (properties.containsKey(ATTRIBUTE_PORT)) {
+            serverConfig.listenPort = Integer.parseInt(properties.getProperty(ATTRIBUTE_PORT));
         }
 
-        if (config.containsKey(ATTRIBUTE_DOCUMENT_ROOT)) {
-            serverConfig.documentRootPath = basePath + config.get(ATTRIBUTE_DOCUMENT_ROOT);
+        if (properties.containsKey(ATTRIBUTE_STATIC_PATH)) {
+            serverConfig.documentRootPath = basePath + properties.getProperty(ATTRIBUTE_STATIC_PATH);
         }
 
-        if (config.containsKey(ATTRIBUTE_MAX_THREADS)) {
-            serverConfig.maxServerThreads = Integer.parseInt(config.get(ATTRIBUTE_MAX_THREADS));
+        if (properties.containsKey(ATTRIBUTE_MAX_THREADS)) {
+            serverConfig.maxServerThreads =
+                    Integer.parseInt(properties.getProperty(ATTRIBUTE_MAX_THREADS));
         }
 
-        if (config.containsKey(ATTRIBUTE_KEEP_ALIVE)) {
-            serverConfig.keepAlive = config.get(ATTRIBUTE_KEEP_ALIVE).equalsIgnoreCase("on");
+        if (properties.containsKey(ATTRIBUTE_KEEP_ALIVE)) {
+            serverConfig.keepAlive =
+                    properties.getProperty(ATTRIBUTE_KEEP_ALIVE).equalsIgnoreCase(TRUE);
         }
 
-        if (config.containsKey(ATTRIBUTE_ERROR_DOCUMENT_404)) {
-            serverConfig.errorDocument404Path = basePath + config.get(ATTRIBUTE_ERROR_DOCUMENT_404);
+        if (properties.containsKey(ATTRIBUTE_ERROR_DOCUMENT_404)) {
+            serverConfig.errorDocument404Path =
+                    basePath + properties.getProperty(ATTRIBUTE_ERROR_DOCUMENT_404);
         }
-        if (config.containsKey(ATTRIBUTE_ERROR_DOCUMENT_403)) {
-            serverConfig.errorDocument403Path = basePath + config.get(ATTRIBUTE_ERROR_DOCUMENT_403);
-        }
-
-        if (config.containsKey(ATTRIBUTE_SERVLET_MAPPED_EXTENSION)) {
-            serverConfig.servletMappedExtension = config.get(ATTRIBUTE_SERVLET_MAPPED_EXTENSION);
+        if (properties.containsKey(ATTRIBUTE_ERROR_DOCUMENT_403)) {
+            serverConfig.errorDocument403Path =
+                    basePath + properties.getProperty(ATTRIBUTE_ERROR_DOCUMENT_403);
         }
 
-        // Initializing mime mapping
-        if (config.containsKey(ATTRIBUTE_MIME_TYPE)) {
+        if (properties.containsKey(ATTRIBUTE_SERVLET_MAPPED_EXTENSION)) {
+            serverConfig.servletMappedExtension = properties.getProperty(ATTRIBUTE_SERVLET_MAPPED_EXTENSION);
+        }
+
+        if (properties.containsKey(ATTRIBUTE_MIME_TYPE)) {
             String defaultMimeType = "text/plain";
-            if (config.containsKey(ATTRIBUTE_DEFAULT_MIME_TYPE)) {
-                defaultMimeType = config.get(ATTRIBUTE_DEFAULT_MIME_TYPE);
+            if (properties.containsKey(ATTRIBUTE_DEFAULT_MIME_TYPE)) {
+                defaultMimeType = properties.getProperty(ATTRIBUTE_DEFAULT_MIME_TYPE);
             }
 
-            InputStream mimeInputStream = new FileInputStream(basePath + config.get(ATTRIBUTE_MIME_TYPE));
+            InputStream mimeInputStream = new FileInputStream(basePath + properties.getProperty(ATTRIBUTE_MIME_TYPE));
             try {
                 serverConfig.mimeTypeMapping = MimeTypeMappingImpl.createFromStream(mimeInputStream, defaultMimeType);
             } finally {
@@ -139,16 +147,18 @@ public class ServerConfigImpl implements ServerConfig {
             }
         }
 
-        // Generating index files
-        if (config.containsKey(ATTRIBUTE_DIRECTORY_INDEX)) {
-            String directoryIndexLine[] = config.get(ATTRIBUTE_DIRECTORY_INDEX).split(" ");
+        if (properties.containsKey(ATTRIBUTE_DIRECTORY_INDEX)) {
+            serverConfig.directoryIndex.clear();
+            String directoryIndexLine[] = properties.getProperty(ATTRIBUTE_DIRECTORY_INDEX).split(",");
             for (int i = 0; i < directoryIndexLine.length; i++) {
-                serverConfig.directoryIndex.add(directoryIndexLine[i]);
+                String index = directoryIndexLine[i].trim();
+                if (!index.equals("")) {
+                    serverConfig.directoryIndex.add(directoryIndexLine[i]);
+                }
             }
         }
 
         if (serverConfig.mimeTypeMapping == null) {
-            // Initializing an empty mime type mapping to prevent null pointer exceptions
             serverConfig.mimeTypeMapping = new MimeTypeMappingImpl();
         }
 
@@ -222,5 +232,10 @@ public class ServerConfigImpl implements ServerConfig {
 
     public void setResourceProviders(List<ResourceProvider> resourceProviders) {
         this.resourceProviders = resourceProviders;
+    }
+
+    @Override
+    public String getAttribute(String name) {
+        return properties.getProperty(name);
     }
 }

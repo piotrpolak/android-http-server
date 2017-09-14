@@ -20,18 +20,19 @@ public class ServerConfigImplTest {
     private File configFile;
     private File mimeFile;
 
-    private static final String DEFAULT_CONFIG_DATA = "Listen 8090\n" +
-            "DocumentRoot wwwx\n" +
-            "ErrorDocument404 error404.html\n" +
-            "ErrorDocument403 error403.html\n" +
-            "MaxThreads 3\n" +
-            "KeepAlive On\n" +
-            "MimeType mime.mime\n" +
-            "ServletMappedExtension dddd\n" +
-            "DirectoryIndex index.php index.html\n";
+    private static final String DEFAULT_CONFIG_DATA = "server.port=8090\n" +
+            "server.servlets.extension=dddd\n" +
+            "server.static.path=wwwx\n" +
+            "server.static.directoryIndex=index.php,index.html\n" +
+            "server.mimeType.defaultMimeType=mime/text\n" +
+            "server.mimeType.filePath=mime.mime\n" +
+            "server.maxThreads=3\n" +
+            "server.keepAlive.enabled=true\n" +
+            "server.errorDocument.404=error404.html\n" +
+            "server.errorDocument.403=error403.html\n";
 
     public void writeFile(String configData) throws IOException {
-        configFile = new File(tempDir + "httpd.conf");
+        configFile = new File(tempDir + "httpd.properties");
         mimeFile = new File(tempDir + "mime.mime");
         try {
             mimeFile.createNewFile();
@@ -89,7 +90,7 @@ public class ServerConfigImplTest {
         writeFile(DEFAULT_CONFIG_DATA);
         try {
             ServerConfig serverConfig = ServerConfigImpl.createFromPath(tempDir, tempDir);
-            assertThat(serverConfig.getMimeTypeMapping().getMimeTypeByExtension("ANY"), is("text/plain"));
+            assertThat(serverConfig.getMimeTypeMapping().getMimeTypeByExtension("ANY"), is("mime/text"));
         } finally {
             removeFile();
         }

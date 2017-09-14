@@ -31,4 +31,13 @@ public class IOUtilitiesTest {
 
         IOUtilities.closeSilently(closeable);
     }
+
+    @Test
+    public void shouldCloseNullClosableSilently() throws IOException {
+        try {
+            IOUtilities.closeSilently(null);
+        } catch (Exception e) {
+            fail("Exception should not be thrown.");
+        }
+    }
 }

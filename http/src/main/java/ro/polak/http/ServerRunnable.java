@@ -102,9 +102,7 @@ public class ServerRunnable implements Runnable {
 
                 throw e; // Make it logged by the main thread
             } finally {
-                if (socket != null) {
-                    IOUtilities.closeSilently(socket);
-                }
+                IOUtilities.closeSilently(socket);
             }
         } catch (IOException e) {
             LOGGER.log(Level.INFO, "Encountered IOException when handling request {0}", new Object[]{

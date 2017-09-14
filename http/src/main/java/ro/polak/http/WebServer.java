@@ -62,22 +62,23 @@ public class WebServer extends Thread {
         HttpServletRequestWrapperFactory requestWrapperFactory = new HttpServletRequestWrapperFactory(serverConfig.getTempPath());
         HttpErrorHandlerResolver httpErrorHandlerResolver = new HttpErrorHandlerResolverImpl(serverConfig);
 
-        while (listen) {
-            try {
-                threadPoolExecutor.execute(new ServerRunnable(serverSocket.accept(),
-                        serverConfig,
-                        requestWrapperFactory,
-                        httpErrorHandlerResolver));
-            } catch (IOException e) {
-                if (listen) {
-                    LOGGER.log(Level.SEVERE, "Communication error", e);
+        try {
+            while (listen) {
+                try {
+                    threadPoolExecutor.execute(new ServerRunnable(serverSocket.accept(),
+                            serverConfig,
+                            requestWrapperFactory,
+                            httpErrorHandlerResolver));
+                } catch (IOException e) {
+                    if (listen) {
+                        LOGGER.log(Level.SEVERE, "Communication error", e);
+                    }
                 }
             }
+        } finally {
+            IOUtilities.closeSilently(serverSocket);
+            threadPoolExecutor.shutdown();
         }
-
-        IOUtilities.closeSilently(serverSocket);
-
-        threadPoolExecutor.shutdown();
     }
 
     private ThreadPoolExecutor getThreadPoolExecutor() {
@@ -204,8 +205,9 @@ public class WebServer extends Thread {
                 try {
                     (new HttpError503Handler()).serve(HttpResponseWrapper.createFromSocket(socket));
                 } catch (IOException e) {
+                } finally {
+                    IOUtilities.closeSilently(socket);
                 }
-                IOUtilities.closeSilently(socket);
             }
         }
     }

@@ -63,8 +63,9 @@ public class AssetResourceProvider implements ResourceProvider {
     @Override
     public void load(String path, HttpRequestWrapper request, HttpResponseWrapper response) {
         String assetPath = getAssetPath(path);
+        InputStream inputStream = null;
         try {
-            InputStream inputStream = getInputStream(assetPath);
+            inputStream = getInputStream(assetPath);
 
             response.setStatus(HttpServletResponse.STATUS_OK);
 
@@ -80,11 +81,10 @@ public class AssetResourceProvider implements ResourceProvider {
 
             response.flushHeaders();
             response.serveStream(inputStream);
-
-            IOUtilities.closeSilently(inputStream);
-
         } catch (IOException e) {
             throw new UnexpectedSituationException(e);
+        } finally {
+            IOUtilities.closeSilently(inputStream);
         }
     }
 

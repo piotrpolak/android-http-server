@@ -11,16 +11,15 @@ import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.servlet.HttpServlet;
 
 /**
- * Loads and rolls servlets on Android.
  * The servlet classes are loaded from the current package or classpath.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201002
  */
-public class ClassPathServletLoader extends AbstractServletLoader {
+public class ClassPathServletLoader implements ServletLoader {
 
     @Override
-    protected boolean servletExists(String classCanonicalName) {
+    public boolean canLoadServlet(String classCanonicalName) {
         try {
             Class.forName(classCanonicalName);
         } catch (ClassNotFoundException e) {
@@ -31,7 +30,7 @@ public class ClassPathServletLoader extends AbstractServletLoader {
     }
 
     @Override
-    protected HttpServlet instantiateServlet(String classCanonicalName) throws ServletInitializationException {
+    public HttpServlet loadServlet(String classCanonicalName) throws ServletInitializationException {
         try {
             return (HttpServlet) Class.forName(classCanonicalName).newInstance();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {

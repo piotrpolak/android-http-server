@@ -102,7 +102,7 @@ public class MainService extends Service implements ServerGui {
         if (!config.exists()) {
             try {
                 config.createNewFile();
-                AssetUtil.copyAssetToFile(assetManager, "conf/" + PROPERTIES_FILE_NAME, config);
+                AssetUtil.copyAssetToFile(assetManager, "conf" + File.separator + PROPERTIES_FILE_NAME, config);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -112,7 +112,7 @@ public class MainService extends Service implements ServerGui {
         if (!mimeType.exists()) {
             try {
                 mimeType.createNewFile();
-                AssetUtil.copyAssetToFile(assetManager, "conf/" + "mime.type", mimeType);
+                AssetUtil.copyAssetToFile(assetManager, "conf" + File.separator + "mime.type", mimeType);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

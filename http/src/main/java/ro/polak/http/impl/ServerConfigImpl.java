@@ -7,6 +7,7 @@
 
 package ro.polak.http.impl;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,13 +66,13 @@ public class ServerConfigImpl implements ServerConfig {
     private Properties properties = new Properties();
 
     public ServerConfigImpl() {
-        this("/httpd/temp/");
+        this(File.separator + "httpd" + File.separator + "temp" + File.separator);
     }
 
     public ServerConfigImpl(String tempPath) {
         this.tempPath = tempPath;
-        basePath = "/httpd/";
-        documentRootPath = basePath + "www/";
+        basePath = File.separator + "httpd" + File.separator;
+        documentRootPath = basePath + "www" + File.separator;
         listenPort = 8080;
         servletMappedExtension = "dhtml";
         maxServerThreads = 10;
@@ -99,7 +100,7 @@ public class ServerConfigImpl implements ServerConfig {
         ServerConfigImpl serverConfig = new ServerConfigImpl();
         serverConfig.basePath = basePath;
         serverConfig.tempPath = tempPath;
-        serverConfig.documentRootPath = basePath + "www/";
+        serverConfig.documentRootPath = basePath + "www" + File.separator;
         serverConfig.properties = properties;
 
         if (properties.containsKey(ATTRIBUTE_PORT)) {

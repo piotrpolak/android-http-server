@@ -87,17 +87,13 @@ public class MainService extends Service implements ServerGui {
         String staticDirPath = Environment.getExternalStorageDirectory() + serverConfig.getDocumentRootPath();
 
         File baseDir = new File(basePath);
-        if (!baseDir.exists()) {
-            if (!baseDir.mkdirs()) {
-                throw new RuntimeException("Unable to create directory " + baseDir.getAbsolutePath());
-            }
+        if (!baseDir.exists() && !baseDir.mkdirs()) {
+            throw new RuntimeException("Unable to create directory " + baseDir.getAbsolutePath());
         }
 
         File staticDir = new File(staticDirPath);
-        if (!staticDir.exists()) {
-            if (!staticDir.mkdirs()) {
-                throw new RuntimeException("Unable to create directory " + staticDir.getAbsolutePath());
-            }
+        if (!staticDir.exists() && !staticDir.mkdirs()) {
+            throw new RuntimeException("Unable to create directory " + staticDir.getAbsolutePath());
         }
 
         AssetManager assetManager = activity.getResources().getAssets();

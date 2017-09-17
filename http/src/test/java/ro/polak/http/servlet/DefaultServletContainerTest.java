@@ -22,7 +22,6 @@ import static org.mockito.Mockito.when;
 
 public class DefaultServletContainerTest {
 
-    private ServletLoader servletLoader;
     private DefaultServletContainer servletContainer;
     private ServletConfig servletConfig;
     private Servlet servlet;
@@ -30,7 +29,7 @@ public class DefaultServletContainerTest {
     @Before
     public void setUp() throws ServletInitializationException {
         servlet = mock(Servlet.class);
-        servletLoader = mock(ServletLoader.class);
+        ServletLoader servletLoader = mock(ServletLoader.class);
         when(servletLoader.canLoadServlet(any(String.class))).thenReturn(true);
         when(servletLoader.loadServlet(any(String.class))).thenReturn(servlet);
         servletContainer = new DefaultServletContainer(servletLoader);

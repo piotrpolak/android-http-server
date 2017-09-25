@@ -2,10 +2,9 @@ language: java
 
 # http/settings.gradle Added here to enable http subproject to be built without the root project
 install:
-  - echo "include ':cli', ':http';" > settings.gradle
-  - ./gradlew :http:assemble
+  - ./gradlew :http:assemble -PskipAndroidBuild
 script:
-  - ./gradlew :http:check -Djava.io.tmpdir=$HOME/.cache/
+  - ./gradlew :http:check -PskipAndroidBuild -Djava.io.tmpdir=$HOME/.cache/
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

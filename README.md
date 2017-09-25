@@ -47,7 +47,7 @@ Once the `ro.polak.http` package is mature enough it will be released as an inde
 The subproject can be tested in the following way:
 
 ```bash
-./gradlew :http:clean :http:check
+./gradlew :http:clean :http:check -PskipAndroidBuild
 ```
 
 The original package code has been refactored and covered with unit and integration tests.
@@ -59,13 +59,13 @@ Standalone server can be used to bundle the `http` subproject into a runnable se
 The CLI subproject is also independent on the Android platform, it is not bundled with the main APK.
 
 ```bash
-./gradlew :cli:bootRun
+./gradlew :cli:bootRun -PskipAndroidBuild
 ```
 
 It is also possible to build one "uber-jar" and to use it as a standalone application:
 
 ```bash
-./gradlew :cli:fatJar
+./gradlew :cli:fatJar -PskipAndroidBuild
 ```
 
 The resulting artifact can then be grabbed from `./cli/build/libs/cli-all.jar`.

@@ -17,6 +17,7 @@ import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.resource.provider.ResourceProvider;
+import ro.polak.http.servlet.DefaultServletContainer;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponseWrapper;
 import ro.polak.http.servlet.HttpServletResponse;
@@ -24,12 +25,9 @@ import ro.polak.http.servlet.HttpSessionWrapper;
 import ro.polak.http.servlet.Servlet;
 import ro.polak.http.servlet.ServletConfig;
 import ro.polak.http.servlet.ServletConfigWrapper;
-import ro.polak.http.servlet.DefaultServletContainer;
 import ro.polak.http.servlet.ServletContextWrapper;
 import ro.polak.http.servlet.ServletPathTranslator;
-import ro.polak.http.servlet.ClassPathServletPathTranslator;
 import ro.polak.http.servlet.UploadedFile;
-import ro.polak.http.servlet.loader.ClassPathServletLoader;
 import ro.polak.http.servlet.loader.ServletLoader;
 import ro.polak.http.utilities.Utilities;
 
@@ -44,10 +42,9 @@ import ro.polak.http.utilities.Utilities;
 public class ServletResourceProvider implements ResourceProvider {
 
     private static final Logger LOGGER = Logger.getLogger(ServletResourceProvider.class.getName());
-    private final ServletLoader servletLoader = new ClassPathServletLoader();
-    private final ServletPathTranslator servletPathTranslator = new ClassPathServletPathTranslator();
-    private final DefaultServletContainer servletContainer = new DefaultServletContainer(servletLoader);
-
+    private final ServletLoader servletLoader;
+    private final ServletPathTranslator servletPathTranslator;
+    private final DefaultServletContainer servletContainer;
     private final ServletContextWrapper servletContext;
     private final ServletConfig servletConfig;
     private final String servletMappedExtension;
@@ -55,10 +52,20 @@ public class ServletResourceProvider implements ResourceProvider {
     /**
      * Default constructor.
      *
+     * @param servletLoader
+     * @param servletPathTranslator
+     * @param servletContainer
      * @param servletContext
      * @param servletMappedExtension
      */
-    public ServletResourceProvider(ServletContextWrapper servletContext, String servletMappedExtension) {
+    public ServletResourceProvider(final ServletLoader servletLoader,
+                                   final ServletPathTranslator servletPathTranslator,
+                                   final DefaultServletContainer servletContainer,
+                                   final ServletContextWrapper servletContext,
+                                   final String servletMappedExtension) {
+        this.servletLoader = servletLoader;
+        this.servletPathTranslator = servletPathTranslator;
+        this.servletContainer = servletContainer;
         this.servletContext = servletContext;
         this.servletMappedExtension = servletMappedExtension;
         servletConfig = new ServletConfigWrapper(servletContext);

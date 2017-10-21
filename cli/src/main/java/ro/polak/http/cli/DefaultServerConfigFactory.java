@@ -25,8 +25,12 @@ import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.resource.provider.impl.FileResourceProvider;
 import ro.polak.http.resource.provider.impl.ServletResourceProvider;
+import ro.polak.http.servlet.ClassPathServletPathTranslator;
+import ro.polak.http.servlet.DefaultServletContainer;
 import ro.polak.http.servlet.RangeHelper;
 import ro.polak.http.servlet.ServletContextWrapper;
+import ro.polak.http.servlet.loader.ClassPathServletLoader;
+import ro.polak.http.servlet.loader.ServletLoader;
 import ro.polak.http.session.storage.FileSessionStorage;
 
 /**
@@ -139,8 +143,10 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
     }
 
     private ServletResourceProvider getServletResourceProvider(ServerConfig serverConfig) {
+        ServletLoader servletLoader = new ClassPathServletLoader();
         return new ServletResourceProvider(
-                getServletContext(serverConfig),
+                servletLoader, new ClassPathServletPathTranslator(),
+                new DefaultServletContainer(servletLoader), getServletContext(serverConfig),
                 serverConfig.getServletMappedExtension());
     }
 }

@@ -95,27 +95,33 @@ public class FileSessionStorage implements SessionStorage {
 
     private HttpSessionWrapper readSession(String id, File file) {
         HttpSessionWrapper session = null;
+        FileInputStream fileInputStream = null;
+        ObjectInputStream objectInputStream = null;
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            fileInputStream = new FileInputStream(file);
+            objectInputStream = new ObjectInputStream(fileInputStream);
             session = (HttpSessionWrapper) objectInputStream.readObject();
-
-            IOUtilities.closeSilently(objectInputStream);
-            IOUtilities.closeSilently(fileInputStream);
 
         } catch (IOException | ClassNotFoundException e) {
             LOGGER.log(Level.WARNING, "Unable to read session " + id + " under " + tempPath, e);
+        } finally {
+            IOUtilities.closeSilently(objectInputStream);
+            IOUtilities.closeSilently(fileInputStream);
         }
         return session;
     }
 
     private void writeSession(HttpSessionWrapper session, File file) throws IOException {
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-        objectOutputStream.writeObject(session);
-
-        IOUtilities.closeSilently(objectOutputStream);
-        IOUtilities.closeSilently(fileOutputStream);
+        FileOutputStream fileOutputStream = null;
+        ObjectOutputStream objectOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(session);
+        } finally {
+            IOUtilities.closeSilently(objectOutputStream);
+            IOUtilities.closeSilently(fileOutputStream);
+        }
     }
 
     private String getSessionStoragePath(String id) {

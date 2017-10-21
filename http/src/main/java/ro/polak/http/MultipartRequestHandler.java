@@ -20,7 +20,6 @@ import java.util.Map;
 import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
-import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
 import ro.polak.http.servlet.UploadedFile;
 import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.RandomStringGenerator;
@@ -37,9 +36,9 @@ public class MultipartRequestHandler {
     private static final String NEW_LINE = "\r\n";
     private static final String BOUNDARY_BEGIN_MARK = "--";
     private static final String HEADERS_DELIMINATOR = NEW_LINE + NEW_LINE;
-    private static final Parser<MultipartHeadersPart> multipartHeadersPartParser = new MultipartHeadersPartParser();
 
     private final InputStream in;
+    private final Parser<MultipartHeadersPart> multipartHeadersPartParser;
     private final int expectedPostLength;
     private final int bufferLength;
     private final String temporaryUploadsDirectory;
@@ -59,31 +58,19 @@ public class MultipartRequestHandler {
 
     /**
      * Constructor.
-     *
-     * @param in
+     *  @param in
      * @param expectedPostLength
      * @param boundary
      * @param temporaryUploadsDirectory
      */
-    public MultipartRequestHandler(final InputStream in, final int expectedPostLength,
-                                   final String boundary, final String temporaryUploadsDirectory) {
-        this(in, expectedPostLength, boundary, temporaryUploadsDirectory, 2048);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param in
-     * @param expectedPostLength
-     * @param boundary
-     * @param temporaryUploadsDirectory
-     */
-    public MultipartRequestHandler(final InputStream in, final int expectedPostLength,
+    public MultipartRequestHandler(Parser<MultipartHeadersPart> multipartHeadersPartParser,
+                                   final InputStream in, final int expectedPostLength,
                                    final String boundary, final String temporaryUploadsDirectory,
                                    final int bufferLength) {
         this.in = in;
         this.expectedPostLength = expectedPostLength;
         this.temporaryUploadsDirectory = temporaryUploadsDirectory;
+        this.multipartHeadersPartParser = multipartHeadersPartParser;
 
         endBoundary = NEW_LINE + BOUNDARY_BEGIN_MARK + boundary;
         beginBoundary = BOUNDARY_BEGIN_MARK + boundary;

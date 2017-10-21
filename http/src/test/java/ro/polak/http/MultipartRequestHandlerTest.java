@@ -10,6 +10,8 @@ import java.util.Iterator;
 
 import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
+import ro.polak.http.protocol.parser.Parser;
+import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
 import ro.polak.http.servlet.UploadedFile;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -20,8 +22,9 @@ public class MultipartRequestHandlerTest {
 
     private static final String BOUNDARY = "------------BOUNDARY";
     private static final String NEW_LINE = "\r\n";
-    private static final String temporaryUploadsDirectory
+    private static final String TEMPORARY_UPLOADS_DIRECTORY
             = System.getProperty("java.io.tmpdir") + "/";
+    private static final Parser<MultipartHeadersPart> parser = new MultipartHeadersPartParser();
 
     @Test
     public void shouldParseBasicFields() throws MalformedInputException {
@@ -51,8 +54,8 @@ public class MultipartRequestHandlerTest {
                         NEW_LINE +
                         NEW_LINE;
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data),
-                data.length(), BOUNDARY, temporaryUploadsDirectory);
+        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+                data.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         try {
             mrh.handle();
@@ -95,8 +98,8 @@ public class MultipartRequestHandlerTest {
                         NEW_LINE +
                         NEW_LINE;
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data),
-                data.length(), BOUNDARY, temporaryUploadsDirectory);
+        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+                data.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         try {
             mrh.handle();
@@ -136,8 +139,8 @@ public class MultipartRequestHandlerTest {
                         NEW_LINE +
                         NEW_LINE;
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data),
-                data.length(), BOUNDARY, temporaryUploadsDirectory);
+        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+                data.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
         try {
             mrh.handle();
         } catch (IOException e) {
@@ -186,8 +189,8 @@ public class MultipartRequestHandlerTest {
                         NEW_LINE +
                         NEW_LINE;
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data),
-                data.length(), BOUNDARY, temporaryUploadsDirectory);
+        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+                data.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
         try {
             mrh.handle();
         } catch (IOException e) {
@@ -299,8 +302,8 @@ public class MultipartRequestHandlerTest {
                         NEW_LINE +
                         NEW_LINE;
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data),
-                data.length(), shortBoundary, temporaryUploadsDirectory, 1);
+        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+                data.length(), shortBoundary, TEMPORARY_UPLOADS_DIRECTORY, 1);
         try {
             mrh.handle();
         } catch (IOException e) {
@@ -349,8 +352,8 @@ public class MultipartRequestHandlerTest {
                         NEW_LINE +
                         NEW_LINE;
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data),
-                data.length(), BOUNDARY, temporaryUploadsDirectory);
+        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+                data.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         try {
             mrh.handle();
@@ -366,8 +369,8 @@ public class MultipartRequestHandlerTest {
         String data =
                 "--123";
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data),
-                data.length() * 2, BOUNDARY, temporaryUploadsDirectory);
+        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+                data.length() * 2, BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         mrh.handle();
     }
@@ -386,8 +389,8 @@ public class MultipartRequestHandlerTest {
                 NEW_LINE +
                 NEW_LINE;
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data), 5,
-                BOUNDARY, temporaryUploadsDirectory);
+        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data), 5,
+                BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         try {
             mrh.handle();
@@ -424,8 +427,8 @@ public class MultipartRequestHandlerTest {
                 NEW_LINE +
                 NEW_LINE;
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(getStreamOutOfString(data),
-                begin.length(), BOUNDARY, temporaryUploadsDirectory);
+        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+                begin.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         try {
             mrh.handle();

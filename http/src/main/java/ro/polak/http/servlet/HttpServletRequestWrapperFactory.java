@@ -33,6 +33,7 @@ import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.protocol.parser.impl.CookieParser;
 import ro.polak.http.protocol.parser.impl.HeadersParser;
+import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
 import ro.polak.http.protocol.parser.impl.QueryStringParser;
 import ro.polak.http.protocol.parser.impl.RequestStatusParser;
 
@@ -45,12 +46,22 @@ import ro.polak.http.protocol.parser.impl.RequestStatusParser;
 public class HttpServletRequestWrapperFactory {
 
     public static final String DEFAULT_SCHEME = "http";
+    private static final int MULTIPART_BUFFER_LENGTH = 2048;
 
     private static final String BOUNDARY_START = "boundary=";
     private static final int URI_MAX_LENGTH = 2048;
     private static final int POST_MAX_LENGTH = 50 * 1024 * 1024;
     private static final int STATUS_MAX_LENGTH = 8 + URI_MAX_LENGTH + 9; // CONNECT + space + URI + space + HTTP/1.0
-    private static final String[] RECOGNIZED_METHODS = {"OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT"};
+    private static final String[] RECOGNIZED_METHODS = {
+            "OPTIONS",
+            "GET",
+            "HEAD",
+            "POST",
+            "PUT",
+            "DELETE",
+            "TRACE",
+            "CONNECT"
+    };
     private static final int METHOD_MAX_LENGTH;
     private static final List<String> RECOGNIZED_METHODS_LIST = Arrays.asList(RECOGNIZED_METHODS);
     private static final String HEADERS_END_DELIMINATOR = "\n\r\n";
@@ -69,14 +80,18 @@ public class HttpServletRequestWrapperFactory {
         METHOD_MAX_LENGTH = maxMethodLength;
     }
 
+    private MultipartHeadersPartParser multipartHeadersPartParser;
     private final String tempPath;
+
 
     /**
      * Default constructor.
      *
      * @param tempPath
      */
-    public HttpServletRequestWrapperFactory(String tempPath) {
+    public HttpServletRequestWrapperFactory(MultipartHeadersPartParser multipartHeadersPartParser,
+                                            String tempPath) {
+        this.multipartHeadersPartParser = multipartHeadersPartParser;
         this.tempPath = tempPath;
     }
 
@@ -86,7 +101,8 @@ public class HttpServletRequestWrapperFactory {
      * @param socket
      * @return
      */
-    public HttpRequestWrapper createFromSocket(Socket socket) throws IOException, ProtocolException {
+    public HttpRequestWrapper createFromSocket(Socket socket)
+            throws IOException, ProtocolException {
 
         HttpRequestWrapper request = new HttpRequestWrapper();
 
@@ -275,7 +291,8 @@ public class HttpServletRequestWrapperFactory {
                 && request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE).toLowerCase().startsWith("multipart/form-data");
     }
 
-    private void handlePostPlainRequest(HttpRequestWrapper request, InputStream in, int postLength) throws IOException, MalformedInputException {
+    private void handlePostPlainRequest(HttpRequestWrapper request, InputStream in, int postLength)
+            throws IOException, MalformedInputException {
         byte[] buffer;
         buffer = new byte[1];
         StringBuilder postLine = new StringBuilder();
@@ -289,7 +306,9 @@ public class HttpServletRequestWrapperFactory {
         request.setPostParameters(queryStringParser.parse(postLine.toString()));
     }
 
-    private void handlePostMultipartRequest(HttpRequestWrapper request, InputStream in, int postLength) throws IOException, MalformedInputException {
+    private void handlePostMultipartRequest(HttpRequestWrapper request, InputStream in, int postLength)
+            throws IOException, MalformedInputException {
+
         String boundary = request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE);
         int boundaryPosition = boundary.toLowerCase().indexOf(BOUNDARY_START);
         request.setMultipart(true);
@@ -297,7 +316,8 @@ public class HttpServletRequestWrapperFactory {
             int boundaryStartPos = boundaryPosition + BOUNDARY_START.length();
             if (boundaryStartPos < boundary.length()) {
                 boundary = boundary.substring(boundaryStartPos, boundary.length());
-                MultipartRequestHandler mrh = new MultipartRequestHandler(in, postLength, boundary, tempPath);
+                MultipartRequestHandler mrh = new MultipartRequestHandler(multipartHeadersPartParser, in, postLength, boundary,
+                        tempPath, MULTIPART_BUFFER_LENGTH);
                 mrh.handle();
 
                 request.setPostParameters(mrh.getPost());

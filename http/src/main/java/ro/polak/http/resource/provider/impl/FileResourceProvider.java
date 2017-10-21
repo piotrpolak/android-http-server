@@ -41,20 +41,29 @@ import ro.polak.http.utilities.Utilities;
  */
 public class FileResourceProvider implements ResourceProvider {
 
-    private static final RangeParser rangeParser = new RangeParser();
-    private static final RangeHelper rangeHelper = new RangeHelper();
-    private static final RangePartHeaderSerializer rangePartHeaderSerializer = new RangePartHeaderSerializer();
+    private final RangeParser rangeParser;
+    private final RangeHelper rangeHelper;
+    private final RangePartHeaderSerializer rangePartHeaderSerializer;
 
     private final MimeTypeMapping mimeTypeMapping;
     private final String basePath;
 
     /**
      * Default constructor.
-     *
+     * @param rangeParser
+     * @param rangeHelper
+     * @param rangePartHeaderSerializer
      * @param mimeTypeMapping
      * @param basePath
      */
-    public FileResourceProvider(final MimeTypeMapping mimeTypeMapping, final String basePath) {
+    public FileResourceProvider(final RangeParser rangeParser,
+                                final RangeHelper rangeHelper,
+                                final RangePartHeaderSerializer rangePartHeaderSerializer,
+                                final MimeTypeMapping mimeTypeMapping,
+                                final String basePath) {
+        this.rangeParser = rangeParser;
+        this.rangeHelper = rangeHelper;
+        this.rangePartHeaderSerializer = rangePartHeaderSerializer;
         this.mimeTypeMapping = mimeTypeMapping;
         this.basePath = basePath;
     }

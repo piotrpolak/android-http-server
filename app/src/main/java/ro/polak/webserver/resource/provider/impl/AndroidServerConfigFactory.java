@@ -20,8 +20,11 @@ import java.util.Set;
 import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.cli.DefaultServerConfigFactory;
+import ro.polak.http.protocol.parser.impl.RangeParser;
+import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.resource.provider.impl.FileResourceProvider;
+import ro.polak.http.servlet.RangeHelper;
 import ro.polak.webserver.AssetResourceProvider;
 
 /**
@@ -78,7 +81,8 @@ public class AndroidServerConfigFactory extends DefaultServerConfigFactory {
             AssetManager assetManager = ((Context) context).getResources().getAssets();
             return new AssetResourceProvider(assetManager, assetBasePath);
         } else {
-            return new FileResourceProvider(mimeTypeMapping, "./app/src/main/assets/" + assetBasePath);
+            return new FileResourceProvider(new RangeParser(), new RangeHelper(),
+                    new RangePartHeaderSerializer(), mimeTypeMapping, "./app/src/main/assets/" + assetBasePath);
         }
     }
 }

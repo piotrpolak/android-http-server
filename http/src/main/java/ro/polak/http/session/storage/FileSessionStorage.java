@@ -29,7 +29,7 @@ import ro.polak.http.utilities.IOUtilities;
 public class FileSessionStorage implements SessionStorage {
 
     private static final Logger LOGGER = Logger.getLogger(FileSessionStorage.class.getName());
-    public static final String SESSION_FILE_SUFFIX = "_session";
+    private static final String SESSION_FILE_SUFFIX = "_session";
     private static final Pattern pattern = Pattern.compile("[a-z]+");
 
     private final String tempPath;

@@ -32,10 +32,8 @@ public final class Utilities {
     // TODO This class should be split into dedicated ones
 
     private static final Logger LOGGER = Logger.getLogger(Utilities.class.getName());
-
-
-    public static final String CHARSET_NAME = "UTF-8";
-    public static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
+    private static final String CHARSET_NAME = "UTF-8";
+    private static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
 
     private Utilities() {
     }

@@ -26,9 +26,9 @@ import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
  */
 public class StreamHelper {
 
-    public static final int BUFFER_SIZE = 512;
-    public static final String NEW_LINE = "\r\n";
-    public static final Charset CHARSET = Charset.forName("UTF-8");
+    private static final int BUFFER_SIZE = 512;
+    private static final String NEW_LINE = "\r\n";
+    private static final Charset CHARSET = Charset.forName("UTF-8");
 
     private final RangeHelper rangeHelper = new RangeHelper();
     private final RangePartHeaderSerializer rangePartHeaderSerializer = new RangePartHeaderSerializer();

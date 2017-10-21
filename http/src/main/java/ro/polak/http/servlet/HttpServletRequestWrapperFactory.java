@@ -45,7 +45,7 @@ import ro.polak.http.protocol.parser.impl.RequestStatusParser;
  */
 public class HttpServletRequestWrapperFactory {
 
-    public static final String DEFAULT_SCHEME = "http";
+    private static final String DEFAULT_SCHEME = "http";
     private static final int MULTIPART_BUFFER_LENGTH = 2048;
 
     private static final String BOUNDARY_START = "boundary=";

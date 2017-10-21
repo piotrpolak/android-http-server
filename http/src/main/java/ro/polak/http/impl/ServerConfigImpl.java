@@ -31,14 +31,15 @@ import ro.polak.http.utilities.IOUtilities;
  */
 public class ServerConfigImpl implements ServerConfig {
 
+    public static final String TRUE = "true";
+    public static final String PROPERTIES_FILE_NAME = "httpd.properties";
+
+
     private static final List<String> SUPPORTED_METHODS = Arrays.asList(
             HttpRequestWrapper.METHOD_GET,
             HttpRequestWrapper.METHOD_POST,
             HttpRequestWrapper.METHOD_HEAD
     );
-
-    public static final String TRUE = "true";
-    public static final String PROPERTIES_FILE_NAME = "httpd.properties";
 
     private static final String ATTRIBUTE_PORT = "server.port";
     private static final String ATTRIBUTE_STATIC_PATH = "server.static.path";

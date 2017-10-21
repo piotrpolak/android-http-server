@@ -21,7 +21,7 @@ import ro.polak.http.protocol.serializer.Serializer;
 public class HeadersSerializer implements Serializer<Headers> {
 
     private static final String NEW_LINE = "\r\n";
-    public static final String KEY_VALUE_SEPARATOR = ": ";
+    private static final String KEY_VALUE_SEPARATOR = ": ";
 
     /**
      * Generates string representation of headers.

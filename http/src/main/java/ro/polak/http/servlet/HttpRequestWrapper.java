@@ -45,7 +45,7 @@ public class HttpRequestWrapper implements HttpServletRequest {
     public final static String METHOD_POST = "POST";
     public final static String METHOD_PUT = "PUT";
     public final static String METHOD_TRACE = "TRACE";
-    public final static String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
+    private final static String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
 
     private Map<String, String> postParameters;
     private Map<String, String> getParameters;

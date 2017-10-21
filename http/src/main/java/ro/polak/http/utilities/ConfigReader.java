@@ -34,21 +34,26 @@ public class ConfigReader {
      */
     public Map<String, String> read(InputStream in) throws IOException {
         HashMap<String, String> values = new HashMap<>();
-        InputStreamReader inputStreamReader = new InputStreamReader(in, CHARSET);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        String line;
 
-        while ((line = bufferedReader.readLine()) != null) {
-            if (isEmptyLine(line)) {
-                continue;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
+        try {
+            inputStreamReader = new InputStreamReader(in, CHARSET);
+            bufferedReader = new BufferedReader(inputStreamReader);
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                if (isEmptyLine(line)) {
+                    continue;
+                }
+
+                String[] parameter = line.split(" ", 2);
+                values.put(parameter[0].trim(), parameter[1].trim());
             }
-
-            String[] parameter = line.split(" ", 2);
-            values.put(parameter[0].trim(), parameter[1].trim());
+        } finally {
+            IOUtilities.closeSilently(bufferedReader);
+            IOUtilities.closeSilently(inputStreamReader);
         }
-
-        IOUtilities.closeSilently(bufferedReader);
-        IOUtilities.closeSilently(inputStreamReader);
 
         return values;
     }
@@ -62,6 +67,7 @@ public class ConfigReader {
      * @param line
      * @return
      */
+
     private boolean isEmptyLine(String line) {
         return line.length() < 3 || line.trim().charAt(0) == '#' || line.indexOf(" ") < 1;
     }

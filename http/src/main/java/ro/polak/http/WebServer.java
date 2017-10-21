@@ -11,21 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ro.polak.http.errorhandler.HttpErrorHandlerResolver;
-import ro.polak.http.errorhandler.impl.HttpError503Handler;
-import ro.polak.http.errorhandler.impl.HttpErrorHandlerResolverImpl;
-import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
-import ro.polak.http.servlet.HttpResponseWrapper;
-import ro.polak.http.servlet.HttpServletRequestWrapperFactory;
 import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.Utilities;
 
@@ -45,6 +33,7 @@ public class WebServer extends Thread {
 
     private final ServerSocket serverSocket;
     private final ServerConfig serverConfig;
+    private ServiceContainer serviceContainer;
 
     private boolean listen;
 
@@ -59,21 +48,17 @@ public class WebServer extends Thread {
 
     @Override
     public void run() {
-        ThreadPoolExecutor threadPoolExecutor = getThreadPoolExecutor();
-        HttpServletRequestWrapperFactory requestWrapperFactory
-                = new HttpServletRequestWrapperFactory(new MultipartHeadersPartParser(),
-                serverConfig.getTempPath());
-
-        HttpErrorHandlerResolver httpErrorHandlerResolver
-                = new HttpErrorHandlerResolverImpl(serverConfig);
+        serviceContainer = new ServiceContainer(serverConfig);
 
         try {
             while (listen) {
                 try {
-                    threadPoolExecutor.execute(new ServerRunnable(serverSocket.accept(),
-                            serverConfig,
-                            requestWrapperFactory,
-                            httpErrorHandlerResolver));
+                    serviceContainer.getThreadPoolExecutor().execute(
+                            new ServerRunnable(serverSocket.accept(),
+                                    serverConfig,
+                                    serviceContainer.getRequestWrapperFactory(),
+                                    serviceContainer.getResponseFactory(),
+                                    serviceContainer.getHttpErrorHandlerResolver()));
                 } catch (IOException e) {
                     if (listen) {
                         LOGGER.log(Level.SEVERE, "Communication error", e);
@@ -82,17 +67,8 @@ public class WebServer extends Thread {
             }
         } finally {
             IOUtilities.closeSilently(serverSocket);
-            threadPoolExecutor.shutdown();
+            serviceContainer.getThreadPoolExecutor().shutdown();
         }
-    }
-
-    private ThreadPoolExecutor getThreadPoolExecutor() {
-        return new ThreadPoolExecutor(1, serverConfig.getMaxServerThreads(),
-                20, TimeUnit.SECONDS,
-                new ArrayBlockingQueue<Runnable>(serverConfig.getMaxServerThreads() * 3),
-                Executors.defaultThreadFactory(),
-                new ServiceUnavailableHandler()
-        );
     }
 
     /**
@@ -194,26 +170,5 @@ public class WebServer extends Thread {
      */
     public ServerConfig getServerConfig() {
         return serverConfig;
-    }
-
-    /**
-     * ServiceUnavailableHandler is responsible for sending 503 error pages when there is more space
-     * in the runnable queue. To test this class you have to limit the number of available threads
-     * and queue size to 1 and then to try open multiple connections at the same time.
-     */
-    private static class ServiceUnavailableHandler implements RejectedExecutionHandler {
-
-        @Override
-        public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-            if (r instanceof ServerRunnable) {
-                Socket socket = ((ServerRunnable) r).getSocket();
-                try {
-                    (new HttpError503Handler()).serve(HttpResponseWrapper.createFromSocket(socket));
-                } catch (IOException e) {
-                } finally {
-                    IOUtilities.closeSilently(socket);
-                }
-            }
-        }
     }
 }

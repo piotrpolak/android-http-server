@@ -1,27 +1,31 @@
 package ro.polak.http.servlet;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.Socket;
 
 import ro.polak.http.Headers;
+import ro.polak.http.protocol.serializer.Serializer;
 
 import static junit.framework.TestCase.fail;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class HttpResponseWrapperTest {
 
+    private HttpResponseWrapper httpResponseWrapper;
+
+    @Before
+    public void setUp() {
+        httpResponseWrapper = new HttpResponseWrapper(mock(Serializer.class),
+                mock(Serializer.class), mock(StreamHelper.class), mock(OutputStream.class));
+    }
+
     @Test(expected = IllegalStateException.class)
     public void shouldNotAllowHeadersToBeFlushedTwice() throws IOException {
-        Socket socket = mock(Socket.class);
-        OutputStream outputStream = mock(OutputStream.class);
-        when(socket.getOutputStream()).thenReturn(outputStream);
-        HttpResponseWrapper httpResponseWrapper = HttpResponseWrapper.createFromSocket(socket);
         try {
             httpResponseWrapper.flushHeaders();
         } catch (IllegalStateException e) {
@@ -33,9 +37,6 @@ public class HttpResponseWrapperTest {
 
     @Test
     public void shouldRedirectProperly() throws IOException {
-        Socket socket = mock(Socket.class);
-        HttpResponseWrapper httpResponseWrapper = HttpResponseWrapper.createFromSocket(socket);
-
         String url = "/SomeUrl";
         httpResponseWrapper.sendRedirect(url);
         assertThat(httpResponseWrapper.getStatus(), is("HTTP/1.1 301 Moved Permanently"));
@@ -44,9 +45,6 @@ public class HttpResponseWrapperTest {
 
     @Test
     public void shouldNotCreateASinglePrintWriter() throws IOException {
-        Socket socket = mock(Socket.class);
-        HttpResponseWrapper httpResponseWrapper = HttpResponseWrapper.createFromSocket(socket);
-
         assertThat(httpResponseWrapper.getWriter().equals(httpResponseWrapper.getWriter()), is(true));
     }
 }

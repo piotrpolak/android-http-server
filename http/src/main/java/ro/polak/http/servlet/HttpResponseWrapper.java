@@ -21,7 +21,6 @@ import ro.polak.http.Headers;
 import ro.polak.http.ServletOutputStreamWrapper;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.protocol.serializer.impl.CookieHeaderSerializer;
-import ro.polak.http.protocol.serializer.impl.HeadersSerializer;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
@@ -38,9 +37,9 @@ public class HttpResponseWrapper implements HttpServletResponse {
     private static final String CONNECTION_CLOSE = "close";
     private static final Charset CHARSET = Charset.forName("UTF-8");
 
-    private static Serializer<Headers> headersSerializer = new HeadersSerializer();
-    private static final StreamHelper streamHelper = new StreamHelper();
-    private static final CookieHeaderSerializer cookieHeaderSerializer = new CookieHeaderSerializer();
+    private final Serializer<Headers> headersSerializer;
+    private final StreamHelper streamHelper;
+    private final Serializer<Cookie> cookieHeaderSerializer;
 
     private Headers headers;
     private OutputStream outputStream;
@@ -53,8 +52,21 @@ public class HttpResponseWrapper implements HttpServletResponse {
 
     /**
      * Default constructor.
+     * @param headersSerializer
+     * @param cookieHeaderSerializer
+     * @param streamHelper
+     * @param outputStream
      */
-    public HttpResponseWrapper() {
+    public HttpResponseWrapper(Serializer<Headers> headersSerializer,
+                               Serializer<Cookie> cookieHeaderSerializer,
+                               StreamHelper streamHelper, OutputStream outputStream) {
+        this.headersSerializer = headersSerializer;
+        this.streamHelper = streamHelper;
+        this.cookieHeaderSerializer = cookieHeaderSerializer;
+        this.outputStream = outputStream;
+
+        wrappedOutputStream = new ServletOutputStreamWrapper(outputStream, this);
+
         reset();
     }
 
@@ -179,19 +191,6 @@ public class HttpResponseWrapper implements HttpServletResponse {
     @Override
     public ServletOutputStream getOutputStream() {
         return wrappedOutputStream;
-    }
-
-    /**
-     * Creates and returns a response outputStream of the socket
-     *
-     * @param socket
-     * @return
-     */
-    public static HttpResponseWrapper createFromSocket(Socket socket) throws IOException {
-        HttpResponseWrapper response = new HttpResponseWrapper();
-        response.outputStream = socket.getOutputStream();
-        response.wrappedOutputStream = new ServletOutputStreamWrapper(socket.getOutputStream(), response);
-        return response;
     }
 
     /**

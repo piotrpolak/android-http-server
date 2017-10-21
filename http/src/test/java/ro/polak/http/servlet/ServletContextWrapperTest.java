@@ -5,14 +5,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Collections;
 
 import ro.polak.http.ServerConfig;
+import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.session.storage.SessionStorage;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -25,6 +28,7 @@ public class ServletContextWrapperTest {
 
     private SessionStorage sessionStorage;
     private ServletContextWrapper servletContext;
+    private HttpResponseWrapper response;
 
     @Before
     public void setUp() {
@@ -32,15 +36,17 @@ public class ServletContextWrapperTest {
         sessionStorage = mock(SessionStorage.class);
         servletContext = new ServletContextWrapper(serverConfig, sessionStorage);
         servletContext.setAttribute("attribute", "value");
+        response = new HttpResponseWrapper(mock(Serializer.class),
+                mock(Serializer.class), mock(StreamHelper.class), mock(OutputStream.class));
     }
 
     @Test
     public void shouldSetCookieAndPersistForValidSession() throws IOException {
         HttpSessionWrapper session = new HttpSessionWrapper("123");
-        HttpResponseWrapper response = new HttpResponseWrapper();
         servletContext.handleSession(session, response);
         verify(sessionStorage, times(1)).persistSession(session);
 
+        assertThat(response.getCookies().size(), is(greaterThan(0)));
         for (Cookie cookie : response.getCookies()) {
             if (cookie.getName().equals(HttpSessionWrapper.COOKIE_NAME)) {
                 assertThat(cookie.getValue(), is(not(nullValue())));
@@ -54,11 +60,11 @@ public class ServletContextWrapperTest {
     @Test
     public void shouldEraseCookieAndRemoveForInvalidatedSession() throws IOException {
         HttpSessionWrapper session = new HttpSessionWrapper("123");
-        HttpResponseWrapper response = new HttpResponseWrapper();
         session.invalidate();
         servletContext.handleSession(session, response);
         verify(sessionStorage, times(1)).removeSession(session);
 
+        assertThat(response.getCookies().size(), is(greaterThan(0)));
         for (Cookie cookie : response.getCookies()) {
             if (cookie.getName().equals(HttpSessionWrapper.COOKIE_NAME)) {
                 assertThat(cookie.getMaxAge(), lessThan(-1));

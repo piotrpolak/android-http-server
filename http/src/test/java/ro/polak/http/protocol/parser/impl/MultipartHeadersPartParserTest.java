@@ -12,7 +12,8 @@ import static org.junit.Assert.assertThat;
 
 public class MultipartHeadersPartParserTest {
 
-    private static Parser<MultipartHeadersPart> multipartHeadersPartParser = new MultipartHeadersPartParser();
+    private static Parser<MultipartHeadersPart> multipartHeadersPartParser
+            = new MultipartHeadersPartParser(new HeadersParser());
 
     @Test
     public void shouldParseValidAttachmentHeader() throws MalformedInputException {

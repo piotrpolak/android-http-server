@@ -65,10 +65,11 @@ public class HttpServletRequestWrapperFactory {
     private static final int METHOD_MAX_LENGTH;
     private static final List<String> RECOGNIZED_METHODS_LIST = Arrays.asList(RECOGNIZED_METHODS);
     private static final String HEADERS_END_DELIMINATOR = "\n\r\n";
-    private static final Parser<Headers> headersParser = new HeadersParser();
-    private static final Parser<Map<String, String>> queryStringParser = new QueryStringParser();
-    private static final Parser<RequestStatus> statusParser = new RequestStatusParser();
-    private static final Parser<Map<String, Cookie>> cookieParser = new CookieParser();
+
+    private final Parser<Headers> headersParser;
+    private final Parser<Map<String, String>> queryStringParser;
+    private final Parser<RequestStatus> statusParser;
+    private final Parser<Map<String, Cookie>> cookieParser;
 
     static {
         int maxMethodLength = 0;
@@ -86,11 +87,22 @@ public class HttpServletRequestWrapperFactory {
 
     /**
      * Default constructor.
-     *
+     * @param headersParser
+     * @param queryStringParser
+     * @param statusParser
+     * @param cookieParser
      * @param tempPath
      */
-    public HttpServletRequestWrapperFactory(MultipartHeadersPartParser multipartHeadersPartParser,
-                                            String tempPath) {
+    public HttpServletRequestWrapperFactory(final Parser<Headers> headersParser,
+                                            final Parser<Map<String, String>> queryStringParser,
+                                            final Parser<RequestStatus> statusParser,
+                                            final Parser<Map<String, Cookie>> cookieParser,
+                                            final MultipartHeadersPartParser multipartHeadersPartParser,
+                                            final String tempPath) {
+        this.headersParser = headersParser;
+        this.queryStringParser = queryStringParser;
+        this.statusParser = statusParser;
+        this.cookieParser = cookieParser;
         this.multipartHeadersPartParser = multipartHeadersPartParser;
         this.tempPath = tempPath;
     }

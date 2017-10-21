@@ -45,7 +45,8 @@ public class MimeTypeMappingImpl implements MimeTypeMapping {
      * @param in
      * @param defaultMimeType
      */
-    public static MimeTypeMapping createFromStream(InputStream in, String defaultMimeType) throws IOException {
+    public static MimeTypeMapping createFromStream(InputStream in, String defaultMimeType)
+            throws IOException {
         MimeTypeMappingImpl mimeTypeMapping = (MimeTypeMappingImpl) createFromStream(in);
         mimeTypeMapping.defaultMimeType = defaultMimeType;
         return mimeTypeMapping;

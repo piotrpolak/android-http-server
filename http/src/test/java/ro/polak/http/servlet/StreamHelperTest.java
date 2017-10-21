@@ -32,9 +32,9 @@ public class StreamHelperTest {
     private ByteArrayInputStream inputStream;
     private ByteArrayOutputStream outputStream;
     private byte[] inputBytes;
-    private final StreamHelper streamHelper = new StreamHelper();
     private final RangeHelper rangeHelper = new RangeHelper();
     private final RangePartHeaderSerializer rangePartHeaderSerializer = new RangePartHeaderSerializer();
+    private final StreamHelper streamHelper = new StreamHelper(rangeHelper, rangePartHeaderSerializer);
     private final SliceHelper sliceHelper = new SliceHelper();
 
     @Before

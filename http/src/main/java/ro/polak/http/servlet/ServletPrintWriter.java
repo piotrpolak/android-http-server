@@ -19,7 +19,7 @@ public class ServletPrintWriter extends PrintWriter {
 
     private boolean wasWriteEndAlreadyCalled = false;
 
-    public ServletPrintWriter(OutputStream outputStream) {
+    public ServletPrintWriter(final OutputStream outputStream) {
         super(outputStream);
     }
 

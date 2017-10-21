@@ -63,7 +63,7 @@ public class MultipartRequestHandler {
      * @param boundary
      * @param temporaryUploadsDirectory
      */
-    public MultipartRequestHandler(Parser<MultipartHeadersPart> multipartHeadersPartParser,
+    public MultipartRequestHandler(final Parser<MultipartHeadersPart> multipartHeadersPartParser,
                                    final InputStream in, final int expectedPostLength,
                                    final String boundary, final String temporaryUploadsDirectory,
                                    final int bufferLength) {

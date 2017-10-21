@@ -11,6 +11,7 @@ import java.util.Iterator;
 import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
+import ro.polak.http.protocol.parser.impl.HeadersParser;
 import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
 import ro.polak.http.servlet.UploadedFile;
 
@@ -24,7 +25,9 @@ public class MultipartRequestHandlerTest {
     private static final String NEW_LINE = "\r\n";
     private static final String TEMPORARY_UPLOADS_DIRECTORY
             = System.getProperty("java.io.tmpdir") + "/";
-    private static final Parser<MultipartHeadersPart> parser = new MultipartHeadersPartParser();
+    private static final Parser<MultipartHeadersPart> parser = new MultipartHeadersPartParser(
+            new HeadersParser()
+    );
 
     @Test
     public void shouldParseBasicFields() throws MalformedInputException {

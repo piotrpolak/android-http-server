@@ -21,7 +21,10 @@ public class RangePartHeader {
     private final String contentType;
     private final long totalLength;
 
-    public RangePartHeader(Range range, String boundary, String contentType, long totalLength) {
+    public RangePartHeader(final Range range,
+                           final String boundary,
+                           final String contentType,
+                           final long totalLength) {
         this.range = range;
         this.boundary = boundary;
         this.contentType = contentType;

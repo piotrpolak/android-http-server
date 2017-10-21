@@ -40,7 +40,8 @@ public class ServletContextWrapper implements ServletContext {
      * @param serverConfig
      * @param sessionStorage
      */
-    public ServletContextWrapper(ServerConfig serverConfig, SessionStorage sessionStorage) {
+    public ServletContextWrapper(final ServerConfig serverConfig,
+                                 final SessionStorage sessionStorage) {
         this.serverConfig = serverConfig;
         this.sessionStorage = sessionStorage;
         attributes = new HashMap<>();

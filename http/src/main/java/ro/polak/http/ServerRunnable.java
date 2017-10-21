@@ -22,6 +22,7 @@ import ro.polak.http.servlet.HttpResponseWrapper;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletRequestWrapperFactory;
 import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.HttpServletResponseWrapperFactory;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
@@ -37,22 +38,26 @@ public class ServerRunnable implements Runnable {
     private final ServerConfig serverConfig;
     private final Socket socket;
     private final HttpServletRequestWrapperFactory requestFactory;
+    private final HttpServletResponseWrapperFactory responseFactory;
     private final HttpErrorHandlerResolver httpErrorHandlerResolver;
 
     /**
      * Default constructor.
+     *
      * @param socket
      * @param serverConfig
      * @param requestFactory
      * @param httpErrorHandlerResolver
      */
-    public ServerRunnable(Socket socket,
-                          ServerConfig serverConfig,
-                          HttpServletRequestWrapperFactory requestFactory,
-                          HttpErrorHandlerResolver httpErrorHandlerResolver) {
+    public ServerRunnable(final Socket socket,
+                          final ServerConfig serverConfig,
+                          final HttpServletRequestWrapperFactory requestFactory,
+                          final HttpServletResponseWrapperFactory responseFactory,
+                          final HttpErrorHandlerResolver httpErrorHandlerResolver) {
         this.socket = socket;
         this.serverConfig = serverConfig;
         this.requestFactory = requestFactory;
+        this.responseFactory = responseFactory;
         this.httpErrorHandlerResolver = httpErrorHandlerResolver;
     }
 
@@ -62,7 +67,7 @@ public class ServerRunnable implements Runnable {
 
         try {
             try {
-                response = HttpResponseWrapper.createFromSocket(socket);
+                response = responseFactory.createFromSocket(socket);
                 HttpRequestWrapper request = requestFactory.createFromSocket(socket);
 
                 LOGGER.log(Level.INFO, "Handling request {0} {1}", new Object[]{

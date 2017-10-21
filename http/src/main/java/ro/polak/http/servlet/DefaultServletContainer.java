@@ -30,7 +30,7 @@ public class DefaultServletContainer implements ServletContainer {
 
     // TODO Implement timeout
 
-    public DefaultServletContainer(ServletLoader servletLoader) {
+    public DefaultServletContainer(final ServletLoader servletLoader) {
         this.servletLoader = servletLoader;
     }
 
@@ -46,7 +46,8 @@ public class DefaultServletContainer implements ServletContainer {
         return initializeServlet(servletClassName, servletConfig);
     }
 
-    private Servlet initializeServlet(String servletClassName, ServletConfig servletConfig) throws ServletInitializationException, ServletException {
+    private Servlet initializeServlet(String servletClassName, ServletConfig servletConfig)
+            throws ServletInitializationException, ServletException {
         Servlet servlet = servletLoader.loadServlet(servletClassName);
         servlet.init(servletConfig);
         servlets.put(servletClassName, servlet);

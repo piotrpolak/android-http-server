@@ -30,8 +30,14 @@ public class StreamHelper {
     private static final String NEW_LINE = "\r\n";
     private static final Charset CHARSET = Charset.forName("UTF-8");
 
-    private final RangeHelper rangeHelper = new RangeHelper();
-    private final RangePartHeaderSerializer rangePartHeaderSerializer = new RangePartHeaderSerializer();
+    private final RangeHelper rangeHelper;
+    private final RangePartHeaderSerializer rangePartHeaderSerializer;
+
+    public StreamHelper(final RangeHelper rangeHelper,
+                        final RangePartHeaderSerializer rangePartHeaderSerializer) {
+        this.rangeHelper = rangeHelper;
+        this.rangePartHeaderSerializer = rangePartHeaderSerializer;
+    }
 
     /**
      * Serves all input stream to the output stream.
@@ -40,7 +46,8 @@ public class StreamHelper {
      * @param outputStream
      * @throws IOException
      */
-    public void serveMultiRangeStream(InputStream inputStream, OutputStream outputStream) throws IOException {
+    public void serveMultiRangeStream(InputStream inputStream, OutputStream outputStream)
+            throws IOException {
         int numberOfBufferReadBytes;
         byte[] buffer = new byte[BUFFER_SIZE];
 
@@ -60,7 +67,8 @@ public class StreamHelper {
      * @param range
      * @throws IOException
      */
-    private void doServeRangeStream(InputStream inputStream, OutputStream outputStream, Range range) throws IOException {
+    private void doServeRangeStream(InputStream inputStream, OutputStream outputStream, Range range)
+            throws IOException {
         int numberOfBufferReadBytes;
         byte[] buffer = new byte[BUFFER_SIZE];
         long numberOfBytesServedForRange = 0;
@@ -101,7 +109,9 @@ public class StreamHelper {
      * @param totalLength
      * @throws IOException
      */
-    public void serveMultiRangeStream(InputStream inputStream, OutputStream outputStream, List<Range> rangeList, String boundary, String contentType, long totalLength) throws IOException {
+    public void serveMultiRangeStream(InputStream inputStream, OutputStream outputStream,
+                                      List<Range> rangeList, String boundary, String contentType,
+                                      long totalLength) throws IOException {
         inputStream.mark(0);
 
         serveMultiRangeStream(new ByteArrayInputStream(NEW_LINE.getBytes(CHARSET)), outputStream);
@@ -113,9 +123,11 @@ public class StreamHelper {
         serveMultiRangeStream(new ByteArrayInputStream(rangePartHeaderSerializer.serializeLastBoundaryDeliminator(boundary).getBytes(CHARSET)), outputStream);
     }
 
-    private void doServeRangePartHeader(OutputStream outputStream, String boundary, String contentType, long totalLength, Range range) throws IOException {
+    private void doServeRangePartHeader(OutputStream outputStream, String boundary,
+                                        String contentType, long totalLength, Range range)
+            throws IOException {
         RangePartHeader rangePartHeader = new RangePartHeader(range, boundary, contentType, totalLength);
-        byte[] rangePartHeaderBytes = rangePartHeaderSerializer.serialize(rangePartHeader).getBytes(CHARSET);
+        byte[] rangePartHeaderBytes= rangePartHeaderSerializer.serialize(rangePartHeader).getBytes(CHARSET);
 
         serveMultiRangeStream(new ByteArrayInputStream(rangePartHeaderBytes), outputStream);
     }
@@ -128,7 +140,8 @@ public class StreamHelper {
      * @param range
      * @throws IOException
      */
-    public void serveMultiRangeStream(InputStream inputStream, OutputStream outputStream, Range range) throws IOException {
+    public void serveMultiRangeStream(InputStream inputStream, OutputStream outputStream,
+                                      Range range) throws IOException {
         inputStream.mark(0);
         doServeRangeStream(inputStream, outputStream, range);
     }

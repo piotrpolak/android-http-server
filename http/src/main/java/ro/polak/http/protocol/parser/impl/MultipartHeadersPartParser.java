@@ -23,6 +23,12 @@ public class MultipartHeadersPartParser implements Parser<MultipartHeadersPart> 
     private static final String NAME_START = "name=\"";
     private static final String FILENAME_START = "filename=\"";
 
+    private final HeadersParser parser;
+
+    public MultipartHeadersPartParser(final HeadersParser headersParser) {
+        this.parser = headersParser;
+    }
+
 //    private static final String[] ALLOWED_CONTENT_DISPOSITIONS = {"inline",
 //            "attachment",
 //            "form-data",
@@ -52,8 +58,6 @@ public class MultipartHeadersPartParser implements Parser<MultipartHeadersPart> 
     public MultipartHeadersPart parse(String headersString) throws MalformedInputException {
 
         MultipartHeadersPart part = new MultipartHeadersPart();
-        HeadersParser parser = new HeadersParser();
-
         Headers headers = parser.parse(headersString, false);
 
         String contentDispositionHeaderValue = headers.getHeader(Headers.HEADER_CONTENT_DISPOSITION);

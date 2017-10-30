@@ -45,13 +45,7 @@ public class MainController implements Controller {
         this.serverSocketFactory = serverSocketFactory;
         this.gui = gui;
 
-        Thread.currentThread().setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread thread, Throwable ex) {
-                final String originalClass = ex.getStackTrace()[0].getClassName();
-                Logger.getLogger(originalClass).log(Level.SEVERE, "Exception", ex);
-            }
-        });
+        Thread.currentThread().setDefaultUncaughtExceptionHandler(new LoggingUncaughtExceptionHandler());
     }
 
     @Override
@@ -89,5 +83,14 @@ public class MainController implements Controller {
         webServer.stopServer();
         webServer = null;
         gui.stop();
+    }
+
+
+    public static class LoggingUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
+        @Override
+        public void uncaughtException(Thread thread, Throwable ex) {
+            final String originalClass = ex.getStackTrace()[0].getClassName();
+            Logger.getLogger(originalClass).log(Level.SEVERE, "Exception", ex);
+        }
     }
 }

@@ -36,8 +36,11 @@ public class ServletContextWrapperTest {
         sessionStorage = mock(SessionStorage.class);
         servletContext = new ServletContextWrapper(serverConfig, sessionStorage);
         servletContext.setAttribute("attribute", "value");
-        response = new HttpResponseWrapper(mock(Serializer.class),
-                mock(Serializer.class), mock(StreamHelper.class), mock(OutputStream.class));
+        response = new HttpResponseWrapper(mock(
+                Serializer.class),
+                mock(Serializer.class),
+                mock(StreamHelper.class),
+                mock(OutputStream.class));
     }
 
     @Test

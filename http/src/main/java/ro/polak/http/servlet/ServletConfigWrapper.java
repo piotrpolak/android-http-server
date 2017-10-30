@@ -22,7 +22,7 @@ public class ServletConfigWrapper implements ServletConfig {
      *
      * @param servletContext
      */
-    public ServletConfigWrapper(ServletContextWrapper servletContext) {
+    public ServletConfigWrapper(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
 

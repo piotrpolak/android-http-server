@@ -16,7 +16,7 @@ import ro.polak.http.exception.ServletInitializationException;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 20170
  */
-interface ServletContainer {
+public interface ServletContainer {
 
     /**
      * Returns initialized servlet for given class name.

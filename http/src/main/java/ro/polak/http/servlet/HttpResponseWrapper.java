@@ -57,7 +57,8 @@ public class HttpResponseWrapper implements HttpServletResponse {
      */
     public HttpResponseWrapper(Serializer<Headers> headersSerializer,
                                Serializer<Cookie> cookieHeaderSerializer,
-                               StreamHelper streamHelper, OutputStream outputStream) {
+                               StreamHelper streamHelper,
+                               OutputStream outputStream) {
         this.headersSerializer = headersSerializer;
         this.streamHelper = streamHelper;
         this.cookieHeaderSerializer = cookieHeaderSerializer;

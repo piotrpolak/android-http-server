@@ -6,9 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import ro.polak.http.Headers;
 import ro.polak.http.protocol.serializer.Serializer;
-import ro.polak.http.servlet.Cookie;
 import ro.polak.http.servlet.HttpResponseWrapper;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.StreamHelper;
@@ -31,9 +29,10 @@ public class AbstractHtmlErrorHandlerTest {
     public void shouldServeBuiltinDocument() throws Exception {
         OutputStream outputStream = new ByteArrayOutputStream();
         HttpResponseWrapper response = new HttpResponseWrapper(
-                (Serializer<Headers>) mock(Serializer.class),
-                (Serializer<Cookie>) mock(Serializer.class),
-                mock(StreamHelper.class), outputStream);
+                mock(Serializer.class),
+                mock(Serializer.class),
+                mock(StreamHelper.class),
+                outputStream);
         AbstractHtmlErrorHandler handler
                 = new SampleHtmlErrorHanlder("500", "MSG_TOKEN", "EXPLANATION_TOKEN", null);
         handler.serve(response);

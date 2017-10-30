@@ -11,6 +11,7 @@ package ro.polak.http.exception;
  * Generic unrecoverable runtime exception.
  */
 public class UnexpectedSituationException extends RuntimeException {
+
     public UnexpectedSituationException(String message) {
         super(message);
     }

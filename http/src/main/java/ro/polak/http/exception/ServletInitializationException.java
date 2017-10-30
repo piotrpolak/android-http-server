@@ -11,6 +11,7 @@ package ro.polak.http.exception;
  * Servlet initialization exception.
  */
 public class ServletInitializationException extends Exception {
+
     public ServletInitializationException(Throwable throwable) {
         super(throwable);
     }

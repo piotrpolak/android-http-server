@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,6 @@ import java.util.Locale;
 import ro.polak.http.Headers;
 import ro.polak.http.ServletOutputStreamWrapper;
 import ro.polak.http.protocol.serializer.Serializer;
-import ro.polak.http.protocol.serializer.impl.CookieHeaderSerializer;
 import ro.polak.http.utilities.IOUtilities;
 
 /**

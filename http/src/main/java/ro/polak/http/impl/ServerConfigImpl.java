@@ -154,7 +154,7 @@ public class ServerConfigImpl implements ServerConfig {
             String directoryIndexLine[] = properties.getProperty(ATTRIBUTE_DIRECTORY_INDEX).split(",");
             for (int i = 0; i < directoryIndexLine.length; i++) {
                 String index = directoryIndexLine[i].trim();
-                if (!index.equals("")) {
+                if (!"".equals(index)) {
                     serverConfig.directoryIndex.add(directoryIndexLine[i]);
                 }
             }

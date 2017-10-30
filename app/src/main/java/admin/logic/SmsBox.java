@@ -24,10 +24,10 @@ import java.util.Map;
 public class SmsBox {
 
     /* _id:162 thread_id:13 toa:145 address:+48111222333 person:295 date:1441998104000 date_sent:1441998104000
-     protocol:0 read:1 status:-1 type:1 reply_path_present:0 subject:null body:Hello World! sc_toa:0
-     report_date:null service_center:+486555555555 locked:0 sub_id:-1 index_on_sim: callback_number:null
-     priority:0 htc_category:0 cs_timestamp:-1 cs_id:null cs_synced:0 error_code:0 creator:com.htc.sense.mms
-     seen:0 is_cdma_format:0 is_evdo:0 c_type:0 exp:0 gid:0 extra:0 date2:1441998103947 sim_slot:0  */
+             protocol:0 read:1 status:-1 type:1 reply_path_present:0 subject:null body:Hello World! sc_toa:0
+             report_date:null service_center:+486555555555 locked:0 sub_id:-1 index_on_sim: callback_number:null
+             priority:0 htc_category:0 cs_timestamp:-1 cs_id:null cs_synced:0 error_code:0 creator:com.htc.sense.mms
+             seen:0 is_cdma_format:0 is_evdo:0 c_type:0 exp:0 gid:0 extra:0 date2:1441998103947 sim_slot:0  */
     private static final String ATTR_THREAD_ID = "thread_id";
     private static final String ATTR_ADDRESS = "address";
     private static final String ATTR_BODY = "body";
@@ -44,7 +44,9 @@ public class SmsBox {
             ATTR_TYPE,
             ATTR_DATE_SENT
     };
-    private static final String URL = "content://sms/inbox";
+    private static final String URL = "content://sms";
+    private static final String ORDER_STRING = "date DESC";
+    private static final String INCOMING_VALUE = "1";
 
     private final Activity context;
 
@@ -55,7 +57,7 @@ public class SmsBox {
     @NonNull
     public List<Message> readMessages(String whereString) {
         Cursor cursor = context.getContentResolver()
-                .query(Uri.parse("content://sms"), PROJECTION, whereString, null, "date DESC");
+                .query(Uri.parse(URL), PROJECTION, whereString, null, ORDER_STRING);
         cursor.moveToFirst();
 
         List<Message> messages = new ArrayList();
@@ -91,7 +93,7 @@ public class SmsBox {
         message.setBody(sms.get(ATTR_BODY));
         message.setDate(new Date(Long.parseLong(sms.get(ATTR_DATE))));
         message.setDateSent(new Date(Long.parseLong(sms.get(ATTR_DATE_SENT))));
-        message.setIncoming(sms.get(ATTR_TYPE).equals("1"));
+        message.setIncoming(sms.get(ATTR_TYPE).equals(INCOMING_VALUE));
         return message;
     }
 

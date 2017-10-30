@@ -33,7 +33,6 @@ public class WebServer extends Thread {
 
     private final ServerSocket serverSocket;
     private final ServerConfig serverConfig;
-    private ServiceContainer serviceContainer;
 
     private boolean listen;
 
@@ -48,7 +47,7 @@ public class WebServer extends Thread {
 
     @Override
     public void run() {
-        serviceContainer = new ServiceContainer(serverConfig);
+        ServiceContainer serviceContainer = new ServiceContainer(serverConfig);
 
         try {
             while (listen) {

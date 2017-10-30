@@ -45,10 +45,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
 
     @Override
     public ServerConfig getServerConfig() {
-        String baseConfigPath;
-        baseConfigPath = getBasePath();
-
-        return getServerConfig(baseConfigPath);
+        return getServerConfig(getBasePath());
     }
 
     /**

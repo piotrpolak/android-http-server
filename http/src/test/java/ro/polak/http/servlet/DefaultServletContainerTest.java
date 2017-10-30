@@ -24,11 +24,10 @@ public class DefaultServletContainerTest {
 
     private DefaultServletContainer servletContainer;
     private ServletConfig servletConfig;
-    private Servlet servlet;
 
     @Before
     public void setUp() throws ServletInitializationException {
-        servlet = mock(Servlet.class);
+        Servlet servlet = mock(Servlet.class);
         ServletLoader servletLoader = mock(ServletLoader.class);
         when(servletLoader.canLoadServlet(any(String.class))).thenReturn(true);
         when(servletLoader.loadServlet(any(String.class))).thenReturn(servlet);

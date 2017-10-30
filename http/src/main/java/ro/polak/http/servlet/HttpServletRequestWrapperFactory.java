@@ -2,7 +2,7 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2016-2016
+ * Copyright (c) Piotr Polak 2016-2017
  **************************************************/
 
 package ro.polak.http.servlet;
@@ -31,11 +31,7 @@ import ro.polak.http.protocol.exception.UnsupportedProtocolException;
 import ro.polak.http.protocol.exception.UriTooLongProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
-import ro.polak.http.protocol.parser.impl.CookieParser;
-import ro.polak.http.protocol.parser.impl.HeadersParser;
 import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
-import ro.polak.http.protocol.parser.impl.QueryStringParser;
-import ro.polak.http.protocol.parser.impl.RequestStatusParser;
 
 /**
  * Utility facilitating creating new requests out of the socket.
@@ -328,7 +324,8 @@ public class HttpServletRequestWrapperFactory {
             int boundaryStartPos = boundaryPosition + BOUNDARY_START.length();
             if (boundaryStartPos < boundary.length()) {
                 boundary = boundary.substring(boundaryStartPos, boundary.length());
-                MultipartRequestHandler mrh = new MultipartRequestHandler(multipartHeadersPartParser, in, postLength, boundary,
+                MultipartRequestHandler mrh =
+                        new MultipartRequestHandler(multipartHeadersPartParser, in, postLength, boundary,
                         tempPath, MULTIPART_BUFFER_LENGTH);
                 mrh.handle();
 

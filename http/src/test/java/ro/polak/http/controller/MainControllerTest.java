@@ -17,6 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -90,12 +91,16 @@ public class MainControllerTest {
     }
 
     @Test
-    public void shouldTLogSituationOnExceptionOnCreateException() throws IOException {
+    public void shouldLogSituationOnExceptionOnCreateException() throws IOException {
         when(serverSocketFactory.createServerSocket()).thenThrow(new IOException("Something"));
         MainController mainController = new MainController(serverConfigFactory, serverSocketFactory,
                 serverGui);
 
-        mainController.start();
+        try {
+            mainController.start();
+        } catch (IllegalStateException e) {
+            fail("Should start web server");
+        }
     }
 
     @Test(expected = IllegalStateException.class)

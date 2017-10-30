@@ -23,6 +23,17 @@ public class ChunkedPrintWriterTest {
     }
 
     @Test
+    public void shouldAppendNewLineProperly() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+        ChunkedPrintWriter printWriter = new ChunkedPrintWriter(out);
+
+        printWriter.print("Wiki");
+        printWriter.println();
+        printWriter.flush();
+        assertThat(new String(out.toByteArray()), is("4\r\nWiki\r\n2\r\n\r\n\r\n"));
+    }
+
+    @Test
     public void shouldEncodeLengthAsHex() {
         ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
         ChunkedPrintWriter printWriter = new ChunkedPrintWriter(out);

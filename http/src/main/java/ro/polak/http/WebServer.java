@@ -148,9 +148,7 @@ public class WebServer extends Thread {
      */
     public void stopServer() {
         listen = false;
-        if (serverSocket != null) {
-            IOUtilities.closeSilently(serverSocket);
-        }
+        IOUtilities.closeSilently(serverSocket);
         LOGGER.info("Server has been stopped.");
     }
 

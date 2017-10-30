@@ -2,6 +2,7 @@ package ro.polak.http;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
@@ -28,11 +29,30 @@ public class WebServerTest {
     }
 
     @Test
+    public void shouldNotStartServerOnTempPathDoesNotExists() throws IOException {
+        ServerSocket serverSocket = mock(ServerSocket.class);
+
+        File file = new File("/proc/someprotectedresource");
+        assertThat(file.exists(), is(false));
+
+        ServerConfig serverConfig = getDefaultServerConfig();
+        when(serverConfig.getTempPath()).thenReturn(file.getAbsolutePath());
+
+        WebServer webServer = new WebServer(serverSocket, serverConfig);
+        assertThat(webServer.startServer(), is(false));
+        assertThat(webServer.isRunning(), is(false));
+    }
+
+    @Test
     public void shouldNotStartServerOnTempPathNonWritable() throws IOException {
         ServerSocket serverSocket = mock(ServerSocket.class);
 
+        File file = new File("/proc/");
+        assertThat(file.exists(), is(true));
+        assertThat(file.canWrite(), is(false));
+
         ServerConfig serverConfig = getDefaultServerConfig();
-        when(serverConfig.getTempPath()).thenReturn("/proc/someprotectedresource");
+        when(serverConfig.getTempPath()).thenReturn(file.getAbsolutePath());
 
         WebServer webServer = new WebServer(serverSocket, serverConfig);
         assertThat(webServer.startServer(), is(false));

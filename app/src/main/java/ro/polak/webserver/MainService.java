@@ -88,12 +88,12 @@ public class MainService extends Service implements ServerGui {
 
         File baseDir = new File(basePath);
         if (!baseDir.exists() && !baseDir.mkdirs()) {
-            throw new RuntimeException("Unable to create directory " + baseDir.getAbsolutePath());
+            throw new ConfigurationException("Unable to create directory " + baseDir.getAbsolutePath());
         }
 
         File staticDir = new File(staticDirPath);
         if (!staticDir.exists() && !staticDir.mkdirs()) {
-            throw new RuntimeException("Unable to create directory " + staticDir.getAbsolutePath());
+            throw new ConfigurationException("Unable to create directory " + staticDir.getAbsolutePath());
         }
 
         AssetManager assetManager = activity.getResources().getAssets();
@@ -104,7 +104,7 @@ public class MainService extends Service implements ServerGui {
                 config.createNewFile();
                 AssetUtil.copyAssetToFile(assetManager, "conf" + File.separator + PROPERTIES_FILE_NAME, config);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ConfigurationException(e);
             }
         }
 
@@ -114,7 +114,7 @@ public class MainService extends Service implements ServerGui {
                 mimeType.createNewFile();
                 AssetUtil.copyAssetToFile(assetManager, "conf" + File.separator + "mime.type", mimeType);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ConfigurationException(e);
             }
         }
     }

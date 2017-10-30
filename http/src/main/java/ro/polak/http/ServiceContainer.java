@@ -39,6 +39,7 @@ public class ServiceContainer {
     private HttpServletResponseWrapperFactory responseFactory;
     private ThreadPoolExecutor threadPoolExecutor;
     private HttpErrorHandlerResolver httpErrorHandlerResolver;
+    private PathHelper pathHelper;
 
     public ServiceContainer(final ServerConfig serverConfig) {
 
@@ -70,6 +71,8 @@ public class ServiceContainer {
 
         httpErrorHandlerResolver = new HttpErrorHandlerResolverImpl(serverConfig);
 
+        pathHelper = new PathHelper();
+
     }
 
     public HttpServletRequestWrapperFactory getRequestWrapperFactory() {
@@ -86,5 +89,9 @@ public class ServiceContainer {
 
     public HttpErrorHandlerResolver getHttpErrorHandlerResolver() {
         return httpErrorHandlerResolver;
+    }
+
+    public PathHelper getPathHelper() {
+        return pathHelper;
     }
 }

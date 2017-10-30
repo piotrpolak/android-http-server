@@ -40,6 +40,7 @@ public class ServerRunnable implements Runnable {
     private final HttpServletRequestWrapperFactory requestFactory;
     private final HttpServletResponseWrapperFactory responseFactory;
     private final HttpErrorHandlerResolver httpErrorHandlerResolver;
+    private final PathHelper pathHelper;
 
     /**
      * Default constructor.
@@ -53,12 +54,14 @@ public class ServerRunnable implements Runnable {
                           final ServerConfig serverConfig,
                           final HttpServletRequestWrapperFactory requestFactory,
                           final HttpServletResponseWrapperFactory responseFactory,
-                          final HttpErrorHandlerResolver httpErrorHandlerResolver) {
+                          final HttpErrorHandlerResolver httpErrorHandlerResolver,
+                          final PathHelper pathHelper) {
         this.socket = socket;
         this.serverConfig = serverConfig;
         this.requestFactory = requestFactory;
         this.responseFactory = responseFactory;
         this.httpErrorHandlerResolver = httpErrorHandlerResolver;
+        this.pathHelper = pathHelper;
     }
 
     @Override
@@ -76,7 +79,7 @@ public class ServerRunnable implements Runnable {
 
                 String requestedPath = request.getRequestURI();
 
-                if (isPathContainingIllegalCharacters(requestedPath)) {
+                if (pathHelper.isPathContainingIllegalCharacters(requestedPath)) {
                     throw new AccessDeniedException();
                 }
 
@@ -85,20 +88,10 @@ public class ServerRunnable implements Runnable {
                 setDefaultResponseHeaders(request, response);
 
                 ResourceProvider resourceProvider = getResourceProvider(requestedPath);
-                if (resourceProvider == null) {
-                    DirectoryIndexDescriptor directoryIndexDescriptor = loadDirectoryIndexResource(requestedPath);
-                    if (directoryIndexDescriptor == null) {
-                        throw new NotFoundException();
-                    } else {
-                        if (!isPathEndingWithSlash(requestedPath)) {
-                            sendRedirectToDirectorySlashedPath(response, requestedPath);
-                        } else {
-                            directoryIndexDescriptor.getResourceProvider().load(
-                                    directoryIndexDescriptor.getDirectoryPath(), request, response);
-                        }
-                    }
-                } else {
+                if (resourceProvider != null) {
                     resourceProvider.load(requestedPath, request, response);
+                } else {
+                    handleDirectoryIndex(response, request, requestedPath);
                 }
             } catch (RuntimeException e) {
                 if (response != null) {
@@ -116,8 +109,19 @@ public class ServerRunnable implements Runnable {
         }
     }
 
-    private boolean isPathEndingWithSlash(String originalPath) {
-        return originalPath.substring(originalPath.length() - 1).equals("/");
+    private void handleDirectoryIndex(HttpResponseWrapper response, HttpRequestWrapper request,
+                                      String requestedPath) throws IOException {
+        DirectoryIndexDescriptor indexDescriptor = loadDirectoryIndexResource(requestedPath);
+        if (indexDescriptor == null) {
+            throw new NotFoundException();
+        } else {
+            if (!pathHelper.isDirectoryPath(requestedPath)) {
+                sendRedirectToDirectorySlashedPath(response, requestedPath);
+            } else {
+                indexDescriptor.getResourceProvider().load(
+                        indexDescriptor.getDirectoryPath(), request, response);
+            }
+        }
     }
 
     private void sendRedirectToDirectorySlashedPath(HttpResponseWrapper response, String originalPath) throws IOException {
@@ -143,7 +147,7 @@ public class ServerRunnable implements Runnable {
     }
 
     private DirectoryIndexDescriptor loadDirectoryIndexResource(String path) {
-        String normalizedDirectoryPath = getNormalizedDirectoryPath(path);
+        String normalizedDirectoryPath = pathHelper.getNormalizedDirectoryPath(path);
         for (String index : serverConfig.getDirectoryIndex()) {
             String directoryIndexPath = normalizedDirectoryPath + index;
             ResourceProvider resourceProvider = getResourceProvider(directoryIndexPath);
@@ -161,29 +165,6 @@ public class ServerRunnable implements Runnable {
             }
         }
         return null;
-    }
-
-    /**
-     * Tells whether the given path contains illegal expressions.
-     *
-     * @param path
-     * @return
-     */
-    private boolean isPathContainingIllegalCharacters(String path) {
-        return path == null || path.startsWith("../") || path.indexOf("/../") != -1;
-    }
-
-    /**
-     * Makes sure the last character is a slash.
-     *
-     * @param path
-     * @return
-     */
-    private String getNormalizedDirectoryPath(String path) {
-        if (path.length() > 0 && path.charAt(path.length() - 1) != '/') {
-            return path + "/";
-        }
-        return path;
     }
 
     /**

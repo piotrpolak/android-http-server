@@ -57,7 +57,8 @@ public class WebServer extends Thread {
                                     serverConfig,
                                     serviceContainer.getRequestWrapperFactory(),
                                     serviceContainer.getResponseFactory(),
-                                    serviceContainer.getHttpErrorHandlerResolver()));
+                                    serviceContainer.getHttpErrorHandlerResolver(),
+                                    serviceContainer.getPathHelper()));
                 } catch (IOException e) {
                     if (listen) {
                         LOGGER.log(Level.SEVERE, "Communication error", e);

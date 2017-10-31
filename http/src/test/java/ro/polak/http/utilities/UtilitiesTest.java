@@ -5,14 +5,13 @@ import org.junit.Test;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static ro.polak.http.ExtraMarchers.utilityClass;
 
 public class UtilitiesTest {
 
-    @Test(expected = java.lang.IllegalAccessException.class)
-    public void testValidatesThatClassFooIsNotInstantiable() throws ClassNotFoundException,
-            IllegalAccessException, InstantiationException {
-        Class cls = Class.forName(Utilities.class.getCanonicalName());
-        cls.newInstance();
+    @Test
+    public void shouldNotBeInstantiable() {
+        assertThat(Utilities.class, is(utilityClass()));
     }
 
     @Test

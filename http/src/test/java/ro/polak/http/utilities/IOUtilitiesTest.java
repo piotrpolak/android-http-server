@@ -14,14 +14,13 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static ro.polak.http.ExtraMarchers.utilityClass;
 
 public class IOUtilitiesTest {
 
-    @Test(expected = java.lang.IllegalAccessException.class)
-    public void testValidatesThatClassFooIsNotInstantiable() throws ClassNotFoundException,
-            IllegalAccessException, InstantiationException {
-        Class cls = Class.forName(IOUtilities.class.getCanonicalName());
-        cls.newInstance();
+    @Test
+    public void shouldNotBeInstantiable() {
+        assertThat(IOUtilities.class, is(utilityClass()));
     }
 
     @Test

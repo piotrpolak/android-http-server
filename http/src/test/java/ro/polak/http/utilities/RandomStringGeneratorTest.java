@@ -5,14 +5,13 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
+import static ro.polak.http.ExtraMarchers.utilityClass;
 
 public class RandomStringGeneratorTest {
 
-    @Test(expected = java.lang.IllegalAccessException.class)
-    public void testValidatesThatClassFooIsNotInstantiable() throws ClassNotFoundException,
-            IllegalAccessException, InstantiationException {
-        Class cls = Class.forName(RandomStringGenerator.class.getCanonicalName());
-        cls.newInstance();
+    @Test
+    public void shouldNotBeInstantiable() {
+        assertThat(RandomStringGenerator.class, is(utilityClass()));
     }
 
     @Test

@@ -1,11 +1,13 @@
 package ro.polak.http.session.storage;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 
+import ro.polak.http.FileUtils;
 import ro.polak.http.servlet.HttpSessionWrapper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,11 +20,17 @@ public class FileSessionStorageTest {
     private static final String VALID_SESSION_ID = "sessionidsjdfhgskldjfsghldkfjsgg";
     private static final String ILLEGAL_SESSION_ID = "////////////////////////////////";
     private static FileSessionStorage fileSessionStorage;
-    private static String tempPath = System.getProperty("java.io.tmpdir") + "/";
+    private static String workingDirectory;
 
     @BeforeClass
-    public static void setUp() {
-        fileSessionStorage = new FileSessionStorage(tempPath);
+    public static void setUp() throws IOException {
+        workingDirectory = FileUtils.createTempDirectory();
+        fileSessionStorage = new FileSessionStorage(workingDirectory);
+    }
+
+    @AfterClass
+    public static void cleanUp() {
+        new File(workingDirectory).delete();
     }
 
     @Test
@@ -94,7 +102,7 @@ public class FileSessionStorageTest {
     @Test
     public void shouldFailSilentlyOnInvalidFileContents() throws IOException {
         String sid = "asdfghjklzxasdfghjklzxasdfghjklz";
-        File sessionFile = new File(tempPath + sid + "_session");
+        File sessionFile = new File(workingDirectory + sid + "_session");
         if (sessionFile.exists() && !sessionFile.delete()) {
             throw new IOException("Unable to delete file " + sessionFile.getAbsolutePath());
         }
@@ -102,5 +110,16 @@ public class FileSessionStorageTest {
             throw new IOException("Unable to create new file " + sessionFile.getAbsolutePath());
         }
         assertThat(fileSessionStorage.getSession(sid), is(nullValue()));
+    }
+
+    @Test(expected = IOException.class)
+    public void shouldThrowExceptionWhenUnableToCreateSessionDirectory() throws IOException {
+        String nonWritableDirectory = FileUtils.createTempDirectory();
+        new File(nonWritableDirectory).setWritable(false);
+
+        FileSessionStorage fileSessionStorage = new FileSessionStorage(nonWritableDirectory);
+        HttpSessionWrapper sessionWrapper = new HttpSessionWrapper(VALID_SESSION_ID);
+        sessionWrapper.setAttribute("attributeName", "SomeValue");
+        fileSessionStorage.persistSession(sessionWrapper);
     }
 }

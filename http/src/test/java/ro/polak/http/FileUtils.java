@@ -4,7 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
+import ro.polak.http.impl.ServerConfigImplTest;
 import ro.polak.http.utilities.IOUtilities;
 
 public class FileUtils {
@@ -12,8 +14,9 @@ public class FileUtils {
     private FileUtils() {
     }
 
-    public static String getTempDir() {
-        return System.getProperty("java.io.tmpdir") + "/";
+    public static String createTempDirectory() throws IOException {
+        return Files.createTempDirectory(ServerConfigImplTest.class.getName())
+                .toFile().getAbsolutePath() + "/";
     }
 
     public static File writeToTempFile(String contents) throws IOException {

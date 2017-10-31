@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import ro.polak.http.FileUtils;
 import ro.polak.http.ServerConfig;
@@ -37,8 +36,7 @@ public class ServerConfigImplTest {
 
     @BeforeClass
     public static void setuUp() throws IOException {
-        workingDirectory = Files.createTempDirectory(ServerConfigImplTest.class.getName())
-                .toFile().getAbsolutePath() + "/";
+        workingDirectory = FileUtils.createTempDirectory();
     }
 
     @AfterClass

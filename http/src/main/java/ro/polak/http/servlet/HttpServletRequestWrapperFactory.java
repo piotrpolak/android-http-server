@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import ro.polak.http.Headers;
+import ro.polak.http.MultipartHeadersPart;
 import ro.polak.http.MultipartRequestHandler;
 import ro.polak.http.RequestStatus;
 import ro.polak.http.Statistics;
@@ -77,7 +78,7 @@ public class HttpServletRequestWrapperFactory {
         METHOD_MAX_LENGTH = maxMethodLength;
     }
 
-    private MultipartHeadersPartParser multipartHeadersPartParser;
+    private Parser<MultipartHeadersPart> multipartHeadersPartParser;
     private final String tempPath;
 
 
@@ -93,7 +94,7 @@ public class HttpServletRequestWrapperFactory {
                                             final Parser<Map<String, String>> queryStringParser,
                                             final Parser<RequestStatus> statusParser,
                                             final Parser<Map<String, Cookie>> cookieParser,
-                                            final MultipartHeadersPartParser multipartHeadersPartParser,
+                                            final Parser<MultipartHeadersPart> multipartHeadersPartParser,
                                             final String tempPath) {
         this.headersParser = headersParser;
         this.queryStringParser = queryStringParser;

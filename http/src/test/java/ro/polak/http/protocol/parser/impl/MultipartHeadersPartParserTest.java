@@ -42,6 +42,15 @@ public class MultipartHeadersPartParserTest {
         assertThat(headers.getContentType(), is(nullValue()));
     }
 
+    @Test
+    public void shouldParseFormDataTextWhenThereIsNoName() throws MalformedInputException {
+        MultipartHeadersPart headers = multipartHeadersPartParser.parse("Content-Disposition: form-data;");
+
+        assertThat(headers.getFileName(), is(nullValue()));
+        assertThat(headers.getName(), is(nullValue()));
+        assertThat(headers.getContentType(), is(nullValue()));
+    }
+
     @Test(expected = MalformedInputException.class)
     public void shouldThrowMalformedInputException() throws MalformedInputException {
         multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text\" filename=\"text");

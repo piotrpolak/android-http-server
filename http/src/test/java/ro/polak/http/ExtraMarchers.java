@@ -2,59 +2,57 @@ package ro.polak.http;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class ExtraMarchers {
 
-    private static final UtilClassMatcher utilClassMatcher = new UtilClassMatcher();
+    private static final UtilityClassMatcher utilClassMatcher = new UtilityClassMatcher();
 
     public static Matcher<? super Class<?>> utilityClass() {
         return utilClassMatcher;
     }
 
-    private static class UtilClassMatcher implements Matcher<Class<?>> {
+    private static class UtilityClassMatcher extends TypeSafeMatcher<Class<?>> {
         @Override
-        public boolean matches(Object item) {
+        protected boolean matchesSafely(Class<?> clazz) {
             boolean isUtilityClass = false;
             try {
-                isUtilityClass = isUtilityClass((Class) item);
+                isUtilityClass = isUtilityClass(clazz);
             } catch (ClassNotFoundException | InstantiationException e) {
                 // Swallowed
             }
 
             // This code will attempt to call empty constructor to generate code coverage
             if (isUtilityClass) {
-                supportCodeCoverage((Class) item);
+                callPrivateConstructor(clazz);
             }
 
             return isUtilityClass;
         }
 
         @Override
-        public void describeMismatch(Object item, Description mismatchDescription) {
-            Class clazz = ((Class) item);
+        protected void describeMismatchSafely(Class<?> clazz, Description mismatchDescription) {
+            if (clazz == null) {
+                super.describeMismatch(clazz, mismatchDescription);
+            } else {
+                mismatchDescription.appendText("The class " + clazz.getCanonicalName() + " is not an utility class.");
 
-            mismatchDescription.appendText("The class " + clazz.getCanonicalName() + " is not an utility class.");
+                boolean isNonUtilityClass = true;
+                try {
+                    isNonUtilityClass = !isUtilityClass(clazz);
+                } catch (ClassNotFoundException e) {
+                    mismatchDescription.appendText(" The class is not found. " + e);
+                } catch (InstantiationException e) {
+                    mismatchDescription.appendText(" The class can not be instantiated. " + e);
+                }
 
-            boolean isNonUtilityClass = true;
-            try {
-                isNonUtilityClass = !isUtilityClass((Class) item);
-            } catch (ClassNotFoundException e) {
-                mismatchDescription.appendText(" The class is not found. " + e);
-            } catch (InstantiationException e) {
-                mismatchDescription.appendText(" The class can not be instantiated. " + e);
+                if (isNonUtilityClass) {
+                    mismatchDescription.appendText(" The class should not be instantiable.");
+                }
             }
-
-            if (isNonUtilityClass) {
-                mismatchDescription.appendText(" The class should not be instantiable.");
-            }
-        }
-
-        @Override
-        public void _dont_implement_Matcher___instead_extend_BaseMatcher_() {
-
         }
 
         @Override
@@ -62,23 +60,21 @@ public class ExtraMarchers {
 
         }
 
-        private void supportCodeCoverage(Class clazz) {
+        private void callPrivateConstructor(Class clazz) {
             try {
-                Class cls = Class.forName(clazz.getCanonicalName());
-                Constructor<?> constructor = cls.getDeclaredConstructor();
+                Constructor<?> constructor = clazz.getDeclaredConstructor();
                 constructor.setAccessible(true);
                 constructor.newInstance();
-            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
+            } catch (NoSuchMethodException | IllegalAccessException |
                     InstantiationException | InvocationTargetException e) {
                 // Swallowed
             }
         }
 
-        private boolean isUtilityClass(Class item) throws ClassNotFoundException, InstantiationException {
+        private boolean isUtilityClass(Class clazz) throws ClassNotFoundException, InstantiationException {
             boolean hasPrivateConstructor = false;
             try {
-                Class cls = Class.forName(item.getCanonicalName());
-                cls.newInstance();
+                clazz.newInstance();
             } catch (IllegalAccessException e) {
                 hasPrivateConstructor = true;
             }

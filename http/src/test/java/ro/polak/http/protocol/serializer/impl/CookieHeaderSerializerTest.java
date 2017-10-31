@@ -1,11 +1,12 @@
 package ro.polak.http.protocol.serializer.impl;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
 
 import ro.polak.http.servlet.Cookie;
+import ro.polak.http.utilities.DateProvider;
 import ro.polak.http.utilities.Utilities;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -14,14 +15,20 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CookieHeaderSerializerTest {
 
     private static CookieHeaderSerializer cookieHeaderSerializer;
+    private static DateProvider dateProvider;
 
-    @BeforeClass
-    public static void setUp() {
-        cookieHeaderSerializer = new CookieHeaderSerializer();
+    @Before
+    public void setUp() {
+        Date now = new Date();
+        dateProvider = mock(DateProvider.class);
+        when(dateProvider.now()).thenReturn(now);
+        cookieHeaderSerializer = new CookieHeaderSerializer(dateProvider);
     }
 
     @Test

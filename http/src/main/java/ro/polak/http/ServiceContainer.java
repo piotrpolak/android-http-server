@@ -26,6 +26,7 @@ import ro.polak.http.servlet.HttpServletRequestWrapperFactory;
 import ro.polak.http.servlet.HttpServletResponseWrapperFactory;
 import ro.polak.http.servlet.RangeHelper;
 import ro.polak.http.servlet.StreamHelper;
+import ro.polak.http.utilities.DateProvider;
 
 /**
  * Instantiates and holds application-wide services
@@ -55,7 +56,7 @@ public class ServiceContainer {
 
         responseFactory = new HttpServletResponseWrapperFactory(
                 new HeadersSerializer(),
-                new CookieHeaderSerializer(),
+                new CookieHeaderSerializer(new DateProvider()),
                 new StreamHelper(
                         new RangeHelper(),
                         new RangePartHeaderSerializer()

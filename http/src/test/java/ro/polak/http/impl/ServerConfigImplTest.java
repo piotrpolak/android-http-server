@@ -1,24 +1,22 @@
 package ro.polak.http.impl;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
+import ro.polak.http.FileUtils;
 import ro.polak.http.ServerConfig;
-import ro.polak.http.utilities.IOUtilities;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
 public class ServerConfigImplTest {
-
-    private String tempDir = System.getProperty("java.io.tmpdir") + "/";
-    private File configFile;
-    private File mimeFile;
 
     private static final String DEFAULT_CONFIG_DATA = "server.port=8090\n" +
             "server.servlets.extension=dddd\n" +
@@ -31,26 +29,25 @@ public class ServerConfigImplTest {
             "server.errorDocument.404=error404.html\n" +
             "server.errorDocument.403=error403.html\n";
 
-    public void writeFile(String configData) throws IOException {
-        configFile = new File(tempDir + "httpd.properties");
-        mimeFile = new File(tempDir + "mime.mime");
-        try {
-            mimeFile.createNewFile();
-        } catch (IOException e) {
-        }
 
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(configFile));
-            writer.write(configData);
-        } finally {
-            if (writer != null) {
-                IOUtilities.closeSilently(writer);
-            }
-        }
+    private static String workingDirectory;
+    private static File configFile;
+    private static File mimeFile;
+
+
+    @BeforeClass
+    public static void setuUp() throws IOException {
+        workingDirectory = Files.createTempDirectory(ServerConfigImplTest.class.getName())
+                .toFile().getAbsolutePath() + "/";
     }
 
-    public void removeFile() throws IOException {
+    @AfterClass
+    public static void cleanUp() {
+        new File(workingDirectory).delete();
+    }
+
+    @After
+    public void cleanUpAfterTest() throws IOException {
         if (configFile != null && configFile.exists() && !configFile.delete()) {
             throw new IOException("Unable to delete " + configFile.getAbsolutePath());
         }
@@ -60,35 +57,42 @@ public class ServerConfigImplTest {
         }
     }
 
+    public void writeFiles(String configData) throws IOException {
+        configFile = new File(workingDirectory + "httpd.properties");
+        mimeFile = new File(workingDirectory + "mime.mime");
+        try {
+            mimeFile.createNewFile();
+        } catch (IOException e) {
+        }
+
+        FileUtils.writeToFile(configFile, configData);
+    }
+
     @Test
     public void shouldCreateFromPath() throws IOException {
-        writeFile(DEFAULT_CONFIG_DATA + "DefaultMimeType mime/text\n");
-        try {
-            ServerConfig serverConfig = ServerConfigImpl.createFromPath(tempDir, tempDir);
-            assertThat(serverConfig.getBasePath(), is(tempDir));
-            assertThat(serverConfig.getDocumentRootPath(), is(tempDir + "wwwx"));
-            assertThat(serverConfig.getServletMappedExtension(), is("dddd"));
-            assertThat(serverConfig.getDirectoryIndex(), hasItem("index.php"));
-            assertThat(serverConfig.getDirectoryIndex(), hasItem("index.html"));
-            assertThat(serverConfig.getErrorDocument403Path(), is(tempDir + "error403.html"));
-            assertThat(serverConfig.getErrorDocument404Path(), is(tempDir + "error404.html"));
-            assertThat(serverConfig.getListenPort(), is(8090));
-            assertThat(serverConfig.getMaxServerThreads(), is(3));
-            assertThat(serverConfig.isKeepAlive(), is(true));
-            assertThat(serverConfig.getMimeTypeMapping().getMimeTypeByExtension("ANY"), is("mime/text"));
-        } finally {
-            removeFile();
-        }
+        writeFiles(DEFAULT_CONFIG_DATA + "DefaultMimeType mime/text\n");
+
+        ServerConfig serverConfig = ServerConfigImpl.createFromPath(workingDirectory, workingDirectory);
+        assertThat(serverConfig.getBasePath(), is(workingDirectory));
+        assertThat(serverConfig.getDocumentRootPath(), is(workingDirectory + "wwwx"));
+        assertThat(serverConfig.getServletMappedExtension(), is("dddd"));
+        assertThat(serverConfig.getDirectoryIndex(), hasItem("index.php"));
+        assertThat(serverConfig.getDirectoryIndex(), hasItem("index.html"));
+        assertThat(serverConfig.getErrorDocument403Path(), is(workingDirectory + "error403.html"));
+        assertThat(serverConfig.getErrorDocument404Path(), is(workingDirectory + "error404.html"));
+        assertThat(serverConfig.getListenPort(), is(8090));
+        assertThat(serverConfig.getMaxServerThreads(), is(3));
+        assertThat(serverConfig.isKeepAlive(), is(true));
+        assertThat(serverConfig.getMimeTypeMapping().getMimeTypeByExtension("ANY"), is("mime/text"));
+
     }
 
     @Test
     public void shouldSetDefaultMimeType() throws IOException {
-        writeFile(DEFAULT_CONFIG_DATA);
-        try {
-            ServerConfig serverConfig = ServerConfigImpl.createFromPath(tempDir, tempDir);
-            assertThat(serverConfig.getMimeTypeMapping().getMimeTypeByExtension("ANY"), is("mime/text"));
-        } finally {
-            removeFile();
-        }
+        writeFiles(DEFAULT_CONFIG_DATA);
+
+        ServerConfig serverConfig = ServerConfigImpl.createFromPath(workingDirectory, workingDirectory);
+        assertThat(serverConfig.getMimeTypeMapping().getMimeTypeByExtension("ANY"), is("mime/text"));
+
     }
 }

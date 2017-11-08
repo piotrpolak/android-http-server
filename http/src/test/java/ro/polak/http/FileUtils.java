@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import ro.polak.http.impl.ServerConfigImplTest;
 import ro.polak.http.utilities.IOUtilities;
 
-public class FileUtils {
+public final class FileUtils {
 
     private FileUtils() {
     }

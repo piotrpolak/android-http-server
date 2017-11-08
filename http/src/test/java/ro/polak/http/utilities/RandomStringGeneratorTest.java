@@ -10,7 +10,7 @@ import static ro.polak.http.ExtraMarchers.utilityClass;
 public class RandomStringGeneratorTest {
 
     @Test
-    public void shouldNotBeInstantiable() {
+    public void shouldNotBeInstantiableFinalClass() {
         assertThat(RandomStringGenerator.class, is(utilityClass()));
     }
 

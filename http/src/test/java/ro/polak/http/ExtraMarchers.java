@@ -6,6 +6,7 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 
 public class ExtraMarchers {
 
@@ -18,9 +19,13 @@ public class ExtraMarchers {
     private static class UtilityClassMatcher extends TypeSafeMatcher<Class<?>> {
         @Override
         protected boolean matchesSafely(Class<?> clazz) {
+            if (!isFinal(clazz)) {
+                return false;
+            }
+
             boolean isUtilityClass = false;
             try {
-                isUtilityClass = isUtilityClass(clazz);
+                isUtilityClass = isInstantiable(clazz);
             } catch (ClassNotFoundException | InstantiationException e) {
                 // Swallowed
             }
@@ -42,7 +47,7 @@ public class ExtraMarchers {
 
                 boolean isNonUtilityClass = true;
                 try {
-                    isNonUtilityClass = !isUtilityClass(clazz);
+                    isNonUtilityClass = !isInstantiable(clazz);
                 } catch (ClassNotFoundException e) {
                     mismatchDescription.appendText(" The class is not found. " + e);
                 } catch (InstantiationException e) {
@@ -51,6 +56,10 @@ public class ExtraMarchers {
 
                 if (isNonUtilityClass) {
                     mismatchDescription.appendText(" The class should not be instantiable.");
+                }
+
+                if (!isFinal(clazz)) {
+                    mismatchDescription.appendText(" The class should have final access modifier.");
                 }
             }
         }
@@ -71,7 +80,7 @@ public class ExtraMarchers {
             }
         }
 
-        private boolean isUtilityClass(Class clazz) throws ClassNotFoundException, InstantiationException {
+        private boolean isInstantiable(Class clazz) throws ClassNotFoundException, InstantiationException {
             boolean hasPrivateConstructor = false;
             try {
                 clazz.newInstance();
@@ -79,6 +88,10 @@ public class ExtraMarchers {
                 hasPrivateConstructor = true;
             }
             return hasPrivateConstructor;
+        }
+
+        private boolean isFinal(Class<?> clazz) {
+            return Modifier.isFinal(clazz.getModifiers());
         }
     }
 }

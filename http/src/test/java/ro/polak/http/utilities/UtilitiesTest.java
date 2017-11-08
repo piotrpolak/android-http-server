@@ -10,7 +10,7 @@ import static ro.polak.http.ExtraMarchers.utilityClass;
 public class UtilitiesTest {
 
     @Test
-    public void shouldNotBeInstantiable() {
+    public void shouldNotBeInstantiableFinalClass() {
         assertThat(Utilities.class, is(utilityClass()));
     }
 

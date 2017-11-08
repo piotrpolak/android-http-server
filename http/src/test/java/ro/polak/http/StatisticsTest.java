@@ -11,7 +11,7 @@ import static ro.polak.http.ExtraMarchers.utilityClass;
 public class StatisticsTest {
 
     @Test
-    public void shouldNotBeInstantiable() {
+    public void shouldNotBeInstantiableFinalClass() {
         assertThat(Statistics.class, is(utilityClass()));
     }
 

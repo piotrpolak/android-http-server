@@ -19,7 +19,7 @@ import static ro.polak.http.ExtraMarchers.utilityClass;
 public class IOUtilitiesTest {
 
     @Test
-    public void shouldNotBeInstantiable() {
+    public void shouldNotBeInstantiableFinalClass() {
         assertThat(IOUtilities.class, is(utilityClass()));
     }
 

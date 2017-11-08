@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 
 import javax.net.ServerSocketFactory;
 
+import ro.polak.http.FileUtils;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.ServerConfigFactory;
 import ro.polak.http.gui.ServerGui;
@@ -42,7 +43,7 @@ public class MainControllerTest {
         when(serverConfigFactory.getServerConfig()).thenReturn(serverConfig);
         when(serverConfig.getMaxServerThreads()).thenReturn(1);
         when(serverConfig.getDocumentRootPath()).thenReturn("/somepath");
-        when(serverConfig.getTempPath()).thenReturn("/tmp");
+        when(serverConfig.getTempPath()).thenReturn(FileUtils.createTempDirectory());
         when(serverSocketFactory.createServerSocket()).thenReturn(serverSocket);
         serverGui = mock(ServerGui.class);
     }

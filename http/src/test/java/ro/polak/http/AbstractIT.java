@@ -22,11 +22,14 @@ public class AbstractIT {
     protected final int PORT = 8080;
     private static File staticFile;
     private static File httpdConfigFile;
+    private static String tempDirectory;
 
     @BeforeClass
     public static void setUp() throws IOException {
         if (serverSocket == null) {
             serverSocket = new ServerSocket();
+
+           tempDirectory = FileUtils.createTempDirectory();
 
             WebServer webServer = new WebServer(serverSocket, getPreparedConfig());
             if (!webServer.startServer()) {
@@ -40,14 +43,12 @@ public class AbstractIT {
     }
 
     private static ServerConfig getPreparedConfig() throws IOException {
-        String tempPath = System.getProperty("java.io.tmpdir") + File.separator + "webserver" + File.separator;
-
-        File workingDirectory = new File(tempPath);
+        File workingDirectory = new File(tempDirectory);
         if (!workingDirectory.exists() && !workingDirectory.mkdir()) {
             throw new IOException("Unable to mkdir " + workingDirectory.getAbsolutePath());
         }
 
-        httpdConfigFile = new File(tempPath + "httpd.properties");
+        httpdConfigFile = new File(tempDirectory + "httpd.properties");
         if (httpdConfigFile.exists() && !httpdConfigFile.delete()) {
             throw new IOException("Unable to delete " + httpdConfigFile.getAbsolutePath());
         }
@@ -77,11 +78,17 @@ public class AbstractIT {
         return serverConfig;
     }
 
-    private static ServerConfig getServerConfig() {
+    private static ServerConfig getServerConfig() throws IOException {
+
         return (new DefaultServerConfigFactory() {
             @Override
             protected String getBasePath() {
                 return getTempPath();
+            }
+
+            @Override
+            protected String getTempPath() {
+                return tempDirectory;
             }
         }).getServerConfig();
     }

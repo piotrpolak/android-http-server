@@ -84,10 +84,10 @@ public class WebServerTest {
         assertThat(webServer.isRunning(), is(false));
     }
 
-    private ServerConfig getDefaultServerConfig() {
+    private ServerConfig getDefaultServerConfig() throws IOException {
         ServerConfig serverConfig = mock(ServerConfig.class);
         when(serverConfig.getDocumentRootPath()).thenReturn("/tmp/SomePathThatDoesNotExist");
-        when(serverConfig.getTempPath()).thenReturn("/tmp/");
+        when(serverConfig.getTempPath()).thenReturn(FileUtils.createTempDirectory());
         when(serverConfig.getMaxServerThreads()).thenReturn(99);
         return serverConfig;
     }

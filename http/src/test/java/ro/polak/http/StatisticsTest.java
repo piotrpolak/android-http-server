@@ -21,7 +21,7 @@ public class StatisticsTest {
     }
 
     @Test
-    public void shouldIncrementAllCounters() {
+    public void shouldIncrementAllCountersAndResetThem() {
         assertThat(Statistics.getError404s(), is(equalTo(0l)));
         assertThat(Statistics.getError500s(), is(equalTo(0l)));
         assertThat(Statistics.getRequestsHandled(), is(equalTo(0l)));
@@ -39,6 +39,11 @@ public class StatisticsTest {
         assertThat(Statistics.getError500s(), is(equalTo(2l)));
         Statistics.incrementRequestHandled();
         assertThat(Statistics.getRequestsHandled(), is(equalTo(2l)));
+
+        Statistics.reset();
+        assertThat(Statistics.getError404s(), is(equalTo(0l)));
+        assertThat(Statistics.getError500s(), is(equalTo(0l)));
+        assertThat(Statistics.getRequestsHandled(), is(equalTo(0l)));
     }
 
     @Test
@@ -55,6 +60,10 @@ public class StatisticsTest {
         assertThat(Statistics.getBytesSent(), is(equalTo(2l)));
         Statistics.addBytesSent(11);
         assertThat(Statistics.getBytesSent(), is(equalTo(13l)));
+
+        Statistics.reset();
+        assertThat(Statistics.getBytesReceived(), is(equalTo(0l)));
+        assertThat(Statistics.getBytesSent(), is(equalTo(0l)));
     }
 
 }

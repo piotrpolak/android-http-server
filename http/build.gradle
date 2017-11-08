@@ -43,7 +43,9 @@ jacocoTestReport {
 // More details at https://github.com/szpak/gradle-pitest-plugin/blob/master/src/main/groovy/info/solidsoft/gradle/pitest/PitestPluginExtension.groovy
 pitest {
     targetClasses = ['ro.polak.http.*']
-    avoidCallsTo = ['ro.polak.http.Statistics', 'ro.polak.http.utilities.IOUtilities']
+    avoidCallsTo = ['ro.polak.http.Statistics',
+                    'ro.polak.http.utilities.IOUtilities',
+                    'java.util.logging.Logger']
     threads = 4
     outputFormats = ['XML', 'HTML']
     timestampedReports = false

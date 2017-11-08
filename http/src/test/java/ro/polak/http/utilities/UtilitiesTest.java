@@ -25,8 +25,11 @@ public class UtilitiesTest {
     @Test
     public void shouldFormatFileSize() {
         assertThat(Utilities.fileSizeUnits(1), is("1 B"));
+        assertThat(Utilities.fileSizeUnits(1024), is("1.00 KB"));
         assertThat(Utilities.fileSizeUnits(1025), is("1.00 KB"));
+        assertThat(Utilities.fileSizeUnits(1048576), is("1.00 MB"));
         assertThat(Utilities.fileSizeUnits(1048577), is("1.00 MB"));
+        assertThat(Utilities.fileSizeUnits(1073741824), is("1.00 GB"));
         assertThat(Utilities.fileSizeUnits(1073741825), is("1.00 GB"));
     }
 }

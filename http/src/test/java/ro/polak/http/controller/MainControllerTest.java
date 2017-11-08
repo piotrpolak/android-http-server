@@ -12,6 +12,7 @@ import javax.net.ServerSocketFactory;
 import ro.polak.http.FileUtils;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.ServerConfigFactory;
+import ro.polak.http.WebServer;
 import ro.polak.http.gui.ServerGui;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -68,7 +69,9 @@ public class MainControllerTest {
 
         assertThat(mainController.getWebServer(), is(nullValue()));
         mainController.start();
-        assertThat(mainController, is(not(nullValue())));
+        assertThat(mainController.getWebServer(), is(not(nullValue())));
+        assertThat(mainController.getWebServer().isRunning(), is(true));
+
     }
 
     @Test
@@ -78,7 +81,10 @@ public class MainControllerTest {
 
         mainController.start();
         assertThat(mainController.getWebServer(), is(not(nullValue())));
+        WebServer webServer = mainController.getWebServer();
         mainController.stop();
+        assertThat(mainController.getWebServer(), is(nullValue()));
+        assertThat(webServer.isRunning(), is(false));
         verify(serverGui, times(1)).stop();
     }
 

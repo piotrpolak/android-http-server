@@ -1,11 +1,21 @@
 apply plugin: 'java'
 apply plugin: 'jacoco'
+apply plugin: 'info.solidsoft.pitest'
 
-sourceCompatibility = 1.7;
+sourceCompatibility = 1.7
 
 // Added here to enable http subproject to be built without the root project
 repositories {
     jcenter()
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.2.2'
+    }
 }
 
 dependencies {
@@ -28,6 +38,15 @@ jacocoTestReport {
                     exclude: ['example/*.class'])
         })
     }
+}
+
+// More details at https://github.com/szpak/gradle-pitest-plugin/blob/master/src/main/groovy/info/solidsoft/gradle/pitest/PitestPluginExtension.groovy
+pitest {
+    targetClasses = ['ro.polak.http.*']
+    avoidCallsTo = ['ro.polak.http.Statistics', 'ro.polak.http.utilities.IOUtilities']
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
 }
 
 check.dependsOn jacocoTestReport

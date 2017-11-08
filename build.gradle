@@ -3,3 +3,12 @@ allprojects {
         jcenter()
     }
 }
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.2.2'
+    }
+}

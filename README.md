@@ -53,6 +53,17 @@ The subproject can be tested in the following way:
 The original package code has been refactored and covered with unit and integration tests.
 Code coverage should be kept above 90%.
 
+## Mutation testing
+
+Mutation tests can be run by executing the following command:
+
+```bash
+./gradlew :http:clean :http:pitest -PskipAndroidBuild
+```
+
+The results can then be found under `http/build/reports/pitest/ro.polak.http/index.html` and
+`http/build/reports/pitest/ro.polak.http/mutation.xml`.
+
 ## Running standalone server (CLI)
 
 Standalone server can be used to bundle the `http` subproject into a runnable server implementation.

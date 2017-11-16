@@ -105,4 +105,20 @@ public interface HttpServletResponse extends ServletResponse {
      * @param status status code and message
      */
     void setStatus(String status);
+
+    /**
+     * Sets header value
+     *
+     * @param name
+     * @param value
+     */
+    void setHeader(String name, String value);
+
+    /**
+     * Sets int header value
+     *
+     * @param name
+     * @param value
+     */
+    void setIntHeader(String name, int value);
 }

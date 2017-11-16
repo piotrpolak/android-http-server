@@ -22,6 +22,12 @@ public abstract class HttpServlet implements Servlet {
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
         this.servletConfig = servletConfig;
+        init();
+    }
+
+    @Override
+    public void init() throws ServletException {
+
     }
 
     @Override

@@ -47,4 +47,13 @@ public class HttpResponseWrapperTest {
     public void shouldNotCreateASinglePrintWriter() throws IOException {
         assertThat(httpResponseWrapper.getWriter().equals(httpResponseWrapper.getWriter()), is(true));
     }
+
+    @Test
+    public void shouldSetHeadersProperly() {
+        httpResponseWrapper.setHeader("StringValue", "value");
+        httpResponseWrapper.setIntHeader("IntValue", 1);
+
+        assertThat(httpResponseWrapper.getHeaders().getHeader("StringValue"), is("value"));
+        assertThat(httpResponseWrapper.getHeaders().getHeader("IntValue"), is("1"));
+    }
 }

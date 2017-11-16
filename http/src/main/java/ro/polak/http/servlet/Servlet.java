@@ -18,6 +18,13 @@ import ro.polak.http.exception.ServletException;
 public interface Servlet {
 
     /**
+     * Initialization method that can be overwritten.
+     *
+     * @throws ServletException
+     */
+    void init() throws ServletException;
+
+    /**
      * The servlet initialization method. The reusable resources should be
      * initialized in the init method.
      *
@@ -37,6 +44,7 @@ public interface Servlet {
 
     /**
      * Returns servlet info such as author or copyright.
+     *
      * @return
      */
     String getServletInfo();

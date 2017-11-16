@@ -175,6 +175,16 @@ public class HttpResponseWrapper implements HttpServletResponse {
     }
 
     @Override
+    public void setHeader(String name, String value) {
+        headers.setHeader(name, value);
+    }
+
+    @Override
+    public void setIntHeader(String name, int value) {
+        headers.setHeader(name, Integer.toString(value));
+    }
+
+    @Override
     public PrintWriter getWriter() {
         if (printWriter == null) {
             if (isTransferChunked()) {

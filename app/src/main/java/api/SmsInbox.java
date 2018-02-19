@@ -28,18 +28,20 @@ import ro.polak.http.servlet.HttpServletResponse;
  */
 public class SmsInbox extends HttpServlet {
 
+    private static final int DEFAULT_MAX_RESULTS = 999;
     private static final String ATTR_MAX_RESULTS = "maxResults";
     private static final String INCOMING_WHERE_STRING = "type=1";
+    private static final String ALL_STRING = "";
 
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
         response.setContentType("text/json");
         int maxResults = request.getParameter(ATTR_MAX_RESULTS) != null
-                ? Integer.parseInt(request.getParameter(ATTR_MAX_RESULTS)) : 10;
+                ? Integer.parseInt(request.getParameter(ATTR_MAX_RESULTS)) : DEFAULT_MAX_RESULTS;
 
         SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
-        List<SmsBox.Message> messages = smsBox.readMessages(INCOMING_WHERE_STRING);
+        List<SmsBox.Message> messages = smsBox.readMessages(ALL_STRING);
 
         JSONArray result = new JSONArray();
         int counterRemaining = maxResults;
@@ -73,10 +75,12 @@ public class SmsInbox extends HttpServlet {
     @NonNull
     private JSONObject toMessageDTO(SmsBox.Message message) throws JSONException {
         JSONObject messageDTO = new JSONObject();
+        messageDTO.put("id", message.getId());
         messageDTO.put("address", message.getAddress());
         messageDTO.put("body", message.getBody());
         messageDTO.put("date", message.getDate());
-        messageDTO.put("date_sent", message.getBody());
+        messageDTO.put("date_sent", message.getDateSent());
+        messageDTO.put("is_incoming", message.isIncoming());
         return messageDTO;
     }
 }

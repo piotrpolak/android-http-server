@@ -28,6 +28,7 @@ public class SmsBox {
              report_date:null service_center:+486555555555 locked:0 sub_id:-1 index_on_sim: callback_number:null
              priority:0 htc_category:0 cs_timestamp:-1 cs_id:null cs_synced:0 error_code:0 creator:com.htc.sense.mms
              seen:0 is_cdma_format:0 is_evdo:0 c_type:0 exp:0 gid:0 extra:0 date2:1441998103947 sim_slot:0  */
+    private static final String ATTR_ID = "_id";
     private static final String ATTR_THREAD_ID = "thread_id";
     private static final String ATTR_ADDRESS = "address";
     private static final String ATTR_BODY = "body";
@@ -37,6 +38,7 @@ public class SmsBox {
     private static final String ATTR_TYPE = "type";
     private static final String ATTR_DATE_SENT = "date_sent";
     private static final String[] PROJECTION = {
+            ATTR_ID,
             ATTR_THREAD_ID,
             ATTR_ADDRESS,
             ATTR_BODY,
@@ -88,6 +90,7 @@ public class SmsBox {
         }
 
         Message message = new Message();
+        message.setId(sms.get(ATTR_ID));
         message.setAddress(sms.get(ATTR_ADDRESS));
         message.setThreadId(threadId);
         message.setBody(sms.get(ATTR_BODY));
@@ -105,12 +108,21 @@ public class SmsBox {
     }
 
     public class Message {
+        private String id;
         private Integer threadId;
         private String address;
         private boolean isIncoming;
         private String body;
         private Date date;
         private Date dateSent;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
 
         public Integer getThreadId() {
             return threadId;

@@ -38,9 +38,14 @@ The `http` subproject is the heart of the application and it is independent on A
 In fact the Android app was just an attempt to find a more practical use of the experimental HTTP
 protocol implementation.
 
-One of the design goals was to keep the resulting artifact small in size and minimalistic in terms
-of dependency on other libraries - it does not require any third party component, all HTTP protocol
-implementation is based on parsing data read from raw TCP sockets.
+One of the design goals was to keep the resulting artifact **small in size** and minimalistic
+in terms of dependency on other libraries - **it does not require any third party component**,
+all HTTP protocol implementation is based on parsing data read from raw TCP sockets.
+
+All application code is targeted to Java 7. It also compiles for Android SDK versions < 19
+(try with resources is not supported, use
+[IOUtilities](../../tree/master/http/src/main/java/ro/polak/http/utilities/IOUtilities.java) as an 
+alternative when closing streams).
 
 Once the `ro.polak.http` package is mature enough it will be released as an independent artifact.
 

@@ -18,21 +18,23 @@ import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 
+import static api.logic.APIResponse.MEDIA_TYPE_APPLICATION_JSON;
+
 /**
  * SMS Send method API endpoint
  */
 public class SmsSend extends HttpServlet {
 
+    public static final String TO_PARAMETER_NAME = "to";
+    public static final String IS_TEST_PARAMETER_NAME = "test";
+    private static final String MESSAGE_PARAMETER_NAME = "message";
+
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
-        response.setContentType("text/json");
-
-        String to = request.getPostParameter("to");
-        String message = request.getPostParameter("message");
-        String test = request.getPostParameter("test");
-
-        String jsonResponse;
+        String to = request.getPostParameter(TO_PARAMETER_NAME);
+        String message = request.getPostParameter(MESSAGE_PARAMETER_NAME);
+        String test = request.getPostParameter(IS_TEST_PARAMETER_NAME);
 
         if (to == null) {
             sendError(response, "Post parameter to is not set");
@@ -55,27 +57,22 @@ public class SmsSend extends HttpServlet {
         }
 
         try {
-            jsonResponse = new APIResponse().toString();
-            
-            // Demo, skipping sending the message
-            if (test != null && test.equals("1")) {
-                response.getWriter().print(jsonResponse);
-                return;
+            if (!"1".equals(test)) {
+                SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
+                smsBox.sendMessage(to, message);
             }
 
-            SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
-            smsBox.sendMessage(to, message);
-            response.getWriter().print(jsonResponse);
+            response.setContentType(MEDIA_TYPE_APPLICATION_JSON);
+            response.getWriter().print(new APIResponse().toString());
         } catch (JSONException e) {
             throw new ServletException(e);
         }
     }
 
     private void sendError(HttpServletResponse response, String errorMessage) throws ServletException {
-        String jsonResponse;
         try {
-            jsonResponse = new APIResponse(APIResponse.CODE_ERROR, errorMessage).toString();
-            response.getWriter().print(jsonResponse);
+            APIResponse apiResponse = new APIResponse(APIResponse.CODE_ERROR, errorMessage);
+            response.getWriter().print(apiResponse.toString());
         } catch (JSONException e) {
             throw new ServletException(e);
         }

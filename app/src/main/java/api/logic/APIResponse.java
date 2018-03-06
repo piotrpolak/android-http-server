@@ -9,6 +9,7 @@ import org.json.JSONObject;
  */
 public class APIResponse {
 
+    public static final String MEDIA_TYPE_APPLICATION_JSON = "application/json";
     public static final int CODE_OK = 200;
     public static final int CODE_ERROR = 400;
     private static final String ATTR_STATUS = "status";

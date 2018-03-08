@@ -23,10 +23,15 @@ public class AssetUtil {
     public static void copyAssetToFile(AssetManager assetManager, String assetPath, File destination)
             throws IOException {
 
-        InputStream in = assetManager.open(assetPath);
-        OutputStream out = new FileOutputStream(destination);
-        IOUtilities.copyStreams(in, out);
-        IOUtilities.closeSilently(out);
-        IOUtilities.closeSilently(in);
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = assetManager.open(assetPath);
+            out = new FileOutputStream(destination);
+            IOUtilities.copyStreams(in, out);
+        } finally {
+            IOUtilities.closeSilently(out);
+            IOUtilities.closeSilently(in);
+        }
     }
 }

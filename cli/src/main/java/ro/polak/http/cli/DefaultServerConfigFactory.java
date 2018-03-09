@@ -16,21 +16,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
+import example.Chunked;
+import example.ChunkedWithDelay;
+import example.Cookies;
+import example.Forbidden;
+import example.Index;
+import example.InternalServerError;
+import example.NotFound;
+import example.Session;
+import example.Streaming;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.ServerConfigFactory;
+import ro.polak.http.configuration.ServletContextBuilder;
 import ro.polak.http.impl.ServerConfigImpl;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.resource.provider.impl.FileResourceProvider;
 import ro.polak.http.resource.provider.impl.ServletResourceProvider;
-import ro.polak.http.servlet.ClassPathServletPathTranslator;
 import ro.polak.http.servlet.DefaultServletContainer;
 import ro.polak.http.servlet.RangeHelper;
 import ro.polak.http.servlet.ServletContextWrapper;
-import ro.polak.http.servlet.loader.ClassPathServletLoader;
-import ro.polak.http.servlet.loader.ServletLoader;
 import ro.polak.http.session.storage.FileSessionStorage;
 
 /**
@@ -84,6 +92,56 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         return new HashSet<>();
     }
 
+    /**
+     * Returns servlet context builder.
+     *
+     * @return
+     */
+    protected ServletContextBuilder getServletContextBuilder() {
+        return ServletContextBuilder.create()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^example/Chunked.dhtml$"))
+                    .withServletClass(Chunked.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^example/ChunkedWithDelay.dhtml$"))
+                    .withServletClass(ChunkedWithDelay.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^example/Cookies.dhtml$"))
+                    .withServletClass(Cookies.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^example/Forbidden.dhtml$"))
+                    .withServletClass(Forbidden.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^example/Index.dhtml$"))
+                    .withServletClass(Index.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^example/$"))
+                    .withServletClass(Index.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^example/InternalServerError.dhtml$"))
+                    .withServletClass(InternalServerError.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^example/NotFound.dhtml$"))
+                    .withServletClass(NotFound.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^example/Session.dhtml$"))
+                    .withServletClass(Session.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^example/Streaming.dhtml$"))
+                    .withServletClass(Streaming.class)
+                .end();
+
+    }
+
     private ServerConfig getServerConfig(String baseConfigPath) {
         ServerConfigImpl serverConfig;
 
@@ -101,18 +159,16 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
     }
 
     private ServletContextWrapper getServletContext(ServerConfig serverConfig) {
-        ServletContextWrapper servletContext = new ServletContextWrapper(serverConfig,
-                new FileSessionStorage(serverConfig.getTempPath()));
-
-        servletContext.setAttribute(ServerConfig.class.getName(), serverConfig);
+        ServletContextBuilder servletContextBuilder = getServletContextBuilder();
+        servletContextBuilder.withServerConfig(serverConfig)
+                .withSessionStorage(new FileSessionStorage(serverConfig.getTempPath()));
 
         for (Map.Entry<String, Object> entry : getAdditionalServletContextAttributes().entrySet()) {
-            servletContext.setAttribute(entry.getKey(), entry.getValue());
+            servletContextBuilder.withAttribute(entry.getKey(), entry.getValue());
         }
 
-        return servletContext;
+        return servletContextBuilder.build();
     }
-
 
     /**
      * For performance reasons ServletResourceProvider is the last resource provider.
@@ -120,7 +176,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
      * @param serverConfig
      * @return
      */
-    private  List<ResourceProvider> selectActiveResourceProviders(ServerConfig serverConfig) {
+    private List<ResourceProvider> selectActiveResourceProviders(ServerConfig serverConfig) {
         List<ResourceProvider> resourceProviders = new ArrayList<>();
 
         resourceProviders.add(getFileResourceProvider(serverConfig));
@@ -140,10 +196,9 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
     }
 
     private ServletResourceProvider getServletResourceProvider(ServerConfig serverConfig) {
-        ServletLoader servletLoader = new ClassPathServletLoader();
         return new ServletResourceProvider(
-                servletLoader, new ClassPathServletPathTranslator(),
-                new DefaultServletContainer(servletLoader), getServletContext(serverConfig),
-                serverConfig.getServletMappedExtension());
+                new DefaultServletContainer(),
+                getServletContext(serverConfig)
+        );
     }
 }

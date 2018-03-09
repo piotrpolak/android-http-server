@@ -12,10 +12,12 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ro.polak.http.ServerConfig;
+import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.session.storage.SessionStorage;
 import ro.polak.http.utilities.RandomStringGenerator;
 import ro.polak.http.utilities.Utilities;
@@ -32,18 +34,21 @@ public class ServletContextWrapper implements ServletContext {
 
     private final ServerConfig serverConfig;
     private final SessionStorage sessionStorage;
+    private final Set<ServletMapping> servletMappings;
     private final Map<String, Object> attributes;
 
     /**
      * Default constructor.
-     *
-     * @param serverConfig
+     *  @param serverConfig
      * @param sessionStorage
+     * @param servletMappings
      */
     public ServletContextWrapper(final ServerConfig serverConfig,
-                                 final SessionStorage sessionStorage) {
+                                 final SessionStorage sessionStorage,
+                                 Set<ServletMapping> servletMappings) {
         this.serverConfig = serverConfig;
         this.sessionStorage = sessionStorage;
+        this.servletMappings = servletMappings;
         attributes = new HashMap<>();
     }
 
@@ -155,5 +160,9 @@ public class ServletContextWrapper implements ServletContext {
 
     private boolean isSessionExpired(HttpSessionWrapper session) {
         return System.currentTimeMillis() - session.getMaxInactiveInterval() * 1000 > session.getLastAccessedTime();
+    }
+
+    public Set<ServletMapping> getServletMappings() {
+        return servletMappings;
     }
 }

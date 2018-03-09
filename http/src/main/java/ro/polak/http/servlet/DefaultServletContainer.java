@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
-import ro.polak.http.servlet.loader.ServletLoader;
 
 /**
  * Manages life cycle of servlets.
@@ -24,18 +23,13 @@ import ro.polak.http.servlet.loader.ServletLoader;
  */
 public class DefaultServletContainer implements ServletContainer {
 
-    private final Map<String, Servlet> servlets = new ConcurrentHashMap<>();
-    private final Map<String, ServletStats> servletStats = new ConcurrentHashMap<>();
-    private final ServletLoader servletLoader;
+    private final Map<Class<? extends HttpServlet>, Servlet> servlets = new ConcurrentHashMap<>();
+    private final Map<Class<? extends HttpServlet>, ServletStats> servletStats = new ConcurrentHashMap<>();
 
     // TODO Implement timeout
 
-    public DefaultServletContainer(final ServletLoader servletLoader) {
-        this.servletLoader = servletLoader;
-    }
-
     @Override
-    public Servlet getForClassName(String servletClassName, ServletConfig servletConfig)
+    public Servlet getForClass(Class<? extends HttpServlet> servletClassName, ServletConfig servletConfig)
             throws ServletInitializationException, ServletException {
 
         if (servlets.containsKey(servletClassName)) {
@@ -46,20 +40,28 @@ public class DefaultServletContainer implements ServletContainer {
         return initializeServlet(servletClassName, servletConfig);
     }
 
-    private Servlet initializeServlet(String servletClassName, ServletConfig servletConfig)
+    private Servlet initializeServlet(Class<? extends HttpServlet> serverClass, ServletConfig servletConfig)
             throws ServletInitializationException, ServletException {
-        Servlet servlet = servletLoader.loadServlet(servletClassName);
+        Servlet servlet = instantiateServlet(serverClass);
         servlet.init(servletConfig);
-        servlets.put(servletClassName, servlet);
-        servletStats.put(servletClassName, new ServletStats());
+        servlets.put(serverClass, servlet);
+        servletStats.put(serverClass, new ServletStats());
         return servlet;
+    }
+
+    private Servlet instantiateServlet(Class<? extends HttpServlet> serverClass) throws ServletInitializationException {
+        try {
+            return serverClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new ServletInitializationException(e);
+        }
     }
 
     /**
      * Destroys all initialized servlets.
      */
     public void shutdown() {
-        for (Map.Entry<String, Servlet> entry : servlets.entrySet()) {
+        for (Map.Entry<Class<? extends HttpServlet>, Servlet> entry : servlets.entrySet()) {
             entry.getValue().destroy();
             servlets.remove(entry.getKey());
             servletStats.remove(entry.getKey());
@@ -71,7 +73,7 @@ public class DefaultServletContainer implements ServletContainer {
      *
      * @return
      */
-    public Map<String, ServletStats> getServletStats() {
+    public Map<Class<? extends HttpServlet>, ServletStats> getServletStats() {
         return Collections.unmodifiableMap(servletStats);
     }
 

@@ -16,10 +16,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
+import admin.DriveAccess;
+import admin.GetFile;
+import admin.Index;
+import admin.Logout;
+import admin.ServerStats;
+import api.SmsInbox;
+import api.SmsSend;
 import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.ServerConfig;
 import ro.polak.http.cli.DefaultServerConfigFactory;
+import ro.polak.http.configuration.ServletContextBuilder;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
@@ -73,6 +82,49 @@ public class AndroidServerConfigFactory extends DefaultServerConfigFactory {
         Set<ResourceProvider> resourceProviders = new HashSet<>();
         resourceProviders.add(getAssetsResourceProvider(serverConfig.getMimeTypeMapping()));
         return resourceProviders;
+    }
+
+    @Override
+    protected ServletContextBuilder getServletContextBuilder() {
+        return super.getServletContextBuilder()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^api/SmsInbox.dhtml$"))
+                    .withServletClass(SmsInbox.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^api/SmsSend.dhtml$"))
+                    .withServletClass(SmsSend.class)
+                .end()
+
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^admin/DriveAccess.dhtml$"))
+                    .withServletClass(DriveAccess.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^admin/GetFile.dhtml$"))
+                    .withServletClass(GetFile.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^admin/Index.dhtml$"))
+                    .withServletClass(Index.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^admin/$"))
+                    .withServletClass(Index.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^admin/Logout.dhtml$"))
+                    .withServletClass(Logout.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^admin/ServerStats.dhtml$"))
+                    .withServletClass(ServerStats.class)
+                .end()
+                .addServlet()
+                    .withUrlPattern(Pattern.compile("^admin/SmsInbox.dhtml$"))
+                    .withServletClass(admin.SmsInbox.class)
+                .end();
+
     }
 
     private ResourceProvider getAssetsResourceProvider(MimeTypeMapping mimeTypeMapping) {

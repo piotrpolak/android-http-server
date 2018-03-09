@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.util.Collections;
 
 import ro.polak.http.ServerConfig;
+import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.session.storage.SessionStorage;
 
@@ -34,7 +35,8 @@ public class ServletContextWrapperTest {
     public void setUp() {
         ServerConfig serverConfig = mock(ServerConfig.class);
         sessionStorage = mock(SessionStorage.class);
-        servletContext = new ServletContextWrapper(serverConfig, sessionStorage);
+        servletContext = new ServletContextWrapper(serverConfig, sessionStorage,
+                Collections.<ServletMapping>emptySet());
         servletContext.setAttribute("attribute", "value");
         response = new HttpResponseWrapper(mock(
                 Serializer.class),

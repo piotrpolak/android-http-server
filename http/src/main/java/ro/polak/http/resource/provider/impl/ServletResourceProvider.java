@@ -13,12 +13,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ro.polak.http.Headers;
+import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpSessionWrapper;
 import ro.polak.http.servlet.Servlet;
@@ -26,10 +28,7 @@ import ro.polak.http.servlet.ServletConfig;
 import ro.polak.http.servlet.ServletConfigWrapper;
 import ro.polak.http.servlet.ServletContainer;
 import ro.polak.http.servlet.ServletContextWrapper;
-import ro.polak.http.servlet.ServletPathTranslator;
 import ro.polak.http.servlet.UploadedFile;
-import ro.polak.http.servlet.loader.ServletLoader;
-import ro.polak.http.utilities.Utilities;
 
 /**
  * Servlet resource provider
@@ -42,39 +41,33 @@ import ro.polak.http.utilities.Utilities;
 public class ServletResourceProvider implements ResourceProvider {
 
     private static final Logger LOGGER = Logger.getLogger(ServletResourceProvider.class.getName());
-    private final ServletLoader servletLoader;
-    private final ServletPathTranslator servletPathTranslator;
+
     private final ServletContainer servletContainer;
     private final ServletContextWrapper servletContext;
     private final ServletConfig servletConfig;
-    private final String servletMappedExtension;
 
     /**
      * Default constructor.
-     *
-     * @param servletLoader
-     * @param servletPathTranslator
      * @param servletContainer
      * @param servletContext
-     * @param servletMappedExtension
      */
-    public ServletResourceProvider(final ServletLoader servletLoader,
-                                   final ServletPathTranslator servletPathTranslator,
-                                   final ServletContainer servletContainer,
-                                   final ServletContextWrapper servletContext,
-                                   final String servletMappedExtension) {
-        this.servletLoader = servletLoader;
-        this.servletPathTranslator = servletPathTranslator;
+    public ServletResourceProvider(final ServletContainer servletContainer,
+                                   final ServletContextWrapper servletContext) {
         this.servletContainer = servletContainer;
         this.servletContext = servletContext;
-        this.servletMappedExtension = servletMappedExtension;
         servletConfig = new ServletConfigWrapper(servletContext);
     }
 
     @Override
     public boolean canLoad(String path) {
-        String servletClass = servletPathTranslator.toClassName(path);
-        return isServletExtension(path) && servletLoader.canLoadServlet(servletClass);
+
+        for (ServletMapping servletMapping : servletContext.getServletMappings()) {
+            if (servletMapping.getUrlPattern().matcher(path.substring(1)).matches()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -82,9 +75,16 @@ public class ServletResourceProvider implements ResourceProvider {
 
         // TODO Handling of ServletException should be improved
 
+        Class<? extends HttpServlet> clazz = null;
+        for (ServletMapping servletMapping : servletContext.getServletMappings()) {
+            if (servletMapping.getUrlPattern().matcher(path.substring(1)).matches()) {
+                clazz = servletMapping.getServletClass();
+                break;
+            }
+        }
+
         try {
-            String servletClass = servletPathTranslator.toClassName(path);
-            Servlet servlet = servletContainer.getForClassName(servletClass, servletConfig);
+            Servlet servlet = servletContainer.getForClass(clazz, servletConfig);
 
             request.setServletContext(servletContext);
             response.setStatus(HttpServletResponse.STATUS_OK);
@@ -96,10 +96,6 @@ public class ServletResourceProvider implements ResourceProvider {
         } catch (ServletException e) {
             throw new UnexpectedSituationException(e);
         }
-    }
-
-    private boolean isServletExtension(String uri) {
-        return Utilities.getExtension(uri).equals(servletMappedExtension);
     }
 
     /**

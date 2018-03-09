@@ -8,6 +8,9 @@
 package ro.polak.http.servlet;
 
 import java.util.Enumeration;
+import java.util.Set;
+
+import ro.polak.http.configuration.ServletMapping;
 
 /**
  * Servlet context.
@@ -50,4 +53,11 @@ public interface ServletContext {
      * @return
      */
     String getMimeType(String file);
+
+    /**
+     * Returns servlet URL pattern to servlet class mappings.
+     *
+     * @return
+     */
+    Set<ServletMapping> getServletMappings();
 }

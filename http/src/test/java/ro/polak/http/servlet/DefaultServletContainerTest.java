@@ -6,19 +6,13 @@ import org.junit.Test;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.servlet.loader.SampleServlet;
-import ro.polak.http.servlet.loader.ServletLoader;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class DefaultServletContainerTest {
 
@@ -27,53 +21,44 @@ public class DefaultServletContainerTest {
 
     @Before
     public void setUp() throws ServletInitializationException {
-        Servlet servlet = mock(Servlet.class);
-        ServletLoader servletLoader = mock(ServletLoader.class);
-        when(servletLoader.canLoadServlet(any(String.class))).thenReturn(true);
-        when(servletLoader.loadServlet(any(String.class))).thenReturn(servlet);
-        servletContainer = new DefaultServletContainer(servletLoader);
+        servletContainer = new DefaultServletContainer();
         servletConfig = mock(ServletConfig.class);
     }
 
     @Test
     public void shouldInitializeServlet() throws ServletException, ServletInitializationException {
-        Servlet servlet = servletContainer.getForClassName(SampleServlet.class.getCanonicalName(),
-                servletConfig);
+        SampleServlet servlet = (SampleServlet) servletContainer.getForClass(SampleServlet.class, servletConfig);
 
         assertThat(servlet, is(not(nullValue())));
-        verify(servlet, times(1)).init(servletConfig);
+        assertThat(servlet.getInitializedCounter(), is(equalTo(1)));
+        assertThat(servlet.getServletConfig(), is(equalTo(servletConfig)));
     }
 
     @Test
     public void shouldReturnServletFromPool() throws ServletException, ServletInitializationException {
-        Servlet servlet = servletContainer.getForClassName(SampleServlet.class.getCanonicalName(),
-                servletConfig);
+        SampleServlet servlet = (SampleServlet) servletContainer.getForClass(SampleServlet.class, servletConfig);
 
         assertThat(servlet, is(not(nullValue())));
-        verify(servlet, times(1)).init(servletConfig);
+        assertThat(servlet.getInitializedCounter(), is(equalTo(1)));
+        assertThat(servlet.getServletConfig(), is(equalTo(servletConfig)));
         assertThat(servletContainer.getServletStats().size(), is(1));
 
-        reset(servlet);
+        SampleServlet servlet2 = (SampleServlet) servletContainer.getForClass(SampleServlet.class, servletConfig);
 
-        Servlet servlet2 = servletContainer.getForClassName(SampleServlet.class.getCanonicalName(),
-                servletConfig);
-
-        verify(servlet2, never()).init(any(ServletConfig.class));
-
-        assertThat(servletContainer.getServletStats().size(), is(1));
         assertThat(servlet2, is(servlet));
+        assertThat(servlet2.getInitializedCounter(), is(equalTo(1)));
 
-        verify(servlet2, never()).destroy();
+        assertThat(servletContainer.getServletStats().size(), is(1));
+        assertThat(servlet2.getDestroyedCounter(), is(equalTo(0)));
     }
 
     @Test
     public void shouldShutdownProperly() throws ServletException, ServletInitializationException {
-        Servlet servlet = servletContainer.getForClassName(SampleServlet.class.getCanonicalName(),
-                servletConfig);
+        SampleServlet servlet = (SampleServlet) servletContainer.getForClass(SampleServlet.class, servletConfig);
 
         assertThat(servletContainer.getServletStats().size(), is(1));
         servletContainer.shutdown();
         assertThat(servletContainer.getServletStats().size(), is(0));
-        verify(servlet, times(1)).destroy();
+        assertThat(servlet.getDestroyedCounter(), is(equalTo(1)));
     }
 }

@@ -27,6 +27,6 @@ public interface ServletContainer {
      * @throws ServletInitializationException
      * @throws ServletException
      */
-    Servlet getForClassName(String servletClassName, ServletConfig servletConfig)
+    Servlet getForClass(Class<? extends HttpServlet> servletClassName, ServletConfig servletConfig)
             throws ServletInitializationException, ServletException;
 }

@@ -61,4 +61,21 @@ public class DefaultServletContainerTest {
         assertThat(servletContainer.getServletStats().size(), is(0));
         assertThat(servlet.getDestroyedCounter(), is(equalTo(1)));
     }
+
+    @Test(expected = ServletInitializationException.class)
+    public void shouldThrowException() throws ServletException, ServletInitializationException {
+        servletContainer.getForClass(InvalidServletWithPrivateConstructor.class, servletConfig);
+    }
+
+    public class InvalidServletWithPrivateConstructor extends HttpServlet {
+
+        private InvalidServletWithPrivateConstructor() {
+
+        }
+
+        @Override
+        public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+
+        }
+    }
 }

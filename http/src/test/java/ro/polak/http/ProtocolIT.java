@@ -10,9 +10,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -47,6 +52,7 @@ public class ProtocolIT extends AbstractIT {
                 .followSslRedirects(false)
                 .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
                 .writeTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+                .cookieJar(new MyCookieJar())
                 .build();
     }
 
@@ -137,6 +143,27 @@ public class ProtocolIT extends AbstractIT {
         String responseBodyString = response.body().string();
         assertThat(responseBodyString, not(isEmptyOrNullString()));
         assertThat(responseBodyString, is("Static file"));
+    }
+
+    @Test
+    public void shouldOpenAndCloseSession() throws IOException {
+        shouldOpenAndCloseSession(1);
+        shouldOpenAndCloseSession(2);
+    }
+
+    private void shouldOpenAndCloseSession(int count) throws IOException {
+        Request request = new Request.Builder()
+                .url(getFullUrl("/example/Session"))
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.isSuccessful(), is(true));
+        assertThat(response.code(), is(200));
+//        assertThat(response.header(Headers.HEADER_CONTENT_LENGTH), is(not(nullValue())));
+        String responseBodyString = response.body().string();
+        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, containsString("Session page hits: " + count));
     }
 
     @Test
@@ -586,5 +613,28 @@ public class ProtocolIT extends AbstractIT {
         }
 
         return new String(uri);
+    }
+
+    /**
+     * All credits go to gncabrera
+     *
+     * @see <a href="https://stackoverflow.com/a/34884863/2298527">https://stackoverflow.com/a/34884863/2298527</a>
+     */
+    public class MyCookieJar implements CookieJar {
+
+        private List<Cookie> cookies;
+
+        @Override
+        public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+            this.cookies = cookies;
+        }
+
+        @Override
+        public List<Cookie> loadForRequest(HttpUrl url) {
+            if (cookies != null)
+                return cookies;
+            return new ArrayList<Cookie>();
+
+        }
     }
 }

@@ -20,7 +20,6 @@ public class AbstractIT {
     private static ServerSocket serverSocket;
     protected final String HOST = "localhost";
     protected final int PORT = 8080;
-    private static File staticFile;
     private static File httpdConfigFile;
     private static String tempDirectory;
 
@@ -29,7 +28,7 @@ public class AbstractIT {
         if (serverSocket == null) {
             serverSocket = new ServerSocket();
 
-           tempDirectory = FileUtils.createTempDirectory();
+            tempDirectory = FileUtils.createTempDirectory();
 
             WebServer webServer = new WebServer(serverSocket, getPreparedConfig());
             if (!webServer.startServer()) {
@@ -58,24 +57,29 @@ public class AbstractIT {
 
         ServerConfig serverConfig = getServerConfig();
 
+        handleFile(serverConfig, "staticfile.html", "Static file");
+        handleFile(serverConfig, "index.html", "Index file");
+
+        return serverConfig;
+    }
+
+    private static void handleFile(ServerConfig serverConfig, String relativePath, String contents) throws IOException {
         File documentRoot = new File(serverConfig.getDocumentRootPath());
         if (!documentRoot.exists() && !documentRoot.mkdir()) {
             throw new IOException("Unable to mkdir " + documentRoot.getAbsolutePath());
         }
 
-        staticFile = new File(serverConfig.getDocumentRootPath() + "staticfile.html");
-        if (staticFile.exists() && !staticFile.delete()) {
-            throw new IOException("Unable to delete " + staticFile.getAbsolutePath());
+        File file = new File(serverConfig.getDocumentRootPath() + relativePath);
+        if (file.exists() && !file.delete()) {
+            throw new IOException("Unable to delete " + file.getAbsolutePath());
         }
-        if (!staticFile.createNewFile()) {
-            throw new IOException("Unable to create " + staticFile.getAbsolutePath());
+        if (!file.createNewFile()) {
+            throw new IOException("Unable to create " + file.getAbsolutePath());
         }
 
-        PrintWriter writer = new PrintWriter(staticFile, "UTF-8");
-        writer.print("Static file");
+        PrintWriter writer = new PrintWriter(file, "UTF-8");
+        writer.print(contents);
         writer.close();
-
-        return serverConfig;
     }
 
     private static ServerConfig getServerConfig() throws IOException {

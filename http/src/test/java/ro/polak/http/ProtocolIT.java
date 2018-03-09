@@ -88,18 +88,25 @@ public class ProtocolIT extends AbstractIT {
     }
 
     @Test
-    public void shouldServeDirectoryIndex() throws IOException {
+    public void shouldServeDirectoryForServletIndex() throws IOException {
+        shouldServeDirectoryFile("/example/", "/example/Index", "<h1>Hello World!</h1>");
+    }
+
+    @Test
+    public void shouldServeDirectoryForFileIndex() throws IOException {
+        shouldServeDirectoryFile("/", "/index.html", "Index file");
+    }
+
+    private void shouldServeDirectoryFile(String pathShort, String pathFull, String commonValue) throws IOException {
         Request request = new Request.Builder()
-                .url(getFullUrl("/example/"))
+                .url(getFullUrl(pathShort))
                 .get()
                 .build();
 
         Request request2 = new Request.Builder()
-                .url(getFullUrl("/example/Index"))
+                .url(getFullUrl(pathFull))
                 .get()
                 .build();
-
-        String commonValue = "<h1>Hello World!</h1>";
 
         Response response = client.newCall(request).execute();
         assertThat(response.isSuccessful(), is(true));

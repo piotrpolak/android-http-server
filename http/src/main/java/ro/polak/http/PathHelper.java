@@ -8,6 +8,8 @@ package ro.polak.http;
  */
 public class PathHelper {
 
+    private static final String SLASH = "/";
+
     /**
      * Tells whether the given path contains illegal expressions.
      *
@@ -28,7 +30,7 @@ public class PathHelper {
         if (isDirectoryPath(path)) {
             return path;
         }
-        return path + "/";
+        return path + SLASH;
     }
 
     /**
@@ -38,6 +40,6 @@ public class PathHelper {
      * @return
      */
     public boolean isDirectoryPath(String originalPath) {
-        return originalPath.substring(originalPath.length() - 1).equals("/");
+        return originalPath.substring(originalPath.length() - 1).equals(SLASH);
     }
 }

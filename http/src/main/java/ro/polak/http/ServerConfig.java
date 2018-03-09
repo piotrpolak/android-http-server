@@ -48,13 +48,6 @@ public interface ServerConfig {
     int getListenPort();
 
     /**
-     * Returns the servlet mapped extension.
-     *
-     * @return
-     */
-    String getServletMappedExtension();
-
-    /**
      * Returns the mime type mapping.
      *
      * @return

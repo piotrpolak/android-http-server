@@ -33,9 +33,9 @@ public class Logout extends HttpServlet {
 
         doc.writeln("<div class=\"box-logout\">");
         doc.writeln("<h2>Logged out</h2>");
-        doc.writeln("<p><a href=\"/admin/Login.dhtml\">Go to the login page</a></p>");
+        doc.writeln("<p><a href=\"/admin/Login\">Go to the login page</a></p>");
         doc.writeln("</div>");
-        doc.writeln("</script>setTimeout(function() {window.location = '/admin/Login.dhtml';}, 3000);</script>");
+        doc.writeln("</script>setTimeout(function() {window.location = '/admin/Login';}, 3000);</script>");
         return doc;
     }
 }

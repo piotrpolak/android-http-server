@@ -47,7 +47,6 @@ public class ServerConfigImpl implements ServerConfig {
     private static final String ATTRIBUTE_KEEP_ALIVE = "server.keepAlive.enabled";
     private static final String ATTRIBUTE_ERROR_DOCUMENT_404 = "server.errorDocument.404";
     private static final String ATTRIBUTE_ERROR_DOCUMENT_403 = "server.errorDocument.403";
-    private static final String ATTRIBUTE_SERVLET_MAPPED_EXTENSION = "server.servlets.extension";
     private static final String ATTRIBUTE_DEFAULT_MIME_TYPE = "server.mimeType.defaultMimeType";
     private static final String ATTRIBUTE_MIME_TYPE = "server.mimeType.filePath";
     private static final String ATTRIBUTE_DIRECTORY_INDEX = "server.static.directoryIndex";
@@ -57,7 +56,6 @@ public class ServerConfigImpl implements ServerConfig {
     private String documentRootPath;
     private String tempPath;
     private int listenPort;
-    private String servletMappedExtension;
     private MimeTypeMapping mimeTypeMapping;
     private int maxServerThreads;
     private boolean keepAlive;
@@ -75,9 +73,8 @@ public class ServerConfigImpl implements ServerConfig {
         basePath = File.separator + "httpd" + File.separator;
         documentRootPath = basePath + "www" + File.separator;
         listenPort = 8080;
-        servletMappedExtension = "dhtml";
         maxServerThreads = 10;
-        directoryIndex = new ArrayList<>(Arrays.asList("Index.dhtml", "index.html", "index.htm"));
+        directoryIndex = new ArrayList<>(Arrays.asList("index.html", "index.htm", "Index"));
 
     }
 
@@ -131,10 +128,6 @@ public class ServerConfigImpl implements ServerConfig {
                     basePath + properties.getProperty(ATTRIBUTE_ERROR_DOCUMENT_403);
         }
 
-        if (properties.containsKey(ATTRIBUTE_SERVLET_MAPPED_EXTENSION)) {
-            serverConfig.servletMappedExtension = properties.getProperty(ATTRIBUTE_SERVLET_MAPPED_EXTENSION);
-        }
-
         if (properties.containsKey(ATTRIBUTE_MIME_TYPE)) {
             String defaultMimeType = "text/plain";
             if (properties.containsKey(ATTRIBUTE_DEFAULT_MIME_TYPE)) {
@@ -185,11 +178,6 @@ public class ServerConfigImpl implements ServerConfig {
     @Override
     public int getListenPort() {
         return listenPort;
-    }
-
-    @Override
-    public String getServletMappedExtension() {
-        return servletMappedExtension;
     }
 
     @Override

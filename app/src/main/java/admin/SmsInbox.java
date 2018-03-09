@@ -36,7 +36,7 @@ public class SmsInbox extends HttpServlet {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
         AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI() + (!request.getQueryString().equals("") ? "?" + request.getQueryString() : ""));
+            response.sendRedirect("/admin/Login?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI() + (!request.getQueryString().equals("") ? "?" + request.getQueryString() : ""));
             return;
         }
         SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
@@ -83,7 +83,7 @@ public class SmsInbox extends HttpServlet {
                 doc.writeln("<div class=\"panel-body " + (message.isIncoming() ? "text-left" : "text-right bg-success") + "\">");
                 doc.writeln("<p><b>" + simpleDateFormat.format(message.getDate()) + "</b></p>");
                 doc.writeln("<p>" + message.getBody() + "</p>");
-                doc.writeln("<p><a class=\"btn btn-primary\" href=\"/admin/SmsInbox.dhtml?thread_id=" + message.getThreadId() + "\">Open thread <span class=\"badge\">" + messages.size() + "</span></a></p>");
+                doc.writeln("<p><a class=\"btn btn-primary\" href=\"/admin/SmsInbox?thread_id=" + message.getThreadId() + "\">Open thread <span class=\"badge\">" + messages.size() + "</span></a></p>");
                 doc.writeln("</div>");
                 doc.writeln("</div>");
             }
@@ -93,7 +93,7 @@ public class SmsInbox extends HttpServlet {
             if (messages != null && messages.size() > 0) {
 
                 doc.writeln("<div class=\"page-header\"><h1>SMS inbox</h1></div>");
-                doc.writeln("<p><a class=\"btn btn-default\" href=\"/admin/SmsInbox.dhtml\"><span class=\"glyphicon glyphicon-arrow-left\" aria-hidden=\"true\"></span> Back to the inbox</a></p>");
+                doc.writeln("<p><a class=\"btn btn-default\" href=\"/admin/SmsInbox\"><span class=\"glyphicon glyphicon-arrow-left\" aria-hidden=\"true\"></span> Back to the inbox</a></p>");
 
                 doc.writeln("<div class=\"panel panel-default\">");
                 doc.writeln("<div class=\"panel-heading\">" + messages.get(0).getAddress() + "</div>");

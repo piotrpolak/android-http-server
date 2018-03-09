@@ -53,7 +53,7 @@ public class ProtocolIT extends AbstractIT {
     @Test(expected = IOException.class)
     public void shouldCloseSocketAfterCloseConnectionRequest() throws IOException, InterruptedException {
         String requestBody = RequestBuilder.defaultBuilder()
-                .get("/example/Index.dhtml")
+                .get("/example/Index")
                 .withHost(HOST + ":" + PORT)
                 .withCloseConnection()
                 .toString();
@@ -89,7 +89,7 @@ public class ProtocolIT extends AbstractIT {
                 .build();
 
         Request request2 = new Request.Builder()
-                .url(getFullUrl("/example/Index.dhtml"))
+                .url(getFullUrl("/example/Index"))
                 .get()
                 .build();
 
@@ -353,7 +353,7 @@ public class ProtocolIT extends AbstractIT {
     @Test
     public void shouldReturn200ChunkedResponse() throws IOException {
         Request request = new Request.Builder()
-                .url(getFullUrl("/example/Chunked.dhtml"))
+                .url(getFullUrl("/example/Chunked"))
                 .get()
                 .build();
 
@@ -400,7 +400,7 @@ public class ProtocolIT extends AbstractIT {
     @Test
     public void shouldReturn500InternalServerError() throws IOException {
         Request request = new Request.Builder()
-                .url(getFullUrl("/example/InternalServerError.dhtml"))
+                .url(getFullUrl("/example/InternalServerError"))
                 .get()
                 .build();
 

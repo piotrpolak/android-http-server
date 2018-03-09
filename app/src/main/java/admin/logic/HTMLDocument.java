@@ -108,13 +108,13 @@ public class HTMLDocument {
             out.append("            <span class=\"icon-bar\"></span>\n");
             out.append("            <span class=\"icon-bar\"></span>\n");
             out.append("        </button>\n");
-            out.append("        <a class=\"navbar-brand\" href=\"/admin/Index.dhtml\">Server</a>\n");
+            out.append("        <a class=\"navbar-brand\" href=\"/admin/Index\">Server</a>\n");
             out.append("    </div>\n");
             out.append("    <div id=\"navbar\" class=\"collapse navbar-collapse\">\n");
             out.append("        <ul class=\"nav navbar-nav\">\n");
 
             for (Map.Entry<String, String> entry : menuElements.entrySet()) {
-                out.append("            <li" + (ownerClass.equals(entry.getKey()) ? " class=\"active\"" : "") + "><a href=\"/admin/" + entry.getKey() + ".dhtml\">" + entry.getValue() + "</a></li>\n");
+                out.append("            <li" + (ownerClass.equals(entry.getKey()) ? " class=\"active\"" : "") + "><a href=\"/admin/" + entry.getKey() + "\">" + entry.getValue() + "</a></li>\n");
             }
 
             out.append("        </ul>\n");

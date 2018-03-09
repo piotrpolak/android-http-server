@@ -51,14 +51,14 @@ public class Index extends HttpServlet {
         printWriter.println("<p>Is requested session id from URL: " + request.isRequestedSessionIdFromURL() + "</p>");
         printWriter.println("<p>Is requested session id valid " + request.isRequestedSessionIdValid() + "</p>");
         printWriter.println("<ul>");
-        printWriter.println("<li><a href='Session.dhtml'>Session example</a></li>");
-        printWriter.println("<li><a href='Cookies.dhtml'>Cookies example</a></li>");
-        printWriter.println("<li><a href='Forbidden.dhtml'>Forbidden page example</a></li>");
-        printWriter.println("<li><a href='NotFound.dhtml'>Not found page example</a></li>");
-        printWriter.println("<li><a href='InternalServerError.dhtml'>Internal server error page example</a></li>");
-        printWriter.println("<li><a href='Streaming.dhtml'>Streaming</a></li>");
-        printWriter.println("<li><a href='Chunked.dhtml'>Chunked</a></li>");
-        printWriter.println("<li><a href='ChunkedWithDelay.dhtml'>Chunked with a delay</a></li>");
+        printWriter.println("<li><a href='Session'>Session example</a></li>");
+        printWriter.println("<li><a href='Cookies'>Cookies example</a></li>");
+        printWriter.println("<li><a href='Forbidden'>Forbidden page example</a></li>");
+        printWriter.println("<li><a href='NotFound'>Not found page example</a></li>");
+        printWriter.println("<li><a href='InternalServerError'>Internal server error page example</a></li>");
+        printWriter.println("<li><a href='Streaming'>Streaming</a></li>");
+        printWriter.println("<li><a href='Chunked'>Chunked</a></li>");
+        printWriter.println("<li><a href='ChunkedWithDelay'>Chunked with a delay</a></li>");
         printWriter.println("</ul>");
     }
 }

@@ -18,7 +18,6 @@ import static org.hamcrest.Matchers.is;
 public class ServerConfigImplTest {
 
     private static final String DEFAULT_CONFIG_DATA = "server.port=8090\n" +
-            "server.servlets.extension=dddd\n" +
             "server.static.path=wwwx\n" +
             "server.static.directoryIndex=index.php,index.html\n" +
             "server.mimeType.defaultMimeType=mime/text\n" +
@@ -78,7 +77,6 @@ public class ServerConfigImplTest {
         assertThat(serverConfig.getTempPath(), is(tempDirectory));
         assertThat(serverConfig.getBasePath(), is(workingDirectory));
         assertThat(serverConfig.getDocumentRootPath(), is(workingDirectory + "wwwx"));
-        assertThat(serverConfig.getServletMappedExtension(), is("dddd"));
         assertThat(serverConfig.getDirectoryIndex(), hasItem("index.php"));
         assertThat(serverConfig.getDirectoryIndex(), hasItem("index.html"));
         assertThat(serverConfig.getDirectoryIndex().size(), is(2));

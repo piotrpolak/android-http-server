@@ -36,7 +36,7 @@ public class DriveAccess extends HttpServlet {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
         AccessControl ac = new AccessControl(serverConfig, request.getSession());
         if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login.dhtml?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI() + (!request.getQueryString().equals("") ? "?" + request.getQueryString() : ""));
+            response.sendRedirect("/admin/Login?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI() + (!request.getQueryString().equals("") ? "?" + request.getQueryString() : ""));
             return;
         }
 
@@ -86,7 +86,7 @@ public class DriveAccess extends HttpServlet {
                 for (File file : files) {
                     if (file.isDirectory()) {
                         directories
-                                .append("<p class=\"filemanager\"><img src=\"/assets/img/folder.png\" alt=\"folder\" /> <a href=\"/admin/DriveAccess.dhtml?"
+                                .append("<p class=\"filemanager\"><img src=\"/assets/img/folder.png\" alt=\"folder\" /> <a href=\"/admin/DriveAccess?"
                                         + Utilities.urlEncode(path
                                         + file.getName() + "/")
                                         + "\">"
@@ -94,7 +94,7 @@ public class DriveAccess extends HttpServlet {
                     } else {
                         filesString.append("<p class=\"filemanager\"><img src=\"/assets/img/"
                                 + fileIconMapper.getIconRelativePath(Utilities.getExtension(file.getName()))
-                                + "\" alt=\"file\" /> <a href=\"/admin/GetFile.dhtml?"
+                                + "\" alt=\"file\" /> <a href=\"/admin/GetFile?"
                                 + Utilities.urlEncode(path + file.getName())
                                 + "\">"
                                 + file.getName()
@@ -117,13 +117,13 @@ public class DriveAccess extends HttpServlet {
 
     private void renderBreadcrubms(HTMLDocument doc, String path) {
         doc.writeln("<ol class=\"breadcrumb\">");
-        doc.writeln("<li><a href=\"/admin/DriveAccess.dhtml?" + Utilities.urlEncode("/") + "\"><img src=\"/assets/img/home.png\" alt=\"home\"></a></li>");
+        doc.writeln("<li><a href=\"/admin/DriveAccess?" + Utilities.urlEncode("/") + "\"><img src=\"/assets/img/home.png\" alt=\"home\"></a></li>");
         StringTokenizer st = new StringTokenizer(path.replace('\\', '/'), "/");
         String currentPath = "/";
         while (st.hasMoreTokens()) {
             String directory = st.nextToken();
             currentPath += directory + "/";
-            doc.writeln("<li><a href=\"/admin/DriveAccess.dhtml?" + Utilities.urlEncode(currentPath) + "\">" + directory + "</a></li>");
+            doc.writeln("<li><a href=\"/admin/DriveAccess?" + Utilities.urlEncode(currentPath) + "\">" + directory + "</a></li>");
         }
 
         doc.writeln("</ol>");

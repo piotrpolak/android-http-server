@@ -44,7 +44,7 @@ public class Login extends HttpServlet {
                 if (request.getParameter("relocate") != null) {
                     response.sendRedirect(request.getParameter("relocate"));
                 } else {
-                    response.sendRedirect("/admin/Index.dhtml");
+                    response.sendRedirect("/admin/Index");
                 }
             } else {
                 LOGGER.fine("Wrong login or password");
@@ -52,7 +52,7 @@ public class Login extends HttpServlet {
             }
         }
 
-        String location = "/admin/Login.dhtml";
+        String location = "/admin/Login";
         if (request.getParameter(RELOCATE_PARAM_NAME) != null) {
             location += "?" + RELOCATE_PARAM_NAME + "=" + Utilities.urlEncode(request.getParameter(RELOCATE_PARAM_NAME));
         }

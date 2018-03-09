@@ -20,7 +20,7 @@ public class HttpResponseWrapperIT extends AbstractIT {
     @Test
     public void shouldPrintHeadersFirstWhenWritingToOutputStream() throws IOException {
         String requestBody = RequestBuilder.defaultBuilder()
-                .get("/example/Streaming.dhtml")
+                .get("/example/Streaming")
                 .withCloseConnection()
                 .toString();
 

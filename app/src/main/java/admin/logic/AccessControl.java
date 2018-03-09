@@ -9,7 +9,7 @@ package admin.logic;
 
 import java.util.logging.Logger;
 
-import ro.polak.http.ServerConfig;
+import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.servlet.HttpSession;
 
 public class AccessControl {

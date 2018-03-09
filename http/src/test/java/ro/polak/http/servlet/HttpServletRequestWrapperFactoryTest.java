@@ -11,8 +11,8 @@ import java.net.Socket;
 import java.util.Map;
 
 import ro.polak.http.Headers;
-import ro.polak.http.protocol.exception.ProtocolException;
-import ro.polak.http.protocol.exception.UnsupportedProtocolException;
+import ro.polak.http.exception.protocol.ProtocolException;
+import ro.polak.http.exception.protocol.UnsupportedProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.protocol.parser.impl.RequestStatusParser;

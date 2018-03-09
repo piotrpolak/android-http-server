@@ -22,17 +22,16 @@ import ro.polak.http.MultipartHeadersPart;
 import ro.polak.http.MultipartRequestHandler;
 import ro.polak.http.RequestStatus;
 import ro.polak.http.Statistics;
-import ro.polak.http.protocol.exception.LengthRequiredException;
-import ro.polak.http.protocol.exception.MalformedOrUnsupportedMethodProtocolException;
-import ro.polak.http.protocol.exception.MalformedStatusLineException;
-import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
-import ro.polak.http.protocol.exception.ProtocolException;
-import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
-import ro.polak.http.protocol.exception.UnsupportedProtocolException;
-import ro.polak.http.protocol.exception.UriTooLongProtocolException;
+import ro.polak.http.exception.protocol.LengthRequiredException;
+import ro.polak.http.exception.protocol.MalformedOrUnsupportedMethodProtocolException;
+import ro.polak.http.exception.protocol.MalformedStatusLineException;
+import ro.polak.http.exception.protocol.PayloadTooLargeProtocolException;
+import ro.polak.http.exception.protocol.ProtocolException;
+import ro.polak.http.exception.protocol.StatusLineTooLongProtocolException;
+import ro.polak.http.exception.protocol.UnsupportedProtocolException;
+import ro.polak.http.exception.protocol.UriTooLongProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
-import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
 
 /**
  * Utility facilitating creating new requests out of the socket.

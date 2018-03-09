@@ -75,7 +75,7 @@ public class DefaultServletContainerTest {
 
         @Override
         public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-
+            // To comply with HttpServlet interface only
         }
     }
 }

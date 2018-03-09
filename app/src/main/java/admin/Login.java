@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 import admin.logic.AccessControl;
 import admin.logic.HTMLDocument;
-import ro.polak.http.ServerConfig;
+import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpServlet;

@@ -9,7 +9,8 @@ import java.io.File;
 import java.io.IOException;
 
 import ro.polak.http.FileUtils;
-import ro.polak.http.ServerConfig;
+import ro.polak.http.configuration.ServerConfig;
+import ro.polak.http.configuration.impl.ServerConfigImpl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;

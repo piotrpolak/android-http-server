@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http.impl;
+package ro.polak.http.configuration.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Properties;
 
 import ro.polak.http.MimeTypeMapping;
-import ro.polak.http.ServerConfig;
+import ro.polak.http.configuration.ServerConfig;
+import ro.polak.http.impl.MimeTypeMappingImpl;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.utilities.IOUtilities;

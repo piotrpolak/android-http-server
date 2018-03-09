@@ -9,20 +9,20 @@ package ro.polak.http.errorhandler.impl;
 import java.io.IOException;
 import java.util.List;
 
-import ro.polak.http.ServerConfig;
+import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.Statistics;
 import ro.polak.http.errorhandler.HttpErrorHandler;
 import ro.polak.http.errorhandler.HttpErrorHandlerResolver;
 import ro.polak.http.exception.AccessDeniedException;
 import ro.polak.http.exception.MethodNotAllowedException;
 import ro.polak.http.exception.NotFoundException;
-import ro.polak.http.protocol.exception.LengthRequiredException;
-import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
-import ro.polak.http.protocol.exception.ProtocolException;
-import ro.polak.http.protocol.exception.RangeNotSatisfiableProtocolException;
-import ro.polak.http.protocol.exception.StatusLineTooLongProtocolException;
-import ro.polak.http.protocol.exception.UnsupportedProtocolException;
-import ro.polak.http.protocol.exception.UriTooLongProtocolException;
+import ro.polak.http.exception.protocol.LengthRequiredException;
+import ro.polak.http.exception.protocol.PayloadTooLargeProtocolException;
+import ro.polak.http.exception.protocol.ProtocolException;
+import ro.polak.http.exception.protocol.RangeNotSatisfiableProtocolException;
+import ro.polak.http.exception.protocol.StatusLineTooLongProtocolException;
+import ro.polak.http.exception.protocol.UnsupportedProtocolException;
+import ro.polak.http.exception.protocol.UriTooLongProtocolException;
 
 /**
  * {@inheritDoc}

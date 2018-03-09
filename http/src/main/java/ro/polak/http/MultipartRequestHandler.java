@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
+import ro.polak.http.exception.protocol.PayloadTooLargeProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.servlet.UploadedFile;

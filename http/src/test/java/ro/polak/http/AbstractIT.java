@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import ro.polak.http.cli.DefaultServerConfigFactory;
+import ro.polak.http.configuration.ServerConfig;
 
 import static junit.framework.TestCase.fail;
 

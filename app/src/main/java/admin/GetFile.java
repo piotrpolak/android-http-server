@@ -17,9 +17,9 @@ import java.io.OutputStream;
 
 import admin.logic.AccessControl;
 import ro.polak.http.Headers;
-import ro.polak.http.ServerConfig;
+import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.exception.ServletException;
-import ro.polak.http.impl.ServerConfigImpl;
+import ro.polak.http.configuration.impl.ServerConfigImpl;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;

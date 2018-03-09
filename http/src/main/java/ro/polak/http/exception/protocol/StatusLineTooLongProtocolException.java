@@ -5,14 +5,14 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http.protocol.exception;
+package ro.polak.http.exception.protocol;
 
 /**
- * Method too long or unknown (not supported).
+ * Status line exceeds its limit.
  */
-public class MalformedOrUnsupportedMethodProtocolException extends ProtocolException {
+public class StatusLineTooLongProtocolException extends ProtocolException {
 
-    public MalformedOrUnsupportedMethodProtocolException(String message) {
+    public StatusLineTooLongProtocolException(String message) {
         super(message);
     }
 }

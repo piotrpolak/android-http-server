@@ -26,7 +26,7 @@ import admin.ServerStats;
 import api.SmsInbox;
 import api.SmsSend;
 import ro.polak.http.MimeTypeMapping;
-import ro.polak.http.ServerConfig;
+import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.cli.DefaultServerConfigFactory;
 import ro.polak.http.configuration.ServletContextBuilder;
 import ro.polak.http.protocol.parser.impl.RangeParser;

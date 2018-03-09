@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.errorhandler.HttpErrorHandlerResolver;
 import ro.polak.http.exception.AccessDeniedException;
 import ro.polak.http.exception.MethodNotAllowedException;

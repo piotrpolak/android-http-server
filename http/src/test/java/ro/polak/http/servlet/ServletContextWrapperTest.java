@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 
-import ro.polak.http.ServerConfig;
+import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.session.storage.SessionStorage;

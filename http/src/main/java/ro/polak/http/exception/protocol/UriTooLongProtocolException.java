@@ -5,14 +5,14 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http.protocol.exception;
+package ro.polak.http.exception.protocol;
 
 /**
- * Status line exceeds its limit.
+ * URI exceeds URI limit.
  */
-public class StatusLineTooLongProtocolException extends ProtocolException {
+public class UriTooLongProtocolException extends ProtocolException {
 
-    public StatusLineTooLongProtocolException(String message) {
+    public UriTooLongProtocolException(String message) {
         super(message);
     }
 }

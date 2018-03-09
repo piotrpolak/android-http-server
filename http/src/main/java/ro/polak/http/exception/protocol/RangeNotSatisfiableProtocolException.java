@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http.protocol.exception;
+package ro.polak.http.exception.protocol;
 
 /**
  * Exception thrown when range is not satisfiable and can not be served.

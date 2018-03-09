@@ -16,8 +16,8 @@ import java.util.List;
 
 import ro.polak.http.Headers;
 import ro.polak.http.MimeTypeMapping;
-import ro.polak.http.protocol.exception.ProtocolException;
-import ro.polak.http.protocol.exception.RangeNotSatisfiableProtocolException;
+import ro.polak.http.exception.protocol.ProtocolException;
+import ro.polak.http.exception.protocol.RangeNotSatisfiableProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;

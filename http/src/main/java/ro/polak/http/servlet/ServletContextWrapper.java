@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ro.polak.http.ServerConfig;
+import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.session.storage.SessionStorage;
 import ro.polak.http.utilities.RandomStringGenerator;

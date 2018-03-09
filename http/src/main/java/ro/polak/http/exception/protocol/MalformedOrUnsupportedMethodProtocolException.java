@@ -5,14 +5,14 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http.protocol.exception;
+package ro.polak.http.exception.protocol;
 
 /**
- * URI exceeds URI limit.
+ * Method too long or unknown (not supported).
  */
-public class UriTooLongProtocolException extends ProtocolException {
+public class MalformedOrUnsupportedMethodProtocolException extends ProtocolException {
 
-    public UriTooLongProtocolException(String message) {
+    public MalformedOrUnsupportedMethodProtocolException(String message) {
         super(message);
     }
 }

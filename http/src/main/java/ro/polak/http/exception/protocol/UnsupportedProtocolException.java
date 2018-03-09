@@ -5,14 +5,14 @@
  * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
-package ro.polak.http.protocol.exception;
+package ro.polak.http.exception.protocol;
 
 /**
- * Malformed status line exception.
+ * Unsupported protocol.
  */
-public class MalformedStatusLineException extends ProtocolException {
+public class UnsupportedProtocolException extends ProtocolException {
 
-    public MalformedStatusLineException(String message) {
+    public UnsupportedProtocolException(String message) {
         super(message);
     }
 }

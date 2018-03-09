@@ -2,7 +2,7 @@ package ro.polak.http.errorhandler.impl;
 
 import org.junit.Test;
 
-import ro.polak.http.ServerConfig;
+import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.errorhandler.HttpErrorHandler;
 import ro.polak.http.errorhandler.HttpErrorHandlerResolver;
 import ro.polak.http.exception.NotFoundException;

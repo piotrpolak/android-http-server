@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.errorhandler.HttpErrorHandlerResolver;
 import ro.polak.http.errorhandler.impl.HttpErrorHandlerResolverImpl;
 import ro.polak.http.protocol.parser.impl.CookieParser;

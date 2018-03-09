@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 import javax.net.ServerSocketFactory;
 
-import ro.polak.http.ServerConfigFactory;
+import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.controller.MainController;
 import ro.polak.http.gui.ServerGui;
 

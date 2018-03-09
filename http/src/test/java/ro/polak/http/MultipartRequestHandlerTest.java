@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
-import ro.polak.http.protocol.exception.PayloadTooLargeProtocolException;
+import ro.polak.http.exception.protocol.PayloadTooLargeProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.protocol.parser.impl.HeadersParser;

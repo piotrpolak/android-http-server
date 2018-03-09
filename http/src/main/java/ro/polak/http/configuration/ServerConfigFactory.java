@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http;
+package ro.polak.http.configuration;
 
 /**
  * Server config factory.

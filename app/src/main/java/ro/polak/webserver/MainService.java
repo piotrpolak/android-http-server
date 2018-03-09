@@ -35,15 +35,15 @@ import java.util.logging.Logger;
 import javax.net.ServerSocketFactory;
 
 import ro.polak.http.R;
-import ro.polak.http.ServerConfig;
-import ro.polak.http.ServerConfigFactory;
+import ro.polak.http.configuration.ServerConfig;
+import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.controller.Controller;
 import ro.polak.http.controller.MainController;
 import ro.polak.http.gui.ServerGui;
 import ro.polak.webserver.logic.AssetUtil;
 import ro.polak.webserver.resource.provider.impl.AndroidServerConfigFactory;
 
-import static ro.polak.http.impl.ServerConfigImpl.PROPERTIES_FILE_NAME;
+import static ro.polak.http.configuration.impl.ServerConfigImpl.PROPERTIES_FILE_NAME;
 
 /**
  * Main application service that holds http server

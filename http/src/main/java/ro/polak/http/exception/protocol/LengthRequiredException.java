@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
-package ro.polak.http.protocol.exception;
+package ro.polak.http.exception.protocol;
 
 /**
  * Length required exception

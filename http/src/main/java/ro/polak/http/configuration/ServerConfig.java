@@ -5,10 +5,11 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http;
+package ro.polak.http.configuration;
 
 import java.util.List;
 
+import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.resource.provider.ResourceProvider;
 
 /**

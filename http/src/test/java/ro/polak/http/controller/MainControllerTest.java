@@ -10,8 +10,8 @@ import java.net.ServerSocket;
 import javax.net.ServerSocketFactory;
 
 import ro.polak.http.FileUtils;
-import ro.polak.http.ServerConfig;
-import ro.polak.http.ServerConfigFactory;
+import ro.polak.http.configuration.ServerConfig;
+import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.WebServer;
 import ro.polak.http.gui.ServerGui;
 

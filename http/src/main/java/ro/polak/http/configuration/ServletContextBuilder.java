@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import ro.polak.http.ServerConfig;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.ServletContextWrapper;
 import ro.polak.http.session.storage.SessionStorage;

@@ -121,21 +121,26 @@ Each servlet must be mapped to an URL similar to `web.xml` manner.
 The following code presents creation of a context and building servlet mapping.
 
 ```java
-ServletContextConfigurationBuilder.create()
-    .withSessionStorage(sessionStorage)
-    .withServerConfig(serverConfig)
-    .addServletContext()
-        .withContextPath("/example")
-        .addServlet()
-            .withUrlPattern(Pattern.compile("^/Index$"))
-            .withServletClass(Index.class)
-        .end()
-        .addServlet()
-            .withUrlPattern(Pattern.compile("^/$"))
-            .withServletClass(Index.class)
-        .end()
-    .end()
-    .build();
+
+class ContextBuilderSample {
+    public Set<ServletContextWrapper> getContexts() {
+        return ServletContextConfigurationBuilder.create()
+                   .withSessionStorage(sessionStorage)
+                   .withServerConfig(serverConfig)
+                   .addServletContext()
+                       .withContextPath("/example")
+                       .addServlet()
+                           .withUrlPattern(Pattern.compile("^/Index$"))
+                           .withServletClass(Index.class)
+                       .end()
+                       .addServlet()
+                           .withUrlPattern(Pattern.compile("^/$"))
+                           .withServletClass(Index.class)
+                       .end()
+                   .end()
+                   .build();
+    }
+}
 ```
 
 ## Screens

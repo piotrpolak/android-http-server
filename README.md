@@ -112,7 +112,31 @@ public class HelloWorld extends HttpServlet {
 }
 ```
 
-More examples can be found in [http/src/main/java/example](./http/src/main/java/example).
+More examples can be found in [http/src/main/java/example](../../tree/master/http/src/main/java/example).
+
+## Building servlet mapping
+
+Each servlet must be mapped to an URL similar to `web.xml` manner.
+
+The following code presents creation of a context and building servlet mapping.
+
+```java
+ServletContextConfigurationBuilder.create()
+    .withSessionStorage(sessionStorage)
+    .withServerConfig(serverConfig)
+    .addServletContext()
+        .withContextPath("/example")
+        .addServlet()
+            .withUrlPattern(Pattern.compile("^/Index$"))
+            .withServletClass(Index.class)
+        .end()
+        .addServlet()
+            .withUrlPattern(Pattern.compile("^/$"))
+            .withServletClass(Index.class)
+        .end()
+    .end()
+    .build();
+```
 
 ## Screens
 
@@ -135,7 +159,7 @@ If you want to send a real SMS please remove "&test=1" from the POST params.
 SERVER_IP=192.168.1.1; SERVER_PORT=8080; \
     echo "Phone number:"; read TO; echo "Message:"; read MESSAGE; \
     wget -qO- --post-data "to=$TO&message=$MESSAGE&test=1" \
-    http://$SERVER_IP:$SERVER_PORT/api/SmsSend.dhtml
+    http://$SERVER_IP:$SERVER_PORT/api/1.0/sms/send
 ```
 
 # Icons

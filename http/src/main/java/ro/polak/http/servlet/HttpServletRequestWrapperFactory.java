@@ -22,6 +22,7 @@ import ro.polak.http.MultipartHeadersPart;
 import ro.polak.http.MultipartRequestHandler;
 import ro.polak.http.RequestStatus;
 import ro.polak.http.Statistics;
+import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.exception.protocol.LengthRequiredException;
 import ro.polak.http.exception.protocol.MalformedOrUnsupportedMethodProtocolException;
 import ro.polak.http.exception.protocol.MalformedStatusLineException;
@@ -83,6 +84,7 @@ public class HttpServletRequestWrapperFactory {
 
     /**
      * Default constructor.
+     *
      * @param headersParser
      * @param queryStringParser
      * @param statusParser
@@ -137,7 +139,13 @@ public class HttpServletRequestWrapperFactory {
         assignSocketMetadata(socket, request);
         request.setStatus(status);
         request.setPathTranslated(request.getRequestURI()); // TODO There is no way to make it work under Android
-        request.setContextPath("/");
+
+        // This will be overwritten when running servlet
+        request.setServletContext(new ServletContextWrapper("/",
+                Collections.<ServletMapping>emptySet(),
+                null,
+                null,
+                Collections.<String, Object>emptyMap()));
         request.setPathInfo("");
         request.setRemoteUser(null);
         request.setPrincipal(null);
@@ -326,7 +334,7 @@ public class HttpServletRequestWrapperFactory {
                 boundary = boundary.substring(boundaryStartPos, boundary.length());
                 MultipartRequestHandler mrh =
                         new MultipartRequestHandler(multipartHeadersPartParser, in, postLength, boundary,
-                        tempPath, MULTIPART_BUFFER_LENGTH);
+                                tempPath, MULTIPART_BUFFER_LENGTH);
                 mrh.handle();
 
                 request.setPostParameters(mrh.getPost());

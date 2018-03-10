@@ -28,12 +28,13 @@ import api.SmsSend;
 import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.cli.DefaultServerConfigFactory;
-import ro.polak.http.configuration.ServletContextBuilder;
+import ro.polak.http.configuration.ServletContextConfigurationBuilder;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.resource.provider.impl.FileResourceProvider;
 import ro.polak.http.servlet.RangeHelper;
+import ro.polak.http.session.storage.SessionStorage;
 import ro.polak.webserver.AssetResourceProvider;
 
 /**
@@ -85,44 +86,51 @@ public class AndroidServerConfigFactory extends DefaultServerConfigFactory {
     }
 
     @Override
-    protected ServletContextBuilder getServletContextBuilder() {
-        return super.getServletContextBuilder()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^api/SmsInbox$"))
-                    .withServletClass(SmsInbox.class)
+    protected ServletContextConfigurationBuilder getServletContextConfigurationBuilder(SessionStorage sessionStorage, ServerConfig serverConfig) {
+        return super.getServletContextConfigurationBuilder(sessionStorage, serverConfig)
+                .addServletContext()
+                    .withContextPath("/api")
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/SmsInbox$"))
+                        .withServletClass(SmsInbox.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/SmsSend$"))
+                        .withServletClass(SmsSend.class)
+                    .end()
                 .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^api/SmsSend$"))
-                    .withServletClass(SmsSend.class)
-                .end()
+                
+                .addServletContext()
+                    .withContextPath("/admin")
 
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^admin/DriveAccess$"))
-                    .withServletClass(DriveAccess.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^admin/GetFile$"))
-                    .withServletClass(GetFile.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^admin/Index$"))
-                    .withServletClass(Index.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^admin/$"))
-                    .withServletClass(Index.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^admin/Logout$"))
-                    .withServletClass(Logout.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^admin/ServerStats$"))
-                    .withServletClass(ServerStats.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^admin/SmsInbox$"))
-                    .withServletClass(admin.SmsInbox.class)
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/DriveAccess$"))
+                        .withServletClass(DriveAccess.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/GetFile$"))
+                        .withServletClass(GetFile.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/Index$"))
+                        .withServletClass(Index.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/$"))
+                        .withServletClass(Index.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/Logout$"))
+                        .withServletClass(Logout.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/ServerStats$"))
+                        .withServletClass(ServerStats.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/SmsInbox$"))
+                        .withServletClass(admin.SmsInbox.class)
+                    .end()
                 .end();
 
     }

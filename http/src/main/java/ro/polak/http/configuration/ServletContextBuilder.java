@@ -4,21 +4,18 @@
  * <p/>
  * Copyright (c) Piotr Polak 2018-2018
  **************************************************/
-
 package ro.polak.http.configuration;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
-import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.ServletContextWrapper;
 import ro.polak.http.session.storage.SessionStorage;
 
 /**
- * Utility for building servlet context configuration.
+ * Utility for building servlet context.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201803
@@ -28,28 +25,32 @@ public class ServletContextBuilder {
     private final Set<ServletMapping> servletMappings = new HashSet<>();
     private final Map<String, Object> attributes = new HashMap<>();
 
+    private String contextPath;
+    private ServletContextConfigurationBuilder parent;
     private SessionStorage sessionStorage;
     private ServerConfig serverConfig;
 
-    private ServletContextBuilder() {
-    }
-
-    public static ServletContextBuilder create() {
-        return new ServletContextBuilder();
+    /**
+     * Creates a mapping builder. This constructor should be package scoped.
+     *
+     * @param parent
+     * @param sessionStorage
+     * @param serverConfig
+     */
+    ServletContextBuilder(ServletContextConfigurationBuilder parent,
+                          SessionStorage sessionStorage,
+                          ServerConfig serverConfig) {
+        this.parent = parent;
+        this.sessionStorage = sessionStorage;
+        this.serverConfig = serverConfig;
     }
 
     public ServletMappingBuilder addServlet() {
         return new ServletMappingBuilder(this);
     }
 
-    public ServletContextBuilder withSessionStorage(SessionStorage sessionStorage) {
-        this.sessionStorage = sessionStorage;
-        return this;
-    }
-
-    public ServletContextBuilder withServerConfig(ServerConfig serverConfig) {
-        this.serverConfig = serverConfig;
-        withAttribute(ServerConfig.class.getName(), this.serverConfig);
+    public ServletContextBuilder withContextPath(String contextPath) {
+        this.contextPath = contextPath;
         return this;
     }
 
@@ -58,33 +59,23 @@ public class ServletContextBuilder {
         return this;
     }
 
-    public ServletContextWrapper build() {
-        return new ServletContextWrapper(serverConfig, sessionStorage, servletMappings);
+    public ServletContextConfigurationBuilder end() {
+        parent.addServletContext(new ServletContextWrapper(contextPath,
+                servletMappings,
+                serverConfig,
+                sessionStorage,
+                attributes));
+        return parent;
     }
 
-    public static class ServletMappingBuilder {
-
-        private final ServletContextBuilder servletContextBuilder;
-        private Pattern urlPattern;
-        private Class<? extends HttpServlet> servletClass;
-
-        public ServletMappingBuilder(ServletContextBuilder servletContextBuilder) {
-            this.servletContextBuilder = servletContextBuilder;
-        }
-
-        public ServletMappingBuilder withUrlPattern(Pattern urlPattern) {
-            this.urlPattern = urlPattern;
-            return this;
-        }
-
-        public ServletMappingBuilder withServletClass(Class<? extends HttpServlet> servletClass) {
-            this.servletClass = servletClass;
-            return this;
-        }
-
-        public ServletContextBuilder end() {
-            servletContextBuilder.servletMappings.add(new ServletMappingImpl(urlPattern, servletClass));
-            return servletContextBuilder;
-        }
+    /**
+     * Adds servlet mapping. This method should be package scoped.
+     *
+     * @param servletMapping
+     * @return
+     */
+    ServletContextBuilder withServletMapping(ServletMapping servletMapping) {
+        servletMappings.add(servletMapping);
+        return this;
     }
 }

@@ -10,6 +10,7 @@ package ro.polak.http.servlet;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -34,22 +35,29 @@ public class ServletContextWrapper implements ServletContext {
 
     private final ServerConfig serverConfig;
     private final SessionStorage sessionStorage;
+    private final String contextPath;
     private final Set<ServletMapping> servletMappings;
     private final Map<String, Object> attributes;
 
     /**
      * Default constructor.
-     *  @param serverConfig
-     * @param sessionStorage
+     *
+     * @param contextPath
      * @param servletMappings
+     * @param serverConfig
+     * @param sessionStorage
+     * @param attributes
      */
-    public ServletContextWrapper(final ServerConfig serverConfig,
+    public ServletContextWrapper(final String contextPath,
+                                 final Set<ServletMapping> servletMappings,
+                                 final ServerConfig serverConfig,
                                  final SessionStorage sessionStorage,
-                                 Set<ServletMapping> servletMappings) {
+                                 Map<String, Object> attributes) {
         this.serverConfig = serverConfig;
         this.sessionStorage = sessionStorage;
-        this.servletMappings = servletMappings;
-        attributes = new HashMap<>();
+        this.contextPath = contextPath;
+        this.servletMappings = new HashSet<>(servletMappings);
+        this.attributes = new HashMap<>(attributes);
     }
 
     @Override
@@ -162,7 +170,13 @@ public class ServletContextWrapper implements ServletContext {
         return System.currentTimeMillis() - session.getMaxInactiveInterval() * 1000 > session.getLastAccessedTime();
     }
 
+    @Override
     public Set<ServletMapping> getServletMappings() {
         return servletMappings;
+    }
+
+    @Override
+    public String getContextPath() {
+        return contextPath;
     }
 }

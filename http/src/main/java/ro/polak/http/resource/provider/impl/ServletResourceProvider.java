@@ -9,6 +9,8 @@ package ro.polak.http.resource.provider.impl;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,13 +22,12 @@ import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponseWrapper;
-import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpSessionWrapper;
 import ro.polak.http.servlet.Servlet;
-import ro.polak.http.servlet.ServletConfig;
 import ro.polak.http.servlet.ServletConfigWrapper;
 import ro.polak.http.servlet.ServletContainer;
+import ro.polak.http.servlet.ServletContext;
 import ro.polak.http.servlet.ServletContextWrapper;
 import ro.polak.http.servlet.UploadedFile;
 
@@ -43,31 +44,24 @@ public class ServletResourceProvider implements ResourceProvider {
     private static final Logger LOGGER = Logger.getLogger(ServletResourceProvider.class.getName());
 
     private final ServletContainer servletContainer;
-    private final ServletContextWrapper servletContext;
-    private final ServletConfig servletConfig;
+    private final Set<ServletContextWrapper> servletContexts;
 
     /**
      * Default constructor.
+     *
      * @param servletContainer
-     * @param servletContext
+     * @param servletContexts
      */
     public ServletResourceProvider(final ServletContainer servletContainer,
-                                   final ServletContextWrapper servletContext) {
+                                   final Set<ServletContextWrapper> servletContexts) {
         this.servletContainer = servletContainer;
-        this.servletContext = servletContext;
-        servletConfig = new ServletConfigWrapper(servletContext);
+        this.servletContexts = servletContexts;
     }
 
     @Override
     public boolean canLoad(String path) {
-
-        for (ServletMapping servletMapping : servletContext.getServletMappings()) {
-            if (servletMapping.getUrlPattern().matcher(path.substring(1)).matches()) {
-                return true;
-            }
-        }
-
-        return false;
+        ServletContext servletContext = getResolvedContext(path);
+        return servletContext != null && getResolvedServletMapping(servletContext, path) != null;
     }
 
     @Override
@@ -75,16 +69,12 @@ public class ServletResourceProvider implements ResourceProvider {
 
         // TODO Handling of ServletException should be improved
 
-        Class<? extends HttpServlet> clazz = null;
-        for (ServletMapping servletMapping : servletContext.getServletMappings()) {
-            if (servletMapping.getUrlPattern().matcher(path.substring(1)).matches()) {
-                clazz = servletMapping.getServletClass();
-                break;
-            }
-        }
+        ServletContextWrapper servletContext = getResolvedContext(path);
+        ServletMapping servletMapping = getResolvedServletMapping(servletContext, path);
 
         try {
-            Servlet servlet = servletContainer.getForClass(clazz, servletConfig);
+            ServletConfigWrapper servletConfig = new ServletConfigWrapper(servletContext);
+            Servlet servlet = servletContainer.getForClass(servletMapping.getServletClass(), servletConfig);
 
             request.setServletContext(servletContext);
             response.setStatus(HttpServletResponse.STATUS_OK);
@@ -96,6 +86,29 @@ public class ServletResourceProvider implements ResourceProvider {
         } catch (ServletException e) {
             throw new UnexpectedSituationException(e);
         }
+    }
+
+    //@Nullable
+    private ServletMapping getResolvedServletMapping(ServletContext servletContext, String path) {
+        Objects.requireNonNull(servletContext);
+        for (ServletMapping servletMapping : servletContext.getServletMappings()) {
+            String inContextPath = path.substring(servletContext.getContextPath().length());
+            if (servletMapping.getUrlPattern().matcher(inContextPath).matches()) {
+                return servletMapping;
+            }
+        }
+
+        return null;
+    }
+
+    //@Nullable
+    private ServletContextWrapper getResolvedContext(String path) {
+        for (ServletContextWrapper servletContext : servletContexts) {
+            if (path.startsWith(servletContext.getContextPath())) {
+                return servletContext;
+            }
+        }
+        return null;
     }
 
     /**
@@ -111,7 +124,7 @@ public class ServletResourceProvider implements ResourceProvider {
         HttpSessionWrapper session = (HttpSessionWrapper) request.getSession(false);
         if (session != null) {
             try {
-                servletContext.handleSession(session, response);
+                ((ServletContextWrapper) request.getServletContext()).handleSession(session, response);
             } catch (IOException e) {
                 LOGGER.log(Level.WARNING, "Unable to persist session", e);
             }

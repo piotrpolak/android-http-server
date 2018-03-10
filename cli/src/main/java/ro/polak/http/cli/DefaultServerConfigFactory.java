@@ -29,7 +29,7 @@ import example.Session;
 import example.Streaming;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServerConfigFactory;
-import ro.polak.http.configuration.ServletContextBuilder;
+import ro.polak.http.configuration.ServletContextConfigurationBuilder;
 import ro.polak.http.configuration.impl.ServerConfigImpl;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
@@ -40,6 +40,7 @@ import ro.polak.http.servlet.DefaultServletContainer;
 import ro.polak.http.servlet.RangeHelper;
 import ro.polak.http.servlet.ServletContextWrapper;
 import ro.polak.http.session.storage.FileSessionStorage;
+import ro.polak.http.session.storage.SessionStorage;
 
 /**
  * Default server config factory.
@@ -97,47 +98,52 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
      *
      * @return
      */
-    protected ServletContextBuilder getServletContextBuilder() {
-        return ServletContextBuilder.create()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^example/Chunked$"))
-                    .withServletClass(Chunked.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^example/ChunkedWithDelay$"))
-                    .withServletClass(ChunkedWithDelay.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^example/Cookies$"))
-                    .withServletClass(Cookies.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^example/Forbidden$"))
-                    .withServletClass(Forbidden.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^example/Index$"))
-                    .withServletClass(Index.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^example/$"))
-                    .withServletClass(Index.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^example/InternalServerError$"))
-                    .withServletClass(InternalServerError.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^example/NotFound$"))
-                    .withServletClass(NotFound.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^example/Session$"))
-                    .withServletClass(Session.class)
-                .end()
-                .addServlet()
-                    .withUrlPattern(Pattern.compile("^example/Streaming$"))
-                    .withServletClass(Streaming.class)
+    protected ServletContextConfigurationBuilder getServletContextConfigurationBuilder(SessionStorage sessionStorage, ServerConfig serverConfig) {
+        return ServletContextConfigurationBuilder.create()
+                .withSessionStorage(sessionStorage)
+                .withServerConfig(serverConfig)
+                .addServletContext()
+                    .withContextPath("/example")
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/Chunked$"))
+                        .withServletClass(Chunked.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/ChunkedWithDelay$"))
+                        .withServletClass(ChunkedWithDelay.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/Cookies$"))
+                        .withServletClass(Cookies.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/Forbidden$"))
+                        .withServletClass(Forbidden.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/Index$"))
+                        .withServletClass(Index.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/$"))
+                        .withServletClass(Index.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/InternalServerError$"))
+                        .withServletClass(InternalServerError.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/NotFound$"))
+                        .withServletClass(NotFound.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/Session$"))
+                        .withServletClass(Session.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/Streaming$"))
+                        .withServletClass(Streaming.class)
+                    .end()
                 .end();
 
     }
@@ -158,16 +164,19 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         return serverConfig;
     }
 
-    private ServletContextWrapper getServletContext(ServerConfig serverConfig) {
-        ServletContextBuilder servletContextBuilder = getServletContextBuilder();
-        servletContextBuilder.withServerConfig(serverConfig)
-                .withSessionStorage(new FileSessionStorage(serverConfig.getTempPath()));
+    private Set<ServletContextWrapper> getServletContexts(ServerConfig serverConfig) {
+        ServletContextConfigurationBuilder servletContextConfigurationBuilder
+                = getServletContextConfigurationBuilder(new FileSessionStorage(serverConfig.getTempPath()), serverConfig);
 
-        for (Map.Entry<String, Object> entry : getAdditionalServletContextAttributes().entrySet()) {
-            servletContextBuilder.withAttribute(entry.getKey(), entry.getValue());
+        Set<ServletContextWrapper> servletContexts = servletContextConfigurationBuilder.build();
+
+        for (ServletContextWrapper servletContextWrapper : servletContexts) {
+            for (Map.Entry<String, Object> entry : getAdditionalServletContextAttributes().entrySet()) {
+                servletContextWrapper.setAttribute(entry.getKey(), entry.getValue());
+            }
         }
 
-        return servletContextBuilder.build();
+        return servletContexts;
     }
 
     /**
@@ -198,7 +207,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
     private ServletResourceProvider getServletResourceProvider(ServerConfig serverConfig) {
         return new ServletResourceProvider(
                 new DefaultServletContainer(),
-                getServletContext(serverConfig)
+                getServletContexts(serverConfig)
         );
     }
 }

@@ -74,7 +74,6 @@ public class HttpRequestWrapper implements HttpServletRequest {
     private String scheme;
     private boolean isSecure;
     private String pathTranslated;
-    private String contextPath;
     private String pathInfo;
     private String remoteUser;
     private Principal principal;
@@ -394,7 +393,12 @@ public class HttpRequestWrapper implements HttpServletRequest {
 
     @Override
     public String getContextPath() {
-        return contextPath;
+        return servletContext.getContextPath();
+    }
+
+    @Override
+    public ServletContext getServletContext() {
+        return servletContext;
     }
 
     @Override
@@ -520,10 +524,6 @@ public class HttpRequestWrapper implements HttpServletRequest {
 
     public void setPathTranslated(String pathTranslated) {
         this.pathTranslated = pathTranslated;
-    }
-
-    public void setContextPath(String contextPath) {
-        this.contextPath = contextPath;
     }
 
     public void setPathInfo(String pathInfo) {

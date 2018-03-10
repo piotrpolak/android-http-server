@@ -60,4 +60,11 @@ public interface ServletContext {
      * @return
      */
     Set<ServletMapping> getServletMappings();
+
+    /**
+     * Returns servlet context path.
+     *
+     * @return
+     */
+    String getContextPath();
 }

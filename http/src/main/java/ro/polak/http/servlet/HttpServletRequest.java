@@ -36,6 +36,13 @@ public interface HttpServletRequest extends ServletRequest {
     String getContextPath();
 
     /**
+     * Returns associated servlet context.
+     *
+     * @return
+     */
+    ServletContext getServletContext();
+
+    /**
      * Returns any extra path information after the servlet name but before the query string, and translates it to a real path.
      *
      * @return
@@ -45,9 +52,8 @@ public interface HttpServletRequest extends ServletRequest {
     /**
      * Returns any extra path information associated with the URL the client sent when it made this request.
      *
-     * @see https://stackoverflow.com/questions/4931323/whats-the-difference-between-getrequesturi-and-getpathinfo-methods-in-httpservl
-     *
      * @return
+     * @see https://stackoverflow.com/questions/4931323/whats-the-difference-between-getrequesturi-and-getpathinfo-methods-in-httpservl
      */
     String getPathInfo();
 

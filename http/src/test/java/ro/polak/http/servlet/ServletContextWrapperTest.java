@@ -35,8 +35,11 @@ public class ServletContextWrapperTest {
     public void setUp() {
         ServerConfig serverConfig = mock(ServerConfig.class);
         sessionStorage = mock(SessionStorage.class);
-        servletContext = new ServletContextWrapper(serverConfig, sessionStorage,
-                Collections.<ServletMapping>emptySet());
+        servletContext = new ServletContextWrapper("/",
+                Collections.<ServletMapping>emptySet(),
+                serverConfig,
+                sessionStorage,
+                Collections.<String, Object>emptyMap());
         servletContext.setAttribute("attribute", "value");
         response = new HttpResponseWrapper(mock(
                 Serializer.class),

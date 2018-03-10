@@ -37,6 +37,8 @@ public final class RandomStringGenerator {
      */
     public static String generate(int length) {
         StringBuilder randomString = new StringBuilder(length);
+
+        // ThreadLocalRandom requires API min 21
         Random random = new Random();
 
         // ASCI 97 - 122

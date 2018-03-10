@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import admin.DriveAccess;
 import admin.GetFile;
 import admin.Index;
+import admin.Login;
 import admin.Logout;
 import admin.ServerStats;
 import api.SmsInbox;
@@ -118,6 +119,10 @@ public class AndroidServerConfigFactory extends DefaultServerConfigFactory {
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/$"))
                         .withServletClass(Index.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/Login"))
+                        .withServletClass(Login.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Logout$"))

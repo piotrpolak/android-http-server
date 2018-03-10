@@ -27,7 +27,7 @@ public class DefaultServletContainerTest {
 
     @Test
     public void shouldInitializeServlet() throws ServletException, ServletInitializationException {
-        SampleServlet servlet = (SampleServlet) servletContainer.getForClass(SampleServlet.class, servletConfig);
+        SampleServlet servlet = (SampleServlet) servletContainer.getServletForClass(SampleServlet.class, servletConfig);
 
         assertThat(servlet, is(not(nullValue())));
         assertThat(servlet.getInitializedCounter(), is(equalTo(1)));
@@ -36,14 +36,14 @@ public class DefaultServletContainerTest {
 
     @Test
     public void shouldReturnServletFromPool() throws ServletException, ServletInitializationException {
-        SampleServlet servlet = (SampleServlet) servletContainer.getForClass(SampleServlet.class, servletConfig);
+        SampleServlet servlet = (SampleServlet) servletContainer.getServletForClass(SampleServlet.class, servletConfig);
 
         assertThat(servlet, is(not(nullValue())));
         assertThat(servlet.getInitializedCounter(), is(equalTo(1)));
         assertThat(servlet.getServletConfig(), is(equalTo(servletConfig)));
         assertThat(servletContainer.getServletStats().size(), is(1));
 
-        SampleServlet servlet2 = (SampleServlet) servletContainer.getForClass(SampleServlet.class, servletConfig);
+        SampleServlet servlet2 = (SampleServlet) servletContainer.getServletForClass(SampleServlet.class, servletConfig);
 
         assertThat(servlet2, is(servlet));
         assertThat(servlet2.getInitializedCounter(), is(equalTo(1)));
@@ -54,7 +54,7 @@ public class DefaultServletContainerTest {
 
     @Test
     public void shouldShutdownProperly() throws ServletException, ServletInitializationException {
-        SampleServlet servlet = (SampleServlet) servletContainer.getForClass(SampleServlet.class, servletConfig);
+        SampleServlet servlet = (SampleServlet) servletContainer.getServletForClass(SampleServlet.class, servletConfig);
 
         assertThat(servletContainer.getServletStats().size(), is(1));
         servletContainer.shutdown();
@@ -64,7 +64,7 @@ public class DefaultServletContainerTest {
 
     @Test(expected = ServletInitializationException.class)
     public void shouldThrowException() throws ServletException, ServletInitializationException {
-        servletContainer.getForClass(InvalidServletWithPrivateConstructor.class, servletConfig);
+        servletContainer.getServletForClass(InvalidServletWithPrivateConstructor.class, servletConfig);
     }
 
     public class InvalidServletWithPrivateConstructor extends HttpServlet {

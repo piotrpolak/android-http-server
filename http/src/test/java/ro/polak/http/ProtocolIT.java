@@ -198,6 +198,15 @@ public class ProtocolIT extends AbstractIT {
     }
 
     @Test
+    public void shouldReturn403ForbiddenOnBlockedByFilter() throws IOException {
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
+                .get("/example/secured/ForbiddenByFilter")
+                .withCloseConnection();
+
+        assertResponsesWithHttpCode(requestBuilder, 403);
+    }
+
+    @Test
     public void shouldReturn405MethodNotAllowed() throws IOException {
         // Connect is not yet implemented
         Request request = new Request.Builder()

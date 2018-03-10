@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import ro.polak.http.exception.FilterInitializationException;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 
@@ -24,20 +25,32 @@ import ro.polak.http.exception.ServletInitializationException;
 public class DefaultServletContainer implements ServletContainer {
 
     private final Map<Class<? extends HttpServlet>, Servlet> servlets = new ConcurrentHashMap<>();
+    private final Map<Class<? extends Filter>, Filter> filters = new ConcurrentHashMap<>();
     private final Map<Class<? extends HttpServlet>, ServletStats> servletStats = new ConcurrentHashMap<>();
 
     // TODO Implement timeout
 
     @Override
-    public Servlet getForClass(Class<? extends HttpServlet> servletClassName, ServletConfig servletConfig)
+    public Servlet getServletForClass(Class<? extends HttpServlet> servletClass, ServletConfig servletConfig)
             throws ServletInitializationException, ServletException {
 
-        if (servlets.containsKey(servletClassName)) {
-            servletStats.get(servletClassName).setLastRequestedAt(new Date());
-            return servlets.get(servletClassName);
+        if (servlets.containsKey(servletClass)) {
+            servletStats.get(servletClass).setLastRequestedAt(new Date());
+            return servlets.get(servletClass);
         }
 
-        return initializeServlet(servletClassName, servletConfig);
+        return initializeServlet(servletClass, servletConfig);
+    }
+
+    @Override
+    public Filter getFilterForClass(Class<? extends Filter> filterClass) throws FilterInitializationException {
+        if (filters.containsKey(filterClass)) {
+            return filters.get(filterClass);
+        }
+
+        Filter filter = instantiateFilter(filterClass);
+        filters.put(filterClass, filter);
+        return filter;
     }
 
     private Servlet initializeServlet(Class<? extends HttpServlet> serverClass, ServletConfig servletConfig)
@@ -54,6 +67,14 @@ public class DefaultServletContainer implements ServletContainer {
             return serverClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             throw new ServletInitializationException(e);
+        }
+    }
+
+    private Filter instantiateFilter(Class<? extends Filter> filterClass) throws FilterInitializationException {
+        try {
+            return filterClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new FilterInitializationException(e);
         }
     }
 

@@ -8,8 +8,10 @@
 package ro.polak.http.servlet;
 
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Set;
 
+import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServletMapping;
 
 /**
@@ -59,7 +61,14 @@ public interface ServletContext {
      *
      * @return
      */
-    Set<ServletMapping> getServletMappings();
+    List<ServletMapping> getServletMappings();
+
+    /**
+     * Returns filter URL pattern to filter class mappings.
+     *
+     * @return
+     */
+    List<FilterMapping> getFilterMappings();
 
     /**
      * Returns servlet context path.

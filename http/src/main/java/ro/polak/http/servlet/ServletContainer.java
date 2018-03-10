@@ -7,6 +7,7 @@
 
 package ro.polak.http.servlet;
 
+import ro.polak.http.exception.FilterInitializationException;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 
@@ -21,12 +22,22 @@ public interface ServletContainer {
     /**
      * Returns initialized servlet for given class name.
      *
-     * @param servletClassName
+     * @param servletClass
      * @param servletConfig
      * @return
      * @throws ServletInitializationException
      * @throws ServletException
      */
-    Servlet getForClass(Class<? extends HttpServlet> servletClassName, ServletConfig servletConfig)
+    Servlet getServletForClass(Class<? extends HttpServlet> servletClass, ServletConfig servletConfig)
             throws ServletInitializationException, ServletException;
+
+    /**
+     * Returns initialized servlet for given class name.
+     *
+     * @param filterClass
+     * @return
+     * @throws FilterInitializationException
+     */
+    Filter getFilterForClass(Class<? extends Filter> filterClass)
+            throws FilterInitializationException;
 }

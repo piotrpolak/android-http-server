@@ -7,7 +7,9 @@
 
 package ro.polak.http.configuration;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import ro.polak.http.servlet.ServletContextWrapper;
@@ -21,7 +23,7 @@ import ro.polak.http.session.storage.SessionStorage;
  */
 public class ServletContextConfigurationBuilder {
 
-    private final Set<ServletContextWrapper> servletContextWrappers = new HashSet<>();
+    private final List<ServletContextWrapper> servletContextWrappers = new ArrayList<>();
 
     private SessionStorage sessionStorage;
     private ServerConfig serverConfig;
@@ -50,7 +52,7 @@ public class ServletContextConfigurationBuilder {
         return new ServletContextBuilder(this, sessionStorage, serverConfig);
     }
 
-    public Set<ServletContextWrapper> build() {
+    public List<ServletContextWrapper> build() {
         return servletContextWrappers;
     }
 

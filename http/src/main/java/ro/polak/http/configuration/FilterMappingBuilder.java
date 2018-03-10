@@ -9,42 +9,48 @@ package ro.polak.http.configuration;
 
 import java.util.regex.Pattern;
 
-import ro.polak.http.configuration.impl.ServletMappingImpl;
-import ro.polak.http.servlet.HttpServlet;
+import ro.polak.http.configuration.impl.FilterMappingImpl;
+import ro.polak.http.servlet.Filter;
 
 /**
- * Utility for building servlet mapping configuration.
+ * Utility for building filter mapping configuration.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201803
  */
-public class ServletMappingBuilder {
+public class FilterMappingBuilder {
 
     private final ServletContextBuilder servletContextBuilder;
     private Pattern urlPattern;
-    private Class<? extends HttpServlet> servletClass;
+    private Pattern urlExcludedPattern;
+    private Class<? extends Filter> clazz;
 
     /**
      * Created a mapping builder. This constructor should be package scoped.
      *
      * @param servletContextBuilder
      */
-    ServletMappingBuilder(ServletContextBuilder servletContextBuilder) {
+    FilterMappingBuilder(ServletContextBuilder servletContextBuilder) {
         this.servletContextBuilder = servletContextBuilder;
     }
 
-    public ServletMappingBuilder withUrlPattern(Pattern urlPattern) {
+    public FilterMappingBuilder withUrlPattern(Pattern urlPattern) {
         this.urlPattern = urlPattern;
         return this;
     }
 
-    public ServletMappingBuilder withServletClass(Class<? extends HttpServlet> servletClass) {
-        this.servletClass = servletClass;
+    public FilterMappingBuilder withUrlExcludedPattern(Pattern urlExcludedPattern) {
+        this.urlExcludedPattern = urlExcludedPattern;
+        return this;
+    }
+
+    public FilterMappingBuilder withFilterClass(Class<? extends Filter> clazz) {
+        this.clazz = clazz;
         return this;
     }
 
     public ServletContextBuilder end() {
-        servletContextBuilder.withServletMapping(new ServletMappingImpl(urlPattern, servletClass));
+        servletContextBuilder.withFilterMapping(new FilterMappingImpl(urlPattern, urlExcludedPattern, clazz));
         return servletContextBuilder;
     }
 }

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 
+import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.protocol.serializer.Serializer;
@@ -36,10 +37,12 @@ public class ServletContextWrapperTest {
         ServerConfig serverConfig = mock(ServerConfig.class);
         sessionStorage = mock(SessionStorage.class);
         servletContext = new ServletContextWrapper("/",
-                Collections.<ServletMapping>emptySet(),
+                Collections.<ServletMapping>emptyList(),
+                Collections.<FilterMapping>emptyList(),
+                Collections.<String, Object>emptyMap(),
                 serverConfig,
-                sessionStorage,
-                Collections.<String, Object>emptyMap());
+                sessionStorage
+        );
         servletContext.setAttribute("attribute", "value");
         response = new HttpResponseWrapper(mock(
                 Serializer.class),

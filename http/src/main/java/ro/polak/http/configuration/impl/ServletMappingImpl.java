@@ -5,10 +5,11 @@
  * Copyright (c) Piotr Polak 2018-2018
  **************************************************/
 
-package ro.polak.http.configuration;
+package ro.polak.http.configuration.impl;
 
 import java.util.regex.Pattern;
 
+import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.servlet.HttpServlet;
 
 /**

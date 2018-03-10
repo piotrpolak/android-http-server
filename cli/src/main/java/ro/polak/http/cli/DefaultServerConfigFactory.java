@@ -22,11 +22,13 @@ import example.Chunked;
 import example.ChunkedWithDelay;
 import example.Cookies;
 import example.Forbidden;
+import example.ForbiddenByFilter;
 import example.Index;
 import example.InternalServerError;
 import example.NotFound;
 import example.Session;
 import example.Streaming;
+import example.filter.FakeSecuredFilter;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.configuration.ServletContextConfigurationBuilder;
@@ -104,6 +106,10 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
                 .withServerConfig(serverConfig)
                 .addServletContext()
                     .withContextPath("/example")
+                    .addFilter()
+                        .withUrlPattern(Pattern.compile("^/secured/.*$"))
+                        .withFilterClass(FakeSecuredFilter.class)
+                    .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Chunked$"))
                         .withServletClass(Chunked.class)
@@ -144,8 +150,11 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
                         .withUrlPattern(Pattern.compile("^/Streaming$"))
                         .withServletClass(Streaming.class)
                     .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/secured/ForbiddenByFilter"))
+                        .withServletClass(ForbiddenByFilter.class)
+                    .end()
                 .end();
-
     }
 
     private ServerConfig getServerConfig(String baseConfigPath) {
@@ -164,11 +173,11 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         return serverConfig;
     }
 
-    private Set<ServletContextWrapper> getServletContexts(ServerConfig serverConfig) {
+    private List<ServletContextWrapper> getServletContexts(ServerConfig serverConfig) {
         ServletContextConfigurationBuilder servletContextConfigurationBuilder
                 = getServletContextConfigurationBuilder(new FileSessionStorage(serverConfig.getTempPath()), serverConfig);
 
-        Set<ServletContextWrapper> servletContexts = servletContextConfigurationBuilder.build();
+        List<ServletContextWrapper> servletContexts = servletContextConfigurationBuilder.build();
 
         for (ServletContextWrapper servletContextWrapper : servletContexts) {
             for (Map.Entry<String, Object> entry : getAdditionalServletContextAttributes().entrySet()) {

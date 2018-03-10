@@ -8,28 +8,38 @@
 package ro.polak.http.resource.provider.impl;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ro.polak.http.Headers;
+import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServletMapping;
+import ro.polak.http.exception.FilterInitializationException;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.resource.provider.ResourceProvider;
+import ro.polak.http.servlet.Filter;
+import ro.polak.http.servlet.FilterChain;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpSessionWrapper;
 import ro.polak.http.servlet.Servlet;
 import ro.polak.http.servlet.ServletConfigWrapper;
 import ro.polak.http.servlet.ServletContainer;
 import ro.polak.http.servlet.ServletContext;
+import ro.polak.http.servlet.ServletContextHelper;
 import ro.polak.http.servlet.ServletContextWrapper;
 import ro.polak.http.servlet.UploadedFile;
+import ro.polak.http.servlet.impl.FilterChainImpl;
 
 /**
  * Servlet resource provider
@@ -44,7 +54,8 @@ public class ServletResourceProvider implements ResourceProvider {
     private static final Logger LOGGER = Logger.getLogger(ServletResourceProvider.class.getName());
 
     private final ServletContainer servletContainer;
-    private final Set<ServletContextWrapper> servletContexts;
+    private final List<ServletContextWrapper> servletContexts;
+    private final ServletContextHelper servletContextHelper = new ServletContextHelper();
 
     /**
      * Default constructor.
@@ -53,62 +64,69 @@ public class ServletResourceProvider implements ResourceProvider {
      * @param servletContexts
      */
     public ServletResourceProvider(final ServletContainer servletContainer,
-                                   final Set<ServletContextWrapper> servletContexts) {
+                                   final List<ServletContextWrapper> servletContexts) {
         this.servletContainer = servletContainer;
         this.servletContexts = servletContexts;
     }
 
     @Override
     public boolean canLoad(String path) {
-        ServletContext servletContext = getResolvedContext(path);
-        return servletContext != null && getResolvedServletMapping(servletContext, path) != null;
+        ServletContext servletContext = servletContextHelper.getResolvedContext(servletContexts, path);
+        return servletContext != null && servletContextHelper.getResolvedServletMapping(servletContext, path) != null;
     }
 
     @Override
     public void load(String path, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
+        ServletContextWrapper servletContext = servletContextHelper.getResolvedContext(servletContexts, path);
+        Objects.requireNonNull(servletContext);
+        ServletMapping servletMapping = servletContextHelper.getResolvedServletMapping(servletContext, path);
 
-        // TODO Handling of ServletException should be improved
+        request.setServletContext(servletContext);
 
-        ServletContextWrapper servletContext = getResolvedContext(path);
-        ServletMapping servletMapping = getResolvedServletMapping(servletContext, path);
+        Servlet servlet = getServlet(servletMapping, new ServletConfigWrapper(servletContext));
 
         try {
-            ServletConfigWrapper servletConfig = new ServletConfigWrapper(servletContext);
-            Servlet servlet = servletContainer.getForClass(servletMapping.getServletClass(), servletConfig);
-
-            request.setServletContext(servletContext);
-            response.setStatus(HttpServletResponse.STATUS_OK);
-            servlet.service(request, response);
-
-            terminate(request, response);
-        } catch (ServletInitializationException e) {
-            throw new UnexpectedSituationException(e);
-        } catch (ServletException e) {
+            FilterChainImpl filterChain = getFilterChain(path, servletContext, servlet);
+            filterChain.doFilter(request, response);
+        } catch (ServletException | FilterInitializationException e) {
             throw new UnexpectedSituationException(e);
         }
     }
 
-    //@Nullable
-    private ServletMapping getResolvedServletMapping(ServletContext servletContext, String path) {
-        Objects.requireNonNull(servletContext);
-        for (ServletMapping servletMapping : servletContext.getServletMappings()) {
-            String inContextPath = path.substring(servletContext.getContextPath().length());
-            if (servletMapping.getUrlPattern().matcher(inContextPath).matches()) {
-                return servletMapping;
-            }
+    private Servlet getServlet(ServletMapping servletMapping, ServletConfigWrapper servletConfig) {
+        Servlet servlet;
+        try {
+            servlet = servletContainer.getServletForClass(servletMapping.getServletClass(), servletConfig);
+        } catch (ServletInitializationException | ServletException e) {
+            throw new UnexpectedSituationException(e);
         }
-
-        return null;
+        return servlet;
     }
 
-    //@Nullable
-    private ServletContextWrapper getResolvedContext(String path) {
-        for (ServletContextWrapper servletContext : servletContexts) {
-            if (path.startsWith(servletContext.getContextPath())) {
-                return servletContext;
+    private FilterChainImpl getFilterChain(String path, ServletContextWrapper servletContext, Servlet servlet)
+            throws FilterInitializationException {
+        ArrayDeque<Filter> arrayDeque = new ArrayDeque<>(getFilterMappingsForPath(path, servletContext));
+        final Servlet finalServlet = servlet;
+        arrayDeque.add(new Filter() {
+            @Override
+            public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+                response.setStatus(HttpServletResponse.STATUS_OK);
+                finalServlet.service(request, response);
+
+                terminate((HttpRequestWrapper) request, (HttpResponseWrapper) response);
             }
+        });
+        return new FilterChainImpl(arrayDeque);
+    }
+
+    private List<Filter> getFilterMappingsForPath(String path, ServletContextWrapper servletContext)
+            throws FilterInitializationException {
+        List<Filter> filters = new ArrayList<>();
+        for (FilterMapping filterMapping : servletContextHelper.getFilterMappingsForPath(servletContext, path)) {
+            filters.add(servletContainer.getFilterForClass(filterMapping.getFilterClass()));
         }
-        return null;
+
+        return filters;
     }
 
     /**

@@ -6,8 +6,10 @@
  **************************************************/
 package ro.polak.http.configuration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,7 +24,8 @@ import ro.polak.http.session.storage.SessionStorage;
  */
 public class ServletContextBuilder {
 
-    private final Set<ServletMapping> servletMappings = new HashSet<>();
+    private final List<ServletMapping> servletMappings = new ArrayList<>();
+    private final List<FilterMapping> filterMappings = new ArrayList<>();
     private final Map<String, Object> attributes = new HashMap<>();
 
     private String contextPath;
@@ -49,6 +52,10 @@ public class ServletContextBuilder {
         return new ServletMappingBuilder(this);
     }
 
+    public FilterMappingBuilder addFilter() {
+        return new FilterMappingBuilder(this);
+    }
+
     public ServletContextBuilder withContextPath(String contextPath) {
         this.contextPath = contextPath;
         return this;
@@ -62,9 +69,11 @@ public class ServletContextBuilder {
     public ServletContextConfigurationBuilder end() {
         parent.addServletContext(new ServletContextWrapper(contextPath,
                 servletMappings,
+                filterMappings,
+                attributes,
                 serverConfig,
-                sessionStorage,
-                attributes));
+                sessionStorage
+        ));
         return parent;
     }
 
@@ -76,6 +85,17 @@ public class ServletContextBuilder {
      */
     ServletContextBuilder withServletMapping(ServletMapping servletMapping) {
         servletMappings.add(servletMapping);
+        return this;
+    }
+
+    /**
+     * Adds servlet mapping. This method should be package scoped.
+     *
+     * @param filterMapping
+     * @return
+     */
+    ServletContextBuilder withFilterMapping(FilterMapping filterMapping) {
+        filterMappings.add(filterMapping);
         return this;
     }
 }

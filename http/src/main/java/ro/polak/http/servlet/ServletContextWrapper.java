@@ -8,15 +8,16 @@
 package ro.polak.http.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.session.storage.SessionStorage;
@@ -36,7 +37,8 @@ public class ServletContextWrapper implements ServletContext {
     private final ServerConfig serverConfig;
     private final SessionStorage sessionStorage;
     private final String contextPath;
-    private final Set<ServletMapping> servletMappings;
+    private final List<ServletMapping> servletMappings;
+    private final List<FilterMapping> filterMappings;
     private final Map<String, Object> attributes;
 
     /**
@@ -44,19 +46,22 @@ public class ServletContextWrapper implements ServletContext {
      *
      * @param contextPath
      * @param servletMappings
+     * @param filterMappings
+     * @param attributes
      * @param serverConfig
      * @param sessionStorage
-     * @param attributes
      */
     public ServletContextWrapper(final String contextPath,
-                                 final Set<ServletMapping> servletMappings,
+                                 final List<ServletMapping> servletMappings,
+                                 final List<FilterMapping> filterMappings,
+                                 final Map<String, Object> attributes,
                                  final ServerConfig serverConfig,
-                                 final SessionStorage sessionStorage,
-                                 Map<String, Object> attributes) {
+                                 final SessionStorage sessionStorage) {
+        this.filterMappings = new ArrayList<>(filterMappings);
         this.serverConfig = serverConfig;
         this.sessionStorage = sessionStorage;
         this.contextPath = contextPath;
-        this.servletMappings = new HashSet<>(servletMappings);
+        this.servletMappings = new ArrayList<>(servletMappings);
         this.attributes = new HashMap<>(attributes);
     }
 
@@ -171,8 +176,13 @@ public class ServletContextWrapper implements ServletContext {
     }
 
     @Override
-    public Set<ServletMapping> getServletMappings() {
+    public List<ServletMapping> getServletMappings() {
         return servletMappings;
+    }
+
+    @Override
+    public List<FilterMapping> getFilterMappings() {
+        return filterMappings;
     }
 
     @Override

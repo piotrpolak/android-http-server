@@ -22,6 +22,7 @@ import ro.polak.http.MultipartHeadersPart;
 import ro.polak.http.MultipartRequestHandler;
 import ro.polak.http.RequestStatus;
 import ro.polak.http.Statistics;
+import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.exception.protocol.LengthRequiredException;
 import ro.polak.http.exception.protocol.MalformedOrUnsupportedMethodProtocolException;
@@ -142,10 +143,12 @@ public class HttpServletRequestWrapperFactory {
 
         // This will be overwritten when running servlet
         request.setServletContext(new ServletContextWrapper("/",
-                Collections.<ServletMapping>emptySet(),
+                Collections.<ServletMapping>emptyList(),
+                Collections.<FilterMapping>emptyList(),
+                Collections.<String, Object>emptyMap(),
                 null,
-                null,
-                Collections.<String, Object>emptyMap()));
+                null
+        ));
         request.setPathInfo("");
         request.setRemoteUser(null);
         request.setPrincipal(null);

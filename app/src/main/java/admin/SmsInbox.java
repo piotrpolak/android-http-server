@@ -16,16 +16,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import admin.logic.AccessControl;
 import admin.logic.HTMLDocument;
 import admin.logic.SmsBox;
-import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-
-import static admin.Login.RELOCATE_PARAM_NAME;
 
 public class SmsInbox extends HttpServlet {
 
@@ -33,12 +29,6 @@ public class SmsInbox extends HttpServlet {
 
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
-        AccessControl ac = new AccessControl(serverConfig, request.getSession());
-        if (!ac.isLogged()) {
-            response.sendRedirect("/admin/Login?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI() + (!request.getQueryString().equals("") ? "?" + request.getQueryString() : ""));
-            return;
-        }
         SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
 
         String threadId = request.getParameter(THREAD_ID_PARAM_NAME);

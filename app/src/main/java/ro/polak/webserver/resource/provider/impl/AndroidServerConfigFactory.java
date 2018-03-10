@@ -24,6 +24,8 @@ import admin.Index;
 import admin.Login;
 import admin.Logout;
 import admin.ServerStats;
+import admin.filter.LogoutFilter;
+import admin.filter.SecurityFilter;
 import api.SmsInbox;
 import api.SmsSend;
 import ro.polak.http.MimeTypeMapping;
@@ -103,7 +105,15 @@ public class AndroidServerConfigFactory extends DefaultServerConfigFactory {
                 
                 .addServletContext()
                     .withContextPath("/admin")
-
+                    .addFilter()
+                        .withUrlPattern(Pattern.compile("^.*$"))
+                        .withUrlExcludedPattern(Pattern.compile("^/(?:Login|Logout)"))
+                        .withFilterClass(SecurityFilter.class)
+                    .end()
+                    .addFilter()
+                        .withUrlPattern(Pattern.compile("^/Logout$"))
+                        .withFilterClass(LogoutFilter.class)
+                    .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/DriveAccess$"))
                         .withServletClass(DriveAccess.class)
@@ -121,7 +131,7 @@ public class AndroidServerConfigFactory extends DefaultServerConfigFactory {
                         .withServletClass(Index.class)
                     .end()
                     .addServlet()
-                        .withUrlPattern(Pattern.compile("^/Login"))
+                        .withUrlPattern(Pattern.compile("^/Login$"))
                         .withServletClass(Login.class)
                     .end()
                     .addServlet()

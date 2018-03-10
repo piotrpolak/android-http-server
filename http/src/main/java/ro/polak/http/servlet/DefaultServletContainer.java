@@ -43,12 +43,14 @@ public class DefaultServletContainer implements ServletContainer {
     }
 
     @Override
-    public Filter getFilterForClass(Class<? extends Filter> filterClass) throws FilterInitializationException {
+    public Filter getFilterForClass(Class<? extends Filter> filterClass, FilterConfig filterConfig)
+            throws FilterInitializationException, ServletException {
         if (filters.containsKey(filterClass)) {
             return filters.get(filterClass);
         }
 
         Filter filter = instantiateFilter(filterClass);
+        filter.init(filterConfig);
         filters.put(filterClass, filter);
         return filter;
     }

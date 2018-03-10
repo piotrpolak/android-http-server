@@ -92,6 +92,12 @@ public class ServletContextHelperTest {
     }
 
     public static class FakeFilter implements Filter {
+
+        @Override
+        public void init(FilterConfig filterConfig) throws ServletException {
+            // Do nothing
+        }
+
         @Override
         public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
             // Do nothing

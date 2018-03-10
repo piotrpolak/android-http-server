@@ -38,6 +38,6 @@ public interface ServletContainer {
      * @return
      * @throws FilterInitializationException
      */
-    Filter getFilterForClass(Class<? extends Filter> filterClass)
-            throws FilterInitializationException;
+    Filter getFilterForClass(Class<? extends Filter> filterClass, FilterConfig filterConfig)
+            throws FilterInitializationException, ServletException;
 }

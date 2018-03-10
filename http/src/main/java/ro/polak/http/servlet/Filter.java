@@ -20,6 +20,14 @@ import ro.polak.http.exception.ServletException;
 public interface Filter {
 
     /**
+     * Initializes filter.
+     *
+     * @param filterConfig
+     * @throws ServletException
+     */
+    void init(FilterConfig filterConfig) throws ServletException;
+
+    /**
      * Performs request/response filtering.
      *
      * @param request

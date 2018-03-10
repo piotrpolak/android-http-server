@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +26,8 @@ import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.Filter;
 import ro.polak.http.servlet.FilterChain;
+import ro.polak.http.servlet.FilterConfig;
+import ro.polak.http.servlet.FilterConfigWrapper;
 import ro.polak.http.servlet.HttpRequestWrapper;
 import ro.polak.http.servlet.HttpResponseWrapper;
 import ro.polak.http.servlet.HttpServletRequest;
@@ -85,9 +86,11 @@ public class ServletResourceProvider implements ResourceProvider {
 
         Servlet servlet = getServlet(servletMapping, new ServletConfigWrapper(servletContext));
 
+        response.setStatus(HttpServletResponse.STATUS_OK);
         try {
             FilterChainImpl filterChain = getFilterChain(path, servletContext, servlet);
             filterChain.doFilter(request, response);
+            terminate(request, response);
         } catch (ServletException | FilterInitializationException e) {
             throw new UnexpectedSituationException(e);
         }
@@ -103,27 +106,32 @@ public class ServletResourceProvider implements ResourceProvider {
         return servlet;
     }
 
-    private FilterChainImpl getFilterChain(String path, ServletContextWrapper servletContext, Servlet servlet)
-            throws FilterInitializationException {
+    private FilterChainImpl getFilterChain(String path, ServletContextWrapper servletContext, final Servlet servlet)
+            throws FilterInitializationException, ServletException {
+
         ArrayDeque<Filter> arrayDeque = new ArrayDeque<>(getFilterMappingsForPath(path, servletContext));
-        final Servlet finalServlet = servlet;
         arrayDeque.add(new Filter() {
             @Override
-            public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-                response.setStatus(HttpServletResponse.STATUS_OK);
-                finalServlet.service(request, response);
+            public void init(FilterConfig filterConfig) throws ServletException {
 
-                terminate((HttpRequestWrapper) request, (HttpResponseWrapper) response);
+            }
+
+            @Override
+            public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+                servlet.service(request, response);
             }
         });
         return new FilterChainImpl(arrayDeque);
     }
 
     private List<Filter> getFilterMappingsForPath(String path, ServletContextWrapper servletContext)
-            throws FilterInitializationException {
+            throws FilterInitializationException, ServletException {
+
+        FilterConfig filterConfig = new FilterConfigWrapper(servletContext);
+
         List<Filter> filters = new ArrayList<>();
         for (FilterMapping filterMapping : servletContextHelper.getFilterMappingsForPath(servletContext, path)) {
-            filters.add(servletContainer.getFilterForClass(filterMapping.getFilterClass()));
+            filters.add(servletContainer.getFilterForClass(filterMapping.getFilterClass(), filterConfig));
         }
 
         return filters;

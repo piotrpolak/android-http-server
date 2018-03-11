@@ -33,7 +33,8 @@ The provided Gradle wrapper should be used to build the application:
 
 ## The http subproject and the idea behind it
 
-The `http` subproject is the heart of the application and it is independent on Android platform.
+The [http](../../tree/master/http/) subproject is the heart of the application and it is
+independent on Android platform.
 
 In fact the Android app was just an attempt to find a more practical use of the experimental HTTP
 protocol implementation.
@@ -47,7 +48,8 @@ All application code is targeted to Java 7. It also compiles for Android SDK ver
 [IOUtilities](../../tree/master/http/src/main/java/ro/polak/http/utilities/IOUtilities.java) as an 
 alternative when closing streams).
 
-Once the `ro.polak.http` package is mature enough it will be released as an independent artifact.
+Once the [ro.polak.http](../../tree/master/http/src/main/java/) package is mature enough it will be
+released as an independent artifact.
 
 The subproject can be tested in the following way:
 
@@ -94,7 +96,7 @@ java -jar ./cli/build/libs/cli-all.jar
 
 ## Sample code
 
-Hello World servlet
+### Hello World servlet
 
 ```java
 package example;
@@ -112,23 +114,75 @@ public class HelloWorld extends HttpServlet {
 }
 ```
 
+## Request logging servlet
+
+```java
+package example;
+
+import java.io.IOException;
+
+import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.Filter;
+import ro.polak.http.servlet.FilterChain;
+import ro.polak.http.servlet.FilterConfig;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+
+public class RequestLoggingFilter implements Filter {
+    
+    private static final Logger LOGGER = Logger.getLogger(RequestLoggingFilter.class.getName());
+
+    private FilterConfig filterConfig;
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        this.filterConfig = filterConfig;
+    }
+
+    @Override
+    public void doFilter(HttpServletRequest request, HttpServletResponse response,
+                         FilterChain filterChain) throws IOException, ServletException {
+        LOGGER.fine("Handling incoming request " + request.getRequestURL());
+        
+        filterChain.doFilter(request, response);
+    }
+}
+```
+
 More examples can be found in [http/src/main/java/example](../../tree/master/http/src/main/java/example).
 
-## Building servlet mapping
+## Deployment descriptor - creating servlet contexts and mapping servlets to URLs
 
 Each servlet must be mapped to an URL similar to `web.xml` manner.
 
-The following code presents creation of a context and building servlet mapping.
-
 ```java
+package example;
 
-class ContextBuilderSample {
-    public Set<ServletContextWrapper> getContexts() {
-        return ServletContextConfigurationBuilder.create()
+import java.util.List;
+import java.util.regex.Pattern;
+
+import ro.polak.http.configuration.DeploymentDescriptorBuilder;
+import ro.polak.http.configuration.ServerConfig;
+import ro.polak.http.session.storage.SessionStorage;
+
+class DeploymentDescriptorFactory {
+    public List<ServletContextWrapper> buildDeploymentDescriptor(SessionStorage sessionStorage,
+                                                    ServerConfig serverConfig) {
+        
+        return DeploymentDescriptorBuilder.create()
                    .withSessionStorage(sessionStorage)
                    .withServerConfig(serverConfig)
                    .addServletContext()
                        .withContextPath("/example")
+                       .addFilter()
+                           .withUrlPattern(Pattern.compile("^.*$"))
+                           .withUrlExcludedPattern(Pattern.compile("^/(?:Login|Logout)"))
+                           .withFilterClass(SecurityFilter.class)
+                       .end()
+                       .addFilter()
+                           .withUrlPattern(Pattern.compile("^/Logout$"))
+                           .withFilterClass(LogoutFilter.class)
+                       .end()
                        .addServlet()
                            .withUrlPattern(Pattern.compile("^/Index$"))
                            .withServletClass(Index.class)

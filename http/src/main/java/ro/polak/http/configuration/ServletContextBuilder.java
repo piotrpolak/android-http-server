@@ -8,10 +8,8 @@ package ro.polak.http.configuration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import ro.polak.http.servlet.ServletContextWrapper;
 import ro.polak.http.session.storage.SessionStorage;
@@ -29,7 +27,7 @@ public class ServletContextBuilder {
     private final Map<String, Object> attributes = new HashMap<>();
 
     private String contextPath;
-    private ServletContextConfigurationBuilder parent;
+    private DeploymentDescriptorBuilder parent;
     private SessionStorage sessionStorage;
     private ServerConfig serverConfig;
 
@@ -40,7 +38,7 @@ public class ServletContextBuilder {
      * @param sessionStorage
      * @param serverConfig
      */
-    ServletContextBuilder(ServletContextConfigurationBuilder parent,
+    ServletContextBuilder(DeploymentDescriptorBuilder parent,
                           SessionStorage sessionStorage,
                           ServerConfig serverConfig) {
         this.parent = parent;
@@ -66,7 +64,7 @@ public class ServletContextBuilder {
         return this;
     }
 
-    public ServletContextConfigurationBuilder end() {
+    public DeploymentDescriptorBuilder end() {
         parent.addServletContext(new ServletContextWrapper(contextPath,
                 servletMappings,
                 filterMappings,

@@ -8,9 +8,7 @@
 package ro.polak.http.configuration;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import ro.polak.http.servlet.ServletContextWrapper;
 import ro.polak.http.session.storage.SessionStorage;
@@ -21,7 +19,7 @@ import ro.polak.http.session.storage.SessionStorage;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201803
  */
-public class ServletContextConfigurationBuilder {
+public class DeploymentDescriptorBuilder {
 
     private final List<ServletContextWrapper> servletContextWrappers = new ArrayList<>();
 
@@ -31,19 +29,19 @@ public class ServletContextConfigurationBuilder {
     /**
      * This constructor is intentionally private.
      */
-    private ServletContextConfigurationBuilder() {
+    private DeploymentDescriptorBuilder() {
     }
 
-    public static ServletContextConfigurationBuilder create() {
-        return new ServletContextConfigurationBuilder();
+    public static DeploymentDescriptorBuilder create() {
+        return new DeploymentDescriptorBuilder();
     }
 
-    public ServletContextConfigurationBuilder withSessionStorage(SessionStorage sessionStorage) {
+    public DeploymentDescriptorBuilder withSessionStorage(SessionStorage sessionStorage) {
         this.sessionStorage = sessionStorage;
         return this;
     }
 
-    public ServletContextConfigurationBuilder withServerConfig(ServerConfig serverConfig) {
+    public DeploymentDescriptorBuilder withServerConfig(ServerConfig serverConfig) {
         this.serverConfig = serverConfig;
         return this;
     }
@@ -62,7 +60,7 @@ public class ServletContextConfigurationBuilder {
      * @param servletContextWrapper
      * @return
      */
-    ServletContextConfigurationBuilder addServletContext(ServletContextWrapper servletContextWrapper) {
+    DeploymentDescriptorBuilder addServletContext(ServletContextWrapper servletContextWrapper) {
         servletContextWrapper.setAttribute(ServerConfig.class.getName(), serverConfig);
         servletContextWrappers.add(servletContextWrapper);
         return this;

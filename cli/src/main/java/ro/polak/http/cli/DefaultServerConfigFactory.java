@@ -31,7 +31,7 @@ import example.Streaming;
 import example.filter.FakeSecuredFilter;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServerConfigFactory;
-import ro.polak.http.configuration.ServletContextConfigurationBuilder;
+import ro.polak.http.configuration.DeploymentDescriptorBuilder;
 import ro.polak.http.configuration.impl.ServerConfigImpl;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
@@ -100,8 +100,10 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
      *
      * @return
      */
-    protected ServletContextConfigurationBuilder getServletContextConfigurationBuilder(SessionStorage sessionStorage, ServerConfig serverConfig) {
-        return ServletContextConfigurationBuilder.create()
+    protected DeploymentDescriptorBuilder getDeploymentDescriptorBuilder(
+            SessionStorage sessionStorage, ServerConfig serverConfig) {
+
+        return DeploymentDescriptorBuilder.create()
                 .withSessionStorage(sessionStorage)
                 .withServerConfig(serverConfig)
                 .addServletContext()
@@ -174,10 +176,10 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
     }
 
     private List<ServletContextWrapper> getServletContexts(ServerConfig serverConfig) {
-        ServletContextConfigurationBuilder servletContextConfigurationBuilder
-                = getServletContextConfigurationBuilder(new FileSessionStorage(serverConfig.getTempPath()), serverConfig);
+        DeploymentDescriptorBuilder deploymentDescriptorBuilder
+                = getDeploymentDescriptorBuilder(new FileSessionStorage(serverConfig.getTempPath()), serverConfig);
 
-        List<ServletContextWrapper> servletContexts = servletContextConfigurationBuilder.build();
+        List<ServletContextWrapper> servletContexts = deploymentDescriptorBuilder.build();
 
         for (ServletContextWrapper servletContextWrapper : servletContexts) {
             for (Map.Entry<String, Object> entry : getAdditionalServletContextAttributes().entrySet()) {

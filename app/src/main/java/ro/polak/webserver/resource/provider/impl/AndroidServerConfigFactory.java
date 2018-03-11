@@ -31,7 +31,7 @@ import api.SmsSend;
 import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.cli.DefaultServerConfigFactory;
-import ro.polak.http.configuration.ServletContextConfigurationBuilder;
+import ro.polak.http.configuration.DeploymentDescriptorBuilder;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
@@ -89,7 +89,7 @@ public class AndroidServerConfigFactory extends DefaultServerConfigFactory {
     }
 
     @Override
-    protected ServletContextConfigurationBuilder getServletContextConfigurationBuilder(SessionStorage sessionStorage, ServerConfig serverConfig) {
+    protected DeploymentDescriptorBuilder getServletContextConfigurationBuilder(SessionStorage sessionStorage, ServerConfig serverConfig) {
         return super.getServletContextConfigurationBuilder(sessionStorage, serverConfig)
                 .addServletContext()
                     .withContextPath("/api/1.0")

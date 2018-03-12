@@ -1,10 +1,15 @@
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.impl;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
+import ro.polak.http.servlet.HttpServlet;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.ServletConfig;
+import ro.polak.http.servlet.impl.ServletContainerImpl;
 import ro.polak.http.servlet.loader.SampleServlet;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -14,14 +19,14 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 
-public class DefaultServletContainerTest {
+public class ServletContainerImplTest {
 
-    private DefaultServletContainer servletContainer;
+    private ServletContainerImpl servletContainer;
     private ServletConfig servletConfig;
 
     @Before
     public void setUp() throws ServletInitializationException {
-        servletContainer = new DefaultServletContainer();
+        servletContainer = new ServletContainerImpl();
         servletConfig = mock(ServletConfig.class);
     }
 

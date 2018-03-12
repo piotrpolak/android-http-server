@@ -11,9 +11,9 @@ import java.io.OutputStream;
 import ro.polak.http.FileUtils;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
-import ro.polak.http.servlet.HttpResponseWrapper;
-import ro.polak.http.servlet.RangeHelper;
-import ro.polak.http.servlet.StreamHelper;
+import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.helper.RangeHelper;
+import ro.polak.http.servlet.helper.StreamHelper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -22,12 +22,12 @@ import static org.mockito.Mockito.mock;
 public class AbstractHtmlErrorHandlerTest {
 
     private static OutputStream outputStream;
-    private static HttpResponseWrapper response;
+    private static HttpResponseImpl response;
 
     @Before
     public void setUp() {
         outputStream = new ByteArrayOutputStream();
-        response = new HttpResponseWrapper(
+        response = new HttpResponseImpl(
                 mock(Serializer.class),
                 mock(Serializer.class),
                 new StreamHelper(new RangeHelper(), new RangePartHeaderSerializer()),

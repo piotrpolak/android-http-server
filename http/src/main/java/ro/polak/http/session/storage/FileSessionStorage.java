@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import ro.polak.http.servlet.HttpSessionWrapper;
+import ro.polak.http.servlet.impl.HttpSessionImpl;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
@@ -44,7 +44,7 @@ public class FileSessionStorage implements SessionStorage {
     }
 
     @Override
-    public void persistSession(HttpSessionWrapper session) throws IOException {
+    public void persistSession(HttpSessionImpl session) throws IOException {
         if (!isSessionIdValid(session.getId())) {
             throw new IllegalArgumentException("Session ID can not be empty and must be composed of 32 characters");
         }
@@ -60,8 +60,8 @@ public class FileSessionStorage implements SessionStorage {
     }
 
     @Override
-    public HttpSessionWrapper getSession(String id) throws IOException {
-        HttpSessionWrapper session = null;
+    public HttpSessionImpl getSession(String id) throws IOException {
+        HttpSessionImpl session = null;
         if (isSessionIdValid(id)) {
             File file = new File(getSessionStoragePath(id));
 
@@ -88,19 +88,19 @@ public class FileSessionStorage implements SessionStorage {
     }
 
     @Override
-    public boolean removeSession(HttpSessionWrapper session) {
+    public boolean removeSession(HttpSessionImpl session) {
         File file = new File(getSessionStoragePath(session.getId()));
         return file.delete();
     }
 
-    private HttpSessionWrapper readSession(String id, File file) {
-        HttpSessionWrapper session = null;
+    private HttpSessionImpl readSession(String id, File file) {
+        HttpSessionImpl session = null;
         FileInputStream fileInputStream = null;
         ObjectInputStream objectInputStream = null;
         try {
             fileInputStream = new FileInputStream(file);
             objectInputStream = new ObjectInputStream(fileInputStream);
-            session = (HttpSessionWrapper) objectInputStream.readObject();
+            session = (HttpSessionImpl) objectInputStream.readObject();
 
         } catch (IOException | ClassNotFoundException e) {
             LOGGER.log(Level.WARNING, "Unable to read session " + id + " under " + tempPath, e);
@@ -111,7 +111,7 @@ public class FileSessionStorage implements SessionStorage {
         return session;
     }
 
-    private void writeSession(HttpSessionWrapper session, File file) throws IOException {
+    private void writeSession(HttpSessionImpl session, File file) throws IOException {
         FileOutputStream fileOutputStream = null;
         ObjectOutputStream objectOutputStream = null;
         try {

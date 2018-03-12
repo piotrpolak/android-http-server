@@ -3,6 +3,7 @@ package ro.polak.http.servlet;
 import org.junit.Test;
 
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.impl.ServletConfigImpl;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -24,7 +25,7 @@ public class HttpServletTest {
     public void shouldProvideContextAfterInitialization() throws ServletException {
         HttpServlet httpServlet = new SampleServlet();
         ServletContext servletContext = mock(ServletContext.class);
-        ServletConfig servletConfig = new ServletConfigWrapper(servletContext);
+        ServletConfig servletConfig = new ServletConfigImpl(servletContext);
         httpServlet.init(servletConfig);
         assertThat(httpServlet.getServletInfo(), is(""));
         assertThat(httpServlet.getServletContext(), is(equalTo(servletContext)));

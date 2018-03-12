@@ -16,8 +16,8 @@ import java.io.InputStream;
 
 import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.resource.provider.ResourceProvider;
-import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpResponseImpl;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.utilities.IOUtilities;
 
@@ -61,7 +61,7 @@ public class AssetResourceProvider implements ResourceProvider {
     }
 
     @Override
-    public void load(String path, HttpRequestWrapper request, HttpResponseWrapper response) {
+    public void load(String path, HttpRequestImpl request, HttpResponseImpl response) {
         String assetPath = getAssetPath(path);
         InputStream inputStream = null;
         try {

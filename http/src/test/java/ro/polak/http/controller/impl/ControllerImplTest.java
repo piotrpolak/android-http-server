@@ -1,4 +1,4 @@
-package ro.polak.http.controller;
+package ro.polak.http.controller.impl;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +13,7 @@ import ro.polak.http.FileUtils;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.WebServer;
+import ro.polak.http.controller.impl.ControllerImpl;
 import ro.polak.http.gui.ServerGui;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-public class MainControllerTest {
+public class ControllerImplTest {
 
     private static ServerConfigFactory serverConfigFactory;
     private static ServerSocketFactory serverSocketFactory;
@@ -57,54 +58,54 @@ public class MainControllerTest {
     @Test
     public void shouldAssignDefaultUncaughtExceptionHandler() {
         assertThat(Thread.currentThread().getDefaultUncaughtExceptionHandler(), is(nullValue()));
-        new MainController(serverConfigFactory, serverSocketFactory, serverGui);
+        new ControllerImpl(serverConfigFactory, serverSocketFactory, serverGui);
 
         assertThat(Thread.currentThread().getDefaultUncaughtExceptionHandler(), is(not(nullValue())));
     }
 
     @Test
     public void shouldGetWebServerAfterServerStart() {
-        MainController mainController = new MainController(serverConfigFactory, serverSocketFactory,
+        ControllerImpl controllerImpl = new ControllerImpl(serverConfigFactory, serverSocketFactory,
                 serverGui);
 
-        assertThat(mainController.getWebServer(), is(nullValue()));
-        mainController.start();
-        assertThat(mainController.getWebServer(), is(not(nullValue())));
-        assertThat(mainController.getWebServer().isRunning(), is(true));
+        assertThat(controllerImpl.getWebServer(), is(nullValue()));
+        controllerImpl.start();
+        assertThat(controllerImpl.getWebServer(), is(not(nullValue())));
+        assertThat(controllerImpl.getWebServer().isRunning(), is(true));
 
     }
 
     @Test
     public void shouldStopProperly() {
-        MainController mainController = new MainController(serverConfigFactory, serverSocketFactory,
+        ControllerImpl controllerImpl = new ControllerImpl(serverConfigFactory, serverSocketFactory,
                 serverGui);
 
-        mainController.start();
-        assertThat(mainController.getWebServer(), is(not(nullValue())));
-        WebServer webServer = mainController.getWebServer();
-        mainController.stop();
-        assertThat(mainController.getWebServer(), is(nullValue()));
+        controllerImpl.start();
+        assertThat(controllerImpl.getWebServer(), is(not(nullValue())));
+        WebServer webServer = controllerImpl.getWebServer();
+        controllerImpl.stop();
+        assertThat(controllerImpl.getWebServer(), is(nullValue()));
         assertThat(webServer.isRunning(), is(false));
         verify(serverGui, times(1)).stop();
     }
 
     @Test(expected = IllegalStateException.class)
     public void shouldThrowExceptionOnIllegalStart() {
-        MainController mainController = new MainController(serverConfigFactory, serverSocketFactory,
+        ControllerImpl controllerImpl = new ControllerImpl(serverConfigFactory, serverSocketFactory,
                 serverGui);
 
-        mainController.start();
-        mainController.start();
+        controllerImpl.start();
+        controllerImpl.start();
     }
 
     @Test
     public void shouldLogSituationOnExceptionOnCreateException() throws IOException {
         when(serverSocketFactory.createServerSocket()).thenThrow(new IOException("Something"));
-        MainController mainController = new MainController(serverConfigFactory, serverSocketFactory,
+        ControllerImpl controllerImpl = new ControllerImpl(serverConfigFactory, serverSocketFactory,
                 serverGui);
 
         try {
-            mainController.start();
+            controllerImpl.start();
         } catch (IllegalStateException e) {
             fail("Should start web server");
         }
@@ -112,9 +113,9 @@ public class MainControllerTest {
 
     @Test(expected = IllegalStateException.class)
     public void shouldThrowExceptionOnIllegalStop() {
-        MainController mainController = new MainController(serverConfigFactory, serverSocketFactory,
+        ControllerImpl controllerImpl = new ControllerImpl(serverConfigFactory, serverSocketFactory,
                 serverGui);
 
-        mainController.stop();
+        controllerImpl.stop();
     }
 }

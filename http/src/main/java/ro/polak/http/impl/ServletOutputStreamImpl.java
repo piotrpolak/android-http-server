@@ -5,12 +5,12 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http;
+package ro.polak.http.impl;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.impl.HttpResponseImpl;
 import ro.polak.http.servlet.ServletOutputStream;
 
 /**
@@ -18,10 +18,10 @@ import ro.polak.http.servlet.ServletOutputStream;
  *
  * @since 201611
  */
-public class ServletOutputStreamWrapper extends ServletOutputStream {
+public class ServletOutputStreamImpl extends ServletOutputStream {
 
     private final OutputStream outputStream;
-    private final HttpResponseWrapper response;
+    private final HttpResponseImpl response;
 
     /**
      * Default constructor.
@@ -29,7 +29,7 @@ public class ServletOutputStreamWrapper extends ServletOutputStream {
      * @param outputStream
      * @param httpResponse
      */
-    public ServletOutputStreamWrapper(final OutputStream outputStream, final HttpResponseWrapper httpResponse) {
+    public ServletOutputStreamImpl(final OutputStream outputStream, final HttpResponseImpl httpResponse) {
         this.outputStream = outputStream;
         this.response = httpResponse;
     }

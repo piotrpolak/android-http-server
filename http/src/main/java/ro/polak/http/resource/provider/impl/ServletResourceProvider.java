@@ -27,18 +27,18 @@ import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.Filter;
 import ro.polak.http.servlet.FilterChain;
 import ro.polak.http.servlet.FilterConfig;
-import ro.polak.http.servlet.FilterConfigWrapper;
-import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.impl.FilterConfigImpl;
+import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpResponseImpl;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpSessionWrapper;
+import ro.polak.http.servlet.impl.HttpSessionImpl;
 import ro.polak.http.servlet.Servlet;
-import ro.polak.http.servlet.ServletConfigWrapper;
+import ro.polak.http.servlet.impl.ServletConfigImpl;
 import ro.polak.http.servlet.ServletContainer;
 import ro.polak.http.servlet.ServletContext;
-import ro.polak.http.servlet.ServletContextHelper;
-import ro.polak.http.servlet.ServletContextWrapper;
+import ro.polak.http.servlet.helper.ServletContextHelper;
+import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.servlet.UploadedFile;
 import ro.polak.http.servlet.impl.FilterChainImpl;
 
@@ -55,7 +55,7 @@ public class ServletResourceProvider implements ResourceProvider {
     private static final Logger LOGGER = Logger.getLogger(ServletResourceProvider.class.getName());
 
     private final ServletContainer servletContainer;
-    private final List<ServletContextWrapper> servletContexts;
+    private final List<ServletContextImpl> servletContexts;
     private final ServletContextHelper servletContextHelper = new ServletContextHelper();
 
     /**
@@ -65,7 +65,7 @@ public class ServletResourceProvider implements ResourceProvider {
      * @param servletContexts
      */
     public ServletResourceProvider(final ServletContainer servletContainer,
-                                   final List<ServletContextWrapper> servletContexts) {
+                                   final List<ServletContextImpl> servletContexts) {
         this.servletContainer = servletContainer;
         this.servletContexts = servletContexts;
     }
@@ -77,14 +77,14 @@ public class ServletResourceProvider implements ResourceProvider {
     }
 
     @Override
-    public void load(String path, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
-        ServletContextWrapper servletContext = servletContextHelper.getResolvedContext(servletContexts, path);
+    public void load(String path, HttpRequestImpl request, HttpResponseImpl response) throws IOException {
+        ServletContextImpl servletContext = servletContextHelper.getResolvedContext(servletContexts, path);
         Objects.requireNonNull(servletContext);
         ServletMapping servletMapping = servletContextHelper.getResolvedServletMapping(servletContext, path);
 
         request.setServletContext(servletContext);
 
-        Servlet servlet = getServlet(servletMapping, new ServletConfigWrapper(servletContext));
+        Servlet servlet = getServlet(servletMapping, new ServletConfigImpl(servletContext));
 
         response.setStatus(HttpServletResponse.STATUS_OK);
         try {
@@ -96,7 +96,7 @@ public class ServletResourceProvider implements ResourceProvider {
         }
     }
 
-    private Servlet getServlet(ServletMapping servletMapping, ServletConfigWrapper servletConfig) {
+    private Servlet getServlet(ServletMapping servletMapping, ServletConfigImpl servletConfig) {
         Servlet servlet;
         try {
             servlet = servletContainer.getServletForClass(servletMapping.getServletClass(), servletConfig);
@@ -106,7 +106,7 @@ public class ServletResourceProvider implements ResourceProvider {
         return servlet;
     }
 
-    private FilterChainImpl getFilterChain(String path, ServletContextWrapper servletContext, final Servlet servlet)
+    private FilterChainImpl getFilterChain(String path, ServletContextImpl servletContext, final Servlet servlet)
             throws FilterInitializationException, ServletException {
 
         ArrayDeque<Filter> arrayDeque = new ArrayDeque<>(getFilterMappingsForPath(path, servletContext));
@@ -124,10 +124,10 @@ public class ServletResourceProvider implements ResourceProvider {
         return new FilterChainImpl(arrayDeque);
     }
 
-    private List<Filter> getFilterMappingsForPath(String path, ServletContextWrapper servletContext)
+    private List<Filter> getFilterMappingsForPath(String path, ServletContextImpl servletContext)
             throws FilterInitializationException, ServletException {
 
-        FilterConfig filterConfig = new FilterConfigWrapper(servletContext);
+        FilterConfig filterConfig = new FilterConfigImpl(servletContext);
 
         List<Filter> filters = new ArrayList<>();
         for (FilterMapping filterMapping : servletContextHelper.getFilterMappingsForPath(servletContext, path)) {
@@ -144,13 +144,13 @@ public class ServletResourceProvider implements ResourceProvider {
      * @param response
      * @throws IOException
      */
-    private void terminate(HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
+    private void terminate(HttpRequestImpl request, HttpResponseImpl response) throws IOException {
         freeUploadedUnprocessedFiles(request.getUploadedFiles());
 
-        HttpSessionWrapper session = (HttpSessionWrapper) request.getSession(false);
+        HttpSessionImpl session = (HttpSessionImpl) request.getSession(false);
         if (session != null) {
             try {
-                ((ServletContextWrapper) request.getServletContext()).handleSession(session, response);
+                ((ServletContextImpl) request.getServletContext()).handleSession(session, response);
             } catch (IOException e) {
                 LOGGER.log(Level.WARNING, "Unable to persist session", e);
             }

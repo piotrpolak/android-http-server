@@ -4,9 +4,11 @@
  * <p/>
  * Copyright (c) Piotr Polak 2017-2017
  **************************************************/
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.helper;
 
 import java.util.List;
+
+import ro.polak.http.servlet.Range;
 
 /**
  * Range utilities.

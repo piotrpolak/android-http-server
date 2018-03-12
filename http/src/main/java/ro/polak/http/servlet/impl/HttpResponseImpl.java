@@ -4,7 +4,7 @@
  * <p/>
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,8 +17,15 @@ import java.util.List;
 import java.util.Locale;
 
 import ro.polak.http.Headers;
-import ro.polak.http.ServletOutputStreamWrapper;
+import ro.polak.http.impl.ServletOutputStreamImpl;
 import ro.polak.http.protocol.serializer.Serializer;
+import ro.polak.http.servlet.ChunkedPrintWriter;
+import ro.polak.http.servlet.Cookie;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.Range;
+import ro.polak.http.servlet.ServletOutputStream;
+import ro.polak.http.servlet.ServletPrintWriter;
+import ro.polak.http.servlet.helper.StreamHelper;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
@@ -27,7 +34,7 @@ import ro.polak.http.utilities.IOUtilities;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class HttpResponseWrapper implements HttpServletResponse {
+public class HttpResponseImpl implements HttpServletResponse {
 
     private static final String NEW_LINE = "\r\n";
     private static final String TRANSFER_ENCODING_CHUNKED = "chunked";
@@ -55,16 +62,16 @@ public class HttpResponseWrapper implements HttpServletResponse {
      * @param streamHelper
      * @param outputStream
      */
-    public HttpResponseWrapper(Serializer<Headers> headersSerializer,
-                               Serializer<Cookie> cookieHeaderSerializer,
-                               StreamHelper streamHelper,
-                               OutputStream outputStream) {
+    public HttpResponseImpl(Serializer<Headers> headersSerializer,
+                            Serializer<Cookie> cookieHeaderSerializer,
+                            StreamHelper streamHelper,
+                            OutputStream outputStream) {
         this.headersSerializer = headersSerializer;
         this.streamHelper = streamHelper;
         this.cookieHeaderSerializer = cookieHeaderSerializer;
         this.outputStream = outputStream;
 
-        wrappedOutputStream = new ServletOutputStreamWrapper(outputStream, this);
+        wrappedOutputStream = new ServletOutputStreamImpl(outputStream, this);
 
         reset();
     }

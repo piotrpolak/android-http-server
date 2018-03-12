@@ -13,7 +13,7 @@ import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import ro.polak.http.errorhandler.impl.HttpError503Handler;
-import ro.polak.http.servlet.HttpServletResponseWrapperFactory;
+import ro.polak.http.servlet.factory.HttpServletResponseImplFactory;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
@@ -26,14 +26,14 @@ import ro.polak.http.utilities.IOUtilities;
  */
 public class ServiceUnavailableHandler implements RejectedExecutionHandler {
 
-    private final HttpServletResponseWrapperFactory responseFactory;
+    private final HttpServletResponseImplFactory responseFactory;
 
     /**
      * Default constructor.
      *
      * @param responseFactory
      */
-    public ServiceUnavailableHandler(final HttpServletResponseWrapperFactory responseFactory) {
+    public ServiceUnavailableHandler(final HttpServletResponseImplFactory responseFactory) {
         this.responseFactory = responseFactory;
     }
 

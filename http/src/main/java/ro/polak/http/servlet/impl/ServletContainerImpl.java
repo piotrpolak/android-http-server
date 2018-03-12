@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.impl;
 
 import java.util.Collections;
 import java.util.Date;
@@ -15,6 +15,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import ro.polak.http.exception.FilterInitializationException;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
+import ro.polak.http.servlet.Filter;
+import ro.polak.http.servlet.FilterConfig;
+import ro.polak.http.servlet.HttpServlet;
+import ro.polak.http.servlet.Servlet;
+import ro.polak.http.servlet.ServletConfig;
+import ro.polak.http.servlet.ServletContainer;
 
 /**
  * Manages life cycle of servlets.
@@ -22,7 +28,7 @@ import ro.polak.http.exception.ServletInitializationException;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201709
  */
-public class DefaultServletContainer implements ServletContainer {
+public class ServletContainerImpl implements ServletContainer {
 
     private final Map<Class<? extends HttpServlet>, Servlet> servlets = new ConcurrentHashMap<>();
     private final Map<Class<? extends Filter>, Filter> filters = new ConcurrentHashMap<>();

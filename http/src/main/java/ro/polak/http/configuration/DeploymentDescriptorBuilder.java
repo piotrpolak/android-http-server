@@ -10,7 +10,7 @@ package ro.polak.http.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-import ro.polak.http.servlet.ServletContextWrapper;
+import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.session.storage.SessionStorage;
 
 /**
@@ -21,7 +21,7 @@ import ro.polak.http.session.storage.SessionStorage;
  */
 public class DeploymentDescriptorBuilder {
 
-    private final List<ServletContextWrapper> servletContextWrappers = new ArrayList<>();
+    private final List<ServletContextImpl> servletContextImpls = new ArrayList<>();
 
     private SessionStorage sessionStorage;
     private ServerConfig serverConfig;
@@ -50,19 +50,19 @@ public class DeploymentDescriptorBuilder {
         return new ServletContextBuilder(this, sessionStorage, serverConfig);
     }
 
-    public List<ServletContextWrapper> build() {
-        return servletContextWrappers;
+    public List<ServletContextImpl> build() {
+        return servletContextImpls;
     }
 
     /**
      * Adds a servlet context. This method should be package scoped.
      *
-     * @param servletContextWrapper
+     * @param servletContextImpl
      * @return
      */
-    protected DeploymentDescriptorBuilder addServletContext(ServletContextWrapper servletContextWrapper) {
-        servletContextWrapper.setAttribute(ServerConfig.class.getName(), serverConfig);
-        servletContextWrappers.add(servletContextWrapper);
+    protected DeploymentDescriptorBuilder addServletContext(ServletContextImpl servletContextImpl) {
+        servletContextImpl.setAttribute(ServerConfig.class.getName(), serverConfig);
+        servletContextImpls.add(servletContextImpl);
         return this;
     }
 }

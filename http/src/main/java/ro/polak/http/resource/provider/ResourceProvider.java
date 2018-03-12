@@ -9,8 +9,8 @@ package ro.polak.http.resource.provider;
 
 import java.io.IOException;
 
-import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpResponseImpl;
 
 /**
  * Interface used for loading certain types of HTTP resources
@@ -37,5 +37,5 @@ public interface ResourceProvider {
      * @return
      * @throws IOException
      */
-    void load(String path, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException;
+    void load(String path, HttpRequestImpl request, HttpResponseImpl response) throws IOException;
 }

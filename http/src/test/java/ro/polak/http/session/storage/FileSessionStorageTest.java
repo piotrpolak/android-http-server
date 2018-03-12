@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 import ro.polak.http.FileUtils;
-import ro.polak.http.servlet.HttpSessionWrapper;
+import ro.polak.http.servlet.impl.HttpSessionImpl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -35,7 +35,7 @@ public class FileSessionStorageTest {
 
     @Test
     public void shouldPersistRestoreAndRemoveSession() throws IOException {
-        HttpSessionWrapper sessionWrapper = new HttpSessionWrapper(VALID_SESSION_ID);
+        HttpSessionImpl sessionWrapper = new HttpSessionImpl(VALID_SESSION_ID);
         sessionWrapper.setAttribute("attributeName", "SomeValue");
         fileSessionStorage.persistSession(sessionWrapper);
 
@@ -51,7 +51,7 @@ public class FileSessionStorageTest {
 
     @Test
     public void shouldPersistSessionAndOverWriteFile() throws IOException {
-        HttpSessionWrapper sessionWrapper = new HttpSessionWrapper(VALID_SESSION_ID);
+        HttpSessionImpl sessionWrapper = new HttpSessionImpl(VALID_SESSION_ID);
         sessionWrapper.setAttribute("attributeName", "SomeValue");
         fileSessionStorage.persistSession(sessionWrapper);
 
@@ -59,7 +59,7 @@ public class FileSessionStorageTest {
         assertThat(sessionWrapper, is(not(nullValue())));
         assertThat((String) sessionWrapper.getAttribute("attributeName"), is("SomeValue"));
 
-        HttpSessionWrapper session2Wrapper = new HttpSessionWrapper(VALID_SESSION_ID);
+        HttpSessionImpl session2Wrapper = new HttpSessionImpl(VALID_SESSION_ID);
         session2Wrapper.setAttribute("otherName", "OtherValue");
         fileSessionStorage.persistSession(session2Wrapper);
 
@@ -76,19 +76,19 @@ public class FileSessionStorageTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldValidateSessionNameLength() throws IOException {
-        HttpSessionWrapper sessionWrapper = new HttpSessionWrapper("abcX8");
+        HttpSessionImpl sessionWrapper = new HttpSessionImpl("abcX8");
         fileSessionStorage.persistSession(sessionWrapper);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldValidateSessionNameNull() throws IOException {
-        HttpSessionWrapper sessionWrapper = new HttpSessionWrapper(null);
+        HttpSessionImpl sessionWrapper = new HttpSessionImpl(null);
         fileSessionStorage.persistSession(sessionWrapper);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldValidateSessionNameIllegalCharacters() throws IOException {
-        HttpSessionWrapper sessionWrapper = new HttpSessionWrapper(ILLEGAL_SESSION_ID);
+        HttpSessionImpl sessionWrapper = new HttpSessionImpl(ILLEGAL_SESSION_ID);
         fileSessionStorage.persistSession(sessionWrapper);
     }
 
@@ -118,7 +118,7 @@ public class FileSessionStorageTest {
         new File(nonWritableDirectory).setWritable(false);
 
         FileSessionStorage fileSessionStorage = new FileSessionStorage(nonWritableDirectory);
-        HttpSessionWrapper sessionWrapper = new HttpSessionWrapper(VALID_SESSION_ID);
+        HttpSessionImpl sessionWrapper = new HttpSessionImpl(VALID_SESSION_ID);
         sessionWrapper.setAttribute("attributeName", "SomeValue");
         fileSessionStorage.persistSession(sessionWrapper);
     }

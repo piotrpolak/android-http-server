@@ -23,10 +23,10 @@ import ro.polak.http.protocol.parser.impl.RequestStatusParser;
 import ro.polak.http.protocol.serializer.impl.CookieHeaderSerializer;
 import ro.polak.http.protocol.serializer.impl.HeadersSerializer;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
-import ro.polak.http.servlet.HttpServletRequestWrapperFactory;
-import ro.polak.http.servlet.HttpServletResponseWrapperFactory;
-import ro.polak.http.servlet.RangeHelper;
-import ro.polak.http.servlet.StreamHelper;
+import ro.polak.http.servlet.factory.HttpServletRequestImplFactory;
+import ro.polak.http.servlet.factory.HttpServletResponseImplFactory;
+import ro.polak.http.servlet.helper.RangeHelper;
+import ro.polak.http.servlet.helper.StreamHelper;
 import ro.polak.http.utilities.DateProvider;
 
 /**
@@ -37,8 +37,8 @@ import ro.polak.http.utilities.DateProvider;
  */
 public class ServiceContainer {
 
-    private HttpServletRequestWrapperFactory requestWrapperFactory;
-    private HttpServletResponseWrapperFactory responseFactory;
+    private HttpServletRequestImplFactory requestWrapperFactory;
+    private HttpServletResponseImplFactory responseFactory;
     private ThreadPoolExecutor threadPoolExecutor;
     private HttpErrorHandlerResolver httpErrorHandlerResolver;
     private PathHelper pathHelper;
@@ -47,7 +47,7 @@ public class ServiceContainer {
 
         HeadersParser headersParser = new HeadersParser();
 
-        requestWrapperFactory = new HttpServletRequestWrapperFactory(headersParser,
+        requestWrapperFactory = new HttpServletRequestImplFactory(headersParser,
                 new QueryStringParser(),
                 new RequestStatusParser(),
                 new CookieParser(),
@@ -55,7 +55,7 @@ public class ServiceContainer {
                 serverConfig.getTempPath()
         );
 
-        responseFactory = new HttpServletResponseWrapperFactory(
+        responseFactory = new HttpServletResponseImplFactory(
                 new HeadersSerializer(),
                 new CookieHeaderSerializer(new DateProvider()),
                 new StreamHelper(
@@ -77,11 +77,11 @@ public class ServiceContainer {
 
     }
 
-    public HttpServletRequestWrapperFactory getRequestWrapperFactory() {
+    public HttpServletRequestImplFactory getRequestWrapperFactory() {
         return requestWrapperFactory;
     }
 
-    public HttpServletResponseWrapperFactory getResponseFactory() {
+    public HttpServletResponseImplFactory getResponseFactory() {
         return responseFactory;
     }
 

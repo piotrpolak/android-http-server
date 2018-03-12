@@ -1,4 +1,4 @@
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.helper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +15,9 @@ import java.util.Random;
 
 import ro.polak.http.RangePartHeader;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
+import ro.polak.http.servlet.Range;
+import ro.polak.http.servlet.helper.RangeHelper;
+import ro.polak.http.servlet.helper.StreamHelper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;

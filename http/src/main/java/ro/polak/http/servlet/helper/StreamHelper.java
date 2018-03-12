@@ -4,7 +4,7 @@
  * <p/>
  * Copyright (c) Piotr Polak 2017-2017
  **************************************************/
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.helper;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,6 +17,8 @@ import ro.polak.http.RangePartHeader;
 import ro.polak.http.Statistics;
 import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
+import ro.polak.http.servlet.Range;
+import ro.polak.http.servlet.helper.RangeHelper;
 
 /**
  * Helps serving streams.

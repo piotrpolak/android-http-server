@@ -38,9 +38,9 @@ import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.resource.provider.impl.FileResourceProvider;
 import ro.polak.http.resource.provider.impl.ServletResourceProvider;
-import ro.polak.http.servlet.DefaultServletContainer;
-import ro.polak.http.servlet.RangeHelper;
-import ro.polak.http.servlet.ServletContextWrapper;
+import ro.polak.http.servlet.impl.ServletContainerImpl;
+import ro.polak.http.servlet.helper.RangeHelper;
+import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.session.storage.FileSessionStorage;
 import ro.polak.http.session.storage.SessionStorage;
 
@@ -175,15 +175,15 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         return serverConfig;
     }
 
-    private List<ServletContextWrapper> getServletContexts(ServerConfig serverConfig) {
+    private List<ServletContextImpl> getServletContexts(ServerConfig serverConfig) {
         DeploymentDescriptorBuilder deploymentDescriptorBuilder
                 = getDeploymentDescriptorBuilder(new FileSessionStorage(serverConfig.getTempPath()), serverConfig);
 
-        List<ServletContextWrapper> servletContexts = deploymentDescriptorBuilder.build();
+        List<ServletContextImpl> servletContexts = deploymentDescriptorBuilder.build();
 
-        for (ServletContextWrapper servletContextWrapper : servletContexts) {
+        for (ServletContextImpl servletContextImpl : servletContexts) {
             for (Map.Entry<String, Object> entry : getAdditionalServletContextAttributes().entrySet()) {
-                servletContextWrapper.setAttribute(entry.getKey(), entry.getValue());
+                servletContextImpl.setAttribute(entry.getKey(), entry.getValue());
             }
         }
 
@@ -217,7 +217,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
 
     private ServletResourceProvider getServletResourceProvider(ServerConfig serverConfig) {
         return new ServletResourceProvider(
-                new DefaultServletContainer(),
+                new ServletContainerImpl(),
                 getServletContexts(serverConfig)
         );
     }

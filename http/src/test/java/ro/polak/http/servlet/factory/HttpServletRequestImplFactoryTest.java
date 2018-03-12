@@ -1,4 +1,4 @@
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.factory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +16,9 @@ import ro.polak.http.exception.protocol.UnsupportedProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.protocol.parser.impl.RequestStatusParser;
+import ro.polak.http.servlet.Cookie;
+import ro.polak.http.servlet.factory.HttpServletRequestImplFactory;
+import ro.polak.http.servlet.impl.HttpRequestImpl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -25,9 +28,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class HttpServletRequestWrapperFactoryTest {
+public class HttpServletRequestImplFactoryTest {
 
-    private static HttpServletRequestWrapperFactory factory;
+    private static HttpServletRequestImplFactory factory;
     private static Socket socket;
     private static Parser<Map<String, Cookie>> cookieParser;
     private static Parser<Headers> headersParser;
@@ -40,7 +43,7 @@ public class HttpServletRequestWrapperFactoryTest {
         when(headersParser.parse(any(String.class))).thenReturn(headers);
         cookieParser = mock(Parser.class);
 
-        factory = new HttpServletRequestWrapperFactory(
+        factory = new HttpServletRequestImplFactory(
                 headersParser,
                 mock(Parser.class),
                 new RequestStatusParser(),
@@ -74,7 +77,7 @@ public class HttpServletRequestWrapperFactoryTest {
     public void shouldAssignNoCookieOnMalformedCookieString() throws Exception {
         headers.setHeader(Headers.HEADER_COOKIE, "ANYTHING");
         when(cookieParser.parse(any(String.class))).thenThrow(new MalformedInputException("ANY"));
-        HttpRequestWrapper request = factory.createFromSocket(socket);
+        HttpRequestImpl request = factory.createFromSocket(socket);
         assertThat(request.getCookies().length, is(0));
         verify(cookieParser, times(1)).parse(any(String.class));
     }
@@ -82,7 +85,7 @@ public class HttpServletRequestWrapperFactoryTest {
     @Test
     public void shouldAssignNoCookieAndNoHeadersOnNoHeadersString() throws Exception {
         when(socket.getInputStream()).thenReturn(new ByteArrayInputStream("GET / HTTP/1.0\r\n\r\n".getBytes()));
-        HttpRequestWrapper request = factory.createFromSocket(socket);
+        HttpRequestImpl request = factory.createFromSocket(socket);
         assertThat(request.getCookies().length, is(0));
         assertThat(request.getHeaders().keySet().size(), is(0));
     }

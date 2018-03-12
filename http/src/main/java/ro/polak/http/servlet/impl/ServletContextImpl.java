@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +20,8 @@ import java.util.logging.Logger;
 import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServletMapping;
+import ro.polak.http.servlet.Cookie;
+import ro.polak.http.servlet.ServletContext;
 import ro.polak.http.session.storage.SessionStorage;
 import ro.polak.http.utilities.RandomStringGenerator;
 import ro.polak.http.utilities.Utilities;
@@ -30,9 +32,9 @@ import ro.polak.http.utilities.Utilities;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201610
  */
-public class ServletContextWrapper implements ServletContext {
+public class ServletContextImpl implements ServletContext {
 
-    private static final Logger LOGGER = Logger.getLogger(ServletContextWrapper.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ServletContextImpl.class.getName());
 
     private final ServerConfig serverConfig;
     private final SessionStorage sessionStorage;
@@ -51,12 +53,12 @@ public class ServletContextWrapper implements ServletContext {
      * @param serverConfig
      * @param sessionStorage
      */
-    public ServletContextWrapper(final String contextPath,
-                                 final List<ServletMapping> servletMappings,
-                                 final List<FilterMapping> filterMappings,
-                                 final Map<String, Object> attributes,
-                                 final ServerConfig serverConfig,
-                                 final SessionStorage sessionStorage) {
+    public ServletContextImpl(final String contextPath,
+                              final List<ServletMapping> servletMappings,
+                              final List<FilterMapping> filterMappings,
+                              final Map<String, Object> attributes,
+                              final ServerConfig serverConfig,
+                              final SessionStorage sessionStorage) {
         this.filterMappings = new ArrayList<>(filterMappings);
         this.serverConfig = serverConfig;
         this.sessionStorage = sessionStorage;
@@ -113,8 +115,8 @@ public class ServletContextWrapper implements ServletContext {
      * @param id
      * @return
      */
-    public HttpSessionWrapper getSession(String id) {
-        HttpSessionWrapper session = null;
+    public HttpSessionImpl getSession(String id) {
+        HttpSessionImpl session = null;
 
         try {
             session = sessionStorage.getSession(id);
@@ -140,8 +142,8 @@ public class ServletContextWrapper implements ServletContext {
      *
      * @return
      */
-    public HttpSessionWrapper createNewSession() {
-        HttpSessionWrapper session = new HttpSessionWrapper(RandomStringGenerator.generate());
+    public HttpSessionImpl createNewSession() {
+        HttpSessionImpl session = new HttpSessionImpl(RandomStringGenerator.generate());
         session.setServletContext(this);
         LOGGER.log(Level.FINE, "Created a new session {0}",
                 new Object[]{session.getId()});
@@ -155,8 +157,8 @@ public class ServletContextWrapper implements ServletContext {
      * @param response
      * @throws IOException
      */
-    public void handleSession(HttpSessionWrapper session, HttpResponseWrapper response) throws IOException {
-        Cookie cookie = new Cookie(HttpSessionWrapper.COOKIE_NAME, "");
+    public void handleSession(HttpSessionImpl session, HttpResponseImpl response) throws IOException {
+        Cookie cookie = new Cookie(HttpSessionImpl.COOKIE_NAME, "");
         if (session.isInvalidated()) {
             cookie.setMaxAge(-100);
 
@@ -171,7 +173,7 @@ public class ServletContextWrapper implements ServletContext {
         response.addCookie(cookie);
     }
 
-    private boolean isSessionExpired(HttpSessionWrapper session) {
+    private boolean isSessionExpired(HttpSessionImpl session) {
         return System.currentTimeMillis() - session.getMaxInactiveInterval() * 1000 > session.getLastAccessedTime();
     }
 

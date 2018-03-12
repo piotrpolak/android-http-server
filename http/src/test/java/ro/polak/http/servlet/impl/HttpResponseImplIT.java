@@ -1,4 +1,4 @@
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.impl;
 
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 
-public class HttpResponseWrapperIT extends AbstractIT {
+public class HttpResponseImplIT extends AbstractIT {
 
     @Test
     public void shouldPrintHeadersFirstWhenWritingToOutputStream() throws IOException {

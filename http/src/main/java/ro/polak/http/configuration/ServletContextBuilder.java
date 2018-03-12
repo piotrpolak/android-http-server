@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ro.polak.http.servlet.ServletContextWrapper;
+import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.session.storage.SessionStorage;
 
 /**
@@ -65,7 +65,7 @@ public class ServletContextBuilder {
     }
 
     public DeploymentDescriptorBuilder end() {
-        parent.addServletContext(new ServletContextWrapper(contextPath,
+        parent.addServletContext(new ServletContextImpl(contextPath,
                 servletMappings,
                 filterMappings,
                 attributes,

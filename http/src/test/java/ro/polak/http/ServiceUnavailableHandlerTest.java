@@ -7,8 +7,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import ro.polak.http.servlet.HttpResponseWrapper;
-import ro.polak.http.servlet.HttpServletResponseWrapperFactory;
+import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.factory.HttpServletResponseImplFactory;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 public class ServiceUnavailableHandlerTest {
 
-    private static HttpServletResponseWrapperFactory factory;
+    private static HttpServletResponseImplFactory factory;
     private static ServiceUnavailableHandler serviceUnavailableHandler;
     private static ByteArrayOutputStream outputStream;
     private static PrintWriter printWriter;
@@ -29,8 +29,8 @@ public class ServiceUnavailableHandlerTest {
     @Before
     public void setUp() throws Exception {
         outputStream = new ByteArrayOutputStream();
-        factory = mock(HttpServletResponseWrapperFactory.class);
-        HttpResponseWrapper response = mock(HttpResponseWrapper.class);
+        factory = mock(HttpServletResponseImplFactory.class);
+        HttpResponseImpl response = mock(HttpResponseImpl.class);
         printWriter = new PrintWriter(outputStream);
         when(response.getWriter()).thenReturn(printWriter);
 

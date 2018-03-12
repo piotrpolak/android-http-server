@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.impl;
 
 import java.io.Serializable;
 import java.util.Enumeration;
@@ -13,13 +13,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import ro.polak.http.servlet.HttpSession;
+import ro.polak.http.servlet.ServletContext;
+
 /**
  * Http session implementation
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class HttpSessionWrapper implements HttpSession, Serializable {
+public class HttpSessionImpl implements HttpSession, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -36,7 +39,7 @@ public class HttpSessionWrapper implements HttpSession, Serializable {
     /**
      * @param id
      */
-    public HttpSessionWrapper(String id) {
+    public HttpSessionImpl(String id) {
         this.id = id;
         attributes = new HashMap<>();
         creationTime = lastAccessedTime = System.currentTimeMillis();

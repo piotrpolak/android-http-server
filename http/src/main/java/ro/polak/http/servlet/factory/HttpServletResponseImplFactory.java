@@ -5,13 +5,16 @@
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.factory;
 
 import java.io.IOException;
 import java.net.Socket;
 
 import ro.polak.http.Headers;
 import ro.polak.http.protocol.serializer.Serializer;
+import ro.polak.http.servlet.Cookie;
+import ro.polak.http.servlet.helper.StreamHelper;
+import ro.polak.http.servlet.impl.HttpResponseImpl;
 
 /**
  * Utility facilitating creating new responses out of the socket.
@@ -19,7 +22,7 @@ import ro.polak.http.protocol.serializer.Serializer;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201710
  */
-public class HttpServletResponseWrapperFactory {
+public class HttpServletResponseImplFactory {
 
     private final Serializer<Headers> headersSerializer;
     private final Serializer<Cookie> cookieHeaderSerializer;
@@ -32,9 +35,9 @@ public class HttpServletResponseWrapperFactory {
      * @param cookieHeaderSerializer
      * @param streamHelper
      */
-    public HttpServletResponseWrapperFactory(Serializer<Headers> headersSerializer,
-                                             Serializer<Cookie> cookieHeaderSerializer,
-                                             StreamHelper streamHelper) {
+    public HttpServletResponseImplFactory(Serializer<Headers> headersSerializer,
+                                          Serializer<Cookie> cookieHeaderSerializer,
+                                          StreamHelper streamHelper) {
         this.headersSerializer = headersSerializer;
         this.cookieHeaderSerializer = cookieHeaderSerializer;
         this.streamHelper = streamHelper;
@@ -46,7 +49,7 @@ public class HttpServletResponseWrapperFactory {
      * @param socket
      * @return
      */
-    public HttpResponseWrapper createFromSocket(Socket socket) throws IOException {
-        return new HttpResponseWrapper(headersSerializer, cookieHeaderSerializer, streamHelper, socket.getOutputStream());
+    public HttpResponseImpl createFromSocket(Socket socket) throws IOException {
+        return new HttpResponseImpl(headersSerializer, cookieHeaderSerializer, streamHelper, socket.getOutputStream());
     }
 }

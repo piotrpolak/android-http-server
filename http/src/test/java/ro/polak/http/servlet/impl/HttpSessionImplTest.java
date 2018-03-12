@@ -1,22 +1,25 @@
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.impl;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
 
+import ro.polak.http.servlet.ServletContext;
+import ro.polak.http.servlet.impl.HttpSessionImpl;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
-public class HttpSessionWrapperTest {
+public class HttpSessionImplTest {
 
-    private HttpSessionWrapper session;
+    private HttpSessionImpl session;
 
     @Before
     public void setUp() {
-        session = new HttpSessionWrapper("123");
+        session = new HttpSessionImpl("123");
         session.setAttribute("attribute", "value");
     }
 

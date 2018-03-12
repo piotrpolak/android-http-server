@@ -9,7 +9,7 @@ package ro.polak.http.session.storage;
 
 import java.io.IOException;
 
-import ro.polak.http.servlet.HttpSessionWrapper;
+import ro.polak.http.servlet.impl.HttpSessionImpl;
 
 /**
  * Specifies methods required for storing session.
@@ -25,7 +25,7 @@ public interface SessionStorage {
      * @param session
      * @throws IOException
      */
-    void persistSession(HttpSessionWrapper session) throws IOException;
+    void persistSession(HttpSessionImpl session) throws IOException;
 
     /**
      * Reads session for the given id. Returns null if there is no such session and throws
@@ -35,7 +35,7 @@ public interface SessionStorage {
      * @return
      * @throws IOException
      */
-    HttpSessionWrapper getSession(String id) throws IOException;
+    HttpSessionImpl getSession(String id) throws IOException;
 
     /**
      * Removes session.
@@ -43,5 +43,5 @@ public interface SessionStorage {
      * @param session
      * @return
      */
-    boolean removeSession(HttpSessionWrapper session);
+    boolean removeSession(HttpSessionImpl session);
 }

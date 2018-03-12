@@ -1,4 +1,4 @@
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.helper;
 
 import org.junit.Test;
 
@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ro.polak.http.servlet.Range;
-import ro.polak.http.servlet.RangeHelper;
+import ro.polak.http.servlet.helper.RangeHelper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

@@ -38,7 +38,7 @@ import ro.polak.http.R;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.controller.Controller;
-import ro.polak.http.controller.MainController;
+import ro.polak.http.controller.impl.ControllerImpl;
 import ro.polak.http.gui.ServerGui;
 import ro.polak.webserver.logic.AssetUtil;
 import ro.polak.webserver.resource.provider.impl.AndroidServerConfigFactory;
@@ -75,7 +75,7 @@ public class MainService extends Service implements ServerGui {
 
         doFirstRunChecks(serverConfigFactory);
 
-        controller = new MainController(serverConfigFactory, ServerSocketFactory.getDefault(), this);
+        controller = new ControllerImpl(serverConfigFactory, ServerSocketFactory.getDefault(), this);
         controller.start();
 
         return START_STICKY;

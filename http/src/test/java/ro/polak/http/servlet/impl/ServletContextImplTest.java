@@ -1,4 +1,4 @@
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.impl;
 
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -12,6 +12,9 @@ import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.protocol.serializer.Serializer;
+import ro.polak.http.servlet.Cookie;
+import ro.polak.http.servlet.ServletContext;
+import ro.polak.http.servlet.helper.StreamHelper;
 import ro.polak.http.session.storage.SessionStorage;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -26,17 +29,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ServletContextWrapperTest {
+public class ServletContextImplTest {
 
     private SessionStorage sessionStorage;
-    private ServletContextWrapper servletContext;
-    private HttpResponseWrapper response;
+    private ServletContextImpl servletContext;
+    private HttpResponseImpl response;
 
     @Before
     public void setUp() {
         ServerConfig serverConfig = mock(ServerConfig.class);
         sessionStorage = mock(SessionStorage.class);
-        servletContext = new ServletContextWrapper("/",
+        servletContext = new ServletContextImpl("/",
                 Collections.<ServletMapping>emptyList(),
                 Collections.<FilterMapping>emptyList(),
                 Collections.<String, Object>emptyMap(),
@@ -44,7 +47,7 @@ public class ServletContextWrapperTest {
                 sessionStorage
         );
         servletContext.setAttribute("attribute", "value");
-        response = new HttpResponseWrapper(mock(
+        response = new HttpResponseImpl(mock(
                 Serializer.class),
                 mock(Serializer.class),
                 mock(StreamHelper.class),
@@ -53,13 +56,13 @@ public class ServletContextWrapperTest {
 
     @Test
     public void shouldSetCookieAndPersistForValidSession() throws IOException {
-        HttpSessionWrapper session = new HttpSessionWrapper("123");
+        HttpSessionImpl session = new HttpSessionImpl("123");
         servletContext.handleSession(session, response);
         verify(sessionStorage, times(1)).persistSession(session);
 
         assertThat(response.getCookies().size(), is(greaterThan(0)));
         for (Cookie cookie : response.getCookies()) {
-            if (cookie.getName().equals(HttpSessionWrapper.COOKIE_NAME)) {
+            if (cookie.getName().equals(HttpSessionImpl.COOKIE_NAME)) {
                 assertThat(cookie.getValue(), is(not(nullValue())));
                 return;
             }
@@ -70,14 +73,14 @@ public class ServletContextWrapperTest {
 
     @Test
     public void shouldEraseCookieAndRemoveForInvalidatedSession() throws IOException {
-        HttpSessionWrapper session = new HttpSessionWrapper("123");
+        HttpSessionImpl session = new HttpSessionImpl("123");
         session.invalidate();
         servletContext.handleSession(session, response);
         verify(sessionStorage, times(1)).removeSession(session);
 
         assertThat(response.getCookies().size(), is(greaterThan(0)));
         for (Cookie cookie : response.getCookies()) {
-            if (cookie.getName().equals(HttpSessionWrapper.COOKIE_NAME)) {
+            if (cookie.getName().equals(HttpSessionImpl.COOKIE_NAME)) {
                 assertThat(cookie.getMaxAge(), lessThan(-1));
                 return;
             }
@@ -88,26 +91,26 @@ public class ServletContextWrapperTest {
 
     @Test
     public void shouldReturnSessionForValidSID() throws IOException {
-        HttpSessionWrapper session = new HttpSessionWrapper("123");
+        HttpSessionImpl session = new HttpSessionImpl("123");
         when(sessionStorage.getSession("123")).thenReturn(session);
-        HttpSessionWrapper sessionRead = servletContext.getSession("123");
+        HttpSessionImpl sessionRead = servletContext.getSession("123");
         assertThat(sessionRead, is(not(nullValue())));
         assertThat(sessionRead.getServletContext(), is((ServletContext) servletContext));
     }
 
     @Test
     public void shouldRemoveExpiredSession() throws IOException {
-        HttpSessionWrapper session = new HttpSessionWrapper("123");
+        HttpSessionImpl session = new HttpSessionImpl("123");
         session.setLastAccessedTime(System.currentTimeMillis() - session.getMaxInactiveInterval() * 1000 - 1);
         when(sessionStorage.getSession("123")).thenReturn(session);
-        HttpSessionWrapper sessionRead = servletContext.getSession("123");
+        HttpSessionImpl sessionRead = servletContext.getSession("123");
         verify(sessionStorage, times(1)).removeSession(session);
         assertThat(sessionRead, is(nullValue()));
     }
 
     @Test
     public void shouldCreateSessionWithCorrectContext() {
-        HttpSessionWrapper session = servletContext.createNewSession();
+        HttpSessionImpl session = servletContext.createNewSession();
         assertThat(session, is(not(nullValue())));
         assertThat(session.getServletContext(), is((ServletContext) servletContext));
     }

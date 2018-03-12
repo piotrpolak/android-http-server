@@ -22,11 +22,11 @@ import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
-import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpResponseImpl;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.Range;
-import ro.polak.http.servlet.RangeHelper;
+import ro.polak.http.servlet.helper.RangeHelper;
 import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.RandomStringGenerator;
 import ro.polak.http.utilities.Utilities;
@@ -75,11 +75,11 @@ public class FileResourceProvider implements ResourceProvider {
     }
 
     @Override
-    public void load(String path, HttpRequestWrapper request, HttpResponseWrapper response) throws IOException {
+    public void load(String path, HttpRequestImpl request, HttpResponseImpl response) throws IOException {
         File file = getFile(path);
 
         // A server MUST ignore a Range header field received with a request method other than GET.
-        boolean isGetRequest = request.getMethod().equals(HttpRequestWrapper.METHOD_GET);
+        boolean isGetRequest = request.getMethod().equals(HttpRequestImpl.METHOD_GET);
         boolean isPartialRequest = isGetRequest && request.getHeaders().containsHeader(Headers.HEADER_RANGE);
 
         if (isPartialRequest) {
@@ -93,14 +93,14 @@ public class FileResourceProvider implements ResourceProvider {
         return new File(basePath + uri);
     }
 
-    private void loadCompleteContent(HttpRequestWrapper request, HttpResponseWrapper response, File file) throws IOException {
+    private void loadCompleteContent(HttpRequestImpl request, HttpResponseImpl response, File file) throws IOException {
         response.setContentType(mimeTypeMapping.getMimeTypeByExtension(Utilities.getExtension(file.getName())));
         response.setStatus(HttpServletResponse.STATUS_OK);
         response.setContentLength(file.length());
         response.getHeaders().setHeader(Headers.HEADER_ACCEPT_RANGES, "bytes");
         response.flushHeaders();
 
-        if (!request.getMethod().equals(HttpRequestWrapper.METHOD_HEAD)) {
+        if (!request.getMethod().equals(HttpRequestImpl.METHOD_HEAD)) {
             InputStream fileInputStream = new FileInputStream(file);
             try {
                 response.serveStream(fileInputStream);
@@ -112,7 +112,7 @@ public class FileResourceProvider implements ResourceProvider {
         response.flush();
     }
 
-    private void loadPartialContent(HttpRequestWrapper request, HttpResponseWrapper response, File file) throws IOException {
+    private void loadPartialContent(HttpRequestImpl request, HttpResponseImpl response, File file) throws IOException {
         List<Range> ranges;
         try {
             ranges = rangeParser.parse(request.getHeader(Headers.HEADER_RANGE));

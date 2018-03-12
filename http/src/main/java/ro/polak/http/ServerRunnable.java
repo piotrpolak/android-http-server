@@ -18,12 +18,12 @@ import ro.polak.http.exception.AccessDeniedException;
 import ro.polak.http.exception.MethodNotAllowedException;
 import ro.polak.http.exception.NotFoundException;
 import ro.polak.http.resource.provider.ResourceProvider;
-import ro.polak.http.servlet.HttpRequestWrapper;
-import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpResponseImpl;
 import ro.polak.http.servlet.HttpServletRequest;
-import ro.polak.http.servlet.HttpServletRequestWrapperFactory;
+import ro.polak.http.servlet.factory.HttpServletRequestImplFactory;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServletResponseWrapperFactory;
+import ro.polak.http.servlet.factory.HttpServletResponseImplFactory;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
@@ -38,8 +38,8 @@ public class ServerRunnable implements Runnable {
 
     private final ServerConfig serverConfig;
     private final Socket socket;
-    private final HttpServletRequestWrapperFactory requestFactory;
-    private final HttpServletResponseWrapperFactory responseFactory;
+    private final HttpServletRequestImplFactory requestFactory;
+    private final HttpServletResponseImplFactory responseFactory;
     private final HttpErrorHandlerResolver httpErrorHandlerResolver;
     private final PathHelper pathHelper;
 
@@ -53,8 +53,8 @@ public class ServerRunnable implements Runnable {
      */
     public ServerRunnable(final Socket socket,
                           final ServerConfig serverConfig,
-                          final HttpServletRequestWrapperFactory requestFactory,
-                          final HttpServletResponseWrapperFactory responseFactory,
+                          final HttpServletRequestImplFactory requestFactory,
+                          final HttpServletResponseImplFactory responseFactory,
                           final HttpErrorHandlerResolver httpErrorHandlerResolver,
                           final PathHelper pathHelper) {
         this.socket = socket;
@@ -67,12 +67,12 @@ public class ServerRunnable implements Runnable {
 
     @Override
     public void run() {
-        HttpResponseWrapper response = null;
+        HttpResponseImpl response = null;
 
         try {
             try {
                 response = responseFactory.createFromSocket(socket);
-                HttpRequestWrapper request = requestFactory.createFromSocket(socket);
+                HttpRequestImpl request = requestFactory.createFromSocket(socket);
 
                 LOGGER.log(Level.INFO, "Handling request {0} {1}", new Object[]{
                         request.getMethod(), request.getRequestURI()
@@ -110,7 +110,7 @@ public class ServerRunnable implements Runnable {
         }
     }
 
-    private void handleDirectoryIndex(HttpResponseWrapper response, HttpRequestWrapper request,
+    private void handleDirectoryIndex(HttpResponseImpl response, HttpRequestImpl request,
                                       String requestedPath) throws IOException {
         DirectoryIndexDescriptor indexDescriptor = loadDirectoryIndexResource(requestedPath);
         if (indexDescriptor == null) {
@@ -125,7 +125,7 @@ public class ServerRunnable implements Runnable {
         }
     }
 
-    private void sendRedirectToDirectorySlashedPath(HttpResponseWrapper response, String originalPath) throws IOException {
+    private void sendRedirectToDirectorySlashedPath(HttpResponseImpl response, String originalPath) throws IOException {
         response.setStatus(HttpServletResponse.STATUS_MOVED_PERMANENTLY);
         response.getHeaders().setHeader(Headers.HEADER_LOCATION, originalPath + "/");
         response.flush();
@@ -137,7 +137,7 @@ public class ServerRunnable implements Runnable {
      * @param request
      * @param response
      */
-    private void setDefaultResponseHeaders(HttpRequestWrapper request, HttpResponseWrapper response) {
+    private void setDefaultResponseHeaders(HttpRequestImpl request, HttpResponseImpl response) {
         boolean isKeepAlive = false;
         if (request.getHeaders().containsHeader(Headers.HEADER_CONNECTION)) {
             isKeepAlive = request.getHeaders().getHeader(Headers.HEADER_CONNECTION).equalsIgnoreCase("keep-alive");

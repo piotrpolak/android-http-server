@@ -5,7 +5,7 @@
  * @since 201803
  */
 
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,8 @@ import java.util.Objects;
 
 import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServletMapping;
+import ro.polak.http.servlet.ServletContext;
+import ro.polak.http.servlet.impl.ServletContextImpl;
 
 /**
  * ServletContextHelper.
@@ -36,8 +38,8 @@ public class ServletContextHelper {
     }
 
     //@Nullable
-    public ServletContextWrapper getResolvedContext(List<ServletContextWrapper> servletContexts, String path) {
-        for (ServletContextWrapper servletContext : servletContexts) {
+    public ServletContextImpl getResolvedContext(List<ServletContextImpl> servletContexts, String path) {
+        for (ServletContextImpl servletContext : servletContexts) {
             if (path.startsWith(servletContext.getContextPath())) {
                 return servletContext;
             }

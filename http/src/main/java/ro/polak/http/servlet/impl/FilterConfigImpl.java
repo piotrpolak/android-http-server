@@ -5,7 +5,10 @@
  * Copyright (c) Piotr Polak 2008-2018
  **************************************************/
 
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.impl;
+
+import ro.polak.http.servlet.FilterConfig;
+import ro.polak.http.servlet.ServletContext;
 
 /**
  * Default config.
@@ -13,7 +16,7 @@ package ro.polak.http.servlet;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201803
  */
-public class FilterConfigWrapper implements FilterConfig {
+public class FilterConfigImpl implements FilterConfig {
 
     private final ServletContext servletContext;
 
@@ -22,7 +25,7 @@ public class FilterConfigWrapper implements FilterConfig {
      *
      * @param servletContext
      */
-    public FilterConfigWrapper(ServletContext servletContext) {
+    public FilterConfigImpl(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
 

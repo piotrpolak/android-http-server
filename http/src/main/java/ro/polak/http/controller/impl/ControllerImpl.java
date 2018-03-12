@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http.controller;
+package ro.polak.http.controller.impl;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,6 +16,7 @@ import javax.net.ServerSocketFactory;
 
 import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.WebServer;
+import ro.polak.http.controller.Controller;
 import ro.polak.http.gui.ServerGui;
 
 /**
@@ -24,9 +25,9 @@ import ro.polak.http.gui.ServerGui;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201012
  */
-public class MainController implements Controller {
+public class ControllerImpl implements Controller {
 
-    private static final Logger LOGGER = Logger.getLogger(MainController.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ControllerImpl.class.getName());
 
     private final ServerGui gui;
     private final ServerConfigFactory serverConfigFactory;
@@ -37,7 +38,7 @@ public class MainController implements Controller {
     /**
      * Default constructor.
      */
-    public MainController(final ServerConfigFactory serverConfigFactory,
+    public ControllerImpl(final ServerConfigFactory serverConfigFactory,
                           final ServerSocketFactory serverSocketFactory,
                           final ServerGui gui) {
 

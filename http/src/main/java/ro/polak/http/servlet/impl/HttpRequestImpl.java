@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.impl;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,6 +24,11 @@ import java.util.Map;
 import ro.polak.http.Headers;
 import ro.polak.http.RequestStatus;
 import ro.polak.http.Statistics;
+import ro.polak.http.servlet.Cookie;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpSession;
+import ro.polak.http.servlet.ServletContext;
+import ro.polak.http.servlet.UploadedFile;
 
 import static java.util.TimeZone.getTimeZone;
 
@@ -33,7 +38,7 @@ import static java.util.TimeZone.getTimeZone;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class HttpRequestWrapper implements HttpServletRequest {
+public class HttpRequestImpl implements HttpServletRequest {
 
     public final static String METHOD_CONNECT = "CONNECT";
     public final static String METHOD_DELETE = "DELETE";
@@ -57,9 +62,9 @@ public class HttpRequestWrapper implements HttpServletRequest {
 
     private Map<String, Cookie> cookies;
     private Collection<UploadedFile> uploadedFiles;
-    private HttpSessionWrapper session;
+    private HttpSessionImpl session;
     private boolean sessionWasRequested = false;
-    private ServletContextWrapper servletContext;
+    private ServletContextImpl servletContext;
     private Map<String, Object> attributes;
     private String characterEncoding = "UTF-8";
 
@@ -81,7 +86,7 @@ public class HttpRequestWrapper implements HttpServletRequest {
     /**
      * Default constructor
      */
-    public HttpRequestWrapper() {
+    public HttpRequestImpl() {
         Statistics.incrementRequestHandled();
         postParameters = new HashMap<>();
         getParameters = new HashMap<>();
@@ -177,7 +182,7 @@ public class HttpRequestWrapper implements HttpServletRequest {
 
     @Override
     public String getRequestedSessionId() {
-        Cookie sessionCookie = getCookie(HttpSessionWrapper.COOKIE_NAME);
+        Cookie sessionCookie = getCookie(HttpSessionImpl.COOKIE_NAME);
         if (sessionCookie == null) {
             return null;
 
@@ -446,7 +451,7 @@ public class HttpRequestWrapper implements HttpServletRequest {
      *
      * @param servletContext
      */
-    public void setServletContext(ServletContextWrapper servletContext) {
+    public void setServletContext(ServletContextImpl servletContext) {
         this.servletContext = servletContext;
     }
 

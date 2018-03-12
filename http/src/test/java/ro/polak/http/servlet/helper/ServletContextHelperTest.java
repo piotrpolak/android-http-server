@@ -1,4 +1,4 @@
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.helper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +14,13 @@ import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.configuration.impl.FilterMappingImpl;
 import ro.polak.http.configuration.impl.ServletMappingImpl;
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.Filter;
+import ro.polak.http.servlet.FilterChain;
+import ro.polak.http.servlet.FilterConfig;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.helper.ServletContextHelper;
+import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.servlet.loader.SampleServlet;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,12 +32,12 @@ import static org.mockito.Mockito.when;
 
 public class ServletContextHelperTest {
 
-    private ServletContextWrapper servletContext;
+    private ServletContextImpl servletContext;
     private ServletContextHelper servletContextHelper = new ServletContextHelper();
 
     @Before
     public void setUp() {
-        servletContext = mock(ServletContextWrapper.class);
+        servletContext = mock(ServletContextImpl.class);
         when(servletContext.getContextPath()).thenReturn("/context");
     }
 

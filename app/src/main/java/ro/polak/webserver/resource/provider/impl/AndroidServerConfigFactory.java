@@ -36,7 +36,7 @@ import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.resource.provider.impl.FileResourceProvider;
-import ro.polak.http.servlet.RangeHelper;
+import ro.polak.http.servlet.helper.RangeHelper;
 import ro.polak.http.session.storage.SessionStorage;
 import ro.polak.webserver.AssetResourceProvider;
 

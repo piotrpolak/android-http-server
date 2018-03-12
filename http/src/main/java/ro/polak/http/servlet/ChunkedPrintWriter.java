@@ -18,7 +18,7 @@ import java.io.OutputStream;
  */
 public class ChunkedPrintWriter extends ServletPrintWriter {
 
-    // TODO Move this capability to the ServletOutputStreamWrapper
+    // TODO Move this capability to the ServletOutputStreamImpl
 
     private static final String NEW_LINE = "\r\n";
     private static final String END_LINE = "0\r\n\r\n";

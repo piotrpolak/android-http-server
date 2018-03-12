@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2016-2017
  **************************************************/
 
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.factory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +34,9 @@ import ro.polak.http.exception.protocol.UnsupportedProtocolException;
 import ro.polak.http.exception.protocol.UriTooLongProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
+import ro.polak.http.servlet.Cookie;
+import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.ServletContextImpl;
 
 /**
  * Utility facilitating creating new requests out of the socket.
@@ -41,7 +44,7 @@ import ro.polak.http.protocol.parser.Parser;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201611
  */
-public class HttpServletRequestWrapperFactory {
+public class HttpServletRequestImplFactory {
 
     private static final String DEFAULT_SCHEME = "http";
     private static final int MULTIPART_BUFFER_LENGTH = 2048;
@@ -92,12 +95,12 @@ public class HttpServletRequestWrapperFactory {
      * @param cookieParser
      * @param tempPath
      */
-    public HttpServletRequestWrapperFactory(final Parser<Headers> headersParser,
-                                            final Parser<Map<String, String>> queryStringParser,
-                                            final Parser<RequestStatus> statusParser,
-                                            final Parser<Map<String, Cookie>> cookieParser,
-                                            final Parser<MultipartHeadersPart> multipartHeadersPartParser,
-                                            final String tempPath) {
+    public HttpServletRequestImplFactory(final Parser<Headers> headersParser,
+                                         final Parser<Map<String, String>> queryStringParser,
+                                         final Parser<RequestStatus> statusParser,
+                                         final Parser<Map<String, Cookie>> cookieParser,
+                                         final Parser<MultipartHeadersPart> multipartHeadersPartParser,
+                                         final String tempPath) {
         this.headersParser = headersParser;
         this.queryStringParser = queryStringParser;
         this.statusParser = statusParser;
@@ -112,10 +115,10 @@ public class HttpServletRequestWrapperFactory {
      * @param socket
      * @return
      */
-    public HttpRequestWrapper createFromSocket(Socket socket)
+    public HttpRequestImpl createFromSocket(Socket socket)
             throws IOException, ProtocolException {
 
-        HttpRequestWrapper request = new HttpRequestWrapper();
+        HttpRequestImpl request = new HttpRequestImpl();
 
         InputStream in = socket.getInputStream();
         // The order matters
@@ -142,7 +145,7 @@ public class HttpServletRequestWrapperFactory {
         request.setPathTranslated(request.getRequestURI()); // TODO There is no way to make it work under Android
 
         // This will be overwritten when running servlet
-        request.setServletContext(new ServletContextWrapper("/",
+        request.setServletContext(new ServletContextImpl("/",
                 Collections.<ServletMapping>emptyList(),
                 Collections.<FilterMapping>emptyList(),
                 Collections.<String, Object>emptyMap(),
@@ -175,7 +178,7 @@ public class HttpServletRequestWrapperFactory {
             request.setCookies(Collections.<String, Cookie>emptyMap());
         }
 
-        if (request.getMethod().equalsIgnoreCase(HttpRequestWrapper.METHOD_POST)) {
+        if (request.getMethod().equalsIgnoreCase(HttpRequestImpl.METHOD_POST)) {
             try {
                 handlePostRequest(request, in);
             } catch (MalformedInputException e) {
@@ -190,7 +193,7 @@ public class HttpServletRequestWrapperFactory {
         return protocol.equalsIgnoreCase("HTTP/1.0") || protocol.equalsIgnoreCase("HTTP/1.1");
     }
 
-    private void assignSocketMetadata(Socket socket, HttpRequestWrapper request) {
+    private void assignSocketMetadata(Socket socket, HttpRequestImpl request) {
         request.setSecure(false);
         request.setScheme(DEFAULT_SCHEME);
         request.setRemoteAddr(socket.getInetAddress().getHostAddress());
@@ -276,7 +279,7 @@ public class HttpServletRequestWrapperFactory {
         return headersString.toString();
     }
 
-    private void handlePostRequest(HttpRequestWrapper request, InputStream in) throws IOException, MalformedInputException {
+    private void handlePostRequest(HttpRequestImpl request, InputStream in) throws IOException, MalformedInputException {
         int postLength;
         if (request.getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
             try {
@@ -305,12 +308,12 @@ public class HttpServletRequestWrapperFactory {
         }
     }
 
-    private boolean isMultipartRequest(HttpRequestWrapper request) {
+    private boolean isMultipartRequest(HttpRequestImpl request) {
         return request.getHeaders().containsHeader(Headers.HEADER_CONTENT_TYPE)
                 && request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE).toLowerCase().startsWith("multipart/form-data");
     }
 
-    private void handlePostPlainRequest(HttpRequestWrapper request, InputStream in, int postLength)
+    private void handlePostPlainRequest(HttpRequestImpl request, InputStream in, int postLength)
             throws IOException, MalformedInputException {
         byte[] buffer;
         buffer = new byte[1];
@@ -325,7 +328,7 @@ public class HttpServletRequestWrapperFactory {
         request.setPostParameters(queryStringParser.parse(postLine.toString()));
     }
 
-    private void handlePostMultipartRequest(HttpRequestWrapper request, InputStream in, int postLength)
+    private void handlePostMultipartRequest(HttpRequestImpl request, InputStream in, int postLength)
             throws IOException, MalformedInputException {
 
         String boundary = request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE);

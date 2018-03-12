@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import javax.net.ServerSocketFactory;
 
 import ro.polak.http.configuration.ServerConfigFactory;
-import ro.polak.http.controller.MainController;
+import ro.polak.http.controller.impl.ControllerImpl;
 import ro.polak.http.gui.ServerGui;
 
 /**
@@ -50,10 +50,10 @@ public class DefaultCliServerGui implements ServerGui {
                 "/_//_/  /_/    /_/  /_/    /___/ \\__//_/   |___/ \\__//_/   \n");
         System.out.println("https://github.com/piotrpolak/android-http-server");
         System.out.println("");
-        MainController mainController = new MainController(getServerConfigFactory(),
+        ControllerImpl controllerImpl = new ControllerImpl(getServerConfigFactory(),
                 ServerSocketFactory.getDefault(),
                 gui);
-        mainController.start();
+        controllerImpl.start();
     }
 
     protected ServerConfigFactory getServerConfigFactory() {

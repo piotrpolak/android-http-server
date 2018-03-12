@@ -5,7 +5,10 @@
  * Copyright (c) Piotr Polak 2016-2016
  **************************************************/
 
-package ro.polak.http.servlet;
+package ro.polak.http.servlet.impl;
+
+import ro.polak.http.servlet.ServletConfig;
+import ro.polak.http.servlet.ServletContext;
 
 /**
  * Servlet config implementation.
@@ -13,7 +16,7 @@ package ro.polak.http.servlet;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201610
  */
-public class ServletConfigWrapper implements ServletConfig {
+public class ServletConfigImpl implements ServletConfig {
 
     private final ServletContext servletContext;
 
@@ -22,7 +25,7 @@ public class ServletConfigWrapper implements ServletConfig {
      *
      * @param servletContext
      */
-    public ServletConfigWrapper(ServletContext servletContext) {
+    public ServletConfigImpl(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
 

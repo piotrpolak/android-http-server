@@ -1,4 +1,4 @@
-package ro.polak.http;
+package ro.polak.http.impl;
 
 import org.junit.Test;
 
@@ -6,21 +6,22 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
-import ro.polak.http.servlet.HttpResponseWrapper;
+import ro.polak.http.impl.ServletOutputStreamImpl;
+import ro.polak.http.servlet.impl.HttpResponseImpl;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class OutputStreamWrapperTest {
+public class OutputStreamImplTest {
 
     @Test
     public void shouldFlushHeadersOnFirstUseForInts() throws IOException {
         OutputStream out = mock(OutputStream.class);
         int data = 1;
-        HttpResponseWrapper response = mock(HttpResponseWrapper.class);
-        ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
+        HttpResponseImpl response = mock(HttpResponseImpl.class);
+        ServletOutputStreamImpl outW = new ServletOutputStreamImpl(out, response);
         try {
             when(response.isCommitted()).thenReturn(false);
             outW.write(data);
@@ -39,8 +40,8 @@ public class OutputStreamWrapperTest {
 
         byte[] data = "Hello World".getBytes(Charset.defaultCharset());
 
-        HttpResponseWrapper response = mock(HttpResponseWrapper.class);
-        ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
+        HttpResponseImpl response = mock(HttpResponseImpl.class);
+        ServletOutputStreamImpl outW = new ServletOutputStreamImpl(out, response);
         try {
             when(response.isCommitted()).thenReturn(false);
             outW.write(data);
@@ -60,8 +61,8 @@ public class OutputStreamWrapperTest {
 
         byte[] data = "Hello World".getBytes(Charset.defaultCharset());
 
-        HttpResponseWrapper response = mock(HttpResponseWrapper.class);
-        ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
+        HttpResponseImpl response = mock(HttpResponseImpl.class);
+        ServletOutputStreamImpl outW = new ServletOutputStreamImpl(out, response);
         try {
             when(response.isCommitted()).thenReturn(false);
             outW.write(data, 0, 1);
@@ -78,8 +79,8 @@ public class OutputStreamWrapperTest {
     @Test
     public void shouldForwardFlush() throws IOException {
         OutputStream out = mock(OutputStream.class);
-        HttpResponseWrapper response = mock(HttpResponseWrapper.class);
-        ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
+        HttpResponseImpl response = mock(HttpResponseImpl.class);
+        ServletOutputStreamImpl outW = new ServletOutputStreamImpl(out, response);
         try {
             outW.flush();
             verify(out, times(1)).flush();
@@ -91,8 +92,8 @@ public class OutputStreamWrapperTest {
     @Test
     public void shouldForwardClose() throws IOException {
         OutputStream out = mock(OutputStream.class);
-        HttpResponseWrapper response = mock(HttpResponseWrapper.class);
-        ServletOutputStreamWrapper outW = new ServletOutputStreamWrapper(out, response);
+        HttpResponseImpl response = mock(HttpResponseImpl.class);
+        ServletOutputStreamImpl outW = new ServletOutputStreamImpl(out, response);
         outW.close();
         verify(out, times(1)).close();
     }

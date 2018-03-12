@@ -45,8 +45,8 @@ all HTTP protocol implementation is based on parsing data read from raw TCP sock
 
 All application code is targeted to Java 7. It also compiles for Android SDK versions < 19
 (try with resources is not supported, use
-[IOUtilities](../../tree/master/http/src/main/java/ro/polak/http/utilities/IOUtilities.java) as an 
-alternative when closing streams).
+[IOUtilities.closeSilently(closeable)](../../tree/master/http/src/main/java/ro/polak/http/utilities/IOUtilities.java)
+in a `finally` block as an alternative when closing streams).
 
 Once the [ro.polak.http](../../tree/master/http/src/main/java/) package is mature enough it will be
 released as an independent artifact.
@@ -132,11 +132,9 @@ public class RequestLoggingFilter implements Filter {
     
     private static final Logger LOGGER = Logger.getLogger(RequestLoggingFilter.class.getName());
 
-    private FilterConfig filterConfig;
-
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.filterConfig = filterConfig;
+        // Do nothing
     }
 
     @Override
@@ -149,7 +147,12 @@ public class RequestLoggingFilter implements Filter {
 }
 ```
 
-More examples can be found in [http/src/main/java/example](../../tree/master/http/src/main/java/example).
+Example servlets can be found in [http/src/main/java/example](../../tree/master/http/src/main/java/example).
+
+A practical use of filters can be checked at
+[app/src/main/java/admin/filter/SecurityFilter.java](../../tree/master/app/src/main/java/admin/filter/SecurityFilter.java)
+and 
+[app/src/main/java/admin/filter/LogoutFilter.java](../../tree/master/app/src/main/java/admin/filter/LogoutFilter.java)
 
 ## Deployment descriptor - creating servlet contexts and mapping servlets to URLs
 

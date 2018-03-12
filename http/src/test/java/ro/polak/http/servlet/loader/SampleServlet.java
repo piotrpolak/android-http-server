@@ -31,16 +31,9 @@ public class SampleServlet extends HttpServlet {
         destroyedCounter++;
     }
 
-    /**
-     * Used for testing purpose only
-     *
-     * @param request
-     * @param response
-     * @throws ServletException
-     */
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-
+        // Do nothing, this is used for test only
     }
 
     public int getInitializedCounter() {

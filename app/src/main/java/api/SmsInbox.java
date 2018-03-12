@@ -31,7 +31,6 @@ public class SmsInbox extends HttpServlet {
 
     private static final int DEFAULT_MAX_RESULTS = 999;
     private static final String ATTR_MAX_RESULTS = "maxResults";
-    private static final String INCOMING_WHERE_STRING = "type=1";
     private static final String ALL_STRING = "";
     private static final MessageDTOMapper mapper = new MessageDTOMapper();
 

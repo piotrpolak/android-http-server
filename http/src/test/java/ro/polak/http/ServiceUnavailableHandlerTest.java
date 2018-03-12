@@ -30,7 +30,7 @@ public class ServiceUnavailableHandlerTest {
     public void setUp() throws Exception {
         outputStream = new ByteArrayOutputStream();
         factory = mock(HttpServletResponseWrapperFactory.class);
-        HttpResponseWrapper response = mock(HttpResponseWrapper.class);;
+        HttpResponseWrapper response = mock(HttpResponseWrapper.class);
         printWriter = new PrintWriter(outputStream);
         when(response.getWriter()).thenReturn(printWriter);
 

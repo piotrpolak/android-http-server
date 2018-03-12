@@ -60,7 +60,7 @@ public class DeploymentDescriptorBuilder {
      * @param servletContextWrapper
      * @return
      */
-    DeploymentDescriptorBuilder addServletContext(ServletContextWrapper servletContextWrapper) {
+    protected DeploymentDescriptorBuilder addServletContext(ServletContextWrapper servletContextWrapper) {
         servletContextWrapper.setAttribute(ServerConfig.class.getName(), serverConfig);
         servletContextWrappers.add(servletContextWrapper);
         return this;

@@ -9,7 +9,6 @@ package ro.polak.http.servlet;
 
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Set;
 
 import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServletMapping;

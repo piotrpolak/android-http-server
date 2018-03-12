@@ -81,7 +81,7 @@ public class ServletContextBuilder {
      * @param servletMapping
      * @return
      */
-    ServletContextBuilder withServletMapping(ServletMapping servletMapping) {
+    protected ServletContextBuilder withServletMapping(ServletMapping servletMapping) {
         servletMappings.add(servletMapping);
         return this;
     }
@@ -92,7 +92,7 @@ public class ServletContextBuilder {
      * @param filterMapping
      * @return
      */
-    ServletContextBuilder withFilterMapping(FilterMapping filterMapping) {
+    protected ServletContextBuilder withFilterMapping(FilterMapping filterMapping) {
         filterMappings.add(filterMapping);
         return this;
     }

@@ -113,7 +113,7 @@ public class ServletResourceProvider implements ResourceProvider {
         arrayDeque.add(new Filter() {
             @Override
             public void init(FilterConfig filterConfig) throws ServletException {
-
+                // Do nothing
             }
 
             @Override

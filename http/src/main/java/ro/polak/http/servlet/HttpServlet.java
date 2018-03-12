@@ -27,7 +27,7 @@ public abstract class HttpServlet implements Servlet {
 
     @Override
     public void init() throws ServletException {
-
+        // To be overwritten
     }
 
     @Override

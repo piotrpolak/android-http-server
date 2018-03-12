@@ -66,7 +66,7 @@ public class ExtraMarchers {
 
         @Override
         public void describeTo(Description description) {
-
+            // Not supported
         }
 
         private void callPrivateConstructor(Class clazz) {

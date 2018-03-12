@@ -34,7 +34,7 @@ public class HttpServletTest {
     private class SampleServlet extends HttpServlet {
         @Override
         public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-
+            // Do nothing, this is just a test servlet
         }
     }
 }

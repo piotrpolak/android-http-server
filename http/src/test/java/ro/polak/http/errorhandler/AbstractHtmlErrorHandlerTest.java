@@ -12,7 +12,6 @@ import ro.polak.http.FileUtils;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.servlet.HttpResponseWrapper;
-import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.RangeHelper;
 import ro.polak.http.servlet.StreamHelper;
 

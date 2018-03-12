@@ -2,7 +2,6 @@ package ro.polak.http.resource.provider.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.util.collections.Sets;
 
 import java.io.IOException;
 import java.io.OutputStream;

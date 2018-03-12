@@ -150,9 +150,9 @@ public class RequestLoggingFilter implements Filter {
 Example servlets can be found in [http/src/main/java/example](../../tree/master/http/src/main/java/example).
 
 A practical use of filters can be checked at
-[app/src/main/java/admin/filter/SecurityFilter.java](../../tree/master/app/src/main/java/admin/filter/SecurityFilter.java)
-and 
-[app/src/main/java/admin/filter/LogoutFilter.java](../../tree/master/app/src/main/java/admin/filter/LogoutFilter.java)
+[SecurityFilter.java](../../tree/master/app/src/main/java/admin/filter/SecurityFilter.java) and 
+[LogoutFilter.java](../../tree/master/app/src/main/java/admin/filter/LogoutFilter.java) of the
+admin application.
 
 ## Deployment descriptor - creating servlet contexts and mapping servlets to URLs
 

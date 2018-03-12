@@ -26,11 +26,14 @@ public class LogoutFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
-        serverConfig = (ServerConfig) filterConfig.getServletContext().getAttribute(ServerConfig.class.getName());
+        serverConfig = (ServerConfig) filterConfig.getServletContext()
+                .getAttribute(ServerConfig.class.getName());
     }
 
     @Override
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response,
+                         FilterChain filterChain) throws IOException, ServletException {
+
         new AccessControl(serverConfig, request.getSession()).logout();
         response.sendRedirect(filterConfig.getServletContext().getContextPath() + "/Login");
     }

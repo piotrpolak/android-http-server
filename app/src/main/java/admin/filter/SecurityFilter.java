@@ -6,7 +6,6 @@
  **************************************************/
 
 package admin.filter;
-
 import java.io.IOException;
 
 import admin.logic.AccessControl;
@@ -28,17 +27,26 @@ public class SecurityFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
-        serverConfig = (ServerConfig) filterConfig.getServletContext().getAttribute(ServerConfig.class.getName());
+        serverConfig = (ServerConfig) filterConfig.getServletContext()
+                .getAttribute(ServerConfig.class.getName());
     }
 
     @Override
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        AccessControl ac = new AccessControl(serverConfig, request.getSession());
-        if (!ac.isLogged()) {
-            response.sendRedirect(filterConfig.getServletContext().getContextPath() + "/Login?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI() + (!request.getQueryString().equals("") ? "?" + request.getQueryString() : ""));
+    public void doFilter(HttpServletRequest request, HttpServletResponse response,
+                         FilterChain filterChain) throws IOException, ServletException {
+
+        AccessControl accessControl = new AccessControl(serverConfig, request.getSession());
+        if (!accessControl.isLogged()) {
+            String url = filterConfig.getServletContext().getContextPath() + getLoginUri(request);
+            response.sendRedirect(url);
             return;
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private String getLoginUri(HttpServletRequest request) {
+        return "/Login?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI() +
+                (!"".equals(request.getQueryString()) ? "?" + request.getQueryString() : "");
     }
 }

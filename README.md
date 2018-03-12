@@ -153,6 +153,7 @@ public class RequestLoggingFilter implements Filter {
     @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response,
                          FilterChain filterChain) throws IOException, ServletException {
+        
         LOGGER.fine("Handling incoming request " + request.getRequestURL());
         
         filterChain.doFilter(request, response);
@@ -169,7 +170,9 @@ admin application.
 
 ## Building a deployment descriptor
 
-Each servlet must be mapped to an URL similar to `web.xml` manner.
+[DeploymentDescriptorBuilder](../../tree/master/http/src/main/java/ro/polak/http/configuration/DeploymentDescriptorBuilder.java)
+is an API alternative to traditional `web.xml` approach that aims to make servlet mapping building
+and filter registration easy. See example code below.
 
 ```java
 package example;

@@ -11,6 +11,19 @@ used to handle dynamic pages. The servlet API is designed after the official `ja
 yet it is not compatible. Dynamic pages support cookies, sessions, file uploads and anything else
 to build a common web application.
 
+* [Key features](#key-features)
+* [Building the application](#building-the-application)
+* [The http subproject and the idea behind it](#the-http-subproject-and-the-idea-behind-it)
+* [Mutation testing](#mutation-testing)
+* [Running standalone server (CLI)](#running-standalone-server-cli)
+* [Sample code](#sample-code)
+    * [Hello World servlet](#hello-word-servlet)
+    * [Request logging filter](#request-logging-filter)
+* [Deployment descriptor](#deployment-descriptor---creating-servlet-contexts-and-mapping-servlets-to-urls)
+* [Screens](#screens)
+* [500 error stack trace in browser](#500-error-page-trace-in-browser)
+* [Sample script to send SMS using wget command line utilityr](#sample-script-to-send-sms-using-wget-command-line-utility)
+
 ## Key features
 
 * Small footprint, requires no external libraries
@@ -23,7 +36,7 @@ to build a common web application.
 * Supports serving partial body (ranges)
 * Can serve static content both from file system and APK resources
 
-## Building application
+## Building the application
 
 The provided Gradle wrapper should be used to build the application:
 
@@ -114,7 +127,7 @@ public class HelloWorld extends HttpServlet {
 }
 ```
 
-## Request logging servlet
+### Request logging filter
 
 ```java
 package example;
@@ -210,10 +223,11 @@ class DeploymentDescriptorFactory {
 ![HTTP back-office server statistics](screens/admin-server-statistics.png)
 ![HTTP back-office SMS inbox](screens/admin-sms-inbox.png)
 
-### 500 error page trace
+### 500 error page trace in browser
+
 ![Servlet error 500](screens/servlet-error-500.png)
 
-## Sample script to send SMS using wget
+## Sample script to send SMS using wget command line utility
 
 If you want to send a real SMS please remove "&test=1" from the POST params.
 

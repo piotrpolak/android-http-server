@@ -17,9 +17,9 @@ to build a common web application.
 * [Mutation testing](#mutation-testing)
 * [Running standalone server (CLI)](#running-standalone-server-cli)
 * [Sample code](#sample-code)
-    * [Hello World servlet](#hello-word-servlet)
+    * [Hello World servlet](#hello-world-servlet)
     * [Request logging filter](#request-logging-filter)
-* [Deployment descriptor](#deployment-descriptor---creating-servlet-contexts-and-mapping-servlets-to-urls)
+* [Building a deployment descriptor](#building-a-deployment-descriptor)
 * [Screens](#screens)
 * [500 error stack trace in browser](#500-error-page-trace-in-browser)
 * [Sample script to send SMS using wget command line utilityr](#sample-script-to-send-sms-using-wget-command-line-utility)
@@ -167,7 +167,7 @@ A practical use of filters can be checked at
 [LogoutFilter.java](../../tree/master/app/src/main/java/admin/filter/LogoutFilter.java) of the
 admin application.
 
-## Deployment descriptor - creating servlet contexts and mapping servlets to URLs
+## Building a deployment descriptor
 
 Each servlet must be mapped to an URL similar to `web.xml` manner.
 

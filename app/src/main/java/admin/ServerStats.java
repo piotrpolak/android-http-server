@@ -12,6 +12,7 @@ import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.utilities.FileUtilities;
 
 public class ServerStats extends HttpServlet {
 
@@ -30,10 +31,10 @@ public class ServerStats extends HttpServlet {
 
         doc.writeln("<table class=\"table\">");
         doc.writeln("<tr>");
-        doc.writeln("   <td>Data received</td><td>" + ro.polak.http.utilities.Utilities.fileSizeUnits(ro.polak.http.Statistics.getBytesReceived()) + "</td>");
+        doc.writeln("   <td>Data received</td><td>" + FileUtilities.fileSizeUnits(ro.polak.http.Statistics.getBytesReceived()) + "</td>");
         doc.writeln("</tr>");
         doc.writeln("<tr>");
-        doc.writeln("   <td>Data sent</td><td>" + ro.polak.http.utilities.Utilities.fileSizeUnits(ro.polak.http.Statistics.getBytesSent()) + "</td>");
+        doc.writeln("   <td>Data sent</td><td>" + FileUtilities.fileSizeUnits(ro.polak.http.Statistics.getBytesSent()) + "</td>");
         doc.writeln("</tr>");
         doc.writeln("<tr>");
         doc.writeln("   <td>Requests handled</td><td>" + ro.polak.http.Statistics.getRequestsHandled() + "</td>");

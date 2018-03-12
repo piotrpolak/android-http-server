@@ -12,7 +12,7 @@ import java.util.Map;
 
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
-import ro.polak.http.utilities.Utilities;
+import ro.polak.http.utilities.StringUtilities;
 
 /**
  * HTTP request headers wrapper
@@ -42,8 +42,8 @@ public class QueryStringParser implements Parser<Map<String, String>> {
                 continue;
             }
 
-            if(parameterPair.length > 1) {
-                parameters.put(parameterPair[0], Utilities.urlDecode(parameterPair[1]));
+            if (parameterPair.length > 1) {
+                parameters.put(parameterPair[0], StringUtilities.urlDecode(parameterPair[1]));
             }
         }
 

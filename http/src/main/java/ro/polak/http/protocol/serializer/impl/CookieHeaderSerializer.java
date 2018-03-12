@@ -11,7 +11,8 @@ import java.util.Date;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.servlet.Cookie;
 import ro.polak.http.utilities.DateProvider;
-import ro.polak.http.utilities.Utilities;
+import ro.polak.http.utilities.DateUtilities;
+import ro.polak.http.utilities.StringUtilities;
 
 /**
  * Serializes cookie to text representation.
@@ -44,7 +45,7 @@ public class CookieHeaderSerializer implements Serializer<Cookie> {
         StringBuilder sb = new StringBuilder();
         sb.append(cookie.getName())
                 .append(EQUALS)
-                .append(Utilities.urlEncode(cookie.getValue()));
+                .append(StringUtilities.urlEncode(cookie.getValue()));
 
         if (cookie.getMaxAge() != -1) {
             sb.append(SEPARATOR)
@@ -84,6 +85,6 @@ public class CookieHeaderSerializer implements Serializer<Cookie> {
 
     private String getExpires(long maxAge) {
         long maxAgeMs = maxAge * 1000L;
-        return Utilities.dateFormat(new Date(dateProvider.now().getTime() + maxAgeMs));
+        return DateUtilities.dateFormat(new Date(dateProvider.now().getTime() + maxAgeMs));
     }
 }

@@ -23,8 +23,8 @@ import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.servlet.Cookie;
 import ro.polak.http.servlet.ServletContext;
 import ro.polak.http.session.storage.SessionStorage;
-import ro.polak.http.utilities.RandomStringGenerator;
-import ro.polak.http.utilities.Utilities;
+import ro.polak.http.utilities.FileUtilities;
+import ro.polak.http.utilities.StringUtilities;
 
 /**
  * Servlet context implementation.
@@ -70,7 +70,7 @@ public class ServletContextImpl implements ServletContext {
     @Override
     public String getMimeType(String file) {
         return serverConfig.getMimeTypeMapping().
-                getMimeTypeByExtension(Utilities.getExtension(file));
+                getMimeTypeByExtension(FileUtilities.getExtension(file));
     }
 
     @Override
@@ -143,7 +143,7 @@ public class ServletContextImpl implements ServletContext {
      * @return
      */
     public HttpSessionImpl createNewSession() {
-        HttpSessionImpl session = new HttpSessionImpl(RandomStringGenerator.generate());
+        HttpSessionImpl session = new HttpSessionImpl(StringUtilities.generateRandom());
         session.setServletContext(this);
         LOGGER.log(Level.FINE, "Created a new session {0}",
                 new Object[]{session.getId()});

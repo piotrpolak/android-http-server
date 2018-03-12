@@ -13,7 +13,7 @@ import java.util.Map;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.servlet.Cookie;
-import ro.polak.http.utilities.Utilities;
+import ro.polak.http.utilities.StringUtilities;
 
 /**
  * Cookie parser utility.
@@ -41,7 +41,7 @@ public class CookieParser implements Parser<Map<String, Cookie>> {
             String cookieValues[] = cookiesStr[i].split("=", 2);
             String cookieName = cookieValues[0].trim();
             if (cookieValues.length > 1 && cookieName.length() > 0) {
-                Cookie cookie = new Cookie(cookieName, Utilities.urlDecode(cookieValues[1]));
+                Cookie cookie = new Cookie(cookieName, StringUtilities.urlDecode(cookieValues[1]));
                 cookies.put(cookie.getName(), cookie);
             }
         }

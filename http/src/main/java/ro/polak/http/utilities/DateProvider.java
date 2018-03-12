@@ -9,7 +9,7 @@ package ro.polak.http.utilities;
 import java.util.Date;
 
 /**
- * Date provider
+ * Date provider. Makes testing deterministic.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201710

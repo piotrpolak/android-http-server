@@ -22,8 +22,9 @@ import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.utilities.FileUtilities;
 import ro.polak.http.utilities.IOUtilities;
-import ro.polak.http.utilities.Utilities;
+import ro.polak.http.utilities.StringUtilities;
 
 public class GetFile extends HttpServlet {
 
@@ -41,7 +42,7 @@ public class GetFile extends HttpServlet {
         boolean fileExists = false;
 
         if (!request.getQueryString().equals("")) {
-            File f = new File(Environment.getExternalStorageDirectory() + Utilities.urlDecode(request.getQueryString()));
+            File f = new File(Environment.getExternalStorageDirectory() + StringUtilities.urlDecode(request.getQueryString()));
             if (f.exists() && f.isFile()) {
                 fileExists = true;
                 try {
@@ -62,7 +63,7 @@ public class GetFile extends HttpServlet {
         response.setContentType(getServletContext().getMimeType(file.getName()));
         response.setContentLength(file.length());
         response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename="
-                + Utilities.urlEncode(file.getName()));
+                + StringUtilities.urlEncode(file.getName()));
 
         InputStream in = null;
         try {

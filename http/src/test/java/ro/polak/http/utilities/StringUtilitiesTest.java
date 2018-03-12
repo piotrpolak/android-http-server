@@ -7,17 +7,17 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static ro.polak.http.ExtraMarchers.utilityClass;
 
-public class RandomStringGeneratorTest {
+public class StringUtilitiesTest {
 
     @Test
     public void shouldNotBeInstantiableFinalClass() {
-        assertThat(RandomStringGenerator.class, is(utilityClass()));
+        assertThat(StringUtilities.class, is(utilityClass()));
     }
 
     @Test
     public void shouldGenerateTwoDifferentRandomStrings() {
-        String s1 = RandomStringGenerator.generate();
-        String s2 = RandomStringGenerator.generate();
+        String s1 = StringUtilities.generateRandom();
+        String s2 = StringUtilities.generateRandom();
 
         assertThat(s1.length(), is(32));
         assertThat(s2.length(), is(32));

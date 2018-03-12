@@ -7,7 +7,8 @@ import java.util.Date;
 
 import ro.polak.http.servlet.Cookie;
 import ro.polak.http.utilities.DateProvider;
-import ro.polak.http.utilities.Utilities;
+import ro.polak.http.utilities.DateUtilities;
+import ro.polak.http.utilities.StringUtilities;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
@@ -46,7 +47,7 @@ public class CookieHeaderSerializerTest {
         cookie.setMaxAge(maxAgeSeconds);
         String serializedCookie = cookieHeaderSerializer.serialize(cookie);
         Date date = new Date(System.currentTimeMillis() + Long.valueOf(maxAgeSeconds) * 1000l);
-        String expiresValue = Utilities.dateFormat(date);
+        String expiresValue = DateUtilities.dateFormat(date);
         assertThat(getExpiresValue(serializedCookie), is(expiresValue));
     }
 
@@ -78,7 +79,7 @@ public class CookieHeaderSerializerTest {
         String value = "= &";
         Cookie cookie = new Cookie("name", value);
         String serializedCookie = cookieHeaderSerializer.serialize(cookie);
-        assertThat(serializedCookie, is("name=" + Utilities.urlEncode(value)));
+        assertThat(serializedCookie, is("name=" + StringUtilities.urlEncode(value)));
     }
 
     private String getExpiresValue(String serializedCookie) {

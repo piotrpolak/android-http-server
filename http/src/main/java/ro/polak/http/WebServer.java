@@ -15,8 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ro.polak.http.configuration.ServerConfig;
+import ro.polak.http.utilities.FileUtilities;
 import ro.polak.http.utilities.IOUtilities;
-import ro.polak.http.utilities.Utilities;
 
 /**
  * Web server main class.
@@ -95,7 +95,7 @@ public class WebServer extends Thread {
                 serverConfig.getListenPort()
         });
 
-        Utilities.clearDirectory(serverConfig.getTempPath());
+        FileUtilities.clearDirectory(serverConfig.getTempPath());
 
         start();
         return true;

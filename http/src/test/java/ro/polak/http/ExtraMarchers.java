@@ -30,7 +30,7 @@ public class ExtraMarchers {
                 // Swallowed
             }
 
-            // This code will attempt to call empty constructor to generate code coverage
+            // This code will attempt to call empty constructor to generateRandom code coverage
             if (isUtilityClass) {
                 callPrivateConstructor(clazz);
             }

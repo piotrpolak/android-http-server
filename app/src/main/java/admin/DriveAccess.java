@@ -20,7 +20,8 @@ import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.utilities.Utilities;
+import ro.polak.http.utilities.FileUtilities;
+import ro.polak.http.utilities.StringUtilities;
 
 public class DriveAccess extends HttpServlet {
 
@@ -42,7 +43,7 @@ public class DriveAccess extends HttpServlet {
             return;
         }
 
-        String path = Utilities.urlDecode(request.getQueryString());
+        String path = StringUtilities.urlDecode(request.getQueryString());
 
         if ("".equals(path)) {
             path = "/";
@@ -79,19 +80,19 @@ public class DriveAccess extends HttpServlet {
                     if (file.isDirectory()) {
                         directories
                                 .append("<p class=\"filemanager\"><img src=\"/assets/img/folder.png\" alt=\"folder\" /> <a href=\"/admin/DriveAccess?"
-                                        + Utilities.urlEncode(path
+                                        + StringUtilities.urlEncode(path
                                         + file.getName() + "/")
                                         + "\">"
                                         + file.getName() + "</a></p>");
                     } else {
                         filesString.append("<p class=\"filemanager\"><img src=\"/assets/img/"
-                                + fileIconMapper.getIconRelativePath(Utilities.getExtension(file.getName()))
+                                + fileIconMapper.getIconRelativePath(FileUtilities.getExtension(file.getName()))
                                 + "\" alt=\"file\" /> <a href=\"/admin/GetFile?"
-                                + Utilities.urlEncode(path + file.getName())
+                                + StringUtilities.urlEncode(path + file.getName())
                                 + "\">"
                                 + file.getName()
                                 + "</a> "
-                                + Utilities.fileSizeUnits(file.length())
+                                + FileUtilities.fileSizeUnits(file.length())
                                 + "</p>");
                     }
                 }
@@ -109,13 +110,13 @@ public class DriveAccess extends HttpServlet {
 
     private void renderBreadcrubms(HTMLDocument doc, String path) {
         doc.writeln("<ol class=\"breadcrumb\">");
-        doc.writeln("<li><a href=\"/admin/DriveAccess?" + Utilities.urlEncode("/") + "\"><img src=\"/assets/img/home.png\" alt=\"home\"></a></li>");
+        doc.writeln("<li><a href=\"/admin/DriveAccess?" + StringUtilities.urlEncode("/") + "\"><img src=\"/assets/img/home.png\" alt=\"home\"></a></li>");
         StringTokenizer st = new StringTokenizer(path.replace('\\', '/'), "/");
         String currentPath = "/";
         while (st.hasMoreTokens()) {
             String directory = st.nextToken();
             currentPath += directory + "/";
-            doc.writeln("<li><a href=\"/admin/DriveAccess?" + Utilities.urlEncode(currentPath) + "\">" + directory + "</a></li>");
+            doc.writeln("<li><a href=\"/admin/DriveAccess?" + StringUtilities.urlEncode(currentPath) + "\">" + directory + "</a></li>");
         }
 
         doc.writeln("</ol>");

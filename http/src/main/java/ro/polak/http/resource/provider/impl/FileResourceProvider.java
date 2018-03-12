@@ -28,8 +28,8 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.Range;
 import ro.polak.http.servlet.helper.RangeHelper;
 import ro.polak.http.utilities.IOUtilities;
-import ro.polak.http.utilities.RandomStringGenerator;
-import ro.polak.http.utilities.Utilities;
+import ro.polak.http.utilities.StringUtilities;
+import ro.polak.http.utilities.FileUtilities;
 
 /**
  * File system asset resource provider
@@ -94,7 +94,7 @@ public class FileResourceProvider implements ResourceProvider {
     }
 
     private void loadCompleteContent(HttpRequestImpl request, HttpResponseImpl response, File file) throws IOException {
-        response.setContentType(mimeTypeMapping.getMimeTypeByExtension(Utilities.getExtension(file.getName())));
+        response.setContentType(mimeTypeMapping.getMimeTypeByExtension(FileUtilities.getExtension(file.getName())));
         response.setStatus(HttpServletResponse.STATUS_OK);
         response.setContentLength(file.length());
         response.getHeaders().setHeader(Headers.HEADER_ACCEPT_RANGES, "bytes");
@@ -127,7 +127,7 @@ public class FileResourceProvider implements ResourceProvider {
         response.setStatus(HttpServletResponse.STATUS_PARTIAL_CONTENT);
         response.getHeaders().setHeader(Headers.HEADER_CONTENT_RANGE, "bytes " + getRanges(ranges) + "/" + file.length());
 
-        String contentType = mimeTypeMapping.getMimeTypeByExtension(Utilities.getExtension(file.getName()));
+        String contentType = mimeTypeMapping.getMimeTypeByExtension(FileUtilities.getExtension(file.getName()));
 
         long rangeLength = rangeHelper.getTotalLength(ranges);
 
@@ -136,7 +136,7 @@ public class FileResourceProvider implements ResourceProvider {
             response.setContentLength(rangeLength);
             response.setContentType(contentType);
         } else {
-            boundary = RandomStringGenerator.generate();
+            boundary = StringUtilities.generateRandom();
             response.setContentLength(rangePartHeaderSerializer.getPartHeadersLength(ranges, boundary, contentType, file.length()) + rangeLength);
 
             response.setContentType("multipart/byteranges; boundary=" + boundary);

@@ -13,11 +13,11 @@ import admin.logic.AccessControl;
 import admin.logic.HTMLDocument;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.exception.ServletException;
-import ro.polak.http.servlet.impl.HttpRequestImpl;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.utilities.Utilities;
+import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.utilities.StringUtilities;
 
 public class Login extends HttpServlet {
 
@@ -54,7 +54,7 @@ public class Login extends HttpServlet {
 
         String location = "/admin/Login";
         if (request.getParameter(RELOCATE_PARAM_NAME) != null) {
-            location += "?" + RELOCATE_PARAM_NAME + "=" + Utilities.urlEncode(request.getParameter(RELOCATE_PARAM_NAME));
+            location += "?" + RELOCATE_PARAM_NAME + "=" + StringUtilities.urlEncode(request.getParameter(RELOCATE_PARAM_NAME));
         }
 
 

@@ -8,34 +8,20 @@
 package ro.polak.http.utilities;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.logging.Logger;
 
-import ro.polak.http.exception.UnexpectedSituationException;
-
-import static java.net.URLDecoder.decode;
-import static java.net.URLEncoder.encode;
-import static java.util.TimeZone.getTimeZone;
-
 /**
- * Utilities
+ * FileUtilities
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200804
  */
-public final class Utilities {
+public final class FileUtilities {
 
-    // TODO This class should be split into dedicated ones
+    private static final Logger LOGGER = Logger.getLogger(FileUtilities.class.getName());
 
-    private static final Logger LOGGER = Logger.getLogger(Utilities.class.getName());
-    private static final String CHARSET_NAME = "UTF-8";
-    private static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
-
-    private Utilities() {
+    private FileUtilities() {
     }
 
     /**
@@ -80,34 +66,6 @@ public final class Utilities {
     }
 
     /**
-     * Encodes given string for URL/HTTP
-     *
-     * @param text text to be encoded
-     * @return encoded string
-     */
-    public static String urlEncode(String text) {
-        try {
-            return encode(text, CHARSET_NAME);
-        } catch (UnsupportedEncodingException e) {
-            throw new UnexpectedSituationException(CHARSET_NAME + " is not supported.", e);
-        }
-    }
-
-    /**
-     * Decodes given string for URL/HTTP
-     *
-     * @param text text to be decoded
-     * @return decoded string
-     */
-    public static String urlDecode(String text) {
-        try {
-            return decode(text, CHARSET_NAME);
-        } catch (UnsupportedEncodingException e) {
-            throw new UnexpectedSituationException(CHARSET_NAME + " is not supported.", e);
-        }
-    }
-
-    /**
      * Returns user friendly representation of file size
      *
      * @param length size of a file
@@ -128,22 +86,5 @@ public final class Utilities {
         } else {
             return format.format(size / 1073741824) + " GB";
         }
-    }
-
-    /**
-     * Formats date into the RFC 822 GMT format.
-     *
-     * @param date
-     * @return
-     */
-    public static String dateFormat(Date date) {
-        return getNewDateFormat().format(date);
-    }
-
-    private static SimpleDateFormat getNewDateFormat() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.US);
-        simpleDateFormat.setTimeZone(getTimeZone("GMT"));
-
-        return simpleDateFormat;
     }
 }

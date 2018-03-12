@@ -22,7 +22,7 @@ import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.servlet.UploadedFile;
 import ro.polak.http.utilities.IOUtilities;
-import ro.polak.http.utilities.RandomStringGenerator;
+import ro.polak.http.utilities.StringUtilities;
 
 /**
  * Multipart request handler
@@ -268,7 +268,7 @@ public class MultipartRequestHandler {
         multipartHeadersPart = multipartHeadersPartParser.parse(headersStringBuffered.toString());
 
         if (multipartHeadersPart.getContentType() != null) {
-            currentFile = new File(temporaryUploadsDirectory + RandomStringGenerator.generate());
+            currentFile = new File(temporaryUploadsDirectory + StringUtilities.generateRandom());
             fileOutputStream = new FileOutputStream(currentFile);
         } else {
             valueStringBuffered.setLength(0);

@@ -107,6 +107,8 @@ The standalone server jar can be run on any machine with the following command:
 java -jar ./cli/build/libs/cli-all.jar
 ```
 
+![Command line interface0](screens/command-line-interface.png)
+
 ## Sample code
 
 ### Hello World servlet

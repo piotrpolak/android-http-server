@@ -89,8 +89,8 @@ public class AndroidServerConfigFactory extends DefaultServerConfigFactory {
     }
 
     @Override
-    protected DeploymentDescriptorBuilder getServletContextConfigurationBuilder(SessionStorage sessionStorage, ServerConfig serverConfig) {
-        return super.getServletContextConfigurationBuilder(sessionStorage, serverConfig)
+    protected DeploymentDescriptorBuilder getDeploymentDescriptorBuilder(SessionStorage sessionStorage, ServerConfig serverConfig) {
+        return super.getDeploymentDescriptorBuilder(sessionStorage, serverConfig)
                 .addServletContext()
                     .withContextPath("/api/1.0")
                     .addServlet()

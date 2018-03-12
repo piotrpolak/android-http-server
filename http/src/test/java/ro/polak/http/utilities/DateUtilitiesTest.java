@@ -1,13 +1,21 @@
 package ro.polak.http.utilities;
 
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Date;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static ro.polak.http.ExtraMarchers.utilityClass;
 
 public class DateUtilitiesTest {
+
+    @Test
+    public void shouldNotBeInstantiableFinalClass() {
+        Assert.assertThat(DateUtilities.class, CoreMatchers.is(utilityClass()));
+    }
 
     @Test
     public void shouldFormatDate() {

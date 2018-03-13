@@ -34,7 +34,7 @@ public final class IOUtilities {
         }
         try {
             closeable.close();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
             // Keep it silent
         }
     }

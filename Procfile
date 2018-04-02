@@ -1,1 +1,1 @@
-web: echo "server.port=$PORT" >> ./httpd/httpd.properties &&  java -jar ./cli/build/libs/cli-all.jar
+web: mkdir ./httpd/ && echo "server.port=$PORT" >> ./httpd/httpd.properties &&  java -jar ./cli/build/libs/cli-all.jar

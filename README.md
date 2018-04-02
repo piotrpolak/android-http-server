@@ -16,6 +16,7 @@ to build a common web application.
 * [The http subproject and the idea behind it](#the-http-subproject-and-the-idea-behind-it)
 * [Mutation testing](#mutation-testing)
 * [Running standalone server (CLI)](#running-standalone-server-cli)
+* [Demo](#demo)
 * [Sample code](#sample-code)
     * [Hello World servlet](#hello-world-servlet)
     * [Request logging filter](#request-logging-filter)
@@ -108,6 +109,11 @@ java -jar ./cli/build/libs/cli-all.jar
 ```
 
 ![Command line interface0](screens/command-line-interface.png)
+
+## Demo
+
+A demo application is automatically deployed to Heroku and can be reached at
+[https://android-http-server-demo.herokuapp.com/example/](https://android-http-server-demo.herokuapp.com/example/).
 
 ## Sample code
 

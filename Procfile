@@ -1,0 +1,1 @@
+web: java -jar ./cli/build/libs/cli-all.jar

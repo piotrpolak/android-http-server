@@ -112,8 +112,12 @@ java -jar ./cli/build/libs/cli-all.jar
 
 ## Demo
 
-A demo application is automatically deployed to Heroku and can be reached at
-[https://android-http-server-demo.herokuapp.com/example/](https://android-http-server-demo.herokuapp.com/example/).
+A demo application is automatically deployed to Heroku and can be reached at:
+
+* [https://android-http-server-demo.herokuapp.com/example/](https://android-http-server-demo.herokuapp.com/example/).
+
+Please note the deployed application **does not contain** the *admin* application since that is only
+available for Android. See [Procfile](../../tree/master/Procfile) for the deployment description.
 
 ## Sample code
 

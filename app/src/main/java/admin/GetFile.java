@@ -22,7 +22,6 @@ import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.utilities.FileUtilities;
 import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.StringUtilities;
 

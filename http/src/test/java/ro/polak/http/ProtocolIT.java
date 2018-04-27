@@ -82,22 +82,22 @@ public class ProtocolIT extends AbstractIT {
         while (i++ < 10) {
             // The following code will cause error on a closed socket
             Thread.sleep(100);
-            out.write("X".getBytes());
+            out.write("X" .getBytes());
             out.flush();
         }
     }
 
     @Test
     public void shouldServeDirectoryForServletIndex() throws IOException {
-        shouldServeDirectoryFile("/example/", "/example/Index", "<h1>Hello World!</h1>");
+        assertThat(shouldServeDirectoryFile("/example/", "/example/Index", "<h1>Hello World!</h1>"), is(true));
     }
 
     @Test
     public void shouldServeDirectoryForFileIndex() throws IOException {
-        shouldServeDirectoryFile("/", "/index.html", "Index file");
+        assertThat(shouldServeDirectoryFile("/", "/index.html", "Index file"), is(true));
     }
 
-    private void shouldServeDirectoryFile(String pathShort, String pathFull, String commonValue) throws IOException {
+    private boolean shouldServeDirectoryFile(String pathShort, String pathFull, String commonValue) throws IOException {
         Request request = new Request.Builder()
                 .url(getFullUrl(pathShort))
                 .get()
@@ -121,6 +121,8 @@ public class ProtocolIT extends AbstractIT {
         String response2BodyString = response2.body().string();
         assertThat(response2BodyString, not(isEmptyOrNullString()));
         assertThat(response2BodyString, containsString(commonValue));
+
+        return true;
     }
 
     @Test
@@ -154,11 +156,11 @@ public class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldOpenAndCloseSession() throws IOException {
-        shouldOpenAndCloseSession(1);
-        shouldOpenAndCloseSession(2);
+        assertThat(shouldOpenAndCloseSession(1), is(true));
+        assertThat(shouldOpenAndCloseSession(2), is(true));
     }
 
-    private void shouldOpenAndCloseSession(int count) throws IOException {
+    private boolean shouldOpenAndCloseSession(int count) throws IOException {
         Request request = new Request.Builder()
                 .url(getFullUrl("/example/Session"))
                 .get()
@@ -171,6 +173,8 @@ public class ProtocolIT extends AbstractIT {
         String responseBodyString = response.body().string();
         assertThat(responseBodyString, not(isEmptyOrNullString()));
         assertThat(responseBodyString, containsString("Session page hits: " + count));
+
+        return true;
     }
 
     @Test

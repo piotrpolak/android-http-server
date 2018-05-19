@@ -122,4 +122,13 @@ public class FileSessionStorageTest {
         sessionWrapper.setAttribute("attributeName", "SomeValue");
         fileSessionStorage.persistSession(sessionWrapper);
     }
+
+    @Test(expected = IOException.class)
+    public void shouldThrowExceptionWhenUnableToCreateFile() throws IOException {
+        String nonExistentDirectory = "/tmp/nonexistent-" + Math.random() + "/";
+        assertThat(new File(nonExistentDirectory).exists(), is(false));
+        SessionStorage sessionStorage = new FileSessionStorage(nonExistentDirectory);
+        sessionStorage.persistSession(new HttpSessionImpl(VALID_SESSION_ID));
+    }
+
 }

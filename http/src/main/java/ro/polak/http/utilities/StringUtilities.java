@@ -83,4 +83,14 @@ public final class StringUtilities {
             throw new UnexpectedSituationException(CHARSET_NAME + " is not supported.", e);
         }
     }
+
+    /**
+     * Tells whether a string is null or zero-length.
+     *
+     * @param value
+     * @return
+     */
+    public static boolean isEmpty(String value) {
+        return value == null || value.length() == 0;
+    }
 }

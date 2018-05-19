@@ -24,11 +24,14 @@ import java.util.Map;
 import ro.polak.http.Headers;
 import ro.polak.http.RequestStatus;
 import ro.polak.http.Statistics;
+import ro.polak.http.protocol.parser.MalformedInputException;
+import ro.polak.http.protocol.parser.impl.LocaleParser;
 import ro.polak.http.servlet.Cookie;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpSession;
 import ro.polak.http.servlet.ServletContext;
 import ro.polak.http.servlet.UploadedFile;
+import ro.polak.http.utilities.StringUtilities;
 
 import static java.util.TimeZone.getTimeZone;
 
@@ -230,12 +233,26 @@ public class HttpRequestImpl implements HttpServletRequest {
 
     @Override
     public Locale getLocale() {
-        throw new IllegalStateException("Not implemented");
+        Enumeration<Locale> locales = getLocales();
+        if (locales == null) {
+            return null;
+        }
+
+        return locales.nextElement();
     }
 
     @Override
     public Enumeration getLocales() {
-        throw new IllegalStateException("Not implemented");
+        if (!StringUtilities.isEmpty(headers.getHeader(Headers.HEADER_ACCEPT_LANGUAGE))) {
+            try {
+                return Collections.enumeration(
+                        new LocaleParser().parse(headers.getHeader(Headers.HEADER_ACCEPT_LANGUAGE)));
+            } catch (MalformedInputException e) {
+                // return null
+            }
+        }
+
+        return null;
     }
 
     @Override

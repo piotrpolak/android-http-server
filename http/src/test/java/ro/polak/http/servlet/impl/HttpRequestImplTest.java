@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import ro.polak.http.Headers;
@@ -19,6 +20,7 @@ import ro.polak.http.servlet.Cookie;
 import ro.polak.http.servlet.UploadedFile;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -121,6 +123,10 @@ public class HttpRequestImplTest {
         assertThat(httpRequestImpl.getCookies(), is(Matchers.<Cookie>emptyArray()));
         assertThat(httpRequestImpl.getUploadedFiles().size(), is(0));
         assertThat(httpRequestImpl.getHeaders(), is(headers));
+        assertThat(httpRequestImpl.getLocale(), is(new Locale("pl")));
+
+        List<Locale> locales = Collections.list(httpRequestImpl.getLocales());
+        assertThat(locales, contains(new Locale("pl"), new Locale("en"), new Locale("ro"), new Locale("ru")));
         assertThat((List<String>) (Collections.list(httpRequestImpl.getHeaderNames())), hasItems(Headers.HEADER_ACCEPT_LANGUAGE));
     }
 

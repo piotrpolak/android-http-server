@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -163,12 +164,13 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         ServerConfigImpl serverConfig;
 
         String tempPath = getTempPath();
+        String basePath = File.separator + "httpd" + File.separator;
 
         try {
             serverConfig = ServerConfigImpl.createFromPath(baseConfigPath, tempPath);
         } catch (IOException e) {
             LOGGER.warning("Unable to read server config. Using the default configuration. " + e.getMessage());
-            serverConfig = new ServerConfigImpl(tempPath);
+            serverConfig = new ServerConfigImpl(basePath, tempPath, new Properties());
         }
 
         serverConfig.setResourceProviders(selectActiveResourceProviders(serverConfig));

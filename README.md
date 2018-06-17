@@ -108,6 +108,17 @@ The standalone server jar can be run on any machine with the following command:
 java -jar ./cli/build/libs/cli-all.jar
 ```
 
+### Overwriting configuration values from command line
+
+```bash
+java -jar ./cli/build/libs/cli-all.jar \
+    -Dserver.port=8888 \
+    -Dserver.static.path=/www/public_html
+```
+
+For a complete list of available parameters refer to
+[httpd.properties](../../tree/master//app/src/main/assets/conf/httpd.properties).
+
 ![Command line interface0](screens/command-line-interface.png)
 
 ## Demo

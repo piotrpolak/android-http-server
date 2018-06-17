@@ -18,6 +18,10 @@ import static org.hamcrest.Matchers.is;
 
 public class ServerConfigImplTest {
 
+    public static final String OVERWRITTEN_VALUE = "OVERWRITTEN";
+    public static final String ORIGINAL_VALUE = "somevalue";
+    public static final String ADDITIONAL_ATTRIBUTE_NAME = "additional.attribute";
+
     private static final String DEFAULT_CONFIG_DATA = "server.port=8090\n" +
             "server.static.path=wwwx\n" +
             "server.static.directoryIndex=index.php,index.html\n" +
@@ -27,8 +31,7 @@ public class ServerConfigImplTest {
             "server.keepAlive.enabled=true\n" +
             "server.errorDocument.404=error404.html\n" +
             "server.errorDocument.403=error403.html\n" +
-            "additional.attribute=somevalue\n";
-
+            ADDITIONAL_ATTRIBUTE_NAME + "=" + ORIGINAL_VALUE + "\n";
 
     private static String workingDirectory;
     private static String tempDirectory;
@@ -87,7 +90,7 @@ public class ServerConfigImplTest {
         assertThat(serverConfig.getMaxServerThreads(), is(3));
         assertThat(serverConfig.isKeepAlive(), is(true));
         assertThat(serverConfig.getMimeTypeMapping().getMimeTypeByExtension("ANY"), is("mime/text"));
-        assertThat(serverConfig.getAttribute("additional.attribute"), is("somevalue"));
+        assertThat(serverConfig.getAttribute(ADDITIONAL_ATTRIBUTE_NAME), is(ORIGINAL_VALUE));
 
     }
 
@@ -97,6 +100,18 @@ public class ServerConfigImplTest {
 
         ServerConfig serverConfig = ServerConfigImpl.createFromPath(workingDirectory, tempDirectory);
         assertThat(serverConfig.getMimeTypeMapping().getMimeTypeByExtension("ANY"), is("mime/text"));
+    }
 
+    @Test
+    public void shouldPreferSystemPropertiesOverFileDefinedOnes() throws IOException {
+        writeFiles(DEFAULT_CONFIG_DATA);
+        ServerConfig serverConfig = ServerConfigImpl.createFromPath(workingDirectory, tempDirectory);
+        assertThat(serverConfig.getAttribute(ADDITIONAL_ATTRIBUTE_NAME), is(ORIGINAL_VALUE));
+
+        System.setProperty(ADDITIONAL_ATTRIBUTE_NAME, OVERWRITTEN_VALUE);
+        assertThat(serverConfig.getAttribute(ADDITIONAL_ATTRIBUTE_NAME), is(OVERWRITTEN_VALUE));
+
+        System.clearProperty(ADDITIONAL_ATTRIBUTE_NAME);
+        assertThat(serverConfig.getAttribute(ADDITIONAL_ATTRIBUTE_NAME), is(ORIGINAL_VALUE));
     }
 }

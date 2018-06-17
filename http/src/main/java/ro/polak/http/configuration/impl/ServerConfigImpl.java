@@ -122,10 +122,10 @@ public class ServerConfigImpl implements ServerConfig {
     private static void assignDirectoryIndex(Properties properties, ServerConfigImpl serverConfig) {
         if (properties.containsKey(ATTRIBUTE_DIRECTORY_INDEX)) {
             serverConfig.directoryIndex.clear();
-            String directoryIndexLine[] = properties.getProperty(ATTRIBUTE_DIRECTORY_INDEX).split(",");
+            String directoryIndexLine[] = getResolvedProperty(properties, ATTRIBUTE_DIRECTORY_INDEX).split(",");
             for (int i = 0; i < directoryIndexLine.length; i++) {
                 String index = directoryIndexLine[i].trim();
-                if (!"" .equals(index)) {
+                if (!"".equals(index)) {
                     serverConfig.directoryIndex.add(directoryIndexLine[i]);
                 }
             }
@@ -136,10 +136,10 @@ public class ServerConfigImpl implements ServerConfig {
         if (properties.containsKey(ATTRIBUTE_MIME_TYPE)) {
             String defaultMimeType = "text/plain";
             if (properties.containsKey(ATTRIBUTE_DEFAULT_MIME_TYPE)) {
-                defaultMimeType = properties.getProperty(ATTRIBUTE_DEFAULT_MIME_TYPE);
+                defaultMimeType = getResolvedProperty(properties, ATTRIBUTE_DEFAULT_MIME_TYPE);
             }
 
-            InputStream mimeInputStream = new FileInputStream(basePath + properties.getProperty(ATTRIBUTE_MIME_TYPE));
+            InputStream mimeInputStream = new FileInputStream(basePath + getResolvedProperty(properties, ATTRIBUTE_MIME_TYPE));
             try {
                 serverConfig.mimeTypeMapping = MimeTypeMappingImpl.createFromStream(mimeInputStream, defaultMimeType);
             } finally {
@@ -155,41 +155,52 @@ public class ServerConfigImpl implements ServerConfig {
     private static void assign403Document(String basePath, Properties properties, ServerConfigImpl serverConfig) {
         if (properties.containsKey(ATTRIBUTE_ERROR_DOCUMENT_403)) {
             serverConfig.errorDocument403Path =
-                    basePath + properties.getProperty(ATTRIBUTE_ERROR_DOCUMENT_403);
+                    basePath + getResolvedProperty(properties, ATTRIBUTE_ERROR_DOCUMENT_403);
         }
     }
 
     private static void assign404Document(String basePath, Properties properties, ServerConfigImpl serverConfig) {
         if (properties.containsKey(ATTRIBUTE_ERROR_DOCUMENT_404)) {
             serverConfig.errorDocument404Path =
-                    basePath + properties.getProperty(ATTRIBUTE_ERROR_DOCUMENT_404);
+                    basePath + getResolvedProperty(properties, ATTRIBUTE_ERROR_DOCUMENT_404);
         }
     }
 
     private static void assignKeepAlive(Properties properties, ServerConfigImpl serverConfig) {
         if (properties.containsKey(ATTRIBUTE_KEEP_ALIVE)) {
             serverConfig.keepAlive =
-                    properties.getProperty(ATTRIBUTE_KEEP_ALIVE).equalsIgnoreCase(TRUE);
+                    getResolvedProperty(properties, ATTRIBUTE_KEEP_ALIVE).equalsIgnoreCase(TRUE);
         }
     }
 
     private static void assignMaxThreads(Properties properties, ServerConfigImpl serverConfig) {
         if (properties.containsKey(ATTRIBUTE_MAX_THREADS)) {
             serverConfig.maxServerThreads =
-                    Integer.parseInt(properties.getProperty(ATTRIBUTE_MAX_THREADS));
+                    Integer.parseInt(getResolvedProperty(properties, ATTRIBUTE_MAX_THREADS));
         }
     }
 
     private static void assignDocumentRoot(String basePath, Properties properties, ServerConfigImpl serverConfig) {
         if (properties.containsKey(ATTRIBUTE_STATIC_PATH)) {
-            serverConfig.documentRootPath = basePath + properties.getProperty(ATTRIBUTE_STATIC_PATH);
+            serverConfig.documentRootPath = basePath + getResolvedProperty(properties, ATTRIBUTE_STATIC_PATH);
         }
     }
 
     private static void assignListenPort(Properties properties, ServerConfigImpl serverConfig) {
         if (properties.containsKey(ATTRIBUTE_PORT)) {
-            serverConfig.listenPort = Integer.parseInt(properties.getProperty(ATTRIBUTE_PORT));
+            serverConfig.listenPort = Integer.parseInt(getResolvedProperty(properties, ATTRIBUTE_PORT));
         }
+    }
+
+    /**
+     * Returns specified property. System properties take precedence to the file defined properties.
+     *
+     * @param properties
+     * @param propertyName
+     * @return
+     */
+    private static String getResolvedProperty(Properties properties, String propertyName) {
+        return System.getProperty(propertyName, properties.getProperty(propertyName));
     }
 
     @Override
@@ -258,6 +269,6 @@ public class ServerConfigImpl implements ServerConfig {
 
     @Override
     public String getAttribute(String name) {
-        return properties.getProperty(name);
+        return getResolvedProperty(properties, name);
     }
 }

@@ -65,8 +65,8 @@ public final class StringUtilities {
     public static String urlEncode(String text) {
         try {
             return encode(text, CHARSET_NAME);
-        } catch (UnsupportedEncodingException e) {
-            throw new UnexpectedSituationException(CHARSET_NAME + " is not supported.", e);
+        } catch (UnsupportedEncodingException e) { // $COVERAGE-IGNORE$
+            throw new UnexpectedSituationException(CHARSET_NAME + " is not supported.", e);  // $COVERAGE-IGNORE$
         }
     }
 
@@ -79,8 +79,8 @@ public final class StringUtilities {
     public static String urlDecode(String text) {
         try {
             return decode(text, CHARSET_NAME);
-        } catch (UnsupportedEncodingException e) {
-            throw new UnexpectedSituationException(CHARSET_NAME + " is not supported.", e);
+        } catch (UnsupportedEncodingException e) { // $COVERAGE-IGNORE$
+            throw new UnexpectedSituationException(CHARSET_NAME + " is not supported.", e);  // $COVERAGE-IGNORE$
         }
     }
 

@@ -23,4 +23,13 @@ public class StringUtilitiesTest {
         assertThat(s2.length(), is(32));
         assertThat(s1, is(not(s2)));
     }
+
+    @Test
+    public void shouldDetectEmptyStrings() {
+        assertThat(StringUtilities.isEmpty(null), is(true));
+        assertThat(StringUtilities.isEmpty(""), is(true));
+
+        assertThat(StringUtilities.isEmpty(" "), is(false));
+        assertThat(StringUtilities.isEmpty("a"), is(false));
+    }
 }

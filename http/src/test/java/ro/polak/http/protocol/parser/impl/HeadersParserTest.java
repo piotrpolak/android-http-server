@@ -29,6 +29,20 @@ public class HeadersParserTest {
     }
 
     @Test
+    public void shouldParseAndLtrimHeaders() throws MalformedInputException {
+        Headers headers = headersParser.parse("Cookie:    ABCD\r\nTest:    XYZ\r\nServer:    1");
+
+        assertThat(headers.containsHeader("Cookie"), is(true));
+        assertThat(headers.containsHeader("Test"), is(true));
+        assertThat(headers.containsHeader("Server"), is(true));
+
+        assertThat(headers.getHeader("Cookie"), is("ABCD"));
+        assertThat(headers.getHeader("Test"), is("XYZ"));
+        assertThat(headers.getHeader("Server"), is("1"));
+        assertThat(headers.getHeader("Non-existent"), is(nullValue()));
+    }
+
+    @Test
     public void shouldParseColonValue() throws MalformedInputException {
         Headers headers = headersParser.parse("Cookie: ABCD:XYZ");
 

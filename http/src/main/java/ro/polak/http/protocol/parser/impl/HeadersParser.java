@@ -8,6 +8,7 @@
 package ro.polak.http.protocol.parser.impl;
 
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import ro.polak.http.Headers;
 import ro.polak.http.protocol.parser.MalformedInputException;
@@ -26,6 +27,7 @@ public class HeadersParser implements Parser<Headers> {
     private static final char TAB = '\t';
     private static final String VALUE_SEPARATOR = ":";
     private static final char COMA = ',';
+    private static final Pattern LTRIM_PATTERN = Pattern.compile("^\\s+");
 
     /**
      * Parses message headers.
@@ -101,6 +103,6 @@ public class HeadersParser implements Parser<Headers> {
      * @return
      */
     private String ltrim(String text) {
-        return text.replaceAll("^\\s+", "");
+        return LTRIM_PATTERN.matcher(text).replaceAll("");
     }
 }

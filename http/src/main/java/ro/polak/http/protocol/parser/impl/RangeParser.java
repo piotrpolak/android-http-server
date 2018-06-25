@@ -21,7 +21,9 @@ import ro.polak.http.servlet.Range;
  */
 public class RangeParser implements Parser<List<Range>> {
 
-    public static final String START_WORD = "bytes=";
+    private static final String START_WORD = "bytes=";
+    private static final String RANGES_SEPARATOR = ",";
+    private static final String RANGE_SEPARATOR = "-";
 
     @Override
     public List<Range> parse(String input) throws MalformedInputException {
@@ -32,13 +34,13 @@ public class RangeParser implements Parser<List<Range>> {
             throw new MalformedInputException("Header value must start with bytes=");
         }
 
-        String[] rangesString = inputNormalized.substring(START_WORD.length()).split(",");
+        String[] rangesString = inputNormalized.substring(START_WORD.length()).split(RANGES_SEPARATOR);
         for (String rangeString : rangesString) {
-            if (rangeString.indexOf("-") == -1) {
+            if (rangeString.indexOf(RANGE_SEPARATOR) == -1) {
                 throw new MalformedInputException("Invalid range value " + rangeString);
             }
 
-            String[] values = rangeString.split("-");
+            String[] values = rangeString.split(RANGE_SEPARATOR);
 
             if (values.length != 2) {
                 throw new MalformedInputException("Invalid range value " + rangeString);

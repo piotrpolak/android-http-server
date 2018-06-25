@@ -23,6 +23,9 @@ import ro.polak.http.utilities.StringUtilities;
  */
 public class CookieParser implements Parser<Map<String, Cookie>> {
 
+    private static final String VALUE_SEPARATOR = "=";
+    private static final String COOKIE_SEPARATOR = ";";
+
     /**
      * Parses cookie string, returns an array representing cookies read.
      *
@@ -35,10 +38,10 @@ public class CookieParser implements Parser<Map<String, Cookie>> {
         Map<String, Cookie> cookies = new HashMap<>();
 
         // Splitting separate cookies array
-        String cookiesStr[] = input.split(";");
+        String cookiesStr[] = input.split(COOKIE_SEPARATOR);
         for (int i = 0; i < cookiesStr.length; i++) {
             // Splitting cookie name=value pair
-            String cookieValues[] = cookiesStr[i].split("=", 2);
+            String cookieValues[] = cookiesStr[i].split(VALUE_SEPARATOR, 2);
             String cookieName = cookieValues[0].trim();
             if (cookieValues.length > 1 && cookieName.length() > 0) {
                 Cookie cookie = new Cookie(cookieName, StringUtilities.urlDecode(cookieValues[1]));

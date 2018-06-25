@@ -20,6 +20,8 @@ import ro.polak.http.protocol.parser.Parser;
 public class RequestStatusParser implements Parser<RequestStatus> {
 
     private static final int NUMBER_OF_CHUNKS = 3;
+    private static final String STATUS_SEPARATOR = " ";
+    private static final String QUERY_STRING_START = "?";
 
     /**
      * Parses status line.
@@ -35,7 +37,7 @@ public class RequestStatusParser implements Parser<RequestStatus> {
         String uri;
 
 
-        String statusArray[] = input.split(" ", NUMBER_OF_CHUNKS);
+        String statusArray[] = input.split(STATUS_SEPARATOR, NUMBER_OF_CHUNKS);
 
         if (statusArray.length < NUMBER_OF_CHUNKS) {
             throw new MalformedInputException("Input status string should be composed out of " +
@@ -50,7 +52,7 @@ public class RequestStatusParser implements Parser<RequestStatus> {
         // Protocol is the third part of the status line
         status.setProtocol(statusArray[2].trim());
 
-        int questionMarkPosition = uri.indexOf("?");
+        int questionMarkPosition = uri.indexOf(QUERY_STRING_START);
         if (questionMarkPosition > -1) {
             status.setQueryString(uri.substring(questionMarkPosition + 1));
             uri = uri.substring(0, questionMarkPosition);

@@ -22,6 +22,9 @@ import ro.polak.http.utilities.StringUtilities;
  */
 public class QueryStringParser implements Parser<Map<String, String>> {
 
+    private static final String PAIR_SEPARATOR = "&";
+    private static final String VALUE_SEPARATOR = "=";
+
     /**
      * Returns parsed query parameters
      *
@@ -31,13 +34,13 @@ public class QueryStringParser implements Parser<Map<String, String>> {
     @Override
     public Map<String, String> parse(String queryString) throws MalformedInputException {
         Map<String, String> parameters = new HashMap<>();
-        String queryParametersArray[] = queryString.split("&");
+        String queryParametersArray[] = queryString.split(PAIR_SEPARATOR);
         for (int i = 0; i < queryParametersArray.length; i++) {
             if (queryParametersArray[i].length() == 0) {
                 continue;
             }
 
-            String parameterPair[] = queryParametersArray[i].split("=", 2);
+            String parameterPair[] = queryParametersArray[i].split(VALUE_SEPARATOR, 2);
             if (parameterPair[0].length() == 0) {
                 continue;
             }

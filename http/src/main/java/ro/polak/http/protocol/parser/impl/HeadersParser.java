@@ -22,6 +22,10 @@ import ro.polak.http.protocol.parser.Parser;
 public class HeadersParser implements Parser<Headers> {
 
     private static final String NEW_LINE = "\r\n";
+    private static final char SPACE = ' ';
+    private static final char TAB = '\t';
+    private static final String VALUE_SEPARATOR = ":";
+    private static final char COMA = ',';
 
     /**
      * Parses message headers.
@@ -59,7 +63,7 @@ public class HeadersParser implements Parser<Headers> {
             char firstChar = line.charAt(0);
 
             // Multiline headers start with a space or a tab
-            if (firstChar == ' ' || firstChar == '\t') {
+            if (firstChar == SPACE || firstChar == TAB) {
                 // Protection against header string starting with the space or tab character
                 if (null != lastHeaderName) {
                     lastHeaderValue.append(" ");
@@ -70,7 +74,7 @@ public class HeadersParser implements Parser<Headers> {
                 // Cleans up the previous value
                 lastHeaderValue.setLength(0);
 
-                String headerLineValues[] = line.split(":", 2);
+                String headerLineValues[] = line.split(VALUE_SEPARATOR, 2);
 
                 if (headerLineValues.length < 2) {
                     continue;
@@ -79,7 +83,7 @@ public class HeadersParser implements Parser<Headers> {
                 lastHeaderName = headerLineValues[0];
 
                 if (joinRepeatingHeaders && headers.containsHeader(lastHeaderName)) {
-                    lastHeaderValue.append(headers.getHeader(lastHeaderName)).append(',');
+                    lastHeaderValue.append(headers.getHeader(lastHeaderName)).append(COMA);
                 }
 
                 lastHeaderValue.append(ltrim(headerLineValues[1].substring(0, headerLineValues[1].length())));

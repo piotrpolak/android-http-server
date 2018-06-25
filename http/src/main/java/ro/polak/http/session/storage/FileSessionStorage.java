@@ -30,7 +30,7 @@ public class FileSessionStorage implements SessionStorage {
 
     private static final Logger LOGGER = Logger.getLogger(FileSessionStorage.class.getName());
     private static final String SESSION_FILE_SUFFIX = "_session";
-    private static final Pattern pattern = Pattern.compile("[a-z]+");
+    private static final Pattern SESSION_ID_PATTERN = Pattern.compile("[a-z]+");
 
     private final String tempPath;
 
@@ -84,7 +84,7 @@ public class FileSessionStorage implements SessionStorage {
      * @return
      */
     private boolean isSessionIdValid(String id) {
-        return id != null && id.length() == 32 && pattern.matcher(id).matches();
+        return id != null && id.length() == 32 && SESSION_ID_PATTERN.matcher(id).matches();
     }
 
     @Override

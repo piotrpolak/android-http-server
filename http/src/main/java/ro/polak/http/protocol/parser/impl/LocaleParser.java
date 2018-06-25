@@ -25,7 +25,7 @@ public class LocaleParser implements Parser<List<Locale>> {
 
     private static final String LOCALE_SEPARATOR = ",";
     private static final String WEIGHT_SEPARATOR = ";";
-    public static final String WEIGHT_PREFIX = "q=";
+    private static final String WEIGHT_PREFIX = "q=";
 
     /**
      * A very basic implementation of locale parser that ignores weights.
@@ -78,6 +78,9 @@ public class LocaleParser implements Parser<List<Locale>> {
         return locales;
     }
 
+    /**
+     * Helper class representing locale to weight pair
+     */
     private static class LocaleWithWeight implements Comparable {
         private Locale locale;
         private double weight;

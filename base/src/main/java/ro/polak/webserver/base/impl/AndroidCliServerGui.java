@@ -5,11 +5,10 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.webserver.gui.impl;
+package ro.polak.webserver.base.impl;
 
-import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.cli.DefaultCliServerGui;
-import ro.polak.webserver.resource.provider.impl.AndroidServerConfigFactory;
+import ro.polak.http.configuration.ServerConfigFactory;
 
 /**
  * Server CLI interface along with a runner, used to test some of the Android only features.
@@ -30,6 +29,6 @@ public class AndroidCliServerGui extends DefaultCliServerGui {
 
     @Override
     protected ServerConfigFactory getServerConfigFactory() {
-        return new AndroidServerConfigFactory(null);
+        return new BaseAndroidServerConfigFactory(null);
     }
 }

@@ -1,4 +1,4 @@
-package ro.polak.webserver.logic;
+package ro.polak.webserver.base.logic;
 
 import android.content.res.AssetManager;
 

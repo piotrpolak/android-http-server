@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package ro.polak.webserver;
+package ro.polak.webserver.base;
 
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -16,9 +16,9 @@ import java.io.InputStream;
 
 import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.resource.provider.ResourceProvider;
+import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.impl.HttpRequestImpl;
 import ro.polak.http.servlet.impl.HttpResponseImpl;
-import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.utilities.IOUtilities;
 
 /**

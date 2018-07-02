@@ -1,5 +1,5 @@
 include ':cli', ':http'
 
 if (!settings.hasProperty("skipAndroidBuild")) {
-    include ':app'
+    include ':base', ':app'
 }

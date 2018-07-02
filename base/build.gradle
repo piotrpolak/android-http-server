@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 buildscript {
     dependencies {
@@ -17,7 +17,6 @@ android {
     compileSdkVersion 25
     buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "ro.polak.webserver"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
@@ -37,5 +36,4 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:25.3.1'
     implementation project(path: ':http')
     implementation project(path: ':cli')
-    implementation project(path: ':base')
 }

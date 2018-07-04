@@ -83,8 +83,7 @@ public class AbstractIT {
         writer.close();
     }
 
-    private static ServerConfig getServerConfig() throws IOException {
-
+    private static ServerConfig getServerConfig() {
         return (new DefaultServerConfigFactory() {
             @Override
             protected String getBasePath() {

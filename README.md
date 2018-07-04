@@ -23,7 +23,8 @@ to build a common web application.
 * [Building a deployment descriptor](#building-a-deployment-descriptor)
 * [Screens](#screens)
 * [500 error stack trace in browser](#500-error-page-trace-in-browser)
-* [Sample script to send SMS using wget command line utilityr](#sample-script-to-send-sms-using-wget-command-line-utility)
+* [Sample script to send SMS using wget command line utility](#sample-script-to-send-sms-using-wget-command-line-utility)
+* [License](#license)
 
 ## Key features
 
@@ -274,4 +275,5 @@ FatCow Web Hosting! These icon sets are licensed under a
 
 The project is shared upon [GNU GPLv3 license](LICENSE.txt).
 
-If you are interested in a commercial license please drop me a line at piotr [at] polak [dot] ro
+If you are interested in a dedicated commercial license please drop me a line at
+`piotr [at] polak [dot] ro`

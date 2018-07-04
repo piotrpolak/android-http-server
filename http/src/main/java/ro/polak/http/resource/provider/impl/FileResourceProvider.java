@@ -89,6 +89,11 @@ public class FileResourceProvider implements ResourceProvider {
         }
     }
 
+    @Override
+    public void shutdown() {
+        // Do nothing
+    }
+
     private File getFile(String uri) {
         return new File(basePath + uri);
     }

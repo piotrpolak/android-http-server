@@ -40,4 +40,9 @@ public interface ServletContainer {
      */
     Filter getFilterForClass(Class<? extends Filter> filterClass, FilterConfig filterConfig)
             throws FilterInitializationException, ServletException;
+
+    /**
+     * Shuts down the servlet container, closes all open resources.
+     */
+    void shutdown();
 }

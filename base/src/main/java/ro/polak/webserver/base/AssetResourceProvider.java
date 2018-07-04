@@ -56,8 +56,9 @@ public class AssetResourceProvider implements ResourceProvider {
         return false;
     }
 
-    private InputStream getInputStream(String assetPath) throws IOException {
-        return assetManager.open(assetPath);
+    @Override
+    public void shutdown() {
+        // Do nothing
     }
 
     @Override
@@ -91,5 +92,9 @@ public class AssetResourceProvider implements ResourceProvider {
     @NonNull
     private String getAssetPath(String path) {
         return basePath + path;
+    }
+
+    private InputStream getInputStream(String assetPath) throws IOException {
+        return assetManager.open(assetPath);
     }
 }

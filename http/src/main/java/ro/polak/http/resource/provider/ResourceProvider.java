@@ -38,4 +38,9 @@ public interface ResourceProvider {
      * @throws IOException
      */
     void load(String path, HttpRequestImpl request, HttpResponseImpl response) throws IOException;
+
+    /**
+     * Shuts down the resource provider, closes all open resources.
+     */
+    void shutdown();
 }

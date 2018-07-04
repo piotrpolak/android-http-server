@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import ro.polak.http.configuration.ServerConfig;
+import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.utilities.FileUtilities;
 import ro.polak.http.utilities.IOUtilities;
 
@@ -150,6 +151,9 @@ public class WebServer extends Thread {
     public void stopServer() {
         listen = false;
         IOUtilities.closeSilently(serverSocket);
+        for(ResourceProvider resourceProvider : getServerConfig().getResourceProviders()) {
+            resourceProvider.shutdown();
+        }
         LOGGER.info("Server has been stopped.");
     }
 

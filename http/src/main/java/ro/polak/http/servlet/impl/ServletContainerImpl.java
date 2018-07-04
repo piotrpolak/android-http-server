@@ -89,6 +89,7 @@ public class ServletContainerImpl implements ServletContainer {
     /**
      * Destroys all initialized servlets.
      */
+    @Override
     public void shutdown() {
         for (Map.Entry<Class<? extends HttpServlet>, Servlet> entry : servlets.entrySet()) {
             entry.getValue().destroy();

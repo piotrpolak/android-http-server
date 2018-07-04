@@ -96,6 +96,11 @@ public class ServletResourceProvider implements ResourceProvider {
         }
     }
 
+    @Override
+    public void shutdown() {
+        servletContainer.shutdown();
+    }
+
     private Servlet getServlet(ServletMapping servletMapping, ServletConfigImpl servletConfig) {
         Servlet servlet;
         try {
@@ -112,7 +117,7 @@ public class ServletResourceProvider implements ResourceProvider {
         ArrayDeque<Filter> arrayDeque = new ArrayDeque<>(getFilterMappingsForPath(path, servletContext));
         arrayDeque.add(new Filter() {
             @Override
-            public void init(FilterConfig filterConfig) throws ServletException {
+            public void init(FilterConfig filterConfig) {
                 // Do nothing
             }
 

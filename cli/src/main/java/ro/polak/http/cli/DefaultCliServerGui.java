@@ -50,10 +50,16 @@ public class DefaultCliServerGui implements ServerGui {
                 "/_//_/  /_/    /_/  /_/    /___/ \\__//_/   |___/ \\__//_/   \n");
         System.out.println("https://github.com/piotrpolak/android-http-server");
         System.out.println("");
-        ControllerImpl controllerImpl = new ControllerImpl(getServerConfigFactory(),
+        final ControllerImpl controllerImpl = new ControllerImpl(getServerConfigFactory(),
                 ServerSocketFactory.getDefault(),
                 gui);
         controllerImpl.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                controllerImpl.stop();
+            }
+        });
     }
 
     protected ServerConfigFactory getServerConfigFactory() {

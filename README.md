@@ -269,3 +269,9 @@ SERVER_IP=192.168.1.1; SERVER_PORT=8080; \
 Android HTTP server uses icons from the beautifully designed "Farm-Fresh Web Icons" pack by
 FatCow Web Hosting! These icon sets are licensed under a
 [Creative Commons Attribution 3.0 License](https://creativecommons.org/licenses/by/3.0/).
+
+# License
+
+The project is shared upon [GNU GPLv3 license](LICENSE.txt).
+
+If you are interested in a commercial license please drop me a line at piotr [at] polak [dot] ro

@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * The main server Android activity
+ * The main server Android activity. This class is designed to be extended.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201008
@@ -40,7 +40,16 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     protected BaseMainService mainService;
     protected boolean isMainServiceBound = false;
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    /**
+     * Returns the class of the main service.
+     * This information is used for activity-service communication.
+     *
+     * @return
+     */
+    @NonNull
+    protected abstract Class<? extends BaseMainService> getServiceClass();
+
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             BaseMainService.LocalBinder binder = (BaseMainService.LocalBinder) iBinder;
@@ -62,14 +71,44 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     };
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_CODE:
+                if (grantResults.length > 0) {
+                    if (isAnyPermissionMissing(grantResults)) {
+                        showMustAcceptPermissions();
+                    } else {
+                        doOnPermissionsAccepted();
+                        handleServiceStart();
+                    }
+                } else {
+                    showMustAcceptPermissions();
+                }
+                break;
+            default:
+                throw new IllegalStateException("Unknown permission request " + requestCode);
+        }
+    }
+
+    public void notifyStateChanged() {
+        if (isMainServiceBound) {
+            BaseMainService.ServiceState serviceState = mainService.getServiceState();
+            if (serviceState.isWebServerStarted()) {
+                println("Starging HTTPD");
+                doNotifyStateChangedToOnline(serviceState);
+            } else {
+                println("Stopping HTTPD");
+                doNotifyStateChangedToOffline();
+            }
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         Intent intent = new Intent(this, getServiceClass());
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
-
-    @NonNull
-    protected abstract Class<? extends BaseMainService> getServiceClass();
 
     @Override
     protected void onStop() {
@@ -78,6 +117,31 @@ public abstract class BaseMainActivity extends AppCompatActivity {
             unbindService(serviceConnection);
             isMainServiceBound = false;
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        doOnCreate();
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            requestPermissions();
+        }
+    }
+
+    /**
+     * Returns a set of required permissions.
+     *
+     * @return
+     */
+    @NonNull
+    protected Set<String> getRequiredPermissions() {
+        return new HashSet<>(Arrays.asList(
+                Manifest.permission.INTERNET,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_WIFI_STATE
+        ));
     }
 
     /**
@@ -97,34 +161,6 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         });
     }
 
-    private void startBackgroundService() {
-        Intent serviceIntent = new Intent(BaseMainActivity.this, getServiceClass());
-        startService(serviceIntent);
-        Toast.makeText(getApplicationContext(), "Starting background service", Toast.LENGTH_SHORT).show();
-    }
-
-    public void informStateChanged() {
-        if (isMainServiceBound) {
-            BaseMainService.ServiceState serviceState = mainService.getServiceState();
-            if (serviceState.isWebServerStarted()) {
-                println("Starging HTTPD");
-                doInformStateChangedOn(serviceState);
-            } else {
-                println("Stopping HTTPD");
-                doInformStateChangedOff();
-            }
-        }
-    }
-
-
-    protected void doInformStateChangedOff() {
-        //
-    }
-
-    protected void doInformStateChangedOn(BaseMainService.ServiceState serviceState) {
-        //
-    }
-
     /**
      * GUI print debug method
      *
@@ -139,21 +175,10 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
-        doOnCreate();
-
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            requestPermissions();
-        }
-    }
-
-    protected void doOnCreate() {
-        //
-    }
-
+    /**
+     * Requests missing mermissions
+     */
     protected void requestPermissions() {
         String[] permissionsNotGrantedYet = getMissingPermissions();
 
@@ -165,8 +190,86 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Callback executed when state changed to offline.
+     */
+    protected void doNotifyStateChangedToOffline() {
+        //
+    }
+
+    /**
+     * Callback executed when state changed to online.
+     *
+     * @param serviceState
+     */
+    protected void doNotifyStateChangedToOnline(BaseMainService.ServiceState serviceState) {
+        //
+    }
+
+    /**
+     * Callback executed upon requesting permissions.
+     */
     protected void doRequestPermissions() {
         //
+    }
+
+    /**
+     * Callback executed upon creating the activity.
+     */
+    protected void doOnCreate() {
+        //
+    }
+
+    /**
+     * Callback executed upon all required permissions accepted
+     */
+    protected void doOnPermissionsAccepted() {
+        //
+    }
+
+    /**
+     * Callback executed upon requesting all permissions
+     */
+    protected void doShowMustAcceptPermissions() {
+        //
+    }
+
+    private void handleServiceStart() {
+        if (isMainServiceBound) {
+            Handler mainHandler = new Handler(getApplicationContext().getMainLooper());
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mainService.getServiceState().isServiceStarted()) {
+                        startBackgroundService();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Service already started!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } else {
+            Toast.makeText(getApplicationContext(), "Background service not bound!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isAnyPermissionMissing(int[] grantResults) {
+        for (int result : grantResults) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void startBackgroundService() {
+        Intent serviceIntent = new Intent(BaseMainActivity.this, getServiceClass());
+        startService(serviceIntent);
+        Toast.makeText(getApplicationContext(), "Starting background service", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showMustAcceptPermissions() {
+        doShowMustAcceptPermissions();
+        Toast.makeText(getApplicationContext(), "You must grant all permissions to run the server", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -186,68 +289,5 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         String[] permissionsNotGrantedYetArray = new String[permissionsNotGrantedYet.size()];
         permissionsNotGrantedYet.toArray(permissionsNotGrantedYetArray);
         return permissionsNotGrantedYetArray;
-    }
-
-    @NonNull
-    protected Set<String> getRequiredPermissions() {
-        return new HashSet<>(Arrays.asList(
-                Manifest.permission.INTERNET,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_WIFI_STATE
-        ));
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_CODE:
-                if (grantResults.length > 0) {
-                    boolean isAnyPermissionMissing = false;
-                    for (int result : grantResults) {
-                        if (result != PackageManager.PERMISSION_GRANTED) {
-                            isAnyPermissionMissing = true;
-                        }
-                    }
-
-                    if (isAnyPermissionMissing) {
-                        showMustAcceptPermissions();
-                    } else {
-                        doOnPermissionsAccepted();
-                        if (isMainServiceBound) {
-                            Handler mainHandler = new Handler(getApplicationContext().getMainLooper());
-                            mainHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (!mainService.getServiceState().isServiceStarted()) {
-                                        startBackgroundService();
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), "Service already started!", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Background service not bound!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } else {
-                    showMustAcceptPermissions();
-                }
-                break;
-            default:
-                throw new IllegalStateException("Unknown permission request");
-        }
-    }
-
-    protected void doOnPermissionsAccepted() {
-        //
-    }
-
-    private void showMustAcceptPermissions() {
-        doShowMustAcceptPermissions();
-        Toast.makeText(getApplicationContext(), "You must grant all permissions to run the server", Toast.LENGTH_SHORT).show();
-    }
-
-    protected void doShowMustAcceptPermissions() {
-        //
     }
 }

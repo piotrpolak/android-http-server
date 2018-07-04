@@ -92,6 +92,82 @@ public abstract class BaseMainService extends Service implements ServerGui {
         return new BaseAndroidServerConfigFactory(context);
     }
 
+    @Override
+    public void onDestroy() {
+        if (getServiceState().isWebServerStarted()) {
+            controller.stop();
+        }
+
+        isServiceStarted = false;
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancel(NOTIFICATION_ID);
+    }
+
+    /**
+     * Registers client to allow activity-service communication.
+     *
+     * @param activity
+     */
+    public void registerClient(BaseMainActivity activity) {
+        this.activity = activity;
+    }
+
+    /**
+     * Returns webserver controller.
+     *
+     * @return
+     */
+    public Controller getController() {
+        return controller;
+    }
+
+    /**
+     * Returns current service state.
+     *
+     * @return
+     */
+    public ServiceState getServiceState() {
+        ServiceState serviceState = new ServiceState();
+
+        String accessUrl = "Initializing";
+        if (controller != null && controller.getWebServer() != null) {
+            int port = controller.getWebServer().getServerConfig().getListenPort();
+            String portString = port != 80 ? ":" + port : "";
+            accessUrl = "http://" + getLocalIpAddress() + portString + '/';
+        }
+
+        serviceState.setAccessUrl(accessUrl);
+        serviceState.setServiceStarted(isServiceStarted);
+        serviceState.setWebServerStarted(controller != null && controller.getWebServer() != null && controller.getWebServer().isRunning());
+
+        return serviceState;
+    }
+
+    @Override
+    public void start() {
+        if (activity != null) {
+            activity.notifyStateChanged();
+        }
+
+        Intent notificationIntent = new Intent(this, getActivityClass());
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        setNotification(getNotificationBuilder(pIntent, "Started", R.drawable.online).build());
+    }
+
+    @Override
+    public void stop() {
+        if (activity != null) {
+            activity.notifyStateChanged();
+        }
+
+        Intent notificationIntent = new Intent(this, getActivityClass());
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        setNotification(getNotificationBuilder(pIntent, "Stopped", R.drawable.offline).build());
+    }
+
+    @NonNull
+    protected abstract Class<? extends BaseMainActivity> getActivityClass();
+
     private void doFirstRunChecks(ServerConfigFactory serverConfigFactory) {
         ServerConfig serverConfig = serverConfigFactory.getServerConfig();
         String basePath = Environment.getExternalStorageDirectory() + serverConfig.getBasePath();
@@ -131,67 +207,6 @@ public abstract class BaseMainService extends Service implements ServerGui {
     }
 
 
-    @Override
-    public void onDestroy() {
-        if (getServiceState().isWebServerStarted()) {
-            controller.stop();
-        }
-
-        isServiceStarted = false;
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(NOTIFICATION_ID);
-    }
-
-    public void registerClient(BaseMainActivity activity) {
-        this.activity = activity;
-    }
-
-    public Controller getController() {
-        return controller;
-    }
-
-    public ServiceState getServiceState() {
-        ServiceState serviceState = new ServiceState();
-
-        String accessUrl = "Initializing";
-        if (controller != null && controller.getWebServer() != null) {
-            int port = controller.getWebServer().getServerConfig().getListenPort();
-            String portString = port != 80 ? ":" + port : "";
-            accessUrl = "http://" + getLocalIpAddress() + portString + '/';
-        }
-
-        serviceState.setAccessUrl(accessUrl);
-        serviceState.setServiceStarted(isServiceStarted);
-        serviceState.setWebServerStarted(controller != null && controller.getWebServer() != null && controller.getWebServer().isRunning());
-
-        return serviceState;
-    }
-
-    @Override
-    public void start() {
-        if (activity != null) {
-            activity.informStateChanged();
-        }
-
-        Intent notificationIntent = new Intent(this, getActivityClass());
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        setNotification(getNotificationBuilder(pIntent, "Started", R.drawable.online).build());
-    }
-
-    @Override
-    public void stop() {
-        if (activity != null) {
-            activity.informStateChanged();
-        }
-
-        Intent notificationIntent = new Intent(this, getActivityClass());
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        setNotification(getNotificationBuilder(pIntent, "Stopped", R.drawable.offline).build());
-    }
-
-    @NonNull
-    protected abstract Class<? extends BaseMainActivity> getActivityClass();
-
     private void setNotification(Notification notification) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(NOTIFICATION_ID, notification);
@@ -212,7 +227,7 @@ public abstract class BaseMainService extends Service implements ServerGui {
      *
      * @return String
      */
-    public String getLocalIpAddress() {
+    private String getLocalIpAddress() {
         try {
             WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();

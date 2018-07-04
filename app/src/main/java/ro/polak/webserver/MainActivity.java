@@ -87,7 +87,7 @@ public class MainActivity extends BaseMainActivity {
     }
 
     @Override
-    protected void doInformStateChangedOff() {
+    protected void doNotifyStateChangedToOffline() {
         imgView.setImageResource(R.drawable.offline);
         status.setText("Server offline");
         actionButton.setVisibility(View.VISIBLE);
@@ -95,7 +95,7 @@ public class MainActivity extends BaseMainActivity {
     }
 
     @Override
-    protected void doInformStateChangedOn(BaseMainService.ServiceState serviceState) {
+    protected void doNotifyStateChangedToOnline(BaseMainService.ServiceState serviceState) {
         ipText.setText(serviceState.getAccessUrl());
 
         imgView.setImageResource(R.drawable.online);

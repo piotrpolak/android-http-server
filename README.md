@@ -288,6 +288,7 @@ public class Templating extends HttpServlet {
 ![Admin main activity](screens/main.png)
 ![HTTP back-office login](screens/admin-login.png)
 ![HTTP back-office menu](screens/admin-menu.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpiotrpolak%2Fandroid-http-server.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpiotrpolak%2Fandroid-http-server?ref=badge_shield)
 
 ![HTTP back-office drive access](screens/admin-drive-access.png)
 ![HTTP back-office server statistics](screens/admin-server-statistics.png)
@@ -320,3 +321,5 @@ The project is shared upon [GNU GPLv3 license](LICENSE.txt).
 
 If you are interested in a dedicated commercial license please drop me a line at
 `piotr [at] polak [dot] ro`
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fpiotrpolak%2Fandroid-http-server.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fpiotrpolak%2Fandroid-http-server?ref=badge_large)

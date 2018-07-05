@@ -21,7 +21,7 @@ to build a common web application.
     * [Hello World servlet](#hello-world-servlet)
     * [Request logging filter](#request-logging-filter)
 * [Building a deployment descriptor](#building-a-deployment-descriptor)
-* [Templating](#templating)
+* [Templating support](#templating-support)
 * [Screens](#screens)
 * [500 error stack trace in browser](#500-error-page-trace-in-browser)
 * [Sample script to send SMS using wget command line utility](#sample-script-to-send-sms-using-wget-command-line-utility)
@@ -248,20 +248,18 @@ The following example presents how to integrate [Jtwig](http://jtwig.org/) templ
 
 First you need to add Jtwig dependency in your gradle file:
 
-```
-
+```groovy
 // ...
 dependencies {
     // ...
     compile 'org.jtwig:jtwig-core:5.87.0.RELEASE'
 }
-
 // ...
 ```
 
 Then it works out of the box:
 
-```
+```java
 package example;
 
 import org.jtwig.JtwigModel;

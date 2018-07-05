@@ -51,13 +51,11 @@ public class LocaleParser implements Parser<List<Locale>> {
                 continue;
             }
 
-            if (localeParts.length > 1) {
-                if (localeParts[1].length() > 0) {
-                    if (localeParts[1].startsWith(WEIGHT_PREFIX)) {
-                        weight = Double.parseDouble(localeParts[1].substring(2));
-                    } else {
-                        continue;
-                    }
+            if (localeParts.length > 1 && localeParts[1].length() > 0) {
+                if (localeParts[1].startsWith(WEIGHT_PREFIX)) {
+                    weight = Double.parseDouble(localeParts[1].substring(2));
+                } else {
+                    continue;
                 }
             }
 

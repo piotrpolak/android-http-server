@@ -240,6 +240,54 @@ class DeploymentDescriptorFactory {
 }
 ```
 
+## Templating support
+
+
+The following example presents how to integrate [Jtwig](http://jtwig.org/) templating engine.
+
+First you need to add Jtwig dependency in your gradle file:
+
+```
+
+// ...
+dependencies {
+
+    // ...
+
+    compile 'org.jtwig:jtwig-core:5.87.0.RELEASE'
+
+}
+
+// ...
+```
+
+Then it works out of the box:
+
+
+```
+package example;
+
+import org.jtwig.JtwigModel;
+import org.jtwig.JtwigTemplate;
+
+import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServlet;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+
+public class Templating extends HttpServlet {
+
+    @Override
+    public void service(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException {
+        JtwigTemplate template = JtwigTemplate.inlineTemplate("Hello {{ var }}");
+        JtwigModel model = JtwigModel.newModel().with("var", "World");
+
+        template.render(model, response.getOutputStream());
+    }
+}
+```
+
 ## Screens
 
 ![Admin main activity](screens/main.png)

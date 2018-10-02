@@ -295,7 +295,7 @@ public class Templating extends HttpServlet {
 
 ### 500 error page trace in browser
 
-![Servlet error 500](screens/servlet-error-500.png)
+![Servlet error 500](screens/error-500-stacktrace.png)
 
 ## Sample script to send SMS using wget command line utility
 

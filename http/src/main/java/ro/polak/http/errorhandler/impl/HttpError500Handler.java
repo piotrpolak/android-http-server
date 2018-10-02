@@ -7,6 +7,11 @@
 
 package ro.polak.http.errorhandler.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+
 import ro.polak.http.errorhandler.AbstractHtmlErrorHandler;
 import ro.polak.http.servlet.HttpServletResponse;
 
@@ -30,42 +35,31 @@ public class HttpError500Handler extends AbstractHtmlErrorHandler {
      */
     public HttpError500Handler setReason(Throwable e) {
 
-        String message = "<p style=\"color: red; font-weight: bold;\">";
-
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<p style=\"color: red; font-weight: bold;\">");
         if (e.getMessage() != null && !e.getMessage().equals("")) {
-            message += e.getMessage() + " ";
+            stringBuilder.append(e.getMessage() + " ");
         }
+        stringBuilder.append(e.getClass().getName() + "</p>\n")
+                .append("<pre>")
+                .append(exceptionToString(e))
+                .append("</pre>");
 
-        message += e.getClass().getName() + "</p>\n";
-
-        StackTraceElement[] el = e.getStackTrace();
-
-        message += "<table>\n";
-
-        message += "    <thead>\n";
-        message += "        <tr>\n";
-        message += "            <th>File</th>\n";
-        message += "            <th>Class</th>\n";
-        message += "            <th>Method</th>\n";
-        message += "            <th>Line</th>\n";
-        message += "        </tr>\n";
-        message += "    </thead>\n";
-
-        message += "    <tbody>\n";
-        for (int i = 0; i < el.length; i++) {
-            message += "        <tr>\n";
-            message += "            <td>" + el[i].getFileName() + "</td>\n";
-            message += "            <td>" + el[i].getClassName() + "</td>\n";
-            message += "            <td>" + el[i].getMethodName() + "</td>\n";
-            message += "            <td>" + el[i].getLineNumber() + "</td>\n";
-            message += "        </tr>\n";
-        }
-        message += "    </tbody>\n";
-
-        message += "</table>\n";
-
-        this.explanation = message;
+        explanation = stringBuilder.toString();
 
         return this;
+    }
+
+    private String exceptionToString(Throwable e) {
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(os);
+
+        e.printStackTrace(printStream);
+        try {
+            return os.toString(StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException ignored) {
+            // We are using a well known charset. This is not supposed to happen.
+            return ignored.getMessage();
+        }
     }
 }

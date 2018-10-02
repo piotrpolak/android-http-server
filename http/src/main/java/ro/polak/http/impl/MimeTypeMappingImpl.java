@@ -11,7 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,8 +25,6 @@ import ro.polak.http.utilities.IOUtilities;
  * @since 200802
  */
 public class MimeTypeMappingImpl implements MimeTypeMapping {
-
-    private static final Charset CHARSET = Charset.forName("UTF-8");
 
     private String defaultMimeType;
     private Map<String, String> mapping;
@@ -60,7 +58,7 @@ public class MimeTypeMappingImpl implements MimeTypeMapping {
     public static MimeTypeMapping createFromStream(InputStream in) throws IOException {
         MimeTypeMappingImpl mimeTypeMapping = new MimeTypeMappingImpl();
 
-        InputStreamReader inputStreamReader = new InputStreamReader(in, CHARSET);
+        InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
 
         BufferedReader input = new BufferedReader(inputStreamReader);
         String line;

@@ -8,24 +8,22 @@
 package example;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServlet;
 
 /**
  * Writing to output stream.
  */
 public class Streaming extends HttpServlet {
 
-    private static final Charset CHARSET = Charset.forName("UTF-8");
-
     @Override
     public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
-            byte[] message = "<p>Writing to output stream directly, without chunking.</p>".getBytes(CHARSET);
+            byte[] message = "<p>Writing to output stream directly, without chunking.</p>".getBytes(StandardCharsets.UTF_8);
             response.setContentLength(message.length);
             response.getOutputStream().write(message);
         } catch (IOException e) {

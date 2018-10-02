@@ -9,6 +9,7 @@ package ro.polak.http.servlet.impl;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -69,7 +70,7 @@ public class HttpRequestImpl implements HttpServletRequest {
     private boolean sessionWasRequested = false;
     private ServletContextImpl servletContext;
     private Map<String, Object> attributes;
-    private String characterEncoding = "UTF-8";
+    private String characterEncoding = StandardCharsets.UTF_8.name();
 
     private InputStream in;
     private String localAddr;

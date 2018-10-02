@@ -8,6 +8,7 @@
 package ro.polak.http.utilities;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
 import ro.polak.http.exception.UnexpectedSituationException;
@@ -22,8 +23,6 @@ import static java.net.URLEncoder.encode;
  * @since 200802
  */
 public final class StringUtilities {
-
-    private static final String CHARSET_NAME = "UTF-8";
 
     private StringUtilities() {
     }
@@ -64,9 +63,9 @@ public final class StringUtilities {
      */
     public static String urlEncode(String text) {
         try {
-            return encode(text, CHARSET_NAME);
+            return encode(text, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) { // $COVERAGE-IGNORE$
-            throw new UnexpectedSituationException(CHARSET_NAME + " is not supported.", e);  // $COVERAGE-IGNORE$
+            throw new UnexpectedSituationException(StandardCharsets.UTF_8.name() + " is not supported.", e);  // $COVERAGE-IGNORE$
         }
     }
 
@@ -78,9 +77,9 @@ public final class StringUtilities {
      */
     public static String urlDecode(String text) {
         try {
-            return decode(text, CHARSET_NAME);
+            return decode(text, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) { // $COVERAGE-IGNORE$
-            throw new UnexpectedSituationException(CHARSET_NAME + " is not supported.", e);  // $COVERAGE-IGNORE$
+            throw new UnexpectedSituationException(StandardCharsets.UTF_8.name() + " is not supported.", e);  // $COVERAGE-IGNORE$
         }
     }
 

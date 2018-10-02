@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 import ro.polak.http.cli.DefaultServerConfigFactory;
 import ro.polak.http.configuration.ServerConfig;
@@ -78,7 +79,7 @@ public class AbstractIT {
             throw new IOException("Unable to create " + file.getAbsolutePath());
         }
 
-        PrintWriter writer = new PrintWriter(file, "UTF-8");
+        PrintWriter writer = new PrintWriter(file, StandardCharsets.UTF_8.name());
         writer.print(contents);
         writer.close();
     }

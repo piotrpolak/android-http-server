@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -40,7 +40,6 @@ public class HttpResponseImpl implements HttpServletResponse {
     private static final String TRANSFER_ENCODING_CHUNKED = "chunked";
     private static final String CONNECTION_KEEP_ALIVE = "keep-alive";
     private static final String CONNECTION_CLOSE = "close";
-    private static final Charset CHARSET = Charset.forName("UTF-8");
 
     private final Serializer<Headers> headersSerializer;
     private final StreamHelper streamHelper;
@@ -57,6 +56,7 @@ public class HttpResponseImpl implements HttpServletResponse {
 
     /**
      * Default constructor.
+     *
      * @param headersSerializer
      * @param cookieHeaderSerializer
      * @param streamHelper
@@ -229,7 +229,8 @@ public class HttpResponseImpl implements HttpServletResponse {
             headers.setHeader(Headers.HEADER_SET_COOKIE, cookieHeaderSerializer.serialize(cookie));
         }
 
-        byte[] head = (getStatus() + NEW_LINE + headersSerializer.serialize(headers)).getBytes(CHARSET);
+        byte[] head = (getStatus() + NEW_LINE + headersSerializer.serialize(headers))
+                .getBytes(StandardCharsets.UTF_8);
         InputStream inputStream = new ByteArrayInputStream(head);
         serveStream(inputStream);
 

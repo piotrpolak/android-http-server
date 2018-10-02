@@ -10,7 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import ro.polak.http.RangePartHeader;
@@ -18,7 +18,6 @@ import ro.polak.http.Statistics;
 import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.servlet.Range;
-import ro.polak.http.servlet.helper.RangeHelper;
 
 /**
  * Helps serving streams.
@@ -30,7 +29,6 @@ public class StreamHelper {
 
     private static final int BUFFER_SIZE = 512;
     private static final String NEW_LINE = "\r\n";
-    private static final Charset CHARSET = Charset.forName("UTF-8");
 
     private final RangeHelper rangeHelper;
     private final RangePartHeaderSerializer rangePartHeaderSerializer;
@@ -116,20 +114,20 @@ public class StreamHelper {
                                       long totalLength) throws IOException {
         inputStream.mark(0);
 
-        serveMultiRangeStream(new ByteArrayInputStream(NEW_LINE.getBytes(CHARSET)), outputStream);
+        serveMultiRangeStream(new ByteArrayInputStream(NEW_LINE.getBytes(StandardCharsets.UTF_8)), outputStream);
         for (Range range : rangeList) {
             doServeRangePartHeader(outputStream, boundary, contentType, totalLength, range);
             doServeRangeStream(inputStream, outputStream, range);
-            serveMultiRangeStream(new ByteArrayInputStream(NEW_LINE.getBytes(CHARSET)), outputStream);
+            serveMultiRangeStream(new ByteArrayInputStream(NEW_LINE.getBytes(StandardCharsets.UTF_8)), outputStream);
         }
-        serveMultiRangeStream(new ByteArrayInputStream(rangePartHeaderSerializer.serializeLastBoundaryDeliminator(boundary).getBytes(CHARSET)), outputStream);
+        serveMultiRangeStream(new ByteArrayInputStream(rangePartHeaderSerializer.serializeLastBoundaryDeliminator(boundary).getBytes(StandardCharsets.UTF_8)), outputStream);
     }
 
     private void doServeRangePartHeader(OutputStream outputStream, String boundary,
                                         String contentType, long totalLength, Range range)
             throws IOException {
         RangePartHeader rangePartHeader = new RangePartHeader(range, boundary, contentType, totalLength);
-        byte[] rangePartHeaderBytes= rangePartHeaderSerializer.serialize(rangePartHeader).getBytes(CHARSET);
+        byte[] rangePartHeaderBytes = rangePartHeaderSerializer.serialize(rangePartHeader).getBytes(StandardCharsets.UTF_8);
 
         serveMultiRangeStream(new ByteArrayInputStream(rangePartHeaderBytes), outputStream);
     }

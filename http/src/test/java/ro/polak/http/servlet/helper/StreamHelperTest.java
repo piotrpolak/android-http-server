@@ -7,7 +7,7 @@ import org.mockito.internal.matchers.ArrayEquals;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,8 +16,6 @@ import java.util.Random;
 import ro.polak.http.RangePartHeader;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.servlet.Range;
-import ro.polak.http.servlet.helper.RangeHelper;
-import ro.polak.http.servlet.helper.StreamHelper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -29,7 +27,6 @@ public class StreamHelperTest {
     public static final String BOUNDARY = "someboundary";
     public static final String CONTENT_TYPE = "application/pdf";
     public static final int TOTAL_LENGTH = 0;
-    private static final Charset CHARSET = Charset.forName("UTF-8");
     public static final String NEW_LINE = "\r\n";
 
     private ByteArrayInputStream inputStream;
@@ -178,13 +175,15 @@ public class StreamHelperTest {
 
         private int appendRangePartHeader(byte[] output, int destPos, Range range) {
             RangePartHeader rangePartHeader = new RangePartHeader(range, BOUNDARY, CONTENT_TYPE, TOTAL_LENGTH);
-            byte[] slice = (NEW_LINE + rangePartHeaderSerializer.serialize(rangePartHeader)).getBytes(CHARSET);
+            byte[] slice = (NEW_LINE + rangePartHeaderSerializer.serialize(rangePartHeader))
+                    .getBytes(StandardCharsets.UTF_8);
             System.arraycopy(slice, 0, output, destPos, slice.length);
             return slice.length;
         }
 
         private int appendLastBoundaryDeliminator(byte[] output, int destPos) {
-            byte[] slice = (NEW_LINE + rangePartHeaderSerializer.serializeLastBoundaryDeliminator(BOUNDARY)).getBytes(CHARSET);
+            byte[] slice = (NEW_LINE + rangePartHeaderSerializer.serializeLastBoundaryDeliminator(BOUNDARY))
+                    .getBytes(StandardCharsets.UTF_8);
             System.arraycopy(slice, 0, output, destPos, slice.length);
             return slice.length;
         }

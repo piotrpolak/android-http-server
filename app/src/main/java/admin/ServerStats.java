@@ -14,10 +14,16 @@ import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.utilities.FileUtilities;
 
+/**
+ * Statistics.
+ */
 public class ServerStats extends HttpServlet {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         HTMLDocument doc = renderDocument();
         response.getWriter().print(doc.toString());
     }

@@ -12,7 +12,7 @@ package ro.polak.http.exception;
  */
 public class FilterInitializationException extends Exception {
 
-    public FilterInitializationException(Throwable throwable) {
+    public FilterInitializationException(final Throwable throwable) {
         super(throwable);
     }
 }

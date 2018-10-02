@@ -32,10 +32,10 @@ public class SmsInbox extends HttpServlet {
     private static final int DEFAULT_MAX_RESULTS = 999;
     private static final String ATTR_MAX_RESULTS = "maxResults";
     private static final String ALL_STRING = "";
-    private static final MessageDTOMapper mapper = new MessageDTOMapper();
+    private static final MessageDTOMapper MAPPER = new MessageDTOMapper();
 
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         int maxResults = request.getParameter(ATTR_MAX_RESULTS) != null
                 ? Integer.parseInt(request.getParameter(ATTR_MAX_RESULTS)) : DEFAULT_MAX_RESULTS;
 
@@ -61,7 +61,7 @@ public class SmsInbox extends HttpServlet {
                 break;
             }
 
-            result.put(mapper.toMessageDTO(messages.get(i)));
+            result.put(MAPPER.toMessageDTO(messages.get(i)));
 
             if (maxResults > 0 && --counterRemaining == 0) {
                 break;

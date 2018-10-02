@@ -31,7 +31,7 @@ public class DefaultCliServerGui implements ServerGui {
      *
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         (new DefaultCliServerGui()).init();
     }
 
@@ -62,6 +62,12 @@ public class DefaultCliServerGui implements ServerGui {
         });
     }
 
+    /**
+     * Creates and returns an instance of ServerConfigFactory.
+     * If you want to provide your own ServerConfig factory, this is the place to overwrite.
+     *
+     * @return
+     */
     protected ServerConfigFactory getServerConfigFactory() {
         return new DefaultServerConfigFactory();
     }

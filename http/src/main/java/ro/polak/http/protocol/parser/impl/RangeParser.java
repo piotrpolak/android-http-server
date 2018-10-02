@@ -25,8 +25,11 @@ public class RangeParser implements Parser<List<Range>> {
     private static final String RANGES_SEPARATOR = ",";
     private static final String RANGE_SEPARATOR = "-";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<Range> parse(String input) throws MalformedInputException {
+    public List<Range> parse(final String input) throws MalformedInputException {
         List<Range> rangeList = new ArrayList<>();
 
         String inputNormalized = input.toLowerCase().trim();

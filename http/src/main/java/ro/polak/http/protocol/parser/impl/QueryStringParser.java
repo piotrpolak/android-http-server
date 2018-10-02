@@ -15,7 +15,7 @@ import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.utilities.StringUtilities;
 
 /**
- * HTTP request headers wrapper
+ * HTTP request headers wrapper.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201609
@@ -26,13 +26,13 @@ public class QueryStringParser implements Parser<Map<String, String>> {
     private static final String VALUE_SEPARATOR = "=";
 
     /**
-     * Returns parsed query parameters
+     * Returns parsed query parameters.
      *
      * @param queryString
      * @return
      */
     @Override
-    public Map<String, String> parse(String queryString) throws MalformedInputException {
+    public Map<String, String> parse(final String queryString) throws MalformedInputException {
         Map<String, String> parameters = new HashMap<>();
         String queryParametersArray[] = queryString.split(PAIR_SEPARATOR);
         for (int i = 0; i < queryParametersArray.length; i++) {

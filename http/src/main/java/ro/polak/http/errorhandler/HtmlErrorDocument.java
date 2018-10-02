@@ -8,7 +8,7 @@
 package ro.polak.http.errorhandler;
 
 /**
- * HTML Error document representation
+ * HTML Error document representation.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
@@ -19,7 +19,7 @@ public class HtmlErrorDocument {
     private String message = "";
 
     /**
-     * Sets error document title
+     * Sets error document title.
      *
      * @return
      */
@@ -28,16 +28,16 @@ public class HtmlErrorDocument {
     }
 
     /**
-     * Returns error document title
+     * Returns error document title.
      *
      * @param title
      */
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
     /**
-     * Returns error document message
+     * Returns error document message.
      *
      * @return
      */
@@ -46,16 +46,16 @@ public class HtmlErrorDocument {
     }
 
     /**
-     * Sets error document message
+     * Sets error document message.
      *
      * @param message
      */
-    public void setMessage(String message) {
+    public void setMessage(final String message) {
         this.message = message;
     }
 
     /**
-     * Generates and renders HTML
+     * Generates and renders HTML.
      *
      * @return
      */

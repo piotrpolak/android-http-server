@@ -8,7 +8,7 @@
 package ro.polak.http.exception;
 
 /**
- * Method not allowed exception
+ * Method not allowed exception.
  */
 public class MethodNotAllowedException extends RuntimeException {
 }

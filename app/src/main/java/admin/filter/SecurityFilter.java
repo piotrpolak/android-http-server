@@ -6,6 +6,7 @@
  **************************************************/
 
 package admin.filter;
+
 import java.io.IOException;
 
 import admin.logic.AccessControl;
@@ -19,21 +20,30 @@ import ro.polak.http.servlet.HttpServletResponse;
 
 import static admin.Login.RELOCATE_PARAM_NAME;
 
+/**
+ * Provides a security check before executing the servlet logic.
+ */
 public class SecurityFilter implements Filter {
 
     private FilterConfig filterConfig;
     private ServerConfig serverConfig;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(final FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
         serverConfig = (ServerConfig) filterConfig.getServletContext()
                 .getAttribute(ServerConfig.class.getName());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void doFilter(HttpServletRequest request, HttpServletResponse response,
-                         FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(final HttpServletRequest request, final HttpServletResponse response,
+                         final FilterChain filterChain) throws IOException, ServletException {
 
         AccessControl accessControl = new AccessControl(serverConfig, request.getSession());
         if (!accessControl.isLogged()) {
@@ -46,7 +56,7 @@ public class SecurityFilter implements Filter {
     }
 
     private String getLoginUri(HttpServletRequest request) {
-        return "/Login?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI() +
-                (!"".equals(request.getQueryString()) ? "?" + request.getQueryString() : "");
+        return "/Login?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI()
+                + (!"".equals(request.getQueryString()) ? "?" + request.getQueryString() : "");
     }
 }

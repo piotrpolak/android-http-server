@@ -25,7 +25,7 @@ import ro.polak.http.servlet.impl.HttpRequestImpl;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
- * Server configuration
+ * Server configuration.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
@@ -90,7 +90,7 @@ public class ServerConfigImpl implements ServerConfig {
      * @return
      * @throws IOException
      */
-    public static ServerConfigImpl createFromPath(String basePath, String tempPath) throws IOException {
+    public static ServerConfigImpl createFromPath(final String basePath, final String tempPath) throws IOException {
         Properties properties = loadProperties(basePath);
 
         ServerConfigImpl serverConfig = new ServerConfigImpl(basePath, tempPath, properties);
@@ -98,7 +98,7 @@ public class ServerConfigImpl implements ServerConfig {
         return serverConfig;
     }
 
-    private static Properties loadProperties(String basePath) throws IOException {
+    private static Properties loadProperties(final String basePath) throws IOException {
         InputStream configInputStream = new FileInputStream(basePath + PROPERTIES_FILE_NAME);
 
         Properties properties = new Properties();
@@ -110,7 +110,7 @@ public class ServerConfigImpl implements ServerConfig {
         return properties;
     }
 
-    private void assignDirectoryIndex(Properties properties, List<String> defaultValue) {
+    private void assignDirectoryIndex(final Properties properties, final List<String> defaultValue) {
         if (getResolvedProperty(properties, ATTRIBUTE_DIRECTORY_INDEX) != null) {
             directoryIndex = new ArrayList<>();
             String directoryIndexLine[] = getResolvedProperty(properties, ATTRIBUTE_DIRECTORY_INDEX).split(",");
@@ -125,7 +125,7 @@ public class ServerConfigImpl implements ServerConfig {
         }
     }
 
-    private void assignMimeMapping(String basePath, Properties properties, MimeTypeMapping defaultValue) throws IOException {
+    private void assignMimeMapping(final String basePath, final Properties properties, final MimeTypeMapping defaultValue) throws IOException {
         if (getResolvedProperty(properties, ATTRIBUTE_MIME_TYPE) != null) {
             String defaultMimeType = "text/plain";
             if (getResolvedProperty(properties, ATTRIBUTE_DEFAULT_MIME_TYPE) != null) {
@@ -143,7 +143,7 @@ public class ServerConfigImpl implements ServerConfig {
         }
     }
 
-    private void assign403Document(String basePath, Properties properties) {
+    private void assign403Document(final String basePath, final Properties properties) {
         if (getResolvedProperty(properties, ATTRIBUTE_ERROR_DOCUMENT_403) != null) {
             errorDocument403Path =
                     basePath + getResolvedProperty(properties, ATTRIBUTE_ERROR_DOCUMENT_403);

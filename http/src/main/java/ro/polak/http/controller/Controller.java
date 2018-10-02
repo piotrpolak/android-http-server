@@ -10,7 +10,7 @@ package ro.polak.http.controller;
 import ro.polak.http.WebServer;
 
 /**
- * Defines methods that must be implemented by the server controller
+ * Defines methods that must be implemented by the server controller.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201012
@@ -18,7 +18,7 @@ import ro.polak.http.WebServer;
 public interface Controller {
 
     /**
-     * Starts the server logic
+     * Starts the server logic.
      */
     void start() throws IllegalStateException;
 

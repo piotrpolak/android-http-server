@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * SMS Inbox access service.
+ */
 public class SmsBox {
 
     /* _id:162 thread_id:13 toa:145 address:+48111222333 person:295 date:1441998104000 date_sent:1441998104000
@@ -107,7 +110,7 @@ public class SmsBox {
         smsManager.sendTextMessage(phoneNumber, null, message, pi, null);
     }
 
-    public class Message {
+    public final class Message {
         private String id;
         private Integer threadId;
         private String address;

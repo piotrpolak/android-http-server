@@ -12,15 +12,15 @@ package ro.polak.http.exception;
  */
 public class UnexpectedSituationException extends RuntimeException {
 
-    public UnexpectedSituationException(String message) {
+    public UnexpectedSituationException(final String message) {
         super(message);
     }
 
-    public UnexpectedSituationException(String message, Throwable e) {
+    public UnexpectedSituationException(final String message, final Throwable e) {
         super(message, e);
     }
 
-    public UnexpectedSituationException(Throwable e) {
+    public UnexpectedSituationException(final Throwable e) {
         super(e);
     }
 }

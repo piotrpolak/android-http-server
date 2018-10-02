@@ -10,7 +10,7 @@ package ro.polak.http.servlet;
 import java.io.File;
 
 /**
- * Uploaded file representation
+ * Uploaded file representation.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
@@ -22,7 +22,7 @@ public class UploadedFile {
     private final File file;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param postFieldName
      * @param fileName
@@ -35,7 +35,7 @@ public class UploadedFile {
     }
 
     /**
-     * Deletes temporary file if the file has not been moved to another location
+     * Deletes temporary file if the file has not been moved to another location.
      *
      * @return true if deleted
      */
@@ -48,7 +48,7 @@ public class UploadedFile {
     }
 
     /**
-     * Returns the HTML form postFieldName
+     * Returns the HTML form postFieldName.
      *
      * @return the HTML form postFieldName
      */
@@ -57,7 +57,7 @@ public class UploadedFile {
     }
 
     /**
-     * Returns the postFieldName of uploaded file
+     * Returns the postFieldName of uploaded file.
      *
      * @return the postFieldName of uploaded file
      */
@@ -66,7 +66,7 @@ public class UploadedFile {
     }
 
     /**
-     * Returns uploaded file
+     * Returns uploaded file.
      *
      * @return
      */

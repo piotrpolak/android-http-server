@@ -23,12 +23,18 @@ import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 
+/**
+ * SMS Inbox controller.
+ */
 public class SmsInbox extends HttpServlet {
 
     public static final String THREAD_ID_PARAM_NAME = "thread_id";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
 
         String threadId = request.getParameter(THREAD_ID_PARAM_NAME);

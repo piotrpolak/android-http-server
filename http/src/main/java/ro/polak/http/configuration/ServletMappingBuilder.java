@@ -18,7 +18,7 @@ import ro.polak.http.servlet.HttpServlet;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201803
  */
-public class ServletMappingBuilder {
+public final class ServletMappingBuilder {
 
     private final ServletContextBuilder servletContextBuilder;
     private Pattern urlPattern;
@@ -29,11 +29,11 @@ public class ServletMappingBuilder {
      *
      * @param servletContextBuilder
      */
-    ServletMappingBuilder(ServletContextBuilder servletContextBuilder) {
+    ServletMappingBuilder(final ServletContextBuilder servletContextBuilder) {
         this.servletContextBuilder = servletContextBuilder;
     }
 
-    public ServletMappingBuilder withUrlPattern(Pattern urlPattern) {
+    public ServletMappingBuilder withUrlPattern(final Pattern urlPattern) {
         this.urlPattern = urlPattern;
         return this;
     }

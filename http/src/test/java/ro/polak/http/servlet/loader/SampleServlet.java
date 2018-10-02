@@ -32,7 +32,7 @@ public class SampleServlet extends HttpServlet {
     }
 
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         // Do nothing, this is used for test only
     }
 

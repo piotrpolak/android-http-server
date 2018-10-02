@@ -16,7 +16,7 @@ public class PathHelper {
      * @param path
      * @return
      */
-    public boolean isPathContainingIllegalCharacters(String path) {
+    public boolean isPathContainingIllegalCharacters(final String path) {
         return path == null || path.startsWith("../") || path.indexOf("/../") != -1;
     }
 
@@ -26,7 +26,7 @@ public class PathHelper {
      * @param path
      * @return
      */
-    public String getNormalizedDirectoryPath(String path) {
+    public String getNormalizedDirectoryPath(final String path) {
         if (isDirectoryPath(path)) {
             return path;
         }
@@ -34,12 +34,12 @@ public class PathHelper {
     }
 
     /**
-     * Tells whether the path ends with a slash
+     * Tells whether the path ends with a slash.
      *
      * @param originalPath
      * @return
      */
-    public boolean isDirectoryPath(String originalPath) {
+    public boolean isDirectoryPath(final String originalPath) {
         return originalPath.substring(originalPath.length() - 1).equals(SLASH);
     }
 }

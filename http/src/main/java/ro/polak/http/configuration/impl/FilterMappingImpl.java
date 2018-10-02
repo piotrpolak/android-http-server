@@ -24,22 +24,33 @@ public class FilterMappingImpl implements FilterMapping {
     private final Pattern urlExcludePattern;
     private final Class<? extends Filter> filterClass;
 
-    public FilterMappingImpl(Pattern urlPattern, Pattern urlExcludePattern, Class<? extends Filter> filterClass) {
+    public FilterMappingImpl(final Pattern urlPattern,
+                             final Pattern urlExcludePattern,
+                             final Class<? extends Filter> filterClass) {
         this.urlPattern = urlPattern;
         this.urlExcludePattern = urlExcludePattern;
         this.filterClass = filterClass;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Pattern getUrlPattern() {
         return urlPattern;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Pattern getUrlExcludePattern() {
         return urlExcludePattern;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Class<? extends Filter> getFilterClass() {
         return filterClass;

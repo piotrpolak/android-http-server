@@ -10,7 +10,7 @@ package ro.polak.http.servlet;
 import ro.polak.http.exception.ServletException;
 
 /**
- * HttpServlet v3 interface, declares service() method
+ * HttpServlet v3 interface, declares service() method.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200902
@@ -40,7 +40,7 @@ public interface Servlet {
     /**
      * Called by servlet container, the main servlet logic method.
      */
-    void service(HttpServletRequest request, HttpServletResponse response) throws ServletException; /* IOException */
+    void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException; /* IOException */
 
     /**
      * Returns servlet info such as author or copyright.

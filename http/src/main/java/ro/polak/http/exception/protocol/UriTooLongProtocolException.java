@@ -12,7 +12,7 @@ package ro.polak.http.exception.protocol;
  */
 public class UriTooLongProtocolException extends ProtocolException {
 
-    public UriTooLongProtocolException(String message) {
+    public UriTooLongProtocolException(final String message) {
         super(message);
     }
 }

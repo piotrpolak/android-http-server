@@ -35,21 +35,21 @@ public class HttpServletResponseImplFactory {
      * @param cookieHeaderSerializer
      * @param streamHelper
      */
-    public HttpServletResponseImplFactory(Serializer<Headers> headersSerializer,
-                                          Serializer<Cookie> cookieHeaderSerializer,
-                                          StreamHelper streamHelper) {
+    public HttpServletResponseImplFactory(final Serializer<Headers> headersSerializer,
+                                          final Serializer<Cookie> cookieHeaderSerializer,
+                                          final StreamHelper streamHelper) {
         this.headersSerializer = headersSerializer;
         this.cookieHeaderSerializer = cookieHeaderSerializer;
         this.streamHelper = streamHelper;
     }
 
     /**
-     * Creates and returns a response outputStream of the socket
+     * Creates and returns a response outputStream of the socket.
      *
      * @param socket
      * @return
      */
-    public HttpResponseImpl createFromSocket(Socket socket) throws IOException {
+    public HttpResponseImpl createFromSocket(final Socket socket) throws IOException {
         return new HttpResponseImpl(headersSerializer, cookieHeaderSerializer, streamHelper, socket.getOutputStream());
     }
 }

@@ -13,10 +13,13 @@ import org.json.JSONObject;
 
 import admin.logic.SmsBox;
 
+/**
+ * Maps messages to JSONObjects.
+ */
 public class MessageDTOMapper {
 
     @NonNull
-    public JSONObject toMessageDTO(SmsBox.Message message) throws JSONException {
+    public JSONObject toMessageDTO(final SmsBox.Message message) throws JSONException {
         JSONObject messageDTO = new JSONObject();
         messageDTO.put("id", message.getId());
         messageDTO.put("address", message.getAddress());

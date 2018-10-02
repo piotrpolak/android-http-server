@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 import java.util.Locale;
 
 /**
- * Servlet response
+ * Servlet response.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201708

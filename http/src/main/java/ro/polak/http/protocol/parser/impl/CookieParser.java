@@ -34,7 +34,7 @@ public class CookieParser implements Parser<Map<String, Cookie>> {
      * @throws MalformedInputException
      */
     @Override
-    public Map<String, Cookie> parse(String input) throws MalformedInputException {
+    public Map<String, Cookie> parse(final String input) throws MalformedInputException {
         Map<String, Cookie> cookies = new HashMap<>();
 
         // Splitting separate cookies array

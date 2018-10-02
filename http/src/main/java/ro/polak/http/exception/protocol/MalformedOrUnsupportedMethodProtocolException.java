@@ -12,7 +12,7 @@ package ro.polak.http.exception.protocol;
  */
 public class MalformedOrUnsupportedMethodProtocolException extends ProtocolException {
 
-    public MalformedOrUnsupportedMethodProtocolException(String message) {
+    public MalformedOrUnsupportedMethodProtocolException(final String message) {
         super(message);
     }
 }

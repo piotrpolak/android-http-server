@@ -11,7 +11,7 @@ import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
 import ro.polak.http.servlet.HttpServletResponse;
 
 /**
- * 505 HTTP Version Not Supported error handler
+ * 505 HTTP Version Not Supported error handler.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509

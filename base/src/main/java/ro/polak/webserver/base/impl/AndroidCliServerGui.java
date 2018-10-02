@@ -23,10 +23,13 @@ public class AndroidCliServerGui extends DefaultCliServerGui {
      *
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         (new AndroidCliServerGui()).init();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected ServerConfigFactory getServerConfigFactory() {
         return new BaseAndroidServerConfigFactory(null);

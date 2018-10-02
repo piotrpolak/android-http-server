@@ -34,12 +34,16 @@ import ro.polak.webserver.base.impl.BaseAndroidServerConfigFactory;
  */
 public class AndroidServerConfigFactory extends BaseAndroidServerConfigFactory {
 
-    public AndroidServerConfigFactory(Context context) {
+    public AndroidServerConfigFactory(final Context context) {
         super(context);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected DeploymentDescriptorBuilder getDeploymentDescriptorBuilder(SessionStorage sessionStorage, ServerConfig serverConfig) {
+    protected DeploymentDescriptorBuilder getDeploymentDescriptorBuilder(final SessionStorage sessionStorage,
+                                                                         final ServerConfig serverConfig) {
         return super.getDeploymentDescriptorBuilder(sessionStorage, serverConfig)
                 .addServletContext()
                     .withContextPath("/api/1.0")

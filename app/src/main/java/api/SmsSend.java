@@ -21,7 +21,7 @@ import ro.polak.http.servlet.HttpServletResponse;
 import static api.logic.APIResponse.MEDIA_TYPE_APPLICATION_JSON;
 
 /**
- * SMS Send method API endpoint
+ * SMS Send method API endpoint.
  */
 public class SmsSend extends HttpServlet {
 
@@ -30,7 +30,7 @@ public class SmsSend extends HttpServlet {
     private static final String MESSAGE_PARAMETER_NAME = "message";
 
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
 
         String to = request.getPostParameter(TO_PARAMETER_NAME);
         String message = request.getPostParameter(MESSAGE_PARAMETER_NAME);

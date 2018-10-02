@@ -25,10 +25,13 @@ public class ServletConfigImpl implements ServletConfig {
      *
      * @param servletContext
      */
-    public ServletConfigImpl(ServletContext servletContext) {
+    public ServletConfigImpl(final ServletContext servletContext) {
         this.servletContext = servletContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ServletContext getServletContext() {
         return servletContext;

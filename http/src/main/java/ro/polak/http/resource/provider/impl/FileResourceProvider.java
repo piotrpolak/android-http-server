@@ -32,7 +32,7 @@ import ro.polak.http.utilities.StringUtilities;
 import ro.polak.http.utilities.FileUtilities;
 
 /**
- * File system asset resource provider
+ * File system asset resource provider.
  * <p/>
  * This provider loads the resources from the storage
  *
@@ -68,14 +68,20 @@ public class FileResourceProvider implements ResourceProvider {
         this.basePath = basePath;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean canLoad(String path) {
+    public boolean canLoad(final String path) {
         File file = getFile(path);
         return file.exists() && file.isFile();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void load(String path, HttpRequestImpl request, HttpResponseImpl response) throws IOException {
+    public void load(final String path, final HttpRequestImpl request, final HttpResponseImpl response) throws IOException {
         File file = getFile(path);
 
         // A server MUST ignore a Range header field received with a request method other than GET.
@@ -89,16 +95,19 @@ public class FileResourceProvider implements ResourceProvider {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void shutdown() {
         // Do nothing
     }
 
-    private File getFile(String uri) {
+    private File getFile(final String uri) {
         return new File(basePath + uri);
     }
 
-    private void loadCompleteContent(HttpRequestImpl request, HttpResponseImpl response, File file) throws IOException {
+    private void loadCompleteContent(final HttpRequestImpl request, final HttpResponseImpl response, final File file) throws IOException {
         response.setContentType(mimeTypeMapping.getMimeTypeByExtension(FileUtilities.getExtension(file.getName())));
         response.setStatus(HttpServletResponse.STATUS_OK);
         response.setContentLength(file.length());
@@ -117,7 +126,7 @@ public class FileResourceProvider implements ResourceProvider {
         response.flush();
     }
 
-    private void loadPartialContent(HttpRequestImpl request, HttpResponseImpl response, File file) throws IOException {
+    private void loadPartialContent(final HttpRequestImpl request, final HttpResponseImpl response, final File file) throws IOException {
         List<Range> ranges;
         try {
             ranges = rangeParser.parse(request.getHeader(Headers.HEADER_RANGE));

@@ -5,7 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Represents JSON API Response
+ * Represents JSON API Response.
  */
 public class APIResponse {
 
@@ -20,7 +20,7 @@ public class APIResponse {
     private JSONObject jsonObject = new JSONObject();
 
     /**
-     * Serializes API Response
+     * Serializes API Response.
      *
      * @param code
      * @param message
@@ -34,7 +34,7 @@ public class APIResponse {
     }
 
     /**
-     * Serializes API Response
+     * Serializes API Response.
      *
      * @throws JSONException
      */
@@ -43,16 +43,21 @@ public class APIResponse {
     }
 
     /**
-     * Serializes API Response
+     * Serializes API Response.
      *
      * @param code
      * @param message
      * @throws JSONException
      */
-    public APIResponse(int code, String message) throws JSONException {
+    public APIResponse(final int code, final String message) throws JSONException {
         this(code, message, null);
     }
 
+    /**
+     * Returns object marshalled to JSON.
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return jsonObject.toString();

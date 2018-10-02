@@ -21,8 +21,11 @@ import static ro.polak.http.Headers.HEADER_TRANSFER_ENCODING;
  */
 public class ChunkedWithDelay extends HttpServlet {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         response.getHeaders().setHeader(HEADER_TRANSFER_ENCODING, "chunked");
         PrintWriter printWriter = response.getWriter();
         printWriter.println("<table style='height: 40px; width: 100%; border: 0; cellspacing: 0;'>");

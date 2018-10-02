@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * IOUtilities
+ * IOUtilities.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201702
@@ -28,7 +28,7 @@ public final class IOUtilities {
      *
      * @param closeable
      */
-    public static void closeSilently(Closeable closeable) {
+    public static void closeSilently(final Closeable closeable) {
         if (closeable == null) {
             return;
         }
@@ -40,24 +40,24 @@ public final class IOUtilities {
     }
 
     /**
-     * Copies input stream to output stream
+     * Copies input stream to output stream.
      *
      * @param in
      * @param out
      * @throws IOException
      */
-    public static void copyStreams(InputStream in, OutputStream out) throws IOException {
+    public static void copyStreams(final InputStream in, final OutputStream out) throws IOException {
         copyStreams(in, out, 4096);
     }
 
     /**
-     * Copies input stream to output stream
+     * Copies input stream to output stream.
      *
      * @param in
      * @param out
      * @throws IOException
      */
-    public static void copyStreams(InputStream in, OutputStream out, int bufferSize) throws IOException {
+    public static void copyStreams(final InputStream in, final OutputStream out, final int bufferSize) throws IOException {
         byte[] buffer = new byte[bufferSize];
         int length;
         while ((length = in.read(buffer)) > 0) {

@@ -11,7 +11,7 @@ import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
 import ro.polak.http.servlet.HttpServletResponse;
 
 /**
- * 413 Request Entity Too Large
+ * 413 Request Entity Too Large.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509

@@ -12,7 +12,7 @@ import java.text.DecimalFormat;
 import java.util.logging.Logger;
 
 /**
- * FileUtilities
+ * FileUtilities.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200804
@@ -25,12 +25,12 @@ public final class FileUtilities {
     }
 
     /**
-     * Returns the extension sting for a given file path
+     * Returns the extension sting for a given file path.
      *
      * @param filename filepath or filename
      * @return the extension part for a given file path
      */
-    public static String getExtension(String filename) {
+    public static String getExtension(final String filename) {
         if (filename == null) {
             return null;
         }
@@ -53,7 +53,7 @@ public final class FileUtilities {
     /**
      * Once called, deletes all the files inside the temporary files directory
      */
-    public static void clearDirectory(String directoryPath) {
+    public static void clearDirectory(final String directoryPath) {
         File f = new File(directoryPath);
         File files[] = f.listFiles();
         if (files != null) {
@@ -66,12 +66,12 @@ public final class FileUtilities {
     }
 
     /**
-     * Returns user friendly representation of file size
+     * Returns user friendly representation of file size.
      *
      * @param length size of a file
      * @return formatted size of the file using B, KB, MB, GB
      */
-    public static String fileSizeUnits(long length) {
+    public static String fileSizeUnits(final long length) {
         if (length < 1024) {
             return length + " B";
         }

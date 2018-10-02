@@ -25,12 +25,15 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.StringUtilities;
 
+/**
+ * Servlet user to retrieve a static file.
+ */
 public class GetFile extends HttpServlet {
 
     private static final String ATTR_ADMIN_DRIVE_ACCESS_ENABLED = "admin.driveAccess.enabled";
 
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
 
         if (!serverConfig.getAttribute(ATTR_ADMIN_DRIVE_ACCESS_ENABLED).equals(ServerConfigImpl.TRUE)) {
@@ -58,7 +61,7 @@ public class GetFile extends HttpServlet {
         }
     }
 
-    private void serveFile(File file, HttpServletResponse response) throws IOException {
+    private void serveFile(final File file, final HttpServletResponse response) throws IOException {
         response.setContentType(getServletContext().getMimeType(file.getName()));
         response.setContentLength(file.length());
         response.getHeaders().setHeader(Headers.HEADER_CONTENT_DISPOSITION, "attachment; filename="

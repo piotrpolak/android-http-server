@@ -25,7 +25,7 @@ import ro.polak.http.utilities.IOUtilities;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class WebServer extends Thread {
+public final class WebServer extends Thread {
 
     private static final Logger LOGGER = Logger.getLogger(WebServer.class.getName());
 
@@ -74,7 +74,7 @@ public class WebServer extends Thread {
     }
 
     /**
-     * Starts the web server
+     * Starts the web server.
      */
     public boolean startServer() {
         listen = true;
@@ -115,8 +115,8 @@ public class WebServer extends Thread {
         try {
             serverSocket.bind(new InetSocketAddress(serverConfig.getListenPort()));
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Unable to start server: unable to listen on port " +
-                    serverConfig.getListenPort(), e);
+            LOGGER.log(Level.SEVERE, "Unable to start server: unable to listen on port "
+                    + serverConfig.getListenPort(), e);
             return false;
         }
         return true;
@@ -146,19 +146,19 @@ public class WebServer extends Thread {
     }
 
     /**
-     * Stops the web server
+     * Stops the web server.
      */
     public void stopServer() {
         listen = false;
         IOUtilities.closeSilently(serverSocket);
-        for(ResourceProvider resourceProvider : getServerConfig().getResourceProviders()) {
+        for (ResourceProvider resourceProvider : getServerConfig().getResourceProviders()) {
             resourceProvider.shutdown();
         }
         LOGGER.info("Server has been stopped.");
     }
 
     /**
-     * Tells whether the server is running or not
+     * Tells whether the server is running or not.
      *
      * @return
      */
@@ -167,7 +167,7 @@ public class WebServer extends Thread {
     }
 
     /**
-     * Returns server config
+     * Returns server config.
      *
      * @return
      */

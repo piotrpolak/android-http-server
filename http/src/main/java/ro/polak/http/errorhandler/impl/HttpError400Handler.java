@@ -11,7 +11,7 @@ import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
 import ro.polak.http.servlet.HttpServletResponse;
 
 /**
- * 400 Bad Request
+ * 400 Bad Request.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509

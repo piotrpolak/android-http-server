@@ -19,13 +19,19 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.impl.HttpRequestImpl;
 import ro.polak.http.utilities.StringUtilities;
 
+/**
+ * Admin login page.
+ */
 public class Login extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
     public static final String RELOCATE_PARAM_NAME = "relocate";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
         AccessControl ac = new AccessControl(serverConfig, request.getSession());
 

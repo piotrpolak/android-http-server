@@ -14,7 +14,7 @@ import ro.polak.http.servlet.Range;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201702
  */
-public class RangePartHeader {
+public final class RangePartHeader {
 
     private final Range range;
     private final String boundary;

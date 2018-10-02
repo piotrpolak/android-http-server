@@ -19,7 +19,7 @@ import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
- * Mime type mapping
+ * Mime type mapping.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
@@ -30,7 +30,7 @@ public class MimeTypeMappingImpl implements MimeTypeMapping {
     private Map<String, String> mapping;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public MimeTypeMappingImpl() {
         defaultMimeType = "text/html";
@@ -55,7 +55,7 @@ public class MimeTypeMappingImpl implements MimeTypeMapping {
      *
      * @param in
      */
-    public static MimeTypeMapping createFromStream(InputStream in) throws IOException {
+    public static MimeTypeMapping createFromStream(final InputStream in) throws IOException {
         MimeTypeMappingImpl mimeTypeMapping = new MimeTypeMappingImpl();
 
         InputStreamReader inputStreamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
@@ -72,8 +72,11 @@ public class MimeTypeMappingImpl implements MimeTypeMapping {
         return mimeTypeMapping;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getMimeTypeByExtension(String extension) {
+    public String getMimeTypeByExtension(final String extension) {
         if (extension != null) {
             String extensionNormalized = extension.toLowerCase();
             if (mapping.containsKey(extensionNormalized)) {

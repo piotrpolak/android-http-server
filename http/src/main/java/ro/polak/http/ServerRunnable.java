@@ -65,6 +65,9 @@ public class ServerRunnable implements Runnable {
         this.pathHelper = pathHelper;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         HttpResponseImpl response = null;
@@ -110,7 +113,7 @@ public class ServerRunnable implements Runnable {
         }
     }
 
-    private void handleDirectoryIndex(HttpResponseImpl response, HttpRequestImpl request,
+    private void handleDirectoryIndex(final HttpResponseImpl response, final HttpRequestImpl request,
                                       String requestedPath) throws IOException {
         DirectoryIndexDescriptor indexDescriptor = loadDirectoryIndexResource(requestedPath);
         if (indexDescriptor == null) {

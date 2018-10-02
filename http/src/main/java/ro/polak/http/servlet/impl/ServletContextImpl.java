@@ -67,12 +67,18 @@ public class ServletContextImpl implements ServletContext {
         this.attributes = new HashMap<>(attributes);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getMimeType(String file) {
         return serverConfig.getMimeTypeMapping().
                 getMimeTypeByExtension(FileUtilities.getExtension(file));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setAttribute(String name, Object value) {
         if (value == null) {
@@ -82,6 +88,9 @@ public class ServletContextImpl implements ServletContext {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getAttribute(String name) {
         if (attributes.containsKey(name)) {
@@ -91,6 +100,9 @@ public class ServletContextImpl implements ServletContext {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Enumeration getAttributeNames() {
 
@@ -177,16 +189,25 @@ public class ServletContextImpl implements ServletContext {
         return System.currentTimeMillis() - session.getMaxInactiveInterval() * 1000 > session.getLastAccessedTime();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ServletMapping> getServletMappings() {
         return servletMappings;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<FilterMapping> getFilterMappings() {
         return filterMappings;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getContextPath() {
         return contextPath;

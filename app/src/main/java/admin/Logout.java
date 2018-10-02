@@ -12,10 +12,16 @@ import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 
+/**
+ * Logout servlet. The logout procedure is captured in a LogoutFilter.
+ */
 public class Logout extends HttpServlet {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         // Logout using filter
     }
 }

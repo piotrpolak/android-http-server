@@ -12,6 +12,12 @@ import java.util.logging.Logger;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.servlet.HttpSession;
 
+/**
+ * Access control support class.
+ *
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @since 200802
+ */
 public class AccessControl {
 
     private static final Logger LOGGER = Logger.getLogger(AccessControl.class.getName());
@@ -22,18 +28,18 @@ public class AccessControl {
 
 
     /**
-     * Default constructor
+     * Default constructor.
      *
      * @param serverConfig
      * @param session
      */
-    public AccessControl(ServerConfig serverConfig, HttpSession session) {
+    public AccessControl(final ServerConfig serverConfig, final HttpSession session) {
         this.serverConfig = serverConfig;
         this.session = session;
     }
 
     /**
-     * Tells whether the user is logged
+     * Tells whether the user is logged.
      *
      * @return
      */
@@ -57,20 +63,20 @@ public class AccessControl {
     }
 
     /**
-     * Logs off the currently logged user
+     * Logs off the currently logged user.
      */
     public void logout() {
         session.setAttribute(ATTR_LOGGEDIN, null);
     }
 
     /**
-     * Logs the user in if the login and password match
+     * Logs the user in if the login and password match.
      *
      * @param login
      * @param password
      * @return
      */
-    public boolean doLogin(String login, String password) {
+    public boolean doLogin(final String login, final String password) {
         if (serverConfig.getAttribute("admin.login").equals(login)
                 && serverConfig.getAttribute("admin.password").equals(password)) {
             session.setAttribute(ATTR_LOGGEDIN, "1");

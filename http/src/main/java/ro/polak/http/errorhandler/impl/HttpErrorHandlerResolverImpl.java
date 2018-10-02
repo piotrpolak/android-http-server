@@ -9,8 +9,8 @@ package ro.polak.http.errorhandler.impl;
 import java.io.IOException;
 import java.util.List;
 
-import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.Statistics;
+import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.errorhandler.HttpErrorHandler;
 import ro.polak.http.errorhandler.HttpErrorHandlerResolver;
 import ro.polak.http.exception.AccessDeniedException;
@@ -31,7 +31,7 @@ public class HttpErrorHandlerResolverImpl implements HttpErrorHandlerResolver {
 
     private ServerConfig serverConfig;
 
-    public HttpErrorHandlerResolverImpl(ServerConfig serverConfig) {
+    public HttpErrorHandlerResolverImpl(final ServerConfig serverConfig) {
         this.serverConfig = serverConfig;
     }
 
@@ -43,7 +43,7 @@ public class HttpErrorHandlerResolverImpl implements HttpErrorHandlerResolver {
      * @throws IOException
      */
     @Override
-    public HttpErrorHandler getHandler(RuntimeException e) {
+    public HttpErrorHandler getHandler(final RuntimeException e) {
         Throwable fallbackException;
 
         try {
@@ -68,7 +68,7 @@ public class HttpErrorHandlerResolverImpl implements HttpErrorHandlerResolver {
     }
 
     /**
-     * Returns coma separated allowed methods
+     * Returns coma separated allowed methods.
      *
      * @return
      */
@@ -91,7 +91,7 @@ public class HttpErrorHandlerResolverImpl implements HttpErrorHandlerResolver {
      * @param e
      * @return
      */
-    private HttpErrorHandler getProtocolExceptionHandler(ProtocolException e) {
+    private HttpErrorHandler getProtocolExceptionHandler(final ProtocolException e) {
         if (e instanceof UriTooLongProtocolException || e instanceof StatusLineTooLongProtocolException) {
             return new HttpError414Handler();
         } else if (e instanceof LengthRequiredException) {

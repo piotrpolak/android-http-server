@@ -8,7 +8,7 @@
 package ro.polak.http;
 
 /**
- * Mime type mapping
+ * Mime type mapping.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
@@ -16,7 +16,7 @@ package ro.polak.http;
 public interface MimeTypeMapping {
 
     /**
-     * Returns mime type for specified extension
+     * Returns mime type for specified extension.
      *
      * @param extension extension
      * @return mime type for specified extension

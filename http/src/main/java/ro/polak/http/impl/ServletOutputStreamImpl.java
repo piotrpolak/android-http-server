@@ -34,24 +34,36 @@ public class ServletOutputStreamImpl extends ServletOutputStream {
         this.response = httpResponse;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(int b) throws IOException {
         flushHeadersIfPossible();
         outputStream.write(b);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(byte b[]) throws IOException {
         flushHeadersIfPossible();
         outputStream.write(b);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(byte b[], int off, int len) throws IOException {
         flushHeadersIfPossible();
         outputStream.write(b, off, len);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void flush() throws IOException {
         outputStream.flush();
@@ -63,6 +75,9 @@ public class ServletOutputStreamImpl extends ServletOutputStream {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void close() throws IOException {
         outputStream.close();

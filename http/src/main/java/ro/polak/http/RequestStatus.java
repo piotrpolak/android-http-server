@@ -34,7 +34,7 @@ public class RequestStatus {
      *
      * @param method
      */
-    public void setMethod(String method) {
+    public void setMethod(final String method) {
         this.method = method;
     }
 
@@ -52,7 +52,7 @@ public class RequestStatus {
      *
      * @param uri
      */
-    public void setUri(String uri) {
+    public void setUri(final String uri) {
         this.uri = uri;
     }
 
@@ -70,7 +70,7 @@ public class RequestStatus {
      *
      * @param queryString
      */
-    public void setQueryString(String queryString) {
+    public void setQueryString(final String queryString) {
         this.queryString = queryString;
     }
 
@@ -88,7 +88,7 @@ public class RequestStatus {
      *
      * @param protocol
      */
-    public void setProtocol(String protocol) {
+    public void setProtocol(final String protocol) {
         this.protocol = protocol;
     }
 }

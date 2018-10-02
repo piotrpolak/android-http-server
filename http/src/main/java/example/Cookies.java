@@ -16,15 +16,15 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpServlet;
 
 /**
- * Cookie usage example page
+ * Cookie usage example page.
  */
 public class Cookies extends HttpServlet {
 
-    private final static String PAGE_HITS_COOKIE_NAME = "page_hits";
-    private final static String FIRST_VISITED_AT_COOKIE_NAME = "first_visited_at";
+    private static final String PAGE_HITS_COOKIE_NAME = "page_hits";
+    private static final String FIRST_VISITED_AT_COOKIE_NAME = "first_visited_at";
 
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         int pageHits = 0;
         if (request.getCookie(PAGE_HITS_COOKIE_NAME) != null) {
             pageHits = Integer.parseInt(request.getCookie(PAGE_HITS_COOKIE_NAME).getValue());

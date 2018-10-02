@@ -47,7 +47,7 @@ public class Headers {
      * @param name  header name
      * @param value header value
      */
-    public void setHeader(String name, String value) {
+    public void setHeader(final String name, final String value) {
         headers.put(name, value);
     }
 
@@ -57,7 +57,7 @@ public class Headers {
      * @param name name of the header
      * @return header's value
      */
-    public String getHeader(String name) {
+    public String getHeader(final String name) {
         return headers.get(name);
     }
 
@@ -76,7 +76,7 @@ public class Headers {
      * @param name
      * @return
      */
-    public boolean containsHeader(String name) {
+    public boolean containsHeader(final String name) {
         return headers.containsKey(name);
     }
 }

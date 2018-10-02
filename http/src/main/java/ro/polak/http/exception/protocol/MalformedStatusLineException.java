@@ -12,7 +12,7 @@ package ro.polak.http.exception.protocol;
  */
 public class MalformedStatusLineException extends ProtocolException {
 
-    public MalformedStatusLineException(String message) {
+    public MalformedStatusLineException(final String message) {
         super(message);
     }
 }

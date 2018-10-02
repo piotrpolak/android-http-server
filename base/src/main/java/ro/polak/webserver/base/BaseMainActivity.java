@@ -162,7 +162,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     }
 
     /**
-     * GUI print debug method
+     * GUI print debug method.
      *
      * @param text
      */
@@ -202,7 +202,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
      *
      * @param serviceStateDTO
      */
-    protected void doNotifyStateChangedToOnline(BaseMainService.ServiceStateDTO serviceStateDTO) {
+    protected void doNotifyStateChangedToOnline(final BaseMainService.ServiceStateDTO serviceStateDTO) {
         //
     }
 
@@ -221,14 +221,14 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     }
 
     /**
-     * Callback executed upon all required permissions accepted
+     * Callback executed upon all required permissions accepted.
      */
     protected void doOnPermissionsAccepted() {
         //
     }
 
     /**
-     * Callback executed upon requesting all permissions
+     * Callback executed upon requesting all permissions.
      */
     protected void doShowMustAcceptPermissions() {
         //

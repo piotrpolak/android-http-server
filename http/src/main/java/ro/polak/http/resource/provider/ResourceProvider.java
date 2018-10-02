@@ -13,7 +13,7 @@ import ro.polak.http.servlet.impl.HttpRequestImpl;
 import ro.polak.http.servlet.impl.HttpResponseImpl;
 
 /**
- * Interface used for loading certain types of HTTP resources
+ * Interface used for loading certain types of HTTP resources.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201610
@@ -29,7 +29,7 @@ public interface ResourceProvider {
     boolean canLoad(String path);
 
     /**
-     * Loads the resource by URI, returns true if the resource was found or an error was served
+     * Loads the resource by URI, returns true if the resource was found or an error was served.
      *
      * @param path
      * @param request

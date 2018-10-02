@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * HTML document builder
+ * HTML document builder.
  */
 public class HTMLDocument {
 
@@ -21,50 +21,50 @@ public class HTMLDocument {
     private boolean isAuthenticated;
     private String ownerClass = "";
 
-    public HTMLDocument(String title) {
+    public HTMLDocument(final String title) {
         this.title = title;
         body = new StringBuilder();
         headers = new StringBuilder();
         isAuthenticated = true;
     }
 
-    public HTMLDocument(String title, boolean isAuthenticated) {
+    public HTMLDocument(final String title, final boolean isAuthenticated) {
         this(title);
         this.isAuthenticated = isAuthenticated;
     }
 
-    public void setOwnerClass(String ownerClass) {
+    public void setOwnerClass(final String ownerClass) {
         this.ownerClass = ownerClass;
     }
 
-    public void write(String w) {
+    public void write(final String w) {
         body.append(w);
     }
 
-    public void writeln(String w) {
+    public void writeln(final String w) {
         write(w + "\n");
     }
 
     /**
-     * Attaches CSS style path
+     * Attaches CSS style path.
      *
      * @param style
      */
-    public void attachStyle(String style) {
+    public void attachStyle(final String style) {
         headers.append("<link href=\"" + style + "\" rel=\"stylesheet\" type=\"text/css\" />\n");
     }
 
     /**
-     * Sets favicon path
+     * Sets favicon path.
      *
      * @param favicon
      */
-    public void setFavicon(String favicon) {
+    public void setFavicon(final String favicon) {
         headers.append("<link href=\"" + favicon + "\" rel=\"shortcut icon\" />\n");
     }
 
     /**
-     * Returns HTML representation of the document
+     * Returns HTML representation of the document.
      *
      * @return
      */

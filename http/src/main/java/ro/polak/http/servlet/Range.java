@@ -12,7 +12,7 @@ package ro.polak.http.servlet;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201702
  */
-public class Range {
+public final class Range {
 
     private long from;
     private long to;
@@ -20,7 +20,7 @@ public class Range {
     public Range() {
     }
 
-    public Range(long from, long to) {
+    public Range(final long from, final long to) {
         this.from = from;
         this.to = to;
     }

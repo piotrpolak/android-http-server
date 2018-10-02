@@ -37,24 +37,24 @@ import ro.polak.http.utilities.StringUtilities;
 import static java.util.TimeZone.getTimeZone;
 
 /**
- * HTTP request wrapper
+ * HTTP request wrapper.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
 public class HttpRequestImpl implements HttpServletRequest {
 
-    public final static String METHOD_CONNECT = "CONNECT";
-    public final static String METHOD_DELETE = "DELETE";
-    public final static String METHOD_GET = "GET";
-    public final static String METHOD_HEAD = "HEAD";
-    public final static String METHOD_OPTIONS = "OPTIONS";
-    public final static String METHOD_PURGE = "PURGE";
-    public final static String METHOD_PATCH = "PATCH";
-    public final static String METHOD_POST = "POST";
-    public final static String METHOD_PUT = "PUT";
-    public final static String METHOD_TRACE = "TRACE";
-    private final static String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
+    public static final String METHOD_CONNECT = "CONNECT";
+    public static final String METHOD_DELETE = "DELETE";
+    public static final String METHOD_GET = "GET";
+    public static final String METHOD_HEAD = "HEAD";
+    public static final String METHOD_OPTIONS = "OPTIONS";
+    public static final String METHOD_PURGE = "PURGE";
+    public static final String METHOD_PATCH = "PATCH";
+    public static final String METHOD_POST = "POST";
+    public static final String METHOD_PUT = "PUT";
+    public static final String METHOD_TRACE = "TRACE";
+    private static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
 
     private Map<String, String> postParameters;
     private Map<String, String> getParameters;
@@ -88,7 +88,7 @@ public class HttpRequestImpl implements HttpServletRequest {
     private Principal principal;
 
     /**
-     * Default constructor
+     * Default constructor.
      */
     public HttpRequestImpl() {
         Statistics.incrementRequestHandled();
@@ -98,11 +98,17 @@ public class HttpRequestImpl implements HttpServletRequest {
         attributes = new HashMap<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getRequestURI() {
         return status.getUri();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public StringBuilder getRequestURL() {
         StringBuilder url = new StringBuilder();
@@ -117,13 +123,19 @@ public class HttpRequestImpl implements HttpServletRequest {
         return url;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getHeader(String name) {
+    public String getHeader(final String name) {
         return headers.getHeader(name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public int getIntHeader(String name) {
+    public int getIntHeader(final String name) {
         if (!headers.containsHeader(name)) {
             return -1;
         }
@@ -135,23 +147,35 @@ public class HttpRequestImpl implements HttpServletRequest {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getRemoteAddr() {
         return remoteAddr;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isMultipart() {
         return isMultipart;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Headers getHeaders() {
         return headers;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public long getDateHeader(String name) {
+    public long getDateHeader(final String name) {
         if (!headers.containsHeader(name)) {
             return -1;
         }
@@ -166,11 +190,17 @@ public class HttpRequestImpl implements HttpServletRequest {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Enumeration getHeaderNames() {
         return Collections.enumeration(headers.keySet());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Cookie[] getCookies() {
         Cookie[] cookiesArray = new Cookie[cookies.size()];
@@ -179,11 +209,17 @@ public class HttpRequestImpl implements HttpServletRequest {
         return cookiesArray;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getQueryString() {
         return status.getQueryString();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getRequestedSessionId() {
         Cookie sessionCookie = getCookie(HttpSessionImpl.COOKIE_NAME);
@@ -194,21 +230,33 @@ public class HttpRequestImpl implements HttpServletRequest {
         return sessionCookie.getValue();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Object getAttribute(String name) {
+    public Object getAttribute(final String name) {
         return attributes.get(name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Enumeration getAttributeNames() {
         return Collections.enumeration(attributes.keySet());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCharacterEncoding() {
         return characterEncoding;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getContentLength() {
         if (!headers.containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
@@ -217,21 +265,33 @@ public class HttpRequestImpl implements HttpServletRequest {
         return getIntHeader(Headers.HEADER_CONTENT_LENGTH);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getContentType() {
         return headers.getHeader(Headers.HEADER_CONTENT_TYPE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public InputStream getInputStream() {
         return in;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getLocalAddr() {
         return localAddr;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Locale getLocale() {
         Enumeration<Locale> locales = getLocales();
@@ -242,6 +302,9 @@ public class HttpRequestImpl implements HttpServletRequest {
         return locales.nextElement();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Enumeration getLocales() {
         if (!StringUtilities.isEmpty(headers.getHeader(Headers.HEADER_ACCEPT_LANGUAGE))) {
@@ -256,16 +319,25 @@ public class HttpRequestImpl implements HttpServletRequest {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getLocalName() {
         return localName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getLocalPort() {
         return localPort;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Map getParameterMap() {
         String method = getMethod().toUpperCase();
@@ -276,13 +348,19 @@ public class HttpRequestImpl implements HttpServletRequest {
         return getParameters;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Enumeration getParameterNames() {
         return Collections.enumeration(getParameterMap().keySet());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String[] getParameterValues(String name) {
+    public String[] getParameterValues(final String name) {
 
         // TODO Implement parsing array query strings, like ?a[]=1&a[]=2
         throw new IllegalStateException("Not implemented");
@@ -292,21 +370,33 @@ public class HttpRequestImpl implements HttpServletRequest {
 //        return values;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getProtocol() {
         return status.getProtocol();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BufferedReader getReader() {
         throw new IllegalStateException("Not implemented");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getRemoteHost() {
         return remoteHost;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getRemotePort() {
         return remotePort;
@@ -314,71 +404,110 @@ public class HttpRequestImpl implements HttpServletRequest {
 
     //  RequestDispatcher	getRequestDispatcher(String path)
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getScheme() {
         return scheme;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getServerName() {
         return serverName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getServerPort() {
         return serverPort;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isSecure() {
         return isSecure;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void removeAttribute(String name) {
+    public void removeAttribute(final String name) {
         attributes.remove(name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setAttribute(String name, Object o) {
+    public void setAttribute(final String name, final Object o) {
         attributes.put(name, o);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setCharacterEncoding(String characterEncoding) {
+    public void setCharacterEncoding(final String characterEncoding) {
         this.characterEncoding = characterEncoding;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getMethod() {
         return status.getMethod();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Collection<UploadedFile> getUploadedFiles() {
         return uploadedFiles;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Cookie getCookie(String cookieName) {
+    public Cookie getCookie(final String cookieName) {
         if (cookies.containsKey(cookieName)) {
             return cookies.get(cookieName);
         }
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getParameter(String paramName) {
+    public String getParameter(final String paramName) {
         return getParameters.get(paramName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getPostParameter(String paramName) {
+    public String getPostParameter(final String paramName) {
         return postParameters.get(paramName);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public HttpSession getSession(boolean create) {
+    public HttpSession getSession(final boolean create) {
         getSessionInstance();
 
         if (session == null && create) {
@@ -404,63 +533,99 @@ public class HttpRequestImpl implements HttpServletRequest {
         return session;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public HttpSession getSession() {
         return getSession(true);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getAuthType() {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getContextPath() {
         return servletContext.getContextPath();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ServletContext getServletContext() {
         return servletContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPathTranslated() {
         return pathTranslated;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPathInfo() {
         return pathInfo;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getRemoteUser() {
         return remoteUser;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Principal getUserPrincipal() {
         return principal;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isRequestedSessionIdFromCookie() {
         return true; // Hardcoded, only cookie implementation exists
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isRequestedSessionIdFromURL() {
         return false; // Hardcoded, only cookie implementation exists
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isRequestedSessionIdValid() {
         return getSessionInstance() != null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean isUserInRole(String role) {
+    public boolean isUserInRole(final String role) {
         return false; // Not really implemented
     }
 
@@ -469,95 +634,95 @@ public class HttpRequestImpl implements HttpServletRequest {
      *
      * @param servletContext
      */
-    public void setServletContext(ServletContextImpl servletContext) {
+    public void setServletContext(final ServletContextImpl servletContext) {
         this.servletContext = servletContext;
     }
 
-    public void setRemoteAddr(String remoteAddr) {
+    public void setRemoteAddr(final String remoteAddr) {
         this.remoteAddr = remoteAddr;
     }
 
-    public void setHeaders(Headers headers) {
+    public void setHeaders(final Headers headers) {
         this.headers = headers;
     }
 
-    public void setUploadedFiles(Collection<UploadedFile> uploadedFiles) {
+    public void setUploadedFiles(final Collection<UploadedFile> uploadedFiles) {
         this.uploadedFiles = uploadedFiles;
     }
 
-    public void setGetParameters(Map<String, String> getParameters) {
+    public void setGetParameters(final Map<String, String> getParameters) {
         this.getParameters = getParameters;
     }
 
-    public void setPostParameters(Map<String, String> postParameters) {
+    public void setPostParameters(final Map<String, String> postParameters) {
         this.postParameters = postParameters;
     }
 
-    public void setStatus(RequestStatus status) {
+    public void setStatus(final RequestStatus status) {
         this.status = status;
     }
 
-    public void setCookies(Map<String, Cookie> cookies) {
+    public void setCookies(final Map<String, Cookie> cookies) {
         this.cookies = cookies;
     }
 
-    public void setInputStream(InputStream in) {
+    public void setInputStream(final InputStream in) {
         this.in = in;
     }
 
-    public void setLocalPort(int localPort) {
+    public void setLocalPort(final int localPort) {
         this.localPort = localPort;
     }
 
-    public void setRemoteHost(String remoteHost) {
+    public void setRemoteHost(final String remoteHost) {
         this.remoteHost = remoteHost;
     }
 
-    public void setRemotePort(int remotePort) {
+    public void setRemotePort(final int remotePort) {
         this.remotePort = remotePort;
     }
 
-    public void setLocalAddr(String localAddr) {
+    public void setLocalAddr(final String localAddr) {
         this.localAddr = localAddr;
     }
 
-    public void setServerPort(int serverPort) {
+    public void setServerPort(final int serverPort) {
         this.serverPort = serverPort;
     }
 
-    public void setLocalName(String localName) {
+    public void setLocalName(final String localName) {
         this.localName = localName;
     }
 
-    public void setServerName(String serverName) {
+    public void setServerName(final String serverName) {
         this.serverName = serverName;
     }
 
-    public void setScheme(String scheme) {
+    public void setScheme(final String scheme) {
         this.scheme = scheme;
     }
 
-    public void setSecure(boolean secure) {
+    public void setSecure(final boolean secure) {
         isSecure = secure;
     }
 
-    public void setMultipart(boolean multipart) {
+    public void setMultipart(final boolean multipart) {
         isMultipart = multipart;
     }
 
-    public void setPathTranslated(String pathTranslated) {
+    public void setPathTranslated(final String pathTranslated) {
         this.pathTranslated = pathTranslated;
     }
 
-    public void setPathInfo(String pathInfo) {
+    public void setPathInfo(final String pathInfo) {
         this.pathInfo = pathInfo;
     }
 
-    public void setRemoteUser(String remoteUser) {
+    public void setRemoteUser(final String remoteUser) {
         this.remoteUser = remoteUser;
     }
 
-    public void setPrincipal(Principal principal) {
+    public void setPrincipal(final Principal principal) {
         this.principal = principal;
     }
 

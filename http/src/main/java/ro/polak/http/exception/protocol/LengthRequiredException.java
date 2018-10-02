@@ -8,7 +8,7 @@
 package ro.polak.http.exception.protocol;
 
 /**
- * Length required exception
+ * Length required exception.
  */
 public class LengthRequiredException extends ProtocolException {
     public LengthRequiredException() {

@@ -16,7 +16,7 @@ import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 
 /**
- * Locale parser, very basic implementation
+ * Locale parser, very basic implementation.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201805
@@ -35,7 +35,7 @@ public class LocaleParser implements Parser<List<Locale>> {
      * @throws MalformedInputException
      */
     @Override
-    public List<Locale> parse(String input) throws MalformedInputException {
+    public List<Locale> parse(final String input) throws MalformedInputException {
         String localesStr[] = input.split(LOCALE_SEPARATOR);
         List<LocaleWithWeight> localesWithWeight = new ArrayList<>();
 
@@ -65,7 +65,7 @@ public class LocaleParser implements Parser<List<Locale>> {
         return toLocales(localesWithWeight);
     }
 
-    private List<Locale> toLocales(List<LocaleWithWeight> localesWithWeight) {
+    private List<Locale> toLocales(final List<LocaleWithWeight> localesWithWeight) {
         Collections.sort(localesWithWeight);
 
         List<Locale> locales = new ArrayList<>();
@@ -77,19 +77,19 @@ public class LocaleParser implements Parser<List<Locale>> {
     }
 
     /**
-     * Helper class representing locale to weight pair
+     * Helper class representing locale to weight pair.
      */
     private static class LocaleWithWeight implements Comparable {
         private Locale locale;
         private double weight;
 
-        public LocaleWithWeight(Locale locale, double weight) {
+        LocaleWithWeight(final Locale locale, final double weight) {
             this.locale = locale;
             this.weight = weight;
         }
 
         @Override
-        public int compareTo(Object o) {
+        public int compareTo(final Object o) {
             return Double.compare(((LocaleWithWeight) o).getWeight(), getWeight());
         }
 

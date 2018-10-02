@@ -16,7 +16,7 @@ import ro.polak.http.errorhandler.AbstractHtmlErrorHandler;
 import ro.polak.http.servlet.HttpServletResponse;
 
 /**
- * 500 Internal Server Error HTTP error handler
+ * 500 Internal Server Error HTTP error handler.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
@@ -29,11 +29,11 @@ public class HttpError500Handler extends AbstractHtmlErrorHandler {
     }
 
     /**
-     * Sets the reason and generates error message for 500 HTTP error
+     * Sets the reason and generates error message for 500 HTTP error.
      *
      * @param e Throwable
      */
-    public HttpError500Handler setReason(Throwable e) {
+    public HttpError500Handler setReason(final Throwable e) {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<p style=\"color: red; font-weight: bold;\">");
@@ -45,12 +45,12 @@ public class HttpError500Handler extends AbstractHtmlErrorHandler {
                 .append(exceptionToString(e))
                 .append("</pre>");
 
-        explanation = stringBuilder.toString();
+        setExplanation(stringBuilder.toString());
 
         return this;
     }
 
-    private String exceptionToString(Throwable e) {
+    private String exceptionToString(final Throwable e) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(os);
 

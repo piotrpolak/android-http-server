@@ -20,7 +20,7 @@ import ro.polak.http.session.storage.SessionStorage;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201803
  */
-public class ServletContextBuilder {
+public final class ServletContextBuilder {
 
     private final List<ServletMapping> servletMappings = new ArrayList<>();
     private final List<FilterMapping> filterMappings = new ArrayList<>();
@@ -38,9 +38,9 @@ public class ServletContextBuilder {
      * @param sessionStorage
      * @param serverConfig
      */
-    ServletContextBuilder(DeploymentDescriptorBuilder parent,
-                          SessionStorage sessionStorage,
-                          ServerConfig serverConfig) {
+    ServletContextBuilder(final DeploymentDescriptorBuilder parent,
+                          final SessionStorage sessionStorage,
+                          final ServerConfig serverConfig) {
         this.parent = parent;
         this.sessionStorage = sessionStorage;
         this.serverConfig = serverConfig;

@@ -43,7 +43,7 @@ import ro.polak.http.servlet.UploadedFile;
 import ro.polak.http.servlet.impl.FilterChainImpl;
 
 /**
- * Servlet resource provider
+ * Servlet resource provider.
  * <p/>
  * This provider enables the URLs to be interpreted by servlets
  *
@@ -70,12 +70,18 @@ public class ServletResourceProvider implements ResourceProvider {
         this.servletContexts = servletContexts;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean canLoad(String path) {
+    public boolean canLoad(final String path) {
         ServletContext servletContext = servletContextHelper.getResolvedContext(servletContexts, path);
         return servletContext != null && servletContextHelper.getResolvedServletMapping(servletContext, path) != null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void load(String path, HttpRequestImpl request, HttpResponseImpl response) throws IOException {
         ServletContextImpl servletContext = servletContextHelper.getResolvedContext(servletContexts, path);
@@ -96,6 +102,9 @@ public class ServletResourceProvider implements ResourceProvider {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void shutdown() {
         servletContainer.shutdown();

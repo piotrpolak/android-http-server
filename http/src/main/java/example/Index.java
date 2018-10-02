@@ -15,12 +15,15 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpServlet;
 
 /**
- * Hello page example page
+ * Hello page example page.
  */
 public class Index extends HttpServlet {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         PrintWriter printWriter = response.getWriter();
         printWriter.println("<h1>Hello World!</h1>");
         printWriter.println("<p>Demo servlet page.</p>");

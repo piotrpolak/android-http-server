@@ -115,7 +115,7 @@ public class HttpServletRequestImplFactory {
      * @param socket
      * @return
      */
-    public HttpRequestImpl createFromSocket(Socket socket)
+    public HttpRequestImpl createFromSocket(final Socket socket)
             throws IOException, ProtocolException {
 
         HttpRequestImpl request = new HttpRequestImpl();
@@ -132,7 +132,8 @@ public class HttpServletRequestImplFactory {
 
         int uriLengthExceededWith = status.getUri().length() - URI_MAX_LENGTH;
         if (uriLengthExceededWith > 0) {
-            throw new UriTooLongProtocolException("Uri length exceeded max length with" + uriLengthExceededWith + " characters");
+            throw new UriTooLongProtocolException("Uri length exceeded max length with"
+                    + uriLengthExceededWith + " characters");
         }
 
         if (!isValidProtocol(status.getProtocol())) {
@@ -189,11 +190,11 @@ public class HttpServletRequestImplFactory {
         return request;
     }
 
-    private boolean isValidProtocol(String protocol) {
+    private boolean isValidProtocol(final String protocol) {
         return protocol.equalsIgnoreCase("HTTP/1.0") || protocol.equalsIgnoreCase("HTTP/1.1");
     }
 
-    private void assignSocketMetadata(Socket socket, HttpRequestImpl request) {
+    private void assignSocketMetadata(final Socket socket, final HttpRequestImpl request) {
         request.setSecure(false);
         request.setScheme(DEFAULT_SCHEME);
         request.setRemoteAddr(socket.getInetAddress().getHostAddress());
@@ -206,7 +207,7 @@ public class HttpServletRequestImplFactory {
         request.setServerName(socket.getInetAddress().getHostName());
     }
 
-    private Map<String, Cookie> getCookies(Headers headers) {
+    private Map<String, Cookie> getCookies(final Headers headers) {
         if (headers.containsHeader(Headers.HEADER_COOKIE)) {
             try {
                 return cookieParser.parse(headers.getHeader(Headers.HEADER_COOKIE));
@@ -217,7 +218,7 @@ public class HttpServletRequestImplFactory {
         return new HashMap<>();
     }
 
-    private String getStatusLine(InputStream in)
+    private String getStatusLine(final InputStream in)
             throws IOException, StatusLineTooLongProtocolException, MalformedOrUnsupportedMethodProtocolException {
         StringBuilder statusLine = new StringBuilder();
         byte[] buffer = new byte[1];
@@ -279,7 +280,7 @@ public class HttpServletRequestImplFactory {
         return headersString.toString();
     }
 
-    private void handlePostRequest(HttpRequestImpl request, InputStream in) throws IOException, MalformedInputException {
+    private void handlePostRequest(final HttpRequestImpl request, final InputStream in) throws IOException, MalformedInputException {
         int postLength;
         if (request.getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
             try {
@@ -298,7 +299,8 @@ public class HttpServletRequestImplFactory {
         }
 
         if (postLength > POST_MAX_LENGTH) {
-            throw new PayloadTooLargeProtocolException("Payload of " + postLength + "b exceeds the limit of " + POST_MAX_LENGTH + "b");
+            throw new PayloadTooLargeProtocolException("Payload of " + postLength + "b exceeds the limit of "
+                    + POST_MAX_LENGTH + "b");
         }
 
         if (isMultipartRequest(request)) {
@@ -308,12 +310,12 @@ public class HttpServletRequestImplFactory {
         }
     }
 
-    private boolean isMultipartRequest(HttpRequestImpl request) {
+    private boolean isMultipartRequest(final HttpRequestImpl request) {
         return request.getHeaders().containsHeader(Headers.HEADER_CONTENT_TYPE)
                 && request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE).toLowerCase().startsWith("multipart/form-data");
     }
 
-    private void handlePostPlainRequest(HttpRequestImpl request, InputStream in, int postLength)
+    private void handlePostPlainRequest(final HttpRequestImpl request, final InputStream in, final int postLength)
             throws IOException, MalformedInputException {
         byte[] buffer;
         buffer = new byte[1];
@@ -328,7 +330,7 @@ public class HttpServletRequestImplFactory {
         request.setPostParameters(queryStringParser.parse(postLine.toString()));
     }
 
-    private void handlePostMultipartRequest(HttpRequestImpl request, InputStream in, int postLength)
+    private void handlePostMultipartRequest(final HttpRequestImpl request, final InputStream in, final int postLength)
             throws IOException, MalformedInputException {
 
         String boundary = request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE);

@@ -29,7 +29,7 @@ public class HeadersSerializer implements Serializer<Headers> {
      * @return
      */
     @Override
-    public String serialize(Headers headers) {
+    public String serialize(final Headers headers) {
         Set<String> names = headers.keySet();
         StringBuilder sb = new StringBuilder();
         for (String name : names) {

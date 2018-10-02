@@ -18,21 +18,30 @@ import ro.polak.http.servlet.FilterConfig;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 
+/**
+ * Handles the logout logic.
+ */
 public class LogoutFilter implements Filter {
 
     private FilterConfig filterConfig;
     private ServerConfig serverConfig;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(final FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
         serverConfig = (ServerConfig) filterConfig.getServletContext()
                 .getAttribute(ServerConfig.class.getName());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void doFilter(HttpServletRequest request, HttpServletResponse response,
-                         FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(final HttpServletRequest request, final HttpServletResponse response,
+                         final FilterChain filterChain) throws IOException, ServletException {
 
         new AccessControl(serverConfig, request.getSession()).logout();
         response.sendRedirect(filterConfig.getServletContext().getContextPath() + "/Login");

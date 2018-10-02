@@ -13,12 +13,15 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpServlet;
 
 /**
- * Internal server error page example page
+ * Internal server error page example page.
  */
 public class InternalServerError extends HttpServlet {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         throw new ServletException("Something bad has just happened");
     }
 }

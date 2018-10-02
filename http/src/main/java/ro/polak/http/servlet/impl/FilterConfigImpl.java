@@ -25,10 +25,13 @@ public class FilterConfigImpl implements FilterConfig {
      *
      * @param servletContext
      */
-    public FilterConfigImpl(ServletContext servletContext) {
+    public FilterConfigImpl(final ServletContext servletContext) {
         this.servletContext = servletContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ServletContext getServletContext() {
         return servletContext;

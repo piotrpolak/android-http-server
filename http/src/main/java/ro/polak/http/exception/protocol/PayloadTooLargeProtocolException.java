@@ -12,7 +12,7 @@ package ro.polak.http.exception.protocol;
  */
 public class PayloadTooLargeProtocolException extends ProtocolException {
 
-    public PayloadTooLargeProtocolException(String message) {
+    public PayloadTooLargeProtocolException(final String message) {
         super(message);
     }
 }

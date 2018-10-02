@@ -8,7 +8,7 @@
 package ro.polak.http.exception;
 
 /**
- * Access denied exception
+ * Access denied exception.
  */
 public class AccessDeniedException extends RuntimeException {
 }

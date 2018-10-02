@@ -15,12 +15,15 @@ import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 
 /**
- * Forbidden by filter page example
+ * Forbidden by filter page example.
  */
 public class ForbiddenByFilter extends HttpServlet {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         PrintWriter printWriter = response.getWriter();
         printWriter.println("Hello World!");
     }

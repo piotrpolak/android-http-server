@@ -31,7 +31,7 @@ public class RequestStatusParser implements Parser<RequestStatus> {
      * @throws MalformedInputException
      */
     @Override
-    public RequestStatus parse(String input) throws MalformedInputException {
+    public RequestStatus parse(final String input) throws MalformedInputException {
         RequestStatus status = new RequestStatus();
         status.setQueryString("");
         String uri;
@@ -40,8 +40,8 @@ public class RequestStatusParser implements Parser<RequestStatus> {
         String statusArray[] = input.split(STATUS_SEPARATOR, NUMBER_OF_CHUNKS);
 
         if (statusArray.length < NUMBER_OF_CHUNKS) {
-            throw new MalformedInputException("Input status string should be composed out of " +
-                    NUMBER_OF_CHUNKS + " chunks. Received " + input);
+            throw new MalformedInputException("Input status string should be composed out of "
+                    + NUMBER_OF_CHUNKS + " chunks. Received " + input);
         }
 
         // First element of the array is the HTTP method

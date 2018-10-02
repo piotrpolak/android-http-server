@@ -25,7 +25,7 @@ import ro.polak.webserver.base.BaseMainService;
 import ro.polak.webserver.webserver.R;
 
 /**
- * The main server Android activity
+ * The main server Android activity.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201008
@@ -41,7 +41,9 @@ public class MainActivity extends BaseMainActivity {
     private Button quitButton;
     private ImageView imgView;
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doOnCreate() {
 
@@ -66,12 +68,18 @@ public class MainActivity extends BaseMainActivity {
         status.setText("Initializing");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @NonNull
     @Override
     protected Class<MainService> getServiceClass() {
         return MainService.class;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doRequestPermissions() {
         status.setText("Requesting permissions");
@@ -80,12 +88,18 @@ public class MainActivity extends BaseMainActivity {
         ipText.setVisibility(View.GONE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doShowMustAcceptPermissions() {
         status.setText("Unable to initialize. Missing permissions.");
         requestPermissionsButton.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doNotifyStateChangedToOffline() {
         imgView.setImageResource(R.drawable.offline);
@@ -94,8 +108,11 @@ public class MainActivity extends BaseMainActivity {
         actionButton.setText("Start HTTPD");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected void doNotifyStateChangedToOnline(BaseMainService.ServiceStateDTO serviceStateDTO) {
+    protected void doNotifyStateChangedToOnline(final BaseMainService.ServiceStateDTO serviceStateDTO) {
         ipText.setText(serviceStateDTO.getAccessUrl());
 
         imgView.setImageResource(R.drawable.online);
@@ -104,6 +121,9 @@ public class MainActivity extends BaseMainActivity {
         status.setText("Server online");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void println(final String text) {
         runOnUiThread(new Runnable() {
@@ -118,12 +138,18 @@ public class MainActivity extends BaseMainActivity {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doOnPermissionsAccepted() {
         backgroundButton.setVisibility(View.VISIBLE);
         ipText.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @NonNull
     protected Set<String> getRequiredPermissions() {
@@ -141,11 +167,11 @@ public class MainActivity extends BaseMainActivity {
 
         private BaseMainActivity activity;
 
-        public ButtonListener(BaseMainActivity activity) {
+        ButtonListener(final BaseMainActivity activity) {
             this.activity = activity;
         }
 
-        public void onClick(View v) {
+        public void onClick(final View v) {
             int id = v.getId();
 
             if (id == requestPermissionsButton.getId()) {

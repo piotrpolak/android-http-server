@@ -14,7 +14,7 @@ import java.util.Locale;
 import static java.util.TimeZone.getTimeZone;
 
 /**
- * FileUtilities
+ * FileUtilities.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200804
@@ -32,7 +32,7 @@ public final class DateUtilities {
      * @param date
      * @return
      */
-    public static String dateFormat(Date date) {
+    public static String dateFormat(final Date date) {
         return getNewDateFormat().format(date);
     }
 

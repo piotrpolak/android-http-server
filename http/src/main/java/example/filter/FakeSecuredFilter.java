@@ -18,20 +18,29 @@ import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 
 /**
- * Always throws AccessDeniedException
+ * Always throws AccessDeniedException.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201803
  */
 public class FakeSecuredFilter implements Filter {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(final FilterConfig filterConfig) throws ServletException {
         // Do nothing
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(final HttpServletRequest request,
+                         final HttpServletResponse response,
+                         final FilterChain filterChain)
+            throws IOException, ServletException {
         throw new AccessDeniedException();
     }
 }

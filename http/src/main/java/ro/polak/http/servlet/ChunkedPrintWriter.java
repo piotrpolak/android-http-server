@@ -10,7 +10,7 @@ package ro.polak.http.servlet;
 import java.io.OutputStream;
 
 /**
- * ChunkedPrintWriter
+ * Allows flushing buffer in chunks.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @url https://en.wikipedia.org/wiki/Chunked_transfer_encoding
@@ -28,10 +28,13 @@ public class ChunkedPrintWriter extends ServletPrintWriter {
      *
      * @param out
      */
-    public ChunkedPrintWriter(OutputStream out) {
+    public ChunkedPrintWriter(final OutputStream out) {
         super(out);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void println() {
         // Overwrites the original new line character
@@ -40,8 +43,11 @@ public class ChunkedPrintWriter extends ServletPrintWriter {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void write(String str) {
+    public void write(final String str) {
         String head = Long.toHexString(str.length()).toUpperCase() + NEW_LINE;
         super.write(head);
         super.write(str);

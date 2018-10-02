@@ -22,7 +22,7 @@ import ro.polak.http.servlet.impl.HttpResponseImpl;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
- * APK asset resource provider
+ * APK asset resource provider.
  * <p/>
  * This provider loads the bundled resources from the APK internal structure
  *
@@ -40,13 +40,16 @@ public class AssetResourceProvider implements ResourceProvider {
      * @param assetManager
      * @param basePath
      */
-    public AssetResourceProvider(AssetManager assetManager, String basePath) {
+    public AssetResourceProvider(final AssetManager assetManager, final String basePath) {
         this.assetManager = assetManager;
         this.basePath = basePath;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean canLoad(String path) {
+    public boolean canLoad(final String path) {
         try {
             getInputStream(getAssetPath(path));
             return true;
@@ -56,13 +59,19 @@ public class AssetResourceProvider implements ResourceProvider {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void shutdown() {
         // Do nothing
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void load(String path, HttpRequestImpl request, HttpResponseImpl response) {
+    public void load(final String path, final HttpRequestImpl request, final HttpResponseImpl response) {
         String assetPath = getAssetPath(path);
         InputStream inputStream = null;
         try {
@@ -90,11 +99,11 @@ public class AssetResourceProvider implements ResourceProvider {
     }
 
     @NonNull
-    private String getAssetPath(String path) {
+    private String getAssetPath(final String path) {
         return basePath + path;
     }
 
-    private InputStream getInputStream(String assetPath) throws IOException {
+    private InputStream getInputStream(final String assetPath) throws IOException {
         return assetManager.open(assetPath);
     }
 }

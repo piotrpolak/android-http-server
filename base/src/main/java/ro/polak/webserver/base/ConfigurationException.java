@@ -15,11 +15,11 @@ package ro.polak.webserver.base;
  */
 public class ConfigurationException extends RuntimeException {
 
-    public ConfigurationException(String s) {
+    public ConfigurationException(final String s) {
         super(s);
     }
 
-    public ConfigurationException(Throwable e) {
+    public ConfigurationException(final Throwable e) {
         super(e);
     }
 }

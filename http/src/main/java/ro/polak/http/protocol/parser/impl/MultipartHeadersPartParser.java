@@ -13,7 +13,7 @@ import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 
 /**
- * Multipart request headers parser
+ * Multipart request headers parser.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201611

@@ -19,7 +19,7 @@ import ro.polak.http.session.storage.SessionStorage;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201803
  */
-public class DeploymentDescriptorBuilder {
+public final class DeploymentDescriptorBuilder {
 
     private final List<ServletContextImpl> servletContextImpls = new ArrayList<>();
 
@@ -36,12 +36,12 @@ public class DeploymentDescriptorBuilder {
         return new DeploymentDescriptorBuilder();
     }
 
-    public DeploymentDescriptorBuilder withSessionStorage(SessionStorage sessionStorage) {
+    public DeploymentDescriptorBuilder withSessionStorage(final SessionStorage sessionStorage) {
         this.sessionStorage = sessionStorage;
         return this;
     }
 
-    public DeploymentDescriptorBuilder withServerConfig(ServerConfig serverConfig) {
+    public DeploymentDescriptorBuilder withServerConfig(final ServerConfig serverConfig) {
         this.serverConfig = serverConfig;
         return this;
     }
@@ -60,7 +60,7 @@ public class DeploymentDescriptorBuilder {
      * @param servletContextImpl
      * @return
      */
-    protected DeploymentDescriptorBuilder addServletContext(ServletContextImpl servletContextImpl) {
+    protected DeploymentDescriptorBuilder addServletContext(final ServletContextImpl servletContextImpl) {
         servletContextImpl.setAttribute(ServerConfig.class.getName(), serverConfig);
         servletContextImpls.add(servletContextImpl);
         return this;

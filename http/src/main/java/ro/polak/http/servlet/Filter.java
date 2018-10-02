@@ -36,5 +36,6 @@ public interface Filter {
      * @throws IOException
      * @throws ServletException
      */
-    void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException;
+    void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws IOException, ServletException;
 }

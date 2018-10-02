@@ -36,6 +36,9 @@ public class ServletContainerImpl implements ServletContainer {
 
     // TODO Implement timeout
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Servlet getServletForClass(Class<? extends HttpServlet> servletClass, ServletConfig servletConfig)
             throws ServletInitializationException, ServletException {
@@ -48,6 +51,9 @@ public class ServletContainerImpl implements ServletContainer {
         return initializeServlet(servletClass, servletConfig);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Filter getFilterForClass(Class<? extends Filter> filterClass, FilterConfig filterConfig)
             throws FilterInitializationException, ServletException {

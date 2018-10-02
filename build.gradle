@@ -3,6 +3,11 @@ allprojects {
         jcenter()
         google()
     }
+//    apply plugin: 'checkstyle'
+//    checkstyle {
+//        toolVersion = "8.12"
+//        configFile = new File(rootProject.rootDir.toString() + '/config/checkstyle/sun_checks_custom.xml')
+//    }
 }
 
 buildscript {

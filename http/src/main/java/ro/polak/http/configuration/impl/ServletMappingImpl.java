@@ -24,16 +24,22 @@ public class ServletMappingImpl implements ServletMapping {
 
     private final Class<? extends HttpServlet> servletClass;
 
-    public ServletMappingImpl(Pattern urlPattern, Class<? extends HttpServlet> servletClass) {
+    public ServletMappingImpl(final Pattern urlPattern, final Class<? extends HttpServlet> servletClass) {
         this.urlPattern = urlPattern;
         this.servletClass = servletClass;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Pattern getUrlPattern() {
         return urlPattern;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Class<? extends HttpServlet> getServletClass() {
         return servletClass;

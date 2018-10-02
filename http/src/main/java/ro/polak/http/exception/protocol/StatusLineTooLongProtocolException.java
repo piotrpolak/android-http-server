@@ -12,7 +12,7 @@ package ro.polak.http.exception.protocol;
  */
 public class StatusLineTooLongProtocolException extends ProtocolException {
 
-    public StatusLineTooLongProtocolException(String message) {
+    public StatusLineTooLongProtocolException(final String message) {
         super(message);
     }
 }

@@ -37,12 +37,15 @@ import ro.polak.webserver.base.AssetResourceProvider;
  */
 public class BaseAndroidServerConfigFactory extends DefaultServerConfigFactory {
 
-    private Context context;
+    private final Context context;
 
-    public BaseAndroidServerConfigFactory(Context context) {
+    public BaseAndroidServerConfigFactory(final Context context) {
         this.context = context;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String getBasePath() {
         String baseConfigPath;
@@ -54,6 +57,9 @@ public class BaseAndroidServerConfigFactory extends DefaultServerConfigFactory {
         return baseConfigPath;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected String getTempPath() {
         if (context != null) {
@@ -63,6 +69,9 @@ public class BaseAndroidServerConfigFactory extends DefaultServerConfigFactory {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Map<String, Object> getAdditionalServletContextAttributes() {
         Map<String, Object> attributes = new HashMap<>();
@@ -70,19 +79,26 @@ public class BaseAndroidServerConfigFactory extends DefaultServerConfigFactory {
         return attributes;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected Set<ResourceProvider> getAdditionalResourceProviders(ServerConfig serverConfig) {
+    protected Set<ResourceProvider> getAdditionalResourceProviders(final ServerConfig serverConfig) {
         Set<ResourceProvider> resourceProviders = new HashSet<>();
         resourceProviders.add(getAssetsResourceProvider(serverConfig.getMimeTypeMapping()));
         return resourceProviders;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected DeploymentDescriptorBuilder getDeploymentDescriptorBuilder(SessionStorage sessionStorage, ServerConfig serverConfig) {
+    protected DeploymentDescriptorBuilder getDeploymentDescriptorBuilder(final SessionStorage sessionStorage,
+                                                                         final ServerConfig serverConfig) {
         return super.getDeploymentDescriptorBuilder(sessionStorage, serverConfig);
     }
 
-    private ResourceProvider getAssetsResourceProvider(MimeTypeMapping mimeTypeMapping) {
+    private ResourceProvider getAssetsResourceProvider(final MimeTypeMapping mimeTypeMapping) {
         String assetBasePath = "public";
         if (context != null) {
             AssetManager assetManager = ((Context) context).getResources().getAssets();

@@ -11,7 +11,7 @@ import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
 import ro.polak.http.servlet.HttpServletResponse;
 
 /**
- * 503 Service Unavailable HTTP error handler
+ * 503 Service Unavailable HTTP error handler.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509

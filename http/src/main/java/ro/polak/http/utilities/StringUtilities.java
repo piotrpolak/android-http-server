@@ -17,7 +17,7 @@ import static java.net.URLDecoder.decode;
 import static java.net.URLEncoder.encode;
 
 /**
- * Random string generator
+ * Random string generator.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
@@ -42,7 +42,7 @@ public final class StringUtilities {
      * @param length length of the string
      * @return random string of 32 characters
      */
-    public static String generateRandom(int length) {
+    public static String generateRandom(final int length) {
         StringBuilder randomString = new StringBuilder(length);
 
         // ThreadLocalRandom requires API min 21
@@ -61,7 +61,7 @@ public final class StringUtilities {
      * @param text text to be encoded
      * @return encoded string
      */
-    public static String urlEncode(String text) {
+    public static String urlEncode(final String text) {
         try {
             return encode(text, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) { // $COVERAGE-IGNORE$
@@ -75,7 +75,7 @@ public final class StringUtilities {
      * @param text text to be decoded
      * @return decoded string
      */
-    public static String urlDecode(String text) {
+    public static String urlDecode(final String text) {
         try {
             return decode(text, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) { // $COVERAGE-IGNORE$
@@ -89,7 +89,7 @@ public final class StringUtilities {
      * @param value
      * @return
      */
-    public static boolean isEmpty(String value) {
+    public static boolean isEmpty(final String value) {
         return value == null || value.length() == 0;
     }
 }

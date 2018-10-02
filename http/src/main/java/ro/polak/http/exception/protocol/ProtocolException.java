@@ -12,11 +12,11 @@ package ro.polak.http.exception.protocol;
  */
 public class ProtocolException extends RuntimeException {
 
-    public ProtocolException(String message) {
+    public ProtocolException(final String message) {
         super(message);
     }
 
-    public ProtocolException(String s, Throwable throwable) {
+    public ProtocolException(final String s, final Throwable throwable) {
         super(s, throwable);
     }
 }

@@ -19,22 +19,34 @@ public abstract class HttpServlet implements Servlet {
 
     private ServletConfig servletConfig;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
+    public void init(final ServletConfig servletConfig) throws ServletException {
         this.servletConfig = servletConfig;
         init();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void init() throws ServletException {
         // To be overwritten
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void destroy() {
         // Empty by default, should be overwritten by the implementing servlet
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getServletInfo() {
         return "";

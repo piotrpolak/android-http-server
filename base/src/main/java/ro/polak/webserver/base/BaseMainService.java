@@ -46,7 +46,7 @@ import ro.polak.webserver.base.logic.AssetUtil;
 import static ro.polak.http.configuration.impl.ServerConfigImpl.PROPERTIES_FILE_NAME;
 
 /**
- * Main application service that holds http server
+ * Main application service that holds http server.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201709
@@ -68,7 +68,7 @@ public abstract class BaseMainService extends Service implements ServerGui {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, final int flags, final int startId) {
         isServiceStarted = true;
 
         ServerConfigFactory serverConfigFactory = getServerConfigFactory(this);

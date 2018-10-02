@@ -11,7 +11,8 @@ package ro.polak.http.protocol.parser;
  * Malformed input exception.
  */
 public class MalformedInputException extends Exception {
-    public MalformedInputException(String s) {
+
+    public MalformedInputException(final String s) {
         super(s);
     }
 }

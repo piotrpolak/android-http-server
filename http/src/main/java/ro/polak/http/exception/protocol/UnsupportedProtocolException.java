@@ -12,7 +12,7 @@ package ro.polak.http.exception.protocol;
  */
 public class UnsupportedProtocolException extends ProtocolException {
 
-    public UnsupportedProtocolException(String message) {
+    public UnsupportedProtocolException(final String message) {
         super(message);
     }
 }

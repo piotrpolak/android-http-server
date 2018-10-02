@@ -13,12 +13,15 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpServlet;
 
 /**
- * Session usage example page
+ * Session usage example page.
  */
 public class Session extends HttpServlet {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
 
         // Saving session attribute name in a variable for convenience
         String attributeName = "pageHits";

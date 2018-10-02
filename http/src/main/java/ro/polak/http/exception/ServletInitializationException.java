@@ -12,7 +12,7 @@ package ro.polak.http.exception;
  */
 public class ServletInitializationException extends Exception {
 
-    public ServletInitializationException(Throwable throwable) {
+    public ServletInitializationException(final Throwable throwable) {
         super(throwable);
     }
 }

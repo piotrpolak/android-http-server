@@ -30,7 +30,7 @@ public class CookieHeaderSerializer implements Serializer<Cookie> {
     /**
      * @param dateProvider
      */
-    public CookieHeaderSerializer(DateProvider dateProvider) {
+    public CookieHeaderSerializer(final DateProvider dateProvider) {
         this.dateProvider = dateProvider;
     }
 
@@ -41,7 +41,7 @@ public class CookieHeaderSerializer implements Serializer<Cookie> {
      * @return
      */
     @Override
-    public String serialize(Cookie cookie) {
+    public String serialize(final Cookie cookie) {
         StringBuilder sb = new StringBuilder();
         sb.append(cookie.getName())
                 .append(EQUALS)
@@ -83,7 +83,7 @@ public class CookieHeaderSerializer implements Serializer<Cookie> {
         return sb.toString();
     }
 
-    private String getExpires(long maxAge) {
+    private String getExpires(final long maxAge) {
         long maxAgeMs = maxAge * 1000L;
         return DateUtilities.dateFormat(new Date(dateProvider.now().getTime() + maxAgeMs));
     }

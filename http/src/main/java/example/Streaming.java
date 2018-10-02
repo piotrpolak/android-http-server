@@ -21,7 +21,7 @@ import ro.polak.http.servlet.HttpServletResponse;
 public class Streaming extends HttpServlet {
 
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         try {
             byte[] message = "<p>Writing to output stream directly, without chunking.</p>".getBytes(StandardCharsets.UTF_8);
             response.setContentLength(message.length);

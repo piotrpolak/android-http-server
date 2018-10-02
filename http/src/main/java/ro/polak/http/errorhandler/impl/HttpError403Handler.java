@@ -18,7 +18,7 @@ import ro.polak.http.servlet.HttpServletResponse;
  */
 public class HttpError403Handler extends AbstractHtmlErrorHandler {
 
-    public HttpError403Handler(String errorDocumentPath) {
+    public HttpError403Handler(final String errorDocumentPath) {
         super(HttpServletResponse.STATUS_ACCESS_DENIED, "Error 403 - Forbidden", "<p>Access Denied.</p>",
                 errorDocumentPath);
     }

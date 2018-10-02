@@ -20,7 +20,7 @@ import ro.polak.http.controller.Controller;
 import ro.polak.http.gui.ServerGui;
 
 /**
- * The main controller of the server, can only be initialized as a singleton
+ * The main controller of the server, can only be initialized as a singleton.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201012
@@ -49,11 +49,17 @@ public class ControllerImpl implements Controller {
         Thread.currentThread().setDefaultUncaughtExceptionHandler(new LoggingUncaughtExceptionHandler());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public WebServer getWebServer() {
         return webServer;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void start() throws IllegalStateException {
         if (webServer != null) {
@@ -75,6 +81,9 @@ public class ControllerImpl implements Controller {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void stop() throws IllegalStateException {
         if (webServer == null) {
@@ -88,8 +97,9 @@ public class ControllerImpl implements Controller {
 
 
     public static class LoggingUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
+
         @Override
-        public void uncaughtException(Thread thread, Throwable ex) {
+        public void uncaughtException(final Thread thread, final Throwable ex) {
             final String originalClass = ex.getStackTrace()[0].getClassName();
             Logger.getLogger(originalClass).log(Level.SEVERE, "Exception", ex);
         }

@@ -14,7 +14,7 @@ import java.util.Enumeration;
 import ro.polak.http.Headers;
 
 /**
- * HTTP request
+ * HTTP request.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201610
@@ -43,7 +43,8 @@ public interface HttpServletRequest extends ServletRequest {
     ServletContext getServletContext();
 
     /**
-     * Returns any extra path information after the servlet name but before the query string, and translates it to a real path.
+     * Returns any extra path information after the servlet name but before the query string
+     * and translates it to a real path.
      *
      * @return
      */
@@ -187,14 +188,14 @@ public interface HttpServletRequest extends ServletRequest {
     HttpSession getSession(boolean create);
 
     /**
-     * Returns session associated with this request. Creates a new session if missing
+     * Returns session associated with this request. Creates a new session if missing.
      *
      * @return
      */
     HttpSession getSession();
 
     /**
-     * @return collection of UploadedFiles for multipart request
+     * @return collection of UploadedFiles for multipart request.
      */
     Collection<UploadedFile> getUploadedFiles();
 
@@ -202,14 +203,14 @@ public interface HttpServletRequest extends ServletRequest {
     // -- Extensions
 
     /**
-     * Tells whether the request is of type MultiPart
+     * Tells whether the request is of type MultiPart.
      *
      * @return true for multipart requests
      */
     boolean isMultipart();
 
     /**
-     * Returns headers of the request
+     * Returns headers of the request.
      *
      * @return headers of the request
      * @deprecated
@@ -217,7 +218,7 @@ public interface HttpServletRequest extends ServletRequest {
     Headers getHeaders();
 
     /**
-     * Returns cookie of specified name
+     * Returns cookie of specified name.
      *
      * @param cookieName name of cookie
      * @return
@@ -225,7 +226,7 @@ public interface HttpServletRequest extends ServletRequest {
     Cookie getCookie(String cookieName);
 
     /**
-     * Returns the value of specified POST attribute
+     * Returns the value of specified POST attribute.
      *
      * @param paramName name of the POST attribute
      * @return value of the POST attribute

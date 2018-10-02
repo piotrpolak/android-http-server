@@ -25,8 +25,11 @@ public class RangePartHeaderSerializer implements Serializer<RangePartHeader> {
     private static final String NEW_LINE = "\r\n";
     private static final String DASH_DASH = "--";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String serialize(RangePartHeader input) {
+    public String serialize(final RangePartHeader input) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(DASH_DASH)
                 .append(input.getBoundary())
@@ -54,7 +57,7 @@ public class RangePartHeaderSerializer implements Serializer<RangePartHeader> {
      * @param boundary
      * @return
      */
-    public String serializeLastBoundaryDeliminator(String boundary) {
+    public String serializeLastBoundaryDeliminator(final String boundary) {
         return DASH_DASH + boundary + DASH_DASH + NEW_LINE;
     }
 
@@ -67,7 +70,7 @@ public class RangePartHeaderSerializer implements Serializer<RangePartHeader> {
      * @param totalLength
      * @return
      */
-    public long getPartHeadersLength(List<Range> ranges, String boundary, String contentType, long totalLength) {
+    public long getPartHeadersLength(final List<Range> ranges, final String boundary, final String contentType, final long totalLength) {
         if (ranges.size() < 2) {
             return 0;
         }

@@ -8,7 +8,7 @@
 package ro.polak.http.servlet;
 
 /**
- * Represents HTTP Cookie
+ * Represents HTTP Cookie.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201010
@@ -29,7 +29,7 @@ public class Cookie {
      * @param value
      * @throws IllegalArgumentException
      */
-    public Cookie(String name, String value) throws IllegalArgumentException {
+    public Cookie(final String name, final String value) throws IllegalArgumentException {
         checkNameForIllegalCharacters(name);
 
         this.name = name;
@@ -41,7 +41,7 @@ public class Cookie {
      * @param value
      * @throws IllegalArgumentException
      */
-    public Cookie(String name, int value) throws IllegalArgumentException {
+    public Cookie(final String name, final int value) throws IllegalArgumentException {
         this(name, Integer.toString(value));
     }
 
@@ -50,7 +50,7 @@ public class Cookie {
      * @param value
      * @throws IllegalArgumentException
      */
-    public Cookie(String name, long value) throws IllegalArgumentException {
+    public Cookie(final String name, final long value) throws IllegalArgumentException {
         this(name, Long.toString(value));
     }
 
@@ -59,7 +59,7 @@ public class Cookie {
      * @param value
      * @throws IllegalArgumentException
      */
-    public Cookie(String name, double value) throws IllegalArgumentException {
+    public Cookie(final String name, final double value) throws IllegalArgumentException {
         this(name, Double.toString(value));
     }
 
@@ -68,12 +68,12 @@ public class Cookie {
      * @param value
      * @throws IllegalArgumentException
      */
-    public Cookie(String name, boolean value) throws IllegalArgumentException {
+    public Cookie(final String name, final boolean value) throws IllegalArgumentException {
         this(name, Boolean.toString(value));
     }
 
 
-    private void checkNameForIllegalCharacters(String name) throws IllegalArgumentException {
+    private void checkNameForIllegalCharacters(final String name) throws IllegalArgumentException {
         char illegalCharacters[] = {';', ' ', '\n', '\r', '\t'};
         for (char illegalChar : illegalCharacters) {
             if (name.indexOf(illegalChar) > -1) {
@@ -96,7 +96,7 @@ public class Cookie {
      *
      * @param comment
      */
-    public void setComment(String comment) {
+    public void setComment(final String comment) {
         this.comment = comment;
     }
 
@@ -114,7 +114,7 @@ public class Cookie {
      *
      * @param domain
      */
-    public void setDomain(String domain) {
+    public void setDomain(final String domain) {
         this.domain = domain;
     }
 
@@ -132,7 +132,7 @@ public class Cookie {
      *
      * @param path
      */
-    public void setPath(String path) {
+    public void setPath(final String path) {
         this.path = path;
     }
 
@@ -151,7 +151,7 @@ public class Cookie {
      *
      * @param maxAge
      */
-    public void setMaxAge(int maxAge) {
+    public void setMaxAge(final int maxAge) {
         this.maxAge = maxAge;
     }
 
@@ -196,7 +196,7 @@ public class Cookie {
      *
      * @param secure
      */
-    public void setSecure(boolean secure) {
+    public void setSecure(final boolean secure) {
         this.secure = secure;
     }
 
@@ -214,7 +214,7 @@ public class Cookie {
      *
      * @param httpOnly
      */
-    public void setHttpOnly(boolean httpOnly) {
+    public void setHttpOnly(final boolean httpOnly) {
         this.httpOnly = httpOnly;
     }
 }

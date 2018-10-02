@@ -23,14 +23,20 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.utilities.FileUtilities;
 import ro.polak.http.utilities.StringUtilities;
 
+/**
+ * Drive access servlet.
+ */
 public class DriveAccess extends HttpServlet {
 
     private static final String ADMIN_DRIVE_ACCESS_ENABLED = "admin.driveAccess.enabled";
 
-    private static FileIconMapper fileIconMapper = new FileIconMapper();
+    private static final FileIconMapper MAPPER = new FileIconMapper();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());
 
         HTMLDocument doc = new HTMLDocument("Drive Access");
@@ -62,11 +68,11 @@ public class DriveAccess extends HttpServlet {
         response.getWriter().print(doc.toString());
     }
 
-    private void renderPathNotAvailable(HTMLDocument doc) {
+    private void renderPathNotAvailable(final HTMLDocument doc) {
         doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Path does not exist or drive not mounted.</div>");
     }
 
-    private void renderDirectoryList(HTMLDocument doc, String path, File baseDirectory) {
+    private void renderDirectoryList(final HTMLDocument doc, final String path, final File baseDirectory) {
         StringBuilder filesString = new StringBuilder();
         StringBuilder directories = new StringBuilder();
         File files[] = baseDirectory.listFiles();
@@ -86,7 +92,7 @@ public class DriveAccess extends HttpServlet {
                                         + file.getName() + "</a></p>");
                     } else {
                         filesString.append("<p class=\"filemanager\"><img src=\"/assets/img/"
-                                + fileIconMapper.getIconRelativePath(FileUtilities.getExtension(file.getName()))
+                                + MAPPER.getIconRelativePath(FileUtilities.getExtension(file.getName()))
                                 + "\" alt=\"file\" /> <a href=\"/admin/GetFile?"
                                 + StringUtilities.urlEncode(path + file.getName())
                                 + "\">"
@@ -102,13 +108,13 @@ public class DriveAccess extends HttpServlet {
         doc.write(filesString.toString());
     }
 
-    private void renderFunctionDisabled(HttpServletResponse response, HTMLDocument doc) {
+    private void renderFunctionDisabled(final HttpServletResponse response, final HTMLDocument doc) {
         doc.writeln("<div class=\"alert alert-warning\" role=\"alert\">Drive Access option has been disabled in configuration.</div>");
         doc.writeln("<p>See <b>httpd.properties</b>, parameter <b>_managementEnableDriveAccess</b> must be <b>On</b>.</p>");
         response.getWriter().print(doc.toString());
     }
 
-    private void renderBreadcrubms(HTMLDocument doc, String path) {
+    private void renderBreadcrubms(final HTMLDocument doc, final String path) {
         doc.writeln("<ol class=\"breadcrumb\">");
         doc.writeln("<li><a href=\"/admin/DriveAccess?" + StringUtilities.urlEncode("/") + "\"><img src=\"/assets/img/home.png\" alt=\"home\"></a></li>");
         StringTokenizer st = new StringTokenizer(path.replace('\\', '/'), "/");

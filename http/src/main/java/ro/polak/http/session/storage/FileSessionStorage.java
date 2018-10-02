@@ -39,7 +39,7 @@ public class FileSessionStorage implements SessionStorage {
      *
      * @param tempPath
      */
-    public FileSessionStorage(String tempPath) {
+    public FileSessionStorage(final String tempPath) {
         this.tempPath = tempPath;
     }
 
@@ -83,12 +83,15 @@ public class FileSessionStorage implements SessionStorage {
      * @param id
      * @return
      */
-    private boolean isSessionIdValid(String id) {
+    private boolean isSessionIdValid(final String id) {
         return id != null && id.length() == 32 && SESSION_ID_PATTERN.matcher(id).matches();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean removeSession(HttpSessionImpl session) {
+    public boolean removeSession(final HttpSessionImpl session) {
         File file = new File(getSessionStoragePath(session.getId()));
         return file.delete();
     }

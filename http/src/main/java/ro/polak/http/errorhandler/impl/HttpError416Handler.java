@@ -11,7 +11,7 @@ import ro.polak.http.errorhandler.AbstractPlainTextHttpErrorHandler;
 import ro.polak.http.servlet.HttpServletResponse;
 
 /**
- * 416 Requested Range Not Satisfiable
+ * 416 Requested Range Not Satisfiable.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201701

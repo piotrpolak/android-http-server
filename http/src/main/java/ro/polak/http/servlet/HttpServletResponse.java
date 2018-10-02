@@ -12,7 +12,7 @@ import java.util.List;
 import ro.polak.http.Headers;
 
 /**
- * Represents HTTP response
+ * Represents HTTP response.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201610
@@ -58,56 +58,56 @@ public interface HttpServletResponse extends ServletResponse {
     void sendRedirect(String location);
 
     /**
-     * Sets content type
+     * Sets content type.
      *
      * @param contentType content type
      */
     void setContentType(String contentType);
 
     /**
-     * Returns the content type
+     * Returns the content type.
      *
      * @return
      */
     String getContentType();
 
     /**
-     * Sets keepAlive
+     * Sets keepAlive.
      *
-     * @param keepAlive true for keep alive connection
+     * @param keepAlive true for keep alive connection.
      */
     void setKeepAlive(boolean keepAlive);
 
     /**
-     * Sets content length
+     * Sets content length.
      *
      * @param length length of content
      */
     void setContentLength(int length);
 
     /**
-     * Sets content length
+     * Sets content length.
      *
      * @param length length of content
      */
     void setContentLength(long length);
 
     /**
-     * Returns the response headers
+     * Returns the response headers.
      *
      * @return
      */
     Headers getHeaders();
 
     /**
-     * Sets status of response
+     * Sets status of response.
      *
      * @param status status code and message
      */
     void setStatus(String status);
 
     /**
-     * Sets header value
+     * Sets header value.
      *
      * @param name
      * @param value
@@ -115,7 +115,7 @@ public interface HttpServletResponse extends ServletResponse {
     void setHeader(String name, String value);
 
     /**
-     * Sets int header value
+     * Sets int header value.
      *
      * @param name
      * @param value

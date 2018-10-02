@@ -54,7 +54,9 @@ import ro.polak.http.session.storage.SessionStorage;
 public class DefaultServerConfigFactory implements ServerConfigFactory {
 
     private static final Logger LOGGER = Logger.getLogger(DefaultServerConfigFactory.class.getName());
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ServerConfig getServerConfig() {
         return getServerConfig(getBasePath());
@@ -92,7 +94,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
      *
      * @return
      */
-    protected Set<ResourceProvider> getAdditionalResourceProviders(ServerConfig serverConfig) {
+    protected Set<ResourceProvider> getAdditionalResourceProviders(final ServerConfig serverConfig) {
         return new HashSet<>();
     }
 
@@ -102,7 +104,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
      * @return
      */
     protected DeploymentDescriptorBuilder getDeploymentDescriptorBuilder(
-            SessionStorage sessionStorage, ServerConfig serverConfig) {
+            final SessionStorage sessionStorage, final ServerConfig serverConfig) {
 
         return DeploymentDescriptorBuilder.create()
                 .withSessionStorage(sessionStorage)
@@ -160,7 +162,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
                 .end();
     }
 
-    private ServerConfig getServerConfig(String baseConfigPath) {
+    private ServerConfig getServerConfig(final String baseConfigPath) {
         ServerConfigImpl serverConfig;
 
         String tempPath = getTempPath();
@@ -177,7 +179,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         return serverConfig;
     }
 
-    private List<ServletContextImpl> getServletContexts(ServerConfig serverConfig) {
+    private List<ServletContextImpl> getServletContexts(final ServerConfig serverConfig) {
         DeploymentDescriptorBuilder deploymentDescriptorBuilder
                 = getDeploymentDescriptorBuilder(new FileSessionStorage(serverConfig.getTempPath()), serverConfig);
 
@@ -198,7 +200,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
      * @param serverConfig
      * @return
      */
-    private List<ResourceProvider> selectActiveResourceProviders(ServerConfig serverConfig) {
+    private List<ResourceProvider> selectActiveResourceProviders(final ServerConfig serverConfig) {
         List<ResourceProvider> resourceProviders = new ArrayList<>();
 
         resourceProviders.add(getFileResourceProvider(serverConfig));
@@ -211,13 +213,13 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         return resourceProviders;
     }
 
-    private FileResourceProvider getFileResourceProvider(ServerConfig serverConfig) {
+    private FileResourceProvider getFileResourceProvider(final ServerConfig serverConfig) {
         return new FileResourceProvider(new RangeParser(), new RangeHelper(),
                 new RangePartHeaderSerializer(), serverConfig.getMimeTypeMapping(),
                 serverConfig.getDocumentRootPath());
     }
 
-    private ServletResourceProvider getServletResourceProvider(ServerConfig serverConfig) {
+    private ServletResourceProvider getServletResourceProvider(final ServerConfig serverConfig) {
         return new ServletResourceProvider(
                 new ServletContainerImpl(),
                 getServletContexts(serverConfig)

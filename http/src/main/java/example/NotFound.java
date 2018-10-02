@@ -14,12 +14,15 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.HttpServlet;
 
 /**
- * Not found page example page
+ * Not found page example page.
  */
 public class NotFound extends HttpServlet {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         throw new NotFoundException();
     }
 }

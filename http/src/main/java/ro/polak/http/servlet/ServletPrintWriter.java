@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 
 /**
- * Adds additional writeEnd capability to the default PrintWriter
+ * Adds additional writeEnd capability to the default PrintWriter.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 2001709

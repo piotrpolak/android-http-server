@@ -17,7 +17,7 @@ import ro.polak.http.servlet.HttpSession;
 import ro.polak.http.servlet.ServletContext;
 
 /**
- * Http session implementation
+ * Http session implementation.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
@@ -39,14 +39,17 @@ public class HttpSessionImpl implements HttpSession, Serializable {
     /**
      * @param id
      */
-    public HttpSessionImpl(String id) {
+    public HttpSessionImpl(final String id) {
         this.id = id;
         attributes = new HashMap<>();
         creationTime = lastAccessedTime = System.currentTimeMillis();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setAttribute(String name, Object value) throws IllegalStateException {
+    public void setAttribute(final String name, final Object value) throws IllegalStateException {
         checkInvalidatedSession();
         if (value == null) {
             attributes.remove(name);
@@ -55,8 +58,11 @@ public class HttpSessionImpl implements HttpSession, Serializable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public Object getAttribute(String name) throws IllegalStateException {
+    public Object getAttribute(final String name) throws IllegalStateException {
         checkInvalidatedSession();
         if (attributes.containsKey(name)) {
             return attributes.get(name);
@@ -65,6 +71,9 @@ public class HttpSessionImpl implements HttpSession, Serializable {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Enumeration getAttributeNames() throws IllegalStateException {
         checkInvalidatedSession();
@@ -84,6 +93,9 @@ public class HttpSessionImpl implements HttpSession, Serializable {
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getCreationTime() throws IllegalStateException {
         checkInvalidatedSession();
@@ -91,44 +103,68 @@ public class HttpSessionImpl implements HttpSession, Serializable {
         return creationTime;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getId() {
         return id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public long getLastAccessedTime() throws IllegalStateException {
         checkInvalidatedSession();
         return lastAccessedTime;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getMaxInactiveInterval() {
         return maxInactiveInterval;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ServletContext getServletContext() {
         return servletContext;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setMaxInactiveInterval(int maxInactiveInterval) {
+    public void setMaxInactiveInterval(final int maxInactiveInterval) {
         this.maxInactiveInterval = maxInactiveInterval;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void invalidate() throws IllegalStateException {
         checkInvalidatedSession();
         isInvalidated = true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void removeAttribute(String name) throws IllegalStateException {
         checkInvalidatedSession();
         attributes.remove(name);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isNew() {
         checkInvalidatedSession();
@@ -149,7 +185,7 @@ public class HttpSessionImpl implements HttpSession, Serializable {
      *
      * @param servletContext
      */
-    public void setServletContext(ServletContext servletContext) {
+    public void setServletContext(final ServletContext servletContext) {
         this.servletContext = servletContext;
     }
 
@@ -158,7 +194,7 @@ public class HttpSessionImpl implements HttpSession, Serializable {
      *
      * @param lastAccessedTime
      */
-    public void setLastAccessedTime(long lastAccessedTime) {
+    public void setLastAccessedTime(final long lastAccessedTime) {
         this.lastAccessedTime = lastAccessedTime;
     }
 

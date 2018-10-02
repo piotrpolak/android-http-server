@@ -37,7 +37,7 @@ public class HeadersParser implements Parser<Headers> {
      * @throws MalformedInputException
      */
     @Override
-    public Headers parse(String headersString) throws MalformedInputException {
+    public Headers parse(final String headersString) throws MalformedInputException {
         return parse(headersString, true);
     }
 
@@ -49,7 +49,7 @@ public class HeadersParser implements Parser<Headers> {
      * @return
      * @throws MalformedInputException
      */
-    public Headers parse(String headersString, boolean joinRepeatingHeaders) throws MalformedInputException {
+    public Headers parse(final String headersString, final boolean joinRepeatingHeaders) throws MalformedInputException {
 
         // TODO joinRepeatingHeaders should be replaced by MultiValuedMap
 

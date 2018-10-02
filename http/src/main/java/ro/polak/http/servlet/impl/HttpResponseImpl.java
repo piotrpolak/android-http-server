@@ -29,7 +29,7 @@ import ro.polak.http.servlet.helper.StreamHelper;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
- * Represents HTTP response
+ * Represents HTTP response.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
@@ -62,10 +62,10 @@ public class HttpResponseImpl implements HttpServletResponse {
      * @param streamHelper
      * @param outputStream
      */
-    public HttpResponseImpl(Serializer<Headers> headersSerializer,
-                            Serializer<Cookie> cookieHeaderSerializer,
-                            StreamHelper streamHelper,
-                            OutputStream outputStream) {
+    public HttpResponseImpl(final Serializer<Headers> headersSerializer,
+                            final Serializer<Cookie> cookieHeaderSerializer,
+                            final StreamHelper streamHelper,
+                            final OutputStream outputStream) {
         this.headersSerializer = headersSerializer;
         this.streamHelper = streamHelper;
         this.cookieHeaderSerializer = cookieHeaderSerializer;
@@ -76,21 +76,33 @@ public class HttpResponseImpl implements HttpServletResponse {
         reset();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void addCookie(Cookie cookie) {
+    public void addCookie(final Cookie cookie) {
         cookies.add(cookie);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Cookie> getCookies() {
         return cookies;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isCommitted() {
         return isCommitted;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void reset() {
         headers = new Headers();
@@ -100,97 +112,154 @@ public class HttpResponseImpl implements HttpServletResponse {
 //        resetBuffer();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void resetBuffer() {
         throw new IllegalStateException("Not implemented");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setBufferSize(int bufferSize) {
+    public void setBufferSize(final int bufferSize) {
         this.bufferSize = bufferSize;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setCharacterEncoding(String charset) {
+    public void setCharacterEncoding(final String charset) {
         throw new IllegalStateException("Not implemented");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void sendRedirect(String location) {
+    public void sendRedirect(final String location) {
         this.setStatus(HttpServletResponse.STATUS_MOVED_PERMANENTLY);
         headers.setHeader(Headers.HEADER_LOCATION, location);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setContentType(String contentType) {
+    public void setContentType(final String contentType) {
         headers.setHeader(Headers.HEADER_CONTENT_TYPE, contentType);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setLocale(Locale loc) {
+    public void setLocale(final Locale loc) {
         throw new IllegalStateException("Not implemented");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void flushBuffer() {
         throw new IllegalStateException("Not implemented");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getBufferSize() {
         return bufferSize;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getCharacterEncoding() {
         throw new IllegalStateException("Not implemented");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getContentType() {
         return headers.getHeader(Headers.HEADER_CONTENT_TYPE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Locale getLocale() {
         throw new IllegalStateException("Not implemented");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setKeepAlive(boolean keepAlive) {
+    public void setKeepAlive(final boolean keepAlive) {
         headers.setHeader(Headers.HEADER_CONNECTION, keepAlive ? CONNECTION_KEEP_ALIVE : CONNECTION_CLOSE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setContentLength(int length) {
+    public void setContentLength(final int length) {
         headers.setHeader(Headers.HEADER_CONTENT_LENGTH, Integer.toString(length));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setContentLength(long length) {
+    public void setContentLength(final long length) {
         headers.setHeader(Headers.HEADER_CONTENT_LENGTH, Long.toString(length));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Headers getHeaders() {
         return headers;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setStatus(String status) {
         this.status = status;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setHeader(String name, String value) {
+    public void setHeader(final String name, final String value) {
         headers.setHeader(name, value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setIntHeader(String name, int value) {
+    public void setIntHeader(final String name, final int value) {
         headers.setHeader(name, Integer.toString(value));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PrintWriter getWriter() {
         if (printWriter == null) {
@@ -204,6 +273,9 @@ public class HttpResponseImpl implements HttpServletResponse {
         return printWriter;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ServletOutputStream getOutputStream() {
         return wrappedOutputStream;
@@ -243,7 +315,7 @@ public class HttpResponseImpl implements HttpServletResponse {
      * @param inputStream
      * @throws IOException
      */
-    public void serveStream(InputStream inputStream) throws IOException {
+    public void serveStream(final InputStream inputStream) throws IOException {
         streamHelper.serveMultiRangeStream(inputStream, outputStream);
     }
 
@@ -254,7 +326,7 @@ public class HttpResponseImpl implements HttpServletResponse {
      * @param range
      * @throws IOException
      */
-    public void serveStream(InputStream inputStream, Range range) throws IOException {
+    public void serveStream(final InputStream inputStream, final Range range) throws IOException {
         streamHelper.serveMultiRangeStream(inputStream, outputStream, range);
     }
 
@@ -268,7 +340,11 @@ public class HttpResponseImpl implements HttpServletResponse {
      * @param totalLength
      * @throws IOException
      */
-    public void serveStream(InputStream inputStream, List<Range> rangeList, String boundary, String contentType, long totalLength) throws IOException {
+    public void serveStream(final InputStream inputStream,
+                            final List<Range> rangeList,
+                            final String boundary,
+                            final String contentType,
+                            final long totalLength) throws IOException {
         streamHelper.serveMultiRangeStream(inputStream, outputStream, rangeList, boundary, contentType, totalLength);
     }
 

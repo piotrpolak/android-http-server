@@ -10,25 +10,28 @@ package admin.logic;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Maps extensions to file ICONS.
+ */
 public class FileIconMapper {
 
     private static final String ICON_EXT = ".png";
-    private static Map<String, String> icons = new HashMap<>();
+    private static final Map<String, String> ICONS = new HashMap<>();
 
     static {
-        icons.put("pdf", "");
-        icons.put("jpg", "");
-        icons.put("jpeg", "jpg");
-        icons.put("png", "");
-        icons.put("zip", "");
-        icons.put("gif", "");
+        ICONS.put("pdf", "");
+        ICONS.put("jpg", "");
+        ICONS.put("jpeg", "jpg");
+        ICONS.put("png", "");
+        ICONS.put("zip", "");
+        ICONS.put("gif", "");
     }
 
-    public String getIconRelativePath(String extension) {
+    public String getIconRelativePath(final String extension) {
         String ext = extension.toLowerCase();
 
-        if (icons.containsKey(ext)) {
-            String iconPathKey = icons.get(ext);
+        if (ICONS.containsKey(ext)) {
+            String iconPathKey = ICONS.get(ext);
             if (!"".equals(iconPathKey)) {
                 return iconPathKey + ICON_EXT;
             }

@@ -14,7 +14,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Servlet request
+ * Servlet request.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201707
@@ -100,7 +100,7 @@ public interface ServletRequest {
     int getLocalPort();
 
     /**
-     * Returns the value of specified GET attribute
+     * Returns the value of specified GET attribute.
      *
      * @param paramName name of the GET attribute
      * @return value of the GET attribute
@@ -144,7 +144,7 @@ public interface ServletRequest {
     BufferedReader getReader();
 
     /**
-     * Returns the remove address
+     * Returns the remove address.
      *
      * @return string representation of remote IP
      */

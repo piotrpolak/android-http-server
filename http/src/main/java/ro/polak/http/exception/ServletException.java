@@ -8,9 +8,10 @@
 package ro.polak.http.exception;
 
 /**
- * Default servlet exception
+ * Default servlet exception.
  */
 public class ServletException extends Exception {
+
     public ServletException(String s) {
         super(s);
     }

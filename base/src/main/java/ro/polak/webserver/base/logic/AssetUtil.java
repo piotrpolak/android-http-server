@@ -16,7 +16,7 @@ import ro.polak.http.utilities.IOUtilities;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201709
  */
-public class AssetUtil {
+public final class AssetUtil {
 
     private AssetUtil() {
 
@@ -30,7 +30,9 @@ public class AssetUtil {
      * @param destination
      * @throws IOException
      */
-    public static void copyAssetToFile(AssetManager assetManager, String assetPath, File destination)
+    public static void copyAssetToFile(final AssetManager assetManager,
+                                       final String assetPath,
+                                       final File destination)
             throws IOException {
 
         InputStream in = null;

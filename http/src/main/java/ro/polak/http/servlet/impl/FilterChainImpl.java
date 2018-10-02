@@ -26,12 +26,12 @@ public class FilterChainImpl implements FilterChain {
 
     private ArrayDeque<Filter> filters;
 
-    public FilterChainImpl(ArrayDeque<Filter> filters) {
+    public FilterChainImpl(final ArrayDeque<Filter> filters) {
         this.filters = filters;
     }
 
     @Override
-    public void doFilter(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void doFilter(final HttpServletRequest request, final HttpServletResponse response) throws IOException, ServletException {
         filters.pop().doFilter(request, response, this);
     }
 }

@@ -8,7 +8,7 @@
 package ro.polak.http;
 
 /**
- * Multipart request headers (for each multipart)
+ * Multipart request headers (for each multipart).
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @link http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
@@ -21,7 +21,7 @@ public class MultipartHeadersPart {
     private String name;
 
     /**
-     * Returns the uploaded file name
+     * Returns the uploaded file name.
      *
      * @return
      */
@@ -30,7 +30,7 @@ public class MultipartHeadersPart {
     }
 
     /**
-     * Returns the content type of the uploaded file
+     * Returns the content type of the uploaded file.
      *
      * @return
      */
@@ -39,7 +39,7 @@ public class MultipartHeadersPart {
     }
 
     /**
-     * Returns the name of the form post field
+     * Returns the name of the form post field.
      *
      * @return
      */
@@ -48,7 +48,7 @@ public class MultipartHeadersPart {
     }
 
     /**
-     * Sets the uploaded file name
+     * Sets the uploaded file name.
      *
      * @param fileName
      */
@@ -57,7 +57,7 @@ public class MultipartHeadersPart {
     }
 
     /**
-     * Sets the content type of the uploaded file
+     * Sets the content type of the uploaded file.
      *
      * @param contentType
      */
@@ -66,7 +66,7 @@ public class MultipartHeadersPart {
     }
 
     /**
-     * Sets the name of the form post field
+     * Sets the name of the form post field.
      *
      * @param name
      */

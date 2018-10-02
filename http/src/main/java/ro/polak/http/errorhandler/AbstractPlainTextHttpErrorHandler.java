@@ -13,27 +13,46 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.impl.HttpResponseImpl;
 
 /**
- * Abstract Http Error Handler
+ * Abstract Http Error Handler.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201701
  */
 public abstract class AbstractPlainTextHttpErrorHandler implements HttpErrorHandler {
 
-    protected final String status;
-    protected final String message;
+    private final String status;
+    private final String message;
 
-    public AbstractPlainTextHttpErrorHandler(String status, String message) {
+    public AbstractPlainTextHttpErrorHandler(final String status, final String message) {
         this.status = status;
         this.message = message;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void serve(HttpServletResponse response) throws IOException {
+    public void serve(final HttpServletResponse response) throws IOException {
         response.setStatus(status);
         response.setContentType("text/plain");
         response.setContentLength(message.length());
         response.getWriter().write(message);
         ((HttpResponseImpl) response).flush();
+    }
+
+    /**
+     * Returns status message.
+     * @return
+     */
+    protected String getStatus() {
+        return status;
+    }
+
+    /**
+     * Returns the message content.
+     * @return
+     */
+    protected String getMessage() {
+        return message;
     }
 }

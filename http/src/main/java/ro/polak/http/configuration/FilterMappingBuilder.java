@@ -30,21 +30,21 @@ public class FilterMappingBuilder {
      *
      * @param servletContextBuilder
      */
-    FilterMappingBuilder(ServletContextBuilder servletContextBuilder) {
+    FilterMappingBuilder(final ServletContextBuilder servletContextBuilder) {
         this.servletContextBuilder = servletContextBuilder;
     }
 
-    public FilterMappingBuilder withUrlPattern(Pattern urlPattern) {
+    public FilterMappingBuilder withUrlPattern(final Pattern urlPattern) {
         this.urlPattern = urlPattern;
         return this;
     }
 
-    public FilterMappingBuilder withUrlExcludedPattern(Pattern urlExcludedPattern) {
+    public FilterMappingBuilder withUrlExcludedPattern(final Pattern urlExcludedPattern) {
         this.urlExcludedPattern = urlExcludedPattern;
         return this;
     }
 
-    public FilterMappingBuilder withFilterClass(Class<? extends Filter> clazz) {
+    public FilterMappingBuilder withFilterClass(final Class<? extends Filter> clazz) {
         this.clazz = clazz;
         return this;
     }

@@ -12,7 +12,7 @@ import java.io.IOException;
 import ro.polak.http.servlet.HttpServletResponse;
 
 /**
- * IHTTPError interface defining serve method
+ * IHTTPError interface defining serve method.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509

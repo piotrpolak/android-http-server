@@ -79,7 +79,7 @@ public class ServletContainerImplTest {
         }
 
         @Override
-        public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
             // To comply with HttpServlet interface only
         }
     }

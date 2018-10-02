@@ -21,8 +21,11 @@ import static ro.polak.http.Headers.HEADER_TRANSFER_ENCODING;
  */
 public class Chunked extends HttpServlet {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         response.getHeaders().setHeader(HEADER_TRANSFER_ENCODING, "chunked");
         PrintWriter printWriter = response.getWriter();
         printWriter.print("This is an example of chunked transfer type. ");

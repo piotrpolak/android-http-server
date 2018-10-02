@@ -37,8 +37,11 @@ public class ServiceUnavailableHandler implements RejectedExecutionHandler {
         this.responseFactory = responseFactory;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
+    public void rejectedExecution(final Runnable r, final ThreadPoolExecutor executor) {
         if (r instanceof ServerRunnable) {
             Socket socket = ((ServerRunnable) r).getSocket();
             try {

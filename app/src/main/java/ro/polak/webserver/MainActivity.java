@@ -95,8 +95,8 @@ public class MainActivity extends BaseMainActivity {
     }
 
     @Override
-    protected void doNotifyStateChangedToOnline(BaseMainService.ServiceState serviceState) {
-        ipText.setText(serviceState.getAccessUrl());
+    protected void doNotifyStateChangedToOnline(BaseMainService.ServiceStateDTO serviceStateDTO) {
+        ipText.setText(serviceStateDTO.getAccessUrl());
 
         imgView.setImageResource(R.drawable.online);
         actionButton.setVisibility(View.VISIBLE);

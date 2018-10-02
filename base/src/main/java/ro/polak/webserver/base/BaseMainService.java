@@ -126,9 +126,7 @@ public abstract class BaseMainService extends Service implements ServerGui {
      *
      * @return
      */
-    public ServiceState getServiceState() {
-        ServiceState serviceState = new ServiceState();
-
+    public ServiceStateDTO getServiceState() {
         String accessUrl = "Initializing";
         if (controller != null && controller.getWebServer() != null) {
             int port = controller.getWebServer().getServerConfig().getListenPort();
@@ -136,11 +134,8 @@ public abstract class BaseMainService extends Service implements ServerGui {
             accessUrl = "http://" + getLocalIpAddress() + portString + '/';
         }
 
-        serviceState.setAccessUrl(accessUrl);
-        serviceState.setServiceStarted(isServiceStarted);
-        serviceState.setWebServerStarted(controller != null && controller.getWebServer() != null && controller.getWebServer().isRunning());
-
-        return serviceState;
+        boolean isWebserverStarted = controller != null && controller.getWebServer() != null && controller.getWebServer().isRunning();
+        return new ServiceStateDTO(isServiceStarted, isWebserverStarted, accessUrl);
     }
 
     @Override
@@ -262,33 +257,31 @@ public abstract class BaseMainService extends Service implements ServerGui {
         }
     }
 
-    public class ServiceState {
+    /**
+     * Represents the service state.
+     */
+    public static class ServiceStateDTO {
         private boolean isServiceStarted;
         private boolean isWebServerStarted;
-        private String accessUrl = "";
+        private String accessUrl;
+
+        public ServiceStateDTO(boolean isServiceStarted, boolean isWebServerStarted, String accessUrl) {
+            this.isServiceStarted = isServiceStarted;
+            this.isWebServerStarted = isWebServerStarted;
+            this.accessUrl = accessUrl;
+        }
 
         public boolean isServiceStarted() {
             return isServiceStarted;
-        }
-
-        public void setServiceStarted(boolean serviceStarted) {
-            isServiceStarted = serviceStarted;
         }
 
         public boolean isWebServerStarted() {
             return isWebServerStarted;
         }
 
-        public void setWebServerStarted(boolean webServerStarted) {
-            isWebServerStarted = webServerStarted;
-        }
-
         public String getAccessUrl() {
             return accessUrl;
         }
 
-        public void setAccessUrl(String accessUrl) {
-            this.accessUrl = accessUrl;
-        }
     }
 }

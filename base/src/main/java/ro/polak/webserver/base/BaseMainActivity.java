@@ -92,10 +92,10 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 
     public void notifyStateChanged() {
         if (isMainServiceBound) {
-            BaseMainService.ServiceState serviceState = mainService.getServiceState();
-            if (serviceState.isWebServerStarted()) {
+            BaseMainService.ServiceStateDTO serviceStateDTO = mainService.getServiceState();
+            if (serviceStateDTO.isWebServerStarted()) {
                 println("Starging HTTPD");
-                doNotifyStateChangedToOnline(serviceState);
+                doNotifyStateChangedToOnline(serviceStateDTO);
             } else {
                 println("Stopping HTTPD");
                 doNotifyStateChangedToOffline();
@@ -200,9 +200,9 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     /**
      * Callback executed when state changed to online.
      *
-     * @param serviceState
+     * @param serviceStateDTO
      */
-    protected void doNotifyStateChangedToOnline(BaseMainService.ServiceState serviceState) {
+    protected void doNotifyStateChangedToOnline(BaseMainService.ServiceStateDTO serviceStateDTO) {
         //
     }
 

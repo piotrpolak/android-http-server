@@ -10,7 +10,17 @@ import java.io.OutputStream;
 
 import ro.polak.http.utilities.IOUtilities;
 
+/**
+ * Provides helper methods for managing/serving Android assets.
+ *
+ * @author Piotr Polak piotr [at] polak [dot] ro
+ * @since 201709
+ */
 public class AssetUtil {
+
+    private AssetUtil() {
+
+    }
 
     /**
      * Copies asset to file.

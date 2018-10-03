@@ -161,7 +161,7 @@ public class MainActivity extends BaseMainActivity {
     }
 
     /**
-     * Button listener for the move to background and exit action
+     * Button listener for the move to background and exit action.
      */
     private class ButtonListener implements View.OnClickListener {
 

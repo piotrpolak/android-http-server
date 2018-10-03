@@ -89,7 +89,7 @@ public class HTMLDocument {
         out.append("</head>\n");
         out.append("<body>\n");
 
-        LinkedHashMap<String, String> menuElements = new LinkedHashMap<>(10);
+        LinkedHashMap<String, String> menuElements = new LinkedHashMap<>();
 
         menuElements.put("Index", "About");
         menuElements.put("DriveAccess", "Drive Access");

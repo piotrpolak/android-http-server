@@ -70,7 +70,10 @@ public class RangePartHeaderSerializer implements Serializer<RangePartHeader> {
      * @param totalLength
      * @return
      */
-    public long getPartHeadersLength(final List<Range> ranges, final String boundary, final String contentType, final long totalLength) {
+    public long getPartHeadersLength(final List<Range> ranges,
+                                     final String boundary,
+                                     final String contentType,
+                                     final long totalLength) {
         if (ranges.size() < 2) {
             return 0;
         }

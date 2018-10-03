@@ -12,10 +12,10 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * HTTP headers representation
+ * HTTP headers representation.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @url https://tools.ietf.org/html/rfc2616#section-4.2
+ * @see https://tools.ietf.org/html/rfc2616#section-4.2
  * @since 200802
  */
 public class Headers {
@@ -52,7 +52,7 @@ public class Headers {
     }
 
     /**
-     * Returns header's value
+     * Returns header's value.
      *
      * @param name name of the header
      * @return header's value

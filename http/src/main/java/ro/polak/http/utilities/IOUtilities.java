@@ -20,6 +20,8 @@ import java.io.OutputStream;
  */
 public final class IOUtilities {
 
+    private static final int DEFAULT_BUFFER_SIZE = 4096;
+
     private IOUtilities() {
     }
 
@@ -47,7 +49,7 @@ public final class IOUtilities {
      * @throws IOException
      */
     public static void copyStreams(final InputStream in, final OutputStream out) throws IOException {
-        copyStreams(in, out, 4096);
+        copyStreams(in, out, DEFAULT_BUFFER_SIZE);
     }
 
     /**

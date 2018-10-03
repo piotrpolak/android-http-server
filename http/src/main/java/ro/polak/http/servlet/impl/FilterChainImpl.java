@@ -30,8 +30,13 @@ public class FilterChainImpl implements FilterChain {
         this.filters = filters;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void doFilter(final HttpServletRequest request, final HttpServletResponse response) throws IOException, ServletException {
+    public void doFilter(final HttpServletRequest request, final HttpServletResponse response)
+            throws IOException, ServletException {
+
         filters.pop().doFilter(request, response, this);
     }
 }

@@ -25,7 +25,7 @@ import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.StringUtilities;
 
 /**
- * Multipart request handler
+ * Multipart request handler.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @link http://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
@@ -213,7 +213,11 @@ public class MultipartRequestHandler {
         Statistics.addBytesReceived(allBytesRead);
     }
 
-    private void pushBufferToDestination(byte[] bytes, int start, int end, boolean isHeadersReadingState) throws IOException {
+    private void pushBufferToDestination(final byte[] bytes,
+                                         final int start,
+                                         final int end,
+                                         final boolean isHeadersReadingState)
+            throws IOException {
         if (isHeadersReadingState) {
             for (int i = start; i < end; i++) {
                 headersStringBuffered.append((char) bytes[i]);
@@ -229,7 +233,11 @@ public class MultipartRequestHandler {
         }
     }
 
-    private String pushBufferOnEndOfState(byte[] bytes, int start, int end, boolean isHeadersReadingState) throws IOException, MalformedInputException {
+    private String pushBufferOnEndOfState(final byte[] bytes,
+                                          final int start,
+                                          final int end,
+                                          final boolean isHeadersReadingState)
+            throws IOException, MalformedInputException {
         if (isHeadersReadingState) {
             pushBufferOnEndOfStateHeaders(bytes, start, end);
             return endBoundary;
@@ -239,7 +247,7 @@ public class MultipartRequestHandler {
         }
     }
 
-    private void pushBufferOnEndOfStateBody(byte[] bytes, int start, int end) throws IOException {
+    private void pushBufferOnEndOfStateBody(final byte[] bytes, final int start, final int end) throws IOException {
         int len = end - start;
         if (currentFile != null) {
             if (len > 0) {
@@ -247,7 +255,7 @@ public class MultipartRequestHandler {
             }
             IOUtilities.closeSilently(fileOutputStream);
 
-            uploadedFiles.add(new UploadedFile(multipartHeadersPart.getName(), multipartHeadersPart.getFileName(), currentFile));
+            uploadedFiles.add(getMultipartFile());
             currentFile = null;
         } else {
             if (len > 0) {
@@ -259,7 +267,11 @@ public class MultipartRequestHandler {
         }
     }
 
-    private void pushBufferOnEndOfStateHeaders(byte[] bytes, int start, int end)
+    private UploadedFile getMultipartFile() {
+        return new UploadedFile(multipartHeadersPart.getName(), multipartHeadersPart.getFileName(), currentFile);
+    }
+
+    private void pushBufferOnEndOfStateHeaders(final byte[] bytes, final int start, final int end)
             throws FileNotFoundException, MalformedInputException {
         for (int i = start; i < end; i++) {
             headersStringBuffered.append((char) bytes[i]);

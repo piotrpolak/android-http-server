@@ -52,7 +52,7 @@ public class MultipartHeadersPart {
      *
      * @param fileName
      */
-    public void setFileName(String fileName) {
+    public void setFileName(final String fileName) {
         this.fileName = fileName;
     }
 
@@ -61,7 +61,7 @@ public class MultipartHeadersPart {
      *
      * @param contentType
      */
-    public void setContentType(String contentType) {
+    public void setContentType(final String contentType) {
         this.contentType = contentType;
     }
 
@@ -70,7 +70,7 @@ public class MultipartHeadersPart {
      *
      * @param name
      */
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 }

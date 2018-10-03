@@ -24,20 +24,22 @@ import static java.net.URLEncoder.encode;
  */
 public final class StringUtilities {
 
+    private static final int DEFAULT_RANDOM_STRING_LENGTH = 32;
+
     private StringUtilities() {
     }
 
     /**
-     * Generates random string of lower case chars of length 32
+     * Generates random string of lower case chars of length 32.
      *
      * @return random string of 32 characters
      */
     public static String generateRandom() {
-        return generateRandom(32);
+        return generateRandom(DEFAULT_RANDOM_STRING_LENGTH);
     }
 
     /**
-     * Generates random string of lower case chars of specified length
+     * Generates random string of lower case chars of specified length.
      *
      * @param length length of the string
      * @return random string of 32 characters

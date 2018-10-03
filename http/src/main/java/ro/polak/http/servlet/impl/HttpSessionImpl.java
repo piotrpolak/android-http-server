@@ -26,13 +26,14 @@ public class HttpSessionImpl implements HttpSession, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public transient static final String COOKIE_NAME = "JSSSESSIONID";
+    public static final transient String COOKIE_NAME = "JSSSESSIONID";
+    private static final int SECONDS_IN_HOUR = 3600;
     private transient boolean isInvalidated = false;
     private transient ServletContext servletContext;
 
     private final long creationTime;
     private long lastAccessedTime;
-    private int maxInactiveInterval = 3600;
+    private int maxInactiveInterval = SECONDS_IN_HOUR;
     private String id;
     private Map<String, Object> attributes;
 
@@ -157,7 +158,7 @@ public class HttpSessionImpl implements HttpSession, Serializable {
      * {@inheritDoc}
      */
     @Override
-    public void removeAttribute(String name) throws IllegalStateException {
+    public void removeAttribute(final String name) throws IllegalStateException {
         checkInvalidatedSession();
         attributes.remove(name);
     }

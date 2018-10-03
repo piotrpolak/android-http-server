@@ -58,6 +58,9 @@ public abstract class HttpServlet implements Servlet {
      * @return
      */
     public ServletContext getServletContext() {
-        return servletConfig == null ? null : servletConfig.getServletContext();
+        if (servletConfig == null) {
+            return null;
+        }
+        return servletConfig.getServletContext();
     }
 }

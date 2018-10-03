@@ -51,6 +51,8 @@ public class ServerConfigImpl implements ServerConfig {
     private static final String ATTRIBUTE_DEFAULT_MIME_TYPE = "server.mimeType.defaultMimeType";
     private static final String ATTRIBUTE_MIME_TYPE = "server.mimeType.filePath";
     private static final String ATTRIBUTE_DIRECTORY_INDEX = "server.static.directoryIndex";
+    private static final int DEFAULT_PORT = 8080;
+    private static final int DEFAULT_MAX_THREADS = 10;
 
     private List<String> directoryIndex;
     private String basePath;
@@ -65,14 +67,14 @@ public class ServerConfigImpl implements ServerConfig {
     private List<ResourceProvider> resourceProviders = Collections.emptyList();
     private Properties properties = new Properties();
 
-    public ServerConfigImpl(String basePath, String tempPath, Properties properties) {
+    public ServerConfigImpl(final String basePath, final String tempPath, final Properties properties) {
         this.tempPath = tempPath;
         this.basePath = basePath;
         this.properties = properties;
 
-        assignListenPort(properties, 8080);
+        assignListenPort(properties, DEFAULT_PORT);
         assignDocumentRoot(basePath, properties, basePath + "www" + File.separator);
-        assignMaxThreads(properties, 10);
+        assignMaxThreads(properties, DEFAULT_MAX_THREADS);
         assignKeepAlive(properties, false);
         assign404Document(basePath, properties);
         assign403Document(basePath, properties);
@@ -113,7 +115,7 @@ public class ServerConfigImpl implements ServerConfig {
     private void assignDirectoryIndex(final Properties properties, final List<String> defaultValue) {
         if (getResolvedProperty(properties, ATTRIBUTE_DIRECTORY_INDEX) != null) {
             directoryIndex = new ArrayList<>();
-            String directoryIndexLine[] = getResolvedProperty(properties, ATTRIBUTE_DIRECTORY_INDEX).split(",");
+            String[] directoryIndexLine = getResolvedProperty(properties, ATTRIBUTE_DIRECTORY_INDEX).split(",");
             for (int i = 0; i < directoryIndexLine.length; i++) {
                 String index = directoryIndexLine[i].trim();
                 if (!"".equals(index)) {
@@ -150,14 +152,14 @@ public class ServerConfigImpl implements ServerConfig {
         }
     }
 
-    private void assign404Document(String basePath, Properties properties) {
+    private void assign404Document(final String basePath, final Properties properties) {
         if (getResolvedProperty(properties, ATTRIBUTE_ERROR_DOCUMENT_404) != null) {
             this.errorDocument404Path =
                     basePath + getResolvedProperty(properties, ATTRIBUTE_ERROR_DOCUMENT_404);
         }
     }
 
-    private void assignKeepAlive(Properties properties, boolean defaultValue) {
+    private void assignKeepAlive(final Properties properties, final boolean defaultValue) {
         if (getResolvedProperty(properties, ATTRIBUTE_KEEP_ALIVE) != null) {
             keepAlive =
                     getResolvedProperty(properties, ATTRIBUTE_KEEP_ALIVE).equalsIgnoreCase(TRUE);
@@ -166,7 +168,7 @@ public class ServerConfigImpl implements ServerConfig {
         }
     }
 
-    private void assignMaxThreads(Properties properties, int defaultValue) {
+    private void assignMaxThreads(final Properties properties, final int defaultValue) {
         if (getResolvedProperty(properties, ATTRIBUTE_MAX_THREADS) != null) {
             maxServerThreads =
                     Integer.parseInt(getResolvedProperty(properties, ATTRIBUTE_MAX_THREADS));
@@ -175,7 +177,7 @@ public class ServerConfigImpl implements ServerConfig {
         }
     }
 
-    private void assignDocumentRoot(String basePath, Properties properties, String defaultValue) {
+    private void assignDocumentRoot(final String basePath, final Properties properties, final String defaultValue) {
         if (getResolvedProperty(properties, ATTRIBUTE_STATIC_PATH) != null) {
             documentRootPath = basePath + getResolvedProperty(properties, ATTRIBUTE_STATIC_PATH);
         } else {
@@ -183,7 +185,7 @@ public class ServerConfigImpl implements ServerConfig {
         }
     }
 
-    private void assignListenPort(Properties properties, int defaultValue) {
+    private void assignListenPort(final Properties properties, final int defaultValue) {
         if (getResolvedProperty(properties, ATTRIBUTE_PORT) != null) {
             listenPort = Integer.parseInt(getResolvedProperty(properties, ATTRIBUTE_PORT));
         } else {
@@ -198,76 +200,115 @@ public class ServerConfigImpl implements ServerConfig {
      * @param propertyName
      * @return
      */
-    private static String getResolvedProperty(Properties properties, String propertyName) {
+    private static String getResolvedProperty(final Properties properties, final String propertyName) {
         return System.getProperty(propertyName, properties.getProperty(propertyName));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getBasePath() {
         return basePath;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getDocumentRootPath() {
         return documentRootPath;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getTempPath() {
         return tempPath;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getListenPort() {
         return listenPort;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public MimeTypeMapping getMimeTypeMapping() {
         return mimeTypeMapping;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getMaxServerThreads() {
         return maxServerThreads;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isKeepAlive() {
         return keepAlive;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getErrorDocument404Path() {
         return errorDocument404Path;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getErrorDocument403Path() {
         return errorDocument403Path;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getDirectoryIndex() {
         return directoryIndex;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getSupportedMethods() {
         return SUPPORTED_METHODS;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<ResourceProvider> getResourceProviders() {
         return resourceProviders;
     }
 
-    public void setResourceProviders(List<ResourceProvider> resourceProviders) {
+    public void setResourceProviders(final List<ResourceProvider> resourceProviders) {
         this.resourceProviders = resourceProviders;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getAttribute(String name) {
+    public String getAttribute(final String name) {
         return getResolvedProperty(properties, name);
     }
 }

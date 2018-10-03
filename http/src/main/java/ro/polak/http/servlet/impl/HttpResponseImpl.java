@@ -40,6 +40,7 @@ public class HttpResponseImpl implements HttpServletResponse {
     private static final String TRANSFER_ENCODING_CHUNKED = "chunked";
     private static final String CONNECTION_KEEP_ALIVE = "keep-alive";
     private static final String CONNECTION_CLOSE = "close";
+    private static final int DEFAULT_BUFFER_SIZE = 1024;
 
     private final Serializer<Headers> headersSerializer;
     private final StreamHelper streamHelper;
@@ -52,7 +53,7 @@ public class HttpResponseImpl implements HttpServletResponse {
     private boolean isCommitted;
     private List<Cookie> cookies;
     private String status;
-    private int bufferSize = 1024;
+    private int bufferSize = DEFAULT_BUFFER_SIZE;
 
     /**
      * Default constructor.
@@ -206,7 +207,15 @@ public class HttpResponseImpl implements HttpServletResponse {
      */
     @Override
     public void setKeepAlive(final boolean keepAlive) {
-        headers.setHeader(Headers.HEADER_CONNECTION, keepAlive ? CONNECTION_KEEP_ALIVE : CONNECTION_CLOSE);
+        headers.setHeader(Headers.HEADER_CONNECTION, getKeepAliveHeaderValue(keepAlive));
+    }
+
+    private String getKeepAliveHeaderValue(final boolean keepAlive) {
+        if (keepAlive) {
+            return CONNECTION_KEEP_ALIVE;
+        }
+
+        return CONNECTION_CLOSE;
     }
 
     /**
@@ -237,7 +246,7 @@ public class HttpResponseImpl implements HttpServletResponse {
      * {@inheritDoc}
      */
     @Override
-    public void setStatus(String status) {
+    public void setStatus(final String status) {
         this.status = status;
     }
 
@@ -372,7 +381,7 @@ public class HttpResponseImpl implements HttpServletResponse {
     }
 
     /**
-     * Flushes the output
+     * Flushes the output.
      *
      * @throws IOException
      */

@@ -37,7 +37,7 @@ public class RequestStatusParser implements Parser<RequestStatus> {
         String uri;
 
 
-        String statusArray[] = input.split(STATUS_SEPARATOR, NUMBER_OF_CHUNKS);
+        String[] statusArray = input.split(STATUS_SEPARATOR, NUMBER_OF_CHUNKS);
 
         if (statusArray.length < NUMBER_OF_CHUNKS) {
             throw new MalformedInputException("Input status string should be composed out of "

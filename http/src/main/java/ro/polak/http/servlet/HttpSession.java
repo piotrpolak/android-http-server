@@ -12,7 +12,7 @@ import java.util.Enumeration;
 /**
  * Http session.
  *
- * @url https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/http/HttpSession.html
+ * @see https://tomcat.apache.org/tomcat-5.5-doc/servletapi/javax/servlet/http/HttpSession.html
  */
 public interface HttpSession {
 

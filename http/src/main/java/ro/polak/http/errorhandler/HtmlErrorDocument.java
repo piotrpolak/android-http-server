@@ -74,7 +74,7 @@ public class HtmlErrorDocument {
                 + " body div { text-align: left; margin-left: auto; margin-right: auto; }"
                 + " a { color:#2D498C; text-decoration: none; }"
                 + " a:hover { color: #FF6600; }"
-                + " p { padding: 5px; font-size: 14px; padding-right: 20px; padding-left: 20px;	text-align: justify; }"
+                + " p { padding: 5px; font-size: 14px; padding-right: 20px; padding-left: 20px; text-align: justify; }"
                 + " h1 { padding-bottom: 5px; margin-bottom: 15px; margin-top: 15px; color: #FF3300; font-size: 28px; font-weight: bolder; border-bottom: #E2E2E2 solid 1px; }"
                 + " h2 { margin: 5px; color: #5585B0; }"
                 + " #main { padding: 15px; border-bottom: #E2E2E2 solid 1px; }"

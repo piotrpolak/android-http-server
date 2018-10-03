@@ -11,7 +11,7 @@ import ro.polak.http.errorhandler.AbstractHtmlErrorHandler;
 import ro.polak.http.servlet.HttpServletResponse;
 
 /**
- * 403 Forbidden HTTP error handler
+ * 403 Forbidden HTTP error handler.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509

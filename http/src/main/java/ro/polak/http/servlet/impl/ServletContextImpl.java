@@ -71,7 +71,7 @@ public class ServletContextImpl implements ServletContext {
      * {@inheritDoc}
      */
     @Override
-    public String getMimeType(String file) {
+    public String getMimeType(final String file) {
         return serverConfig.getMimeTypeMapping().
                 getMimeTypeByExtension(FileUtilities.getExtension(file));
     }
@@ -80,7 +80,7 @@ public class ServletContextImpl implements ServletContext {
      * {@inheritDoc}
      */
     @Override
-    public void setAttribute(String name, Object value) {
+    public void setAttribute(final String name, final Object value) {
         if (value == null) {
             attributes.remove(name);
         } else {
@@ -92,7 +92,7 @@ public class ServletContextImpl implements ServletContext {
      * {@inheritDoc}
      */
     @Override
-    public Object getAttribute(String name) {
+    public Object getAttribute(final String name) {
         if (attributes.containsKey(name)) {
             return attributes.get(name);
         }
@@ -127,7 +127,7 @@ public class ServletContextImpl implements ServletContext {
      * @param id
      * @return
      */
-    public HttpSessionImpl getSession(String id) {
+    public HttpSessionImpl getSession(final String id) {
         HttpSessionImpl session = null;
 
         try {
@@ -169,7 +169,7 @@ public class ServletContextImpl implements ServletContext {
      * @param response
      * @throws IOException
      */
-    public void handleSession(HttpSessionImpl session, HttpResponseImpl response) throws IOException {
+    public void handleSession(final HttpSessionImpl session, final HttpResponseImpl response) throws IOException {
         Cookie cookie = new Cookie(HttpSessionImpl.COOKIE_NAME, "");
         if (session.isInvalidated()) {
             cookie.setMaxAge(-100);
@@ -185,7 +185,7 @@ public class ServletContextImpl implements ServletContext {
         response.addCookie(cookie);
     }
 
-    private boolean isSessionExpired(HttpSessionImpl session) {
+    private boolean isSessionExpired(final HttpSessionImpl session) {
         return System.currentTimeMillis() - session.getMaxInactiveInterval() * 1000 > session.getLastAccessedTime();
     }
 

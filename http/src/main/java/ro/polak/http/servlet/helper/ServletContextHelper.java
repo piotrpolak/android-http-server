@@ -25,7 +25,7 @@ import ro.polak.http.servlet.impl.ServletContextImpl;
 public class ServletContextHelper {
 
     //@Nullable
-    public ServletMapping getResolvedServletMapping(ServletContext servletContext, String path) {
+    public ServletMapping getResolvedServletMapping(final ServletContext servletContext, String path) {
         Objects.requireNonNull(servletContext);
         for (ServletMapping servletMapping : servletContext.getServletMappings()) {
             String inContextPath = getPathInContext(servletContext, path);
@@ -38,7 +38,7 @@ public class ServletContextHelper {
     }
 
     //@Nullable
-    public ServletContextImpl getResolvedContext(List<ServletContextImpl> servletContexts, String path) {
+    public ServletContextImpl getResolvedContext(final List<ServletContextImpl> servletContexts, String path) {
         for (ServletContextImpl servletContext : servletContexts) {
             if (path.startsWith(servletContext.getContextPath())) {
                 return servletContext;
@@ -57,7 +57,7 @@ public class ServletContextHelper {
      * @param path
      * @return
      */
-    public List<FilterMapping> getFilterMappingsForPath(ServletContext servletContext, String path) {
+    public List<FilterMapping> getFilterMappingsForPath(final ServletContext servletContext, final String path) {
         Objects.requireNonNull(servletContext);
         String inContextPath = getPathInContext(servletContext, path);
 
@@ -77,7 +77,7 @@ public class ServletContextHelper {
         return filterMappings;
     }
 
-    private String getPathInContext(ServletContext servletContext, String path) {
+    private String getPathInContext(final ServletContext servletContext, final String path) {
         return path.substring(servletContext.getContextPath().length());
     }
 }

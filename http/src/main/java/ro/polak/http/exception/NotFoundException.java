@@ -8,7 +8,7 @@
 package ro.polak.http.exception;
 
 /**
- * Not found exception
+ * Not found exception.
  */
 public class NotFoundException extends RuntimeException {
 }

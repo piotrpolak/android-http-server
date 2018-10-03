@@ -36,7 +36,7 @@ public class LocaleParser implements Parser<List<Locale>> {
      */
     @Override
     public List<Locale> parse(final String input) throws MalformedInputException {
-        String localesStr[] = input.split(LOCALE_SEPARATOR);
+        String[] localesStr = input.split(LOCALE_SEPARATOR);
         List<LocaleWithWeight> localesWithWeight = new ArrayList<>();
 
         for (String locale : localesStr) {

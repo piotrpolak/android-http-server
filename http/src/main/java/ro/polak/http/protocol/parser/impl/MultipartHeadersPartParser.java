@@ -55,7 +55,7 @@ public class MultipartHeadersPartParser implements Parser<MultipartHeadersPart> 
      * @throws MalformedInputException
      */
     @Override
-    public MultipartHeadersPart parse(String headersString) throws MalformedInputException {
+    public MultipartHeadersPart parse(final String headersString) throws MalformedInputException {
 
         MultipartHeadersPart part = new MultipartHeadersPart();
         Headers headers = parser.parse(headersString, false);

@@ -76,7 +76,7 @@ public class HeadersParser implements Parser<Headers> {
                 // Cleans up the previous value
                 lastHeaderValue.setLength(0);
 
-                String headerLineValues[] = line.split(VALUE_SEPARATOR, 2);
+                String[] headerLineValues = line.split(VALUE_SEPARATOR, 2);
 
                 if (headerLineValues.length < 2) {
                     continue;
@@ -102,7 +102,7 @@ public class HeadersParser implements Parser<Headers> {
      * @param text
      * @return
      */
-    private String ltrim(String text) {
+    private String ltrim(final String text) {
         return LTRIM_PATTERN.matcher(text).replaceAll("");
     }
 }

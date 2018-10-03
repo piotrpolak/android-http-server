@@ -21,6 +21,9 @@ import static ro.polak.http.Headers.HEADER_TRANSFER_ENCODING;
  */
 public class ChunkedWithDelay extends HttpServlet {
 
+    private static final int CHUNKS_COUNT = 100;
+    private static final int SLEEP_LENGTH_IN_MS = 30;
+
     /**
      * {@inheritDoc}
      */
@@ -30,9 +33,9 @@ public class ChunkedWithDelay extends HttpServlet {
         PrintWriter printWriter = response.getWriter();
         printWriter.println("<table style='height: 40px; width: 100%; border: 0; cellspacing: 0;'>");
         printWriter.println("<tr><td style='background-color: green'></td>");
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < CHUNKS_COUNT; i++) {
             try {
-                Thread.sleep(30);
+                Thread.sleep(SLEEP_LENGTH_IN_MS);
             } catch (InterruptedException e) {
             }
             printWriter.println("<td style='background-color: black'></td>");

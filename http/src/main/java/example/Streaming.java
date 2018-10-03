@@ -20,6 +20,9 @@ import ro.polak.http.servlet.HttpServletResponse;
  */
 public class Streaming extends HttpServlet {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         try {

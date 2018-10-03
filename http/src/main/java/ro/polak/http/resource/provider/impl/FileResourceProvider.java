@@ -107,7 +107,10 @@ public class FileResourceProvider implements ResourceProvider {
         return new File(basePath + uri);
     }
 
-    private void loadCompleteContent(final HttpRequestImpl request, final HttpResponseImpl response, final File file) throws IOException {
+    private void loadCompleteContent(final HttpRequestImpl request,
+                                     final HttpResponseImpl response,
+                                     final File file) throws IOException {
+
         response.setContentType(mimeTypeMapping.getMimeTypeByExtension(FileUtilities.getExtension(file.getName())));
         response.setStatus(HttpServletResponse.STATUS_OK);
         response.setContentLength(file.length());
@@ -126,7 +129,9 @@ public class FileResourceProvider implements ResourceProvider {
         response.flush();
     }
 
-    private void loadPartialContent(final HttpRequestImpl request, final HttpResponseImpl response, final File file) throws IOException {
+    private void loadPartialContent(final HttpRequestImpl request,
+                                    final HttpResponseImpl response,
+                                    final File file) throws IOException {
         List<Range> ranges;
         try {
             ranges = rangeParser.parse(request.getHeader(Headers.HEADER_RANGE));
@@ -151,7 +156,8 @@ public class FileResourceProvider implements ResourceProvider {
             response.setContentType(contentType);
         } else {
             boundary = StringUtilities.generateRandom();
-            response.setContentLength(rangePartHeaderSerializer.getPartHeadersLength(ranges, boundary, contentType, file.length()) + rangeLength);
+            response.setContentLength(rangePartHeaderSerializer.getPartHeadersLength(ranges, boundary,
+                    contentType, file.length()) + rangeLength);
 
             response.setContentType("multipart/byteranges; boundary=" + boundary);
         }
@@ -170,7 +176,7 @@ public class FileResourceProvider implements ResourceProvider {
         response.flush();
     }
 
-    private String getRanges(List<Range> ranges) {
+    private String getRanges(final List<Range> ranges) {
         StringBuilder rangesString = new StringBuilder();
         int counter = 0;
         for (Range range : ranges) {

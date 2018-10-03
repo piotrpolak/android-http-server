@@ -27,6 +27,12 @@ public class FileIconMapper {
         ICONS.put("gif", "");
     }
 
+    /**
+     * Resolves icon path. If the extension is not known, a default path is returned.
+     *
+     * @param extension
+     * @return
+     */
     public String getIconRelativePath(final String extension) {
         String ext = extension.toLowerCase();
 

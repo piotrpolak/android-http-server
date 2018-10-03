@@ -36,7 +36,8 @@ public class Index extends HttpServlet {
         doc.write("<p>Small multithread web server written completely in Java SE. ");
         doc.write("Implements most of the HTTP 1.1 specification. Uses JLWS Servlets for handling dynamic pages. ");
         doc.write("Supports cookies, sessions, file uploads.</p>");
-        doc.write("<p>Written by Piotr Polak. <a href=\"https://github.com/piotrpolak/android-http-server\" target=\"_blank\">Visit homepage</a>.</p>");
+        doc.write("<p>Written by Piotr Polak. <a href=\"https://github.com/piotrpolak/android-http-server\" "
+                + "target=\"_blank\">Visit homepage</a>.</p>");
         return doc;
     }
 }

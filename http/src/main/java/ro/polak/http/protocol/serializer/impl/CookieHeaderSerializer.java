@@ -24,6 +24,7 @@ public class CookieHeaderSerializer implements Serializer<Cookie> {
 
     private static final String SEPARATOR = "; ";
     private static final String EQUALS = "=";
+    private static final long MILLISECONDS_IN_SECOND = 1000L;
 
     private final DateProvider dateProvider;
 
@@ -84,7 +85,7 @@ public class CookieHeaderSerializer implements Serializer<Cookie> {
     }
 
     private String getExpires(final long maxAge) {
-        long maxAgeMs = maxAge * 1000L;
+        long maxAgeMs = maxAge * MILLISECONDS_IN_SECOND;
         return DateUtilities.dateFormat(new Date(dateProvider.now().getTime() + maxAgeMs));
     }
 }

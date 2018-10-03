@@ -113,8 +113,9 @@ public class ServerRunnable implements Runnable {
         }
     }
 
-    private void handleDirectoryIndex(final HttpResponseImpl response, final HttpRequestImpl request,
-                                      String requestedPath) throws IOException {
+    private void handleDirectoryIndex(final HttpResponseImpl response,
+                                      final HttpRequestImpl request,
+                                      final String requestedPath) throws IOException {
         DirectoryIndexDescriptor indexDescriptor = loadDirectoryIndexResource(requestedPath);
         if (indexDescriptor == null) {
             throw new NotFoundException();
@@ -128,7 +129,7 @@ public class ServerRunnable implements Runnable {
         }
     }
 
-    private void sendRedirectToDirectorySlashedPath(HttpResponseImpl response, String originalPath) throws IOException {
+    private void sendRedirectToDirectorySlashedPath(final HttpResponseImpl response, final String originalPath) throws IOException {
         response.setStatus(HttpServletResponse.STATUS_MOVED_PERMANENTLY);
         response.getHeaders().setHeader(Headers.HEADER_LOCATION, originalPath + "/");
         response.flush();
@@ -140,7 +141,7 @@ public class ServerRunnable implements Runnable {
      * @param request
      * @param response
      */
-    private void setDefaultResponseHeaders(HttpRequestImpl request, HttpResponseImpl response) {
+    private void setDefaultResponseHeaders(final HttpRequestImpl request, final HttpResponseImpl response) {
         boolean isKeepAlive = false;
         if (request.getHeaders().containsHeader(Headers.HEADER_CONNECTION)) {
             isKeepAlive = request.getHeaders().getHeader(Headers.HEADER_CONNECTION).equalsIgnoreCase("keep-alive");
@@ -150,7 +151,7 @@ public class ServerRunnable implements Runnable {
         response.getHeaders().setHeader(Headers.HEADER_SERVER, WebServer.SIGNATURE);
     }
 
-    private DirectoryIndexDescriptor loadDirectoryIndexResource(String path) {
+    private DirectoryIndexDescriptor loadDirectoryIndexResource(final String path) {
         String normalizedDirectoryPath = pathHelper.getNormalizedDirectoryPath(path);
         for (String index : serverConfig.getDirectoryIndex()) {
             String directoryIndexPath = normalizedDirectoryPath + index;
@@ -162,7 +163,7 @@ public class ServerRunnable implements Runnable {
         return null;
     }
 
-    private ResourceProvider getResourceProvider(String path) {
+    private ResourceProvider getResourceProvider(final String path) {
         for (ResourceProvider resourceProvider : serverConfig.getResourceProviders()) {
             if (resourceProvider.canLoad(path)) {
                 return resourceProvider;
@@ -176,7 +177,7 @@ public class ServerRunnable implements Runnable {
      *
      * @param request
      */
-    private void validateRequest(HttpServletRequest request) {
+    private void validateRequest(final HttpServletRequest request) {
         if (!isMethodSupported(request.getMethod())) {
             throw new MethodNotAllowedException();
         }
@@ -188,7 +189,7 @@ public class ServerRunnable implements Runnable {
      * @param method
      * @return
      */
-    private boolean isMethodSupported(String method) {
+    private boolean isMethodSupported(final String method) {
         for (String aMethod : serverConfig.getSupportedMethods()) {
             if (aMethod.equals(method)) {
                 return true;
@@ -213,7 +214,7 @@ public class ServerRunnable implements Runnable {
         private ResourceProvider resourceProvider;
         private String directoryPath;
 
-        public DirectoryIndexDescriptor(ResourceProvider resourceProvider, String indexFilePath) {
+        DirectoryIndexDescriptor(final ResourceProvider resourceProvider, final String indexFilePath) {
             this.resourceProvider = resourceProvider;
             this.directoryPath = indexFilePath;
         }

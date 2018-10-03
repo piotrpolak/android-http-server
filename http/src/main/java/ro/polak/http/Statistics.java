@@ -18,11 +18,11 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class Statistics {
 
-    private static final AtomicLong bytesSend = new AtomicLong();
-    private static final AtomicLong bytesReceived = new AtomicLong();
-    private static final AtomicLong requestsHandled = new AtomicLong();
-    private static final AtomicLong errors404 = new AtomicLong();
-    private static final AtomicLong errors500 = new AtomicLong();
+    private static final AtomicLong BYTES_SEND = new AtomicLong();
+    private static final AtomicLong BYTES_RECEIVED = new AtomicLong();
+    private static final AtomicLong REQUESTS_HANDLED = new AtomicLong();
+    private static final AtomicLong ERRORS_404 = new AtomicLong();
+    private static final AtomicLong ERRORS_500 = new AtomicLong();
 
     private Statistics() {
     }
@@ -31,11 +31,11 @@ public final class Statistics {
      * Resets all statistical values.
      */
     public static void reset() {
-        bytesSend.lazySet(0);
-        bytesReceived.lazySet(0);
-        requestsHandled.lazySet(0);
-        errors404.lazySet(0);
-        errors500.lazySet(0);
+        BYTES_SEND.lazySet(0);
+        BYTES_RECEIVED.lazySet(0);
+        REQUESTS_HANDLED.lazySet(0);
+        ERRORS_404.lazySet(0);
+        ERRORS_500.lazySet(0);
     }
 
     /**
@@ -43,8 +43,8 @@ public final class Statistics {
      *
      * @param bytes
      */
-    public static void addBytesReceived(long bytes) {
-        bytesReceived.addAndGet(bytes);
+    public static void addBytesReceived(final long bytes) {
+        BYTES_RECEIVED.addAndGet(bytes);
     }
 
     /**
@@ -52,29 +52,29 @@ public final class Statistics {
      *
      * @param bytes
      */
-    public static void addBytesSent(long bytes) {
-        bytesSend.addAndGet(bytes);
+    public static void addBytesSent(final long bytes) {
+        BYTES_SEND.addAndGet(bytes);
     }
 
     /**
      * Increments requests handled counter.
      */
     public static void incrementRequestHandled() {
-        requestsHandled.incrementAndGet();
+        REQUESTS_HANDLED.incrementAndGet();
     }
 
     /**
      * Increments 404 errors counter.
      */
     public static void incrementError404() {
-        errors404.incrementAndGet();
+        ERRORS_404.incrementAndGet();
     }
 
     /**
      * Increments 500 errors counter.
      */
     public static void incrementError500() {
-        errors500.incrementAndGet();
+        ERRORS_500.incrementAndGet();
     }
 
     /**
@@ -83,7 +83,7 @@ public final class Statistics {
      * @return
      */
     public static long getBytesSent() {
-        return bytesSend.get();
+        return BYTES_SEND.get();
     }
 
     /**
@@ -92,16 +92,16 @@ public final class Statistics {
      * @return
      */
     public static long getBytesReceived() {
-        return bytesReceived.get();
+        return BYTES_RECEIVED.get();
     }
 
     /**
-     * Returns number of requestsHandled handled.
+     * Returns number of REQUESTS_HANDLED handled.
      *
      * @return
      */
     public static long getRequestsHandled() {
-        return requestsHandled.get();
+        return REQUESTS_HANDLED.get();
     }
 
     /**
@@ -110,7 +110,7 @@ public final class Statistics {
      * @return
      */
     public static long getError404s() {
-        return errors404.get();
+        return ERRORS_404.get();
     }
 
 
@@ -120,6 +120,6 @@ public final class Statistics {
      * @return
      */
     public static long getError500s() {
-        return errors500.get();
+        return ERRORS_500.get();
     }
 }

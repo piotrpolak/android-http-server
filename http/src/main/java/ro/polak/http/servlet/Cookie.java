@@ -73,10 +73,10 @@ public class Cookie {
     }
 
 
-    private void checkNameForIllegalCharacters(final String name) throws IllegalArgumentException {
-        char illegalCharacters[] = {';', ' ', '\n', '\r', '\t'};
+    private void checkNameForIllegalCharacters(final String cookieName) throws IllegalArgumentException {
+        char[] illegalCharacters = {';', ' ', '\n', '\r', '\t'};
         for (char illegalChar : illegalCharacters) {
-            if (name.indexOf(illegalChar) > -1) {
+            if (cookieName.indexOf(illegalChar) > -1) {
                 throw new IllegalArgumentException("Cookie name must be composed of ASCI characters");
             }
         }
@@ -178,7 +178,7 @@ public class Cookie {
      *
      * @param value
      */
-    public void setValue(String value) {
+    public void setValue(final String value) {
         this.value = value;
     }
 

@@ -55,6 +55,8 @@ public class HttpRequestImpl implements HttpServletRequest {
     public static final String METHOD_PUT = "PUT";
     public static final String METHOD_TRACE = "TRACE";
     private static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
+    private static final int HTTP_PORT = 80;
+    private static final int HTTPS_PORT = 433;
 
     private Map<String, String> postParameters;
     private Map<String, String> getParameters;
@@ -115,7 +117,7 @@ public class HttpRequestImpl implements HttpServletRequest {
         url.append(getScheme()).append("://").append(getHost());
 
         int port = getServerPort();
-        if (port != 80 && port != 433) {
+        if (port != HTTP_PORT && port != HTTPS_PORT) {
             url.append(':').append(port);
         }
         url.append(status.getUri());
@@ -402,7 +404,7 @@ public class HttpRequestImpl implements HttpServletRequest {
         return remotePort;
     }
 
-    //  RequestDispatcher	getRequestDispatcher(String path)
+    //  RequestDispatcher getRequestDispatcher(String path)
 
     /**
      * {@inheritDoc}

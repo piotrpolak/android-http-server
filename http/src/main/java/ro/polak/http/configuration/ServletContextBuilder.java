@@ -54,12 +54,12 @@ public final class ServletContextBuilder {
         return new FilterMappingBuilder(this);
     }
 
-    public ServletContextBuilder withContextPath(String contextPath) {
+    public ServletContextBuilder withContextPath(final String contextPath) {
         this.contextPath = contextPath;
         return this;
     }
 
-    public ServletContextBuilder withAttribute(String name, Object value) {
+    public ServletContextBuilder withAttribute(final String name, final Object value) {
         attributes.put(name, value);
         return this;
     }
@@ -81,7 +81,7 @@ public final class ServletContextBuilder {
      * @param servletMapping
      * @return
      */
-    protected ServletContextBuilder withServletMapping(ServletMapping servletMapping) {
+    protected ServletContextBuilder withServletMapping(final ServletMapping servletMapping) {
         servletMappings.add(servletMapping);
         return this;
     }
@@ -92,7 +92,7 @@ public final class ServletContextBuilder {
      * @param filterMapping
      * @return
      */
-    protected ServletContextBuilder withFilterMapping(FilterMapping filterMapping) {
+    protected ServletContextBuilder withFilterMapping(final FilterMapping filterMapping) {
         filterMappings.add(filterMapping);
         return this;
     }

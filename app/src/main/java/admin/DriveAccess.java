@@ -69,13 +69,14 @@ public class DriveAccess extends HttpServlet {
     }
 
     private void renderPathNotAvailable(final HTMLDocument doc) {
-        doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Path does not exist or drive not mounted.</div>");
+        doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> "
+                + "Path does not exist or drive not mounted.</div>");
     }
 
     private void renderDirectoryList(final HTMLDocument doc, final String path, final File baseDirectory) {
         StringBuilder filesString = new StringBuilder();
         StringBuilder directories = new StringBuilder();
-        File files[] = baseDirectory.listFiles();
+        File[] files = baseDirectory.listFiles();
         if (files == null) {
             doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Unable to read files.</div>");
         } else {

@@ -21,7 +21,7 @@ public class RangeHelper {
      * @param range
      * @return
      */
-    public long getRangeLength(Range range) {
+    public long getRangeLength(final Range range) {
         return range.getTo() - range.getFrom() + 1;
     }
 
@@ -31,7 +31,7 @@ public class RangeHelper {
      * @param range
      * @return
      */
-    public boolean isRangeValid(Range range) {
+    public boolean isRangeValid(final Range range) {
         return (range.getFrom() > -1 && range.getTo() >= range.getFrom());
     }
 
@@ -41,7 +41,7 @@ public class RangeHelper {
      * @param ranges
      * @return
      */
-    public long getTotalLength(List<Range> ranges) {
+    public long getTotalLength(final List<Range> ranges) {
         int totalLength = 0;
         for (Range range : ranges) {
             totalLength += getRangeLength(range);
@@ -50,13 +50,13 @@ public class RangeHelper {
     }
 
     /**
-     * Tells whether the ranges are satisfiable for the given stream length
+     * Tells whether the ranges are satisfiable for the given stream length.
      *
      * @param ranges
      * @param streamLength
      * @return
      */
-    public boolean isSatisfiable(Iterable<Range> ranges, long streamLength) {
+    public boolean isSatisfiable(final Iterable<Range> ranges, final long streamLength) {
         for (Range range : ranges) {
             if (range.getTo() >= streamLength || !isRangeValid(range)) {
                 return false;

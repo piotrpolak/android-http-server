@@ -40,7 +40,7 @@ public interface Servlet {
     /**
      * Called by servlet container, the main servlet logic method.
      */
-    void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException; /* IOException */
+    void service(HttpServletRequest request, HttpServletResponse response) throws ServletException; /* IOException */
 
     /**
      * Returns servlet info such as author or copyright.

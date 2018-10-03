@@ -31,6 +31,7 @@ public class FileSessionStorage implements SessionStorage {
     private static final Logger LOGGER = Logger.getLogger(FileSessionStorage.class.getName());
     private static final String SESSION_FILE_SUFFIX = "_session";
     private static final Pattern SESSION_ID_PATTERN = Pattern.compile("[a-z]+");
+    private static final int SESSION_ID_EXPECTED_LENGTH = 32;
 
     private final String tempPath;
 
@@ -43,8 +44,11 @@ public class FileSessionStorage implements SessionStorage {
         this.tempPath = tempPath;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void persistSession(HttpSessionImpl session) throws IOException {
+    public void persistSession(final HttpSessionImpl session) throws IOException {
         if (!isSessionIdValid(session.getId())) {
             throw new IllegalArgumentException("Session ID can not be empty and must be composed of 32 characters");
         }
@@ -59,8 +63,11 @@ public class FileSessionStorage implements SessionStorage {
                 new Object[]{session.getId(), tempPath});
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public HttpSessionImpl getSession(String id) throws IOException {
+    public HttpSessionImpl getSession(final String id) throws IOException {
         HttpSessionImpl session = null;
         if (isSessionIdValid(id)) {
             File file = new File(getSessionStoragePath(id));
@@ -84,7 +91,7 @@ public class FileSessionStorage implements SessionStorage {
      * @return
      */
     private boolean isSessionIdValid(final String id) {
-        return id != null && id.length() == 32 && SESSION_ID_PATTERN.matcher(id).matches();
+        return id != null && id.length() == SESSION_ID_EXPECTED_LENGTH && SESSION_ID_PATTERN.matcher(id).matches();
     }
 
     /**
@@ -96,7 +103,7 @@ public class FileSessionStorage implements SessionStorage {
         return file.delete();
     }
 
-    private HttpSessionImpl readSession(String id, File file) {
+    private HttpSessionImpl readSession(final String id, final File file) {
         HttpSessionImpl session = null;
         FileInputStream fileInputStream = null;
         ObjectInputStream objectInputStream = null;
@@ -114,7 +121,7 @@ public class FileSessionStorage implements SessionStorage {
         return session;
     }
 
-    private void writeSession(HttpSessionImpl session, File file) throws IOException {
+    private void writeSession(final HttpSessionImpl session, final File file) throws IOException {
         FileOutputStream fileOutputStream = null;
         ObjectOutputStream objectOutputStream = null;
         try {
@@ -127,7 +134,7 @@ public class FileSessionStorage implements SessionStorage {
         }
     }
 
-    private String getSessionStoragePath(String id) {
+    private String getSessionStoragePath(final String id) {
         return tempPath + id + SESSION_FILE_SUFFIX;
     }
 }

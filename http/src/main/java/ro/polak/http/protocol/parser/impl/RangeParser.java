@@ -55,7 +55,7 @@ public class RangeParser implements Parser<List<Range>> {
         return rangeList;
     }
 
-    private Range getRange(String[] values) throws MalformedInputException {
+    private Range getRange(final String[] values) throws MalformedInputException {
         try {
             return new Range(Long.parseLong(values[0].trim()), Long.parseLong(values[1].trim()));
         } catch (NumberFormatException e) {

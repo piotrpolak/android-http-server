@@ -40,7 +40,7 @@ public class ServletContainerImpl implements ServletContainer {
      * {@inheritDoc}
      */
     @Override
-    public Servlet getServletForClass(Class<? extends HttpServlet> servletClass, ServletConfig servletConfig)
+    public Servlet getServletForClass(final Class<? extends HttpServlet> servletClass, final ServletConfig servletConfig)
             throws ServletInitializationException, ServletException {
 
         if (servlets.containsKey(servletClass)) {
@@ -55,7 +55,7 @@ public class ServletContainerImpl implements ServletContainer {
      * {@inheritDoc}
      */
     @Override
-    public Filter getFilterForClass(Class<? extends Filter> filterClass, FilterConfig filterConfig)
+    public Filter getFilterForClass(final Class<? extends Filter> filterClass, final FilterConfig filterConfig)
             throws FilterInitializationException, ServletException {
         if (filters.containsKey(filterClass)) {
             return filters.get(filterClass);
@@ -67,7 +67,7 @@ public class ServletContainerImpl implements ServletContainer {
         return filter;
     }
 
-    private Servlet initializeServlet(Class<? extends HttpServlet> serverClass, ServletConfig servletConfig)
+    private Servlet initializeServlet(final Class<? extends HttpServlet> serverClass, final ServletConfig servletConfig)
             throws ServletInitializationException, ServletException {
         Servlet servlet = instantiateServlet(serverClass);
         servlet.init(servletConfig);
@@ -76,7 +76,7 @@ public class ServletContainerImpl implements ServletContainer {
         return servlet;
     }
 
-    private Servlet instantiateServlet(Class<? extends HttpServlet> serverClass) throws ServletInitializationException {
+    private Servlet instantiateServlet(final Class<? extends HttpServlet> serverClass) throws ServletInitializationException {
         try {
             return serverClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -84,7 +84,7 @@ public class ServletContainerImpl implements ServletContainer {
         }
     }
 
-    private Filter instantiateFilter(Class<? extends Filter> filterClass) throws FilterInitializationException {
+    private Filter instantiateFilter(final Class<? extends Filter> filterClass) throws FilterInitializationException {
         try {
             return filterClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -113,6 +113,9 @@ public class ServletContainerImpl implements ServletContainer {
         return Collections.unmodifiableMap(servletStats);
     }
 
+    /**
+     * Servlet statistics DTO.
+     */
     public class ServletStats {
 
         private Date initializedAt;
@@ -131,7 +134,7 @@ public class ServletContainerImpl implements ServletContainer {
             return lastRequestedAt;
         }
 
-        public void setLastRequestedAt(Date lastRequestedAt) {
+        public void setLastRequestedAt(final Date lastRequestedAt) {
             this.lastRequestedAt = lastRequestedAt;
         }
     }

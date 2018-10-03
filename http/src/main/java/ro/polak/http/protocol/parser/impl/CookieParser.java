@@ -38,10 +38,10 @@ public class CookieParser implements Parser<Map<String, Cookie>> {
         Map<String, Cookie> cookies = new HashMap<>();
 
         // Splitting separate cookies array
-        String cookiesStr[] = input.split(COOKIE_SEPARATOR);
+        String[] cookiesStr = input.split(COOKIE_SEPARATOR);
         for (int i = 0; i < cookiesStr.length; i++) {
             // Splitting cookie name=value pair
-            String cookieValues[] = cookiesStr[i].split(VALUE_SEPARATOR, 2);
+            String[] cookieValues = cookiesStr[i].split(VALUE_SEPARATOR, 2);
             String cookieName = cookieValues[0].trim();
             if (cookieValues.length > 1 && cookieName.length() > 0) {
                 Cookie cookie = new Cookie(cookieName, StringUtilities.urlDecode(cookieValues[1]));

@@ -30,13 +30,14 @@ import ro.polak.http.servlet.helper.StreamHelper;
 import ro.polak.http.utilities.DateProvider;
 
 /**
- * Instantiates and holds application-wide services
+ * Instantiates and holds application-wide services.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201710
  */
 public class ServiceContainer {
 
+    private static final int MAX_THREADS_MULTIPLIER = 3;
     private HttpServletRequestImplFactory requestWrapperFactory;
     private HttpServletResponseImplFactory responseFactory;
     private ThreadPoolExecutor threadPoolExecutor;
@@ -66,7 +67,7 @@ public class ServiceContainer {
 
         threadPoolExecutor = new ThreadPoolExecutor(1, serverConfig.getMaxServerThreads(),
                 20, TimeUnit.SECONDS,
-                new ArrayBlockingQueue<Runnable>(serverConfig.getMaxServerThreads() * 3),
+                new ArrayBlockingQueue<Runnable>(serverConfig.getMaxServerThreads() * MAX_THREADS_MULTIPLIER),
                 Executors.defaultThreadFactory(),
                 new ServiceUnavailableHandler(responseFactory)
         );

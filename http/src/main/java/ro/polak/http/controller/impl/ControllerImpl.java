@@ -96,7 +96,10 @@ public class ControllerImpl implements Controller {
     }
 
 
-    public static class LoggingUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
+    /**
+     * Logs unhandled runtime exceptions.
+     */
+    public static final class LoggingUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
 
         @Override
         public void uncaughtException(final Thread thread, final Throwable ex) {

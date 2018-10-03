@@ -43,7 +43,7 @@ public class MimeTypeMappingImpl implements MimeTypeMapping {
      * @param in
      * @param defaultMimeType
      */
-    public static MimeTypeMapping createFromStream(InputStream in, String defaultMimeType)
+    public static MimeTypeMapping createFromStream(final InputStream in, final String defaultMimeType)
             throws IOException {
         MimeTypeMappingImpl mimeTypeMapping = (MimeTypeMappingImpl) createFromStream(in);
         mimeTypeMapping.defaultMimeType = defaultMimeType;
@@ -63,7 +63,7 @@ public class MimeTypeMappingImpl implements MimeTypeMapping {
         BufferedReader input = new BufferedReader(inputStreamReader);
         String line;
         while ((line = input.readLine()) != null) {
-            String mime[] = line.split(" ");
+            String[] mime = line.split(" ");
             for (int i = 1; i < mime.length; i++) {
                 mimeTypeMapping.mapping.put(mime[i].toLowerCase(), mime[0]);
             }

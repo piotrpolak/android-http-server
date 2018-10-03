@@ -18,6 +18,13 @@ import admin.logic.SmsBox;
  */
 public class MessageDTOMapper {
 
+    /**
+     * Maps message to a JSON object.
+     *
+     * @param message
+     * @return
+     * @throws JSONException
+     */
     @NonNull
     public JSONObject toMessageDTO(final SmsBox.Message message) throws JSONException {
         JSONObject messageDTO = new JSONObject();

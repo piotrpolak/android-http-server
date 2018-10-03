@@ -83,7 +83,7 @@ public class ServletResourceProvider implements ResourceProvider {
      * {@inheritDoc}
      */
     @Override
-    public void load(String path, HttpRequestImpl request, HttpResponseImpl response) throws IOException {
+    public void load(final String path, final HttpRequestImpl request, final HttpResponseImpl response) throws IOException {
         ServletContextImpl servletContext = servletContextHelper.getResolvedContext(servletContexts, path);
         Objects.requireNonNull(servletContext);
         ServletMapping servletMapping = servletContextHelper.getResolvedServletMapping(servletContext, path);
@@ -110,7 +110,7 @@ public class ServletResourceProvider implements ResourceProvider {
         servletContainer.shutdown();
     }
 
-    private Servlet getServlet(ServletMapping servletMapping, ServletConfigImpl servletConfig) {
+    private Servlet getServlet(final ServletMapping servletMapping, final ServletConfigImpl servletConfig) {
         Servlet servlet;
         try {
             servlet = servletContainer.getServletForClass(servletMapping.getServletClass(), servletConfig);
@@ -120,25 +120,25 @@ public class ServletResourceProvider implements ResourceProvider {
         return servlet;
     }
 
-    private FilterChainImpl getFilterChain(String path, ServletContextImpl servletContext, final Servlet servlet)
+    private FilterChainImpl getFilterChain(final String path, final ServletContextImpl servletContext, final Servlet servlet)
             throws FilterInitializationException, ServletException {
 
         ArrayDeque<Filter> arrayDeque = new ArrayDeque<>(getFilterMappingsForPath(path, servletContext));
         arrayDeque.add(new Filter() {
             @Override
-            public void init(FilterConfig filterConfig) {
+            public void init(final FilterConfig filterConfig) {
                 // Do nothing
             }
 
             @Override
-            public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+            public void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException {
                 servlet.service(request, response);
             }
         });
         return new FilterChainImpl(arrayDeque);
     }
 
-    private List<Filter> getFilterMappingsForPath(String path, ServletContextImpl servletContext)
+    private List<Filter> getFilterMappingsForPath(final String path, final ServletContextImpl servletContext)
             throws FilterInitializationException, ServletException {
 
         FilterConfig filterConfig = new FilterConfigImpl(servletContext);
@@ -158,7 +158,7 @@ public class ServletResourceProvider implements ResourceProvider {
      * @param response
      * @throws IOException
      */
-    private void terminate(HttpRequestImpl request, HttpResponseImpl response) throws IOException {
+    private void terminate(final HttpRequestImpl request, final HttpResponseImpl response) throws IOException {
         freeUploadedUnprocessedFiles(request.getUploadedFiles());
 
         HttpSessionImpl session = (HttpSessionImpl) request.getSession(false);
@@ -182,7 +182,7 @@ public class ServletResourceProvider implements ResourceProvider {
         response.flush();
     }
 
-    private void freeUploadedUnprocessedFiles(Collection<UploadedFile> uploadedFiles) {
+    private void freeUploadedUnprocessedFiles(final Collection<UploadedFile> uploadedFiles) {
         for (UploadedFile uploadedFile : uploadedFiles) {
             uploadedFile.destroy();
         }

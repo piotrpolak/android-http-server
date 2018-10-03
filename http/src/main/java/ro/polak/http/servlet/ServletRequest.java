@@ -165,7 +165,7 @@ public interface ServletRequest {
      */
     int getRemotePort();
 
-    //  RequestDispatcher	getRequestDispatcher(String path)
+    //  RequestDispatcher getRequestDispatcher(String path)
 
     /**
      * Returns request scheme.

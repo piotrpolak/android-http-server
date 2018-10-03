@@ -10,6 +10,8 @@ package ro.polak.http.protocol.serializer;
 /**
  * Generic serializer interface.
  *
+ * @param <T> the type of the input.
+ *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201611
  */

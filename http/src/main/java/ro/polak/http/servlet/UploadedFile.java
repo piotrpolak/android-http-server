@@ -28,7 +28,7 @@ public class UploadedFile {
      * @param fileName
      * @param file
      */
-    public UploadedFile(String postFieldName, String fileName, File file) {
+    public UploadedFile(final String postFieldName, final String fileName, final File file) {
         this.postFieldName = postFieldName;
         this.fileName = fileName;
         this.file = file;

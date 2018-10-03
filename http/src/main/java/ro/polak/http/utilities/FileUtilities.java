@@ -20,6 +20,9 @@ import java.util.logging.Logger;
 public final class FileUtilities {
 
     private static final Logger LOGGER = Logger.getLogger(FileUtilities.class.getName());
+    private static final int BYTES_IN_KILOBYTE = 1024;
+    private static final int BYTES_IN_MEGABYTE = 1048576;
+    private static final int BYTES_IN_GIGABYTE = 1073741824;
 
     private FileUtilities() {
     }
@@ -51,11 +54,11 @@ public final class FileUtilities {
     }
 
     /**
-     * Once called, deletes all the files inside the temporary files directory
+     * Once called, deletes all the files inside the temporary files directory.
      */
     public static void clearDirectory(final String directoryPath) {
         File f = new File(directoryPath);
-        File files[] = f.listFiles();
+        File[] files = f.listFiles();
         if (files != null) {
             for (int i = 0; i < files.length; i++) {
                 if (!files[i].delete()) {
@@ -72,19 +75,19 @@ public final class FileUtilities {
      * @return formatted size of the file using B, KB, MB, GB
      */
     public static String fileSizeUnits(final long length) {
-        if (length < 1024) {
+        if (length < BYTES_IN_KILOBYTE) {
             return length + " B";
         }
 
         double size = (double) length;
         DecimalFormat format = new DecimalFormat("####0.00");
 
-        if (length < 1048576) {
-            return format.format(size / 1024) + " KB";
-        } else if (length < 1073741824) {
-            return format.format(size / 1048576) + " MB";
+        if (length < BYTES_IN_MEGABYTE) {
+            return format.format(size / BYTES_IN_KILOBYTE) + " KB";
+        } else if (length < BYTES_IN_GIGABYTE) {
+            return format.format(size / BYTES_IN_MEGABYTE) + " MB";
         } else {
-            return format.format(size / 1073741824) + " GB";
+            return format.format(size / BYTES_IN_GIGABYTE) + " GB";
         }
     }
 }

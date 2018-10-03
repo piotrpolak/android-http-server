@@ -68,10 +68,10 @@ public class Login extends HttpServlet {
                 + location
                 + "\" method=\"post\">\n"
                 + "      <input name=\"dologin\" type=\"hidden\" value=\"true\" />\n"
-                + "      <label for=\"inputLogin\" class=\"sr-only\">Login</label>\n" +
-                "        <input name=\"login\" type=\"text\" id=\"inputLogin\" class=\"form-control\" placeholder=\"Login\" required autofocus>\n" +
-                "        <label for=\"inputPassword\" class=\"sr-only\">Password</label>\n" +
-                "        <input name=\"password\" type=\"password\" id=\"inputPassword\" class=\"form-control\" placeholder=\"Password\" required>"
+                + "      <label for=\"inputLogin\" class=\"sr-only\">Login</label>\n"
+                + "        <input name=\"login\" type=\"text\" id=\"inputLogin\" class=\"form-control\" placeholder=\"Login\" required autofocus>\n"
+                + "        <label for=\"inputPassword\" class=\"sr-only\">Password</label>\n"
+                + "        <input name=\"password\" type=\"password\" id=\"inputPassword\" class=\"form-control\" placeholder=\"Password\" required>"
                 + "<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Login</button>\n"
                 + "</form>\n";
 

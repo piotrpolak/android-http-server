@@ -38,7 +38,7 @@ public class ServletOutputStreamImpl extends ServletOutputStream {
      * {@inheritDoc}
      */
     @Override
-    public void write(int b) throws IOException {
+    public void write(final int b) throws IOException {
         flushHeadersIfPossible();
         outputStream.write(b);
     }
@@ -47,7 +47,7 @@ public class ServletOutputStreamImpl extends ServletOutputStream {
      * {@inheritDoc}
      */
     @Override
-    public void write(byte b[]) throws IOException {
+    public void write(final byte[] b) throws IOException {
         flushHeadersIfPossible();
         outputStream.write(b);
     }
@@ -56,7 +56,7 @@ public class ServletOutputStreamImpl extends ServletOutputStream {
      * {@inheritDoc}
      */
     @Override
-    public void write(byte b[], int off, int len) throws IOException {
+    public void write(final byte[] b, final int off, final int len) throws IOException {
         flushHeadersIfPossible();
         outputStream.write(b, off, len);
     }

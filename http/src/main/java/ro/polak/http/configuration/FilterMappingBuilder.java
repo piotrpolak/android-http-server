@@ -34,21 +34,38 @@ public class FilterMappingBuilder {
         this.servletContextBuilder = servletContextBuilder;
     }
 
+    /**
+     * @param urlPattern
+     * @return
+     */
     public FilterMappingBuilder withUrlPattern(final Pattern urlPattern) {
         this.urlPattern = urlPattern;
         return this;
     }
 
+    /**
+     * @param urlExcludedPattern
+     * @return
+     */
     public FilterMappingBuilder withUrlExcludedPattern(final Pattern urlExcludedPattern) {
         this.urlExcludedPattern = urlExcludedPattern;
         return this;
     }
 
+    /**
+     * @param clazz
+     * @return
+     */
     public FilterMappingBuilder withFilterClass(final Class<? extends Filter> clazz) {
         this.clazz = clazz;
         return this;
     }
 
+    /**
+     * Returns the constructed object.
+     *
+     * @return
+     */
     public ServletContextBuilder end() {
         servletContextBuilder.withFilterMapping(new FilterMappingImpl(urlPattern, urlExcludedPattern, clazz));
         return servletContextBuilder;

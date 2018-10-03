@@ -6,7 +6,6 @@
  **************************************************/
 package ro.polak.http.errorhandler.impl;
 
-import java.io.IOException;
 import java.util.List;
 
 import ro.polak.http.Statistics;
@@ -40,7 +39,6 @@ public class HttpErrorHandlerResolverImpl implements HttpErrorHandlerResolver {
      *
      * @param e
      * @return
-     * @throws IOException
      */
     @Override
     public HttpErrorHandler getHandler(final RuntimeException e) {

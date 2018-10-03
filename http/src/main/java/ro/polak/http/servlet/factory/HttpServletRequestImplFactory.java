@@ -66,6 +66,8 @@ public class HttpServletRequestImplFactory {
     private static final int METHOD_MAX_LENGTH;
     private static final List<String> RECOGNIZED_METHODS_LIST = Arrays.asList(RECOGNIZED_METHODS);
     private static final String HEADERS_END_DELIMINATOR = "\n\r\n";
+    private static final int MINUMUM_HEADER_LINE_LENGTH = 3;
+    private static final String MULTIPART_FORM_DATA_HEADER_START = "multipart/form-data";
 
     private final Parser<Headers> headersParser;
     private final Parser<Map<String, String>> queryStringParser;
@@ -164,7 +166,7 @@ public class HttpServletRequestImplFactory {
         }
 
         String headersString = getHeaders(in);
-        if (headersString.length() > 3) {
+        if (headersString.length() > MINUMUM_HEADER_LINE_LENGTH) {
             try {
                 request.setHeaders(headersParser.parse(headersString));
             } catch (MalformedInputException e) {
@@ -259,7 +261,7 @@ public class HttpServletRequestImplFactory {
         return statusLine.toString();
     }
 
-    private String getHeaders(InputStream in) throws IOException {
+    private String getHeaders(final InputStream in) throws IOException {
         StringBuilder headersString = new StringBuilder();
         byte[] buffer;
         buffer = new byte[1];
@@ -268,7 +270,7 @@ public class HttpServletRequestImplFactory {
         while (in.read(buffer, 0, buffer.length) != -1) {
             headersString.append((char) buffer[0]);
             if (headersString.length() > headersEndSymbolLength) {
-                String endChars = headersString.substring(headersString.length() - headersEndSymbolLength, headersString.length());
+                String endChars = getEndChars(headersString, headersEndSymbolLength);
                 if (endChars.equals(HEADERS_END_DELIMINATOR)) {
                     headersString.setLength(headersString.length() - headersEndSymbolLength);
                     break;
@@ -280,7 +282,12 @@ public class HttpServletRequestImplFactory {
         return headersString.toString();
     }
 
-    private void handlePostRequest(final HttpRequestImpl request, final InputStream in) throws IOException, MalformedInputException {
+    private String getEndChars(final StringBuilder headersString, final int headersEndSymbolLength) {
+        return headersString.substring(headersString.length() - headersEndSymbolLength, headersString.length());
+    }
+
+    private void handlePostRequest(final HttpRequestImpl request, final InputStream in)
+            throws IOException, MalformedInputException {
         int postLength;
         if (request.getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
             try {
@@ -312,7 +319,8 @@ public class HttpServletRequestImplFactory {
 
     private boolean isMultipartRequest(final HttpRequestImpl request) {
         return request.getHeaders().containsHeader(Headers.HEADER_CONTENT_TYPE)
-                && request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE).toLowerCase().startsWith("multipart/form-data");
+                && request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE).toLowerCase()
+                .startsWith(MULTIPART_FORM_DATA_HEADER_START);
     }
 
     private void handlePostPlainRequest(final HttpRequestImpl request, final InputStream in, final int postLength)

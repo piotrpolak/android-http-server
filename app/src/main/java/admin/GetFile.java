@@ -32,6 +32,9 @@ public class GetFile extends HttpServlet {
 
     private static final String ATTR_ADMIN_DRIVE_ACCESS_ENABLED = "admin.driveAccess.enabled";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         ServerConfig serverConfig = (ServerConfig) getServletContext().getAttribute(ServerConfig.class.getName());

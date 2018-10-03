@@ -8,9 +8,9 @@
 package example;
 
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServlet;
 
 /**
  * Session usage example page.
@@ -45,7 +45,9 @@ public class Session extends HttpServlet {
         response.getWriter().println("<p>Session page hits: " + pageHits + "</p>");
         response.getWriter().println("<p>Session is new: " + request.getSession().isNew() + "</p>");
         response.getWriter().println("<p>Session creation time: " + request.getSession().getCreationTime() + "</p>");
-        response.getWriter().println("<p>Session last accessed time: " + request.getSession().getLastAccessedTime() + "</p>");
-        response.getWriter().println("<p>Session max inactive interval in seconds: " + request.getSession().getMaxInactiveInterval() + "</p>");
+        response.getWriter().println("<p>Session last accessed time: "
+                + request.getSession().getLastAccessedTime() + "</p>");
+        response.getWriter().println("<p>Session max inactive interval in seconds: "
+                + request.getSession().getMaxInactiveInterval() + "</p>");
     }
 }

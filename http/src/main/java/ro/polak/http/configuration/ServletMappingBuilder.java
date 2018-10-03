@@ -38,7 +38,7 @@ public final class ServletMappingBuilder {
         return this;
     }
 
-    public ServletMappingBuilder withServletClass(Class<? extends HttpServlet> servletClass) {
+    public ServletMappingBuilder withServletClass(final Class<? extends HttpServlet> servletClass) {
         this.servletClass = servletClass;
         return this;
     }

@@ -10,6 +10,8 @@ package ro.polak.http.protocol.parser;
 /**
  * Generic parser interface.
  *
+ * @param <T> the parse output type.
+ *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201611
  */

@@ -54,13 +54,15 @@ public class Login extends HttpServlet {
                 }
             } else {
                 LOGGER.fine("Wrong login or password");
-                doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Incorrect login or password!</div>");
+                doc.writeln("<div class=\"alert alert-danger\" role=\"alert\">"
+                        + "<strong>Oh snap!</strong> Incorrect login or password!</div>");
             }
         }
 
         String location = "/admin/Login";
         if (request.getParameter(RELOCATE_PARAM_NAME) != null) {
-            location += "?" + RELOCATE_PARAM_NAME + "=" + StringUtilities.urlEncode(request.getParameter(RELOCATE_PARAM_NAME));
+            location += "?" + RELOCATE_PARAM_NAME + "="
+                    + StringUtilities.urlEncode(request.getParameter(RELOCATE_PARAM_NAME));
         }
 
 
@@ -69,9 +71,11 @@ public class Login extends HttpServlet {
                 + "\" method=\"post\">\n"
                 + "      <input name=\"dologin\" type=\"hidden\" value=\"true\" />\n"
                 + "      <label for=\"inputLogin\" class=\"sr-only\">Login</label>\n"
-                + "        <input name=\"login\" type=\"text\" id=\"inputLogin\" class=\"form-control\" placeholder=\"Login\" required autofocus>\n"
+                + "        <input name=\"login\" type=\"text\" id=\"inputLogin\" class=\"form-control\" "
+                + "placeholder=\"Login\" required autofocus>\n"
                 + "        <label for=\"inputPassword\" class=\"sr-only\">Password</label>\n"
-                + "        <input name=\"password\" type=\"password\" id=\"inputPassword\" class=\"form-control\" placeholder=\"Password\" required>"
+                + "        <input name=\"password\" type=\"password\" id=\"inputPassword\" class=\"form-control\" "
+                + "placeholder=\"Password\" required>"
                 + "<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Login</button>\n"
                 + "</form>\n";
 

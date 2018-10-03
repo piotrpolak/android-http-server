@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * HTML document builder.
  */
-public class HTMLDocument {
+public final class HTMLDocument {
 
     private String title;
     private StringBuilder body;
@@ -102,7 +102,8 @@ public class HTMLDocument {
             out.append("<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n");
             out.append("<div class=\"container\">\n");
             out.append("    <div class=\"navbar-header\">\n");
-            out.append("        <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n");
+            out.append("        <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" "
+                    + "data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n");
             out.append("            <span class=\"sr-only\">Toggle navigation</span>\n");
             out.append("            <span class=\"icon-bar\"></span>\n");
             out.append("            <span class=\"icon-bar\"></span>\n");
@@ -114,7 +115,8 @@ public class HTMLDocument {
             out.append("        <ul class=\"nav navbar-nav\">\n");
 
             for (Map.Entry<String, String> entry : menuElements.entrySet()) {
-                out.append("            <li" + (ownerClass.equals(entry.getKey()) ? " class=\"active\"" : "") + "><a href=\"/admin/" + entry.getKey() + "\">" + entry.getValue() + "</a></li>\n");
+                out.append("            <li" + (ownerClass.equals(entry.getKey()) ? " class=\"active\"" : "")
+                        + "><a href=\"/admin/" + entry.getKey() + "\">" + entry.getValue() + "</a></li>\n");
             }
 
             out.append("        </ul>\n");

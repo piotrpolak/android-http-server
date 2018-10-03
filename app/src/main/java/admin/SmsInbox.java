@@ -45,7 +45,7 @@ public class SmsInbox extends HttpServlet {
         response.getWriter().print(doc.toString());
     }
 
-    private Map<Integer, List<SmsBox.Message>> getThreadMessageTree(List<SmsBox.Message> messages) {
+    private Map<Integer, List<SmsBox.Message>> getThreadMessageTree(final List<SmsBox.Message> messages) {
         Map<Integer, List<SmsBox.Message>> threads = new LinkedHashMap<>();
         for (SmsBox.Message message : messages) {
             List thread = threads.get(message.getThreadId());
@@ -60,7 +60,9 @@ public class SmsInbox extends HttpServlet {
         return threads;
     }
 
-    private HTMLDocument renderDocument(String threadId, String whereString, Map<Integer, List<SmsBox.Message>> threads) {
+    private HTMLDocument renderDocument(final String threadId,
+                                        final String whereString,
+                                        final Map<Integer, List<SmsBox.Message>> threads) {
         HTMLDocument doc = new HTMLDocument("SMS inbox");
         doc.setOwnerClass(getClass().getSimpleName());
 
@@ -76,10 +78,13 @@ public class SmsInbox extends HttpServlet {
 
                 doc.writeln("<div class=\"panel panel-default\">");
                 doc.writeln("<div class=\"panel-heading\">" + message.getAddress() + "</div>");
-                doc.writeln("<div class=\"panel-body " + (message.isIncoming() ? "text-left" : "text-right bg-success") + "\">");
+                doc.writeln("<div class=\"panel-body "
+                        + (message.isIncoming() ? "text-left" : "text-right bg-success") + "\">");
                 doc.writeln("<p><b>" + simpleDateFormat.format(message.getDate()) + "</b></p>");
                 doc.writeln("<p>" + message.getBody() + "</p>");
-                doc.writeln("<p><a class=\"btn btn-primary\" href=\"/admin/SmsInbox?thread_id=" + message.getThreadId() + "\">Open thread <span class=\"badge\">" + messages.size() + "</span></a></p>");
+                doc.writeln("<p><a class=\"btn btn-primary\" href=\"/admin/SmsInbox?thread_id="
+                        + message.getThreadId() + "\">Open thread <span class=\"badge\">"
+                        + messages.size() + "</span></a></p>");
                 doc.writeln("</div>");
                 doc.writeln("</div>");
             }
@@ -89,7 +94,9 @@ public class SmsInbox extends HttpServlet {
             if (messages != null && messages.size() > 0) {
 
                 doc.writeln("<div class=\"page-header\"><h1>SMS inbox</h1></div>");
-                doc.writeln("<p><a class=\"btn btn-default\" href=\"/admin/SmsInbox\"><span class=\"glyphicon glyphicon-arrow-left\" aria-hidden=\"true\"></span> Back to the inbox</a></p>");
+                doc.writeln("<p><a class=\"btn btn-default\" href=\"/admin/SmsInbox\">"
+                        + "<span class=\"glyphicon glyphicon-arrow-left\" aria-hidden=\"true\">"
+                        + "</span> Back to the inbox</a></p>");
 
                 doc.writeln("<div class=\"panel panel-default\">");
                 doc.writeln("<div class=\"panel-heading\">" + messages.get(0).getAddress() + "</div>");

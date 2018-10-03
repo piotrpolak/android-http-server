@@ -52,13 +52,15 @@ public final class StringUtilities {
 
         // ASCI 97 - 122
         while (randomString.length() < length) {
+            // CHECKSTYLE.OFF: MagicNumberCheck
             randomString.append((char) (random.nextInt(25) + 97));
+            // CHECKSTYLE.ON: MagicNumberCheck
         }
         return randomString.toString();
     }
 
     /**
-     * Encodes given string for URL/HTTP
+     * Encodes given string for URL/HTTP.
      *
      * @param text text to be encoded
      * @return encoded string
@@ -67,12 +69,12 @@ public final class StringUtilities {
         try {
             return encode(text, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) { // $COVERAGE-IGNORE$
-            throw new UnexpectedSituationException(StandardCharsets.UTF_8.name() + " is not supported.", e);  // $COVERAGE-IGNORE$
+            throw new UnexpectedSituationException("Encoding is not supported.", e);  // $COVERAGE-IGNORE$
         }
     }
 
     /**
-     * Decodes given string for URL/HTTP
+     * Decodes given string for URL/HTTP.
      *
      * @param text text to be decoded
      * @return decoded string
@@ -81,7 +83,7 @@ public final class StringUtilities {
         try {
             return decode(text, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) { // $COVERAGE-IGNORE$
-            throw new UnexpectedSituationException(StandardCharsets.UTF_8.name() + " is not supported.", e);  // $COVERAGE-IGNORE$
+            throw new UnexpectedSituationException("Encoding is not supported.", e);  // $COVERAGE-IGNORE$
         }
     }
 

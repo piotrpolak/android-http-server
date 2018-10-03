@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * SMS Inbox access service.
  */
-public class SmsBox {
+public final class SmsBox {
 
     /* _id:162 thread_id:13 toa:145 address:+48111222333 person:295 date:1441998104000 date_sent:1441998104000
              protocol:0 read:1 status:-1 type:1 reply_path_present:0 subject:null body:Hello World! sc_toa:0
@@ -55,12 +55,12 @@ public class SmsBox {
 
     private final Activity context;
 
-    public SmsBox(Activity contentResolver) {
+    public SmsBox(final Activity contentResolver) {
         this.context = contentResolver;
     }
 
     @NonNull
-    public List<Message> readMessages(String whereString) {
+    public List<Message> readMessages(final String whereString) {
         Cursor cursor = context.getContentResolver()
                 .query(Uri.parse(URL), PROJECTION, whereString, null, ORDER_STRING);
         cursor.moveToFirst();
@@ -74,7 +74,7 @@ public class SmsBox {
     }
 
     @NonNull
-    private Map<String, String> getStringStringMap(Cursor cursor) {
+    private Map<String, String> getStringStringMap(final Cursor cursor) {
         Map<String, String> sms = new HashMap<>();
         for (int idx = 0; idx < cursor.getColumnCount(); idx++) {
             if (cursor.getColumnName(idx) != null && cursor.getString(idx) != null) {
@@ -85,7 +85,7 @@ public class SmsBox {
     }
 
     @NonNull
-    private Message toMessage(Map<String, String> sms) {
+    private Message toMessage(final Map<String, String> sms) {
         int threadId = -1;
 
         if (sms.get(ATTR_THREAD_ID) != null && !sms.get(ATTR_THREAD_ID).equals("")) {
@@ -103,14 +103,17 @@ public class SmsBox {
         return message;
     }
 
-    public void sendMessage(String phoneNumber, String message) {
+    public void sendMessage(final String phoneNumber, final String message) {
         Intent intent = new Intent(context, context.getClass());
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, 0);
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(phoneNumber, null, message, pi, null);
     }
 
-    public final class Message {
+    /**
+     * Message DTO.
+     */
+    public static final class Message {
         private String id;
         private Integer threadId;
         private String address;
@@ -123,7 +126,7 @@ public class SmsBox {
             return id;
         }
 
-        public void setId(String id) {
+        public void setId(final String id) {
             this.id = id;
         }
 
@@ -131,7 +134,7 @@ public class SmsBox {
             return threadId;
         }
 
-        public void setThreadId(Integer threadId) {
+        public void setThreadId(final Integer threadId) {
             this.threadId = threadId;
         }
 
@@ -139,7 +142,7 @@ public class SmsBox {
             return address;
         }
 
-        public void setAddress(String address) {
+        public void setAddress(final String address) {
             this.address = address;
         }
 
@@ -147,7 +150,7 @@ public class SmsBox {
             return isIncoming;
         }
 
-        public void setIncoming(boolean incoming) {
+        public void setIncoming(final boolean incoming) {
             isIncoming = incoming;
         }
 
@@ -155,7 +158,7 @@ public class SmsBox {
             return body;
         }
 
-        public void setBody(String body) {
+        public void setBody(final String body) {
             this.body = body;
         }
 
@@ -163,7 +166,7 @@ public class SmsBox {
             return date;
         }
 
-        public void setDate(Date date) {
+        public void setDate(final Date date) {
             this.date = date;
         }
 
@@ -171,7 +174,7 @@ public class SmsBox {
             return dateSent;
         }
 
-        public void setDateSent(Date dateSent) {
+        public void setDateSent(final Date dateSent) {
             this.dateSent = dateSent;
         }
     }

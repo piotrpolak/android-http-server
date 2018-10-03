@@ -127,14 +127,17 @@ public class ServerConfigImpl implements ServerConfig {
         }
     }
 
-    private void assignMimeMapping(final String basePath, final Properties properties, final MimeTypeMapping defaultValue) throws IOException {
+    private void assignMimeMapping(final String basePath,
+                                   final Properties properties,
+                                   final MimeTypeMapping defaultValue) throws IOException {
         if (getResolvedProperty(properties, ATTRIBUTE_MIME_TYPE) != null) {
             String defaultMimeType = "text/plain";
             if (getResolvedProperty(properties, ATTRIBUTE_DEFAULT_MIME_TYPE) != null) {
                 defaultMimeType = getResolvedProperty(properties, ATTRIBUTE_DEFAULT_MIME_TYPE);
             }
 
-            InputStream mimeInputStream = new FileInputStream(basePath + getResolvedProperty(properties, ATTRIBUTE_MIME_TYPE));
+            InputStream mimeInputStream = new FileInputStream(basePath
+                    + getResolvedProperty(properties, ATTRIBUTE_MIME_TYPE));
             try {
                 mimeTypeMapping = MimeTypeMappingImpl.createFromStream(mimeInputStream, defaultMimeType);
             } finally {
@@ -300,6 +303,11 @@ public class ServerConfigImpl implements ServerConfig {
         return resourceProviders;
     }
 
+    /**
+     * Assigns resource providers to the config.
+     *
+     * @param resourceProviders
+     */
     public void setResourceProviders(final List<ResourceProvider> resourceProviders) {
         this.resourceProviders = resourceProviders;
     }

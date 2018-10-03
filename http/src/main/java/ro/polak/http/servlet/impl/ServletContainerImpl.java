@@ -76,7 +76,8 @@ public class ServletContainerImpl implements ServletContainer {
         return servlet;
     }
 
-    private Servlet instantiateServlet(final Class<? extends HttpServlet> serverClass) throws ServletInitializationException {
+    private Servlet instantiateServlet(final Class<? extends HttpServlet> serverClass)
+            throws ServletInitializationException {
         try {
             return serverClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -84,7 +85,8 @@ public class ServletContainerImpl implements ServletContainer {
         }
     }
 
-    private Filter instantiateFilter(final Class<? extends Filter> filterClass) throws FilterInitializationException {
+    private Filter instantiateFilter(final Class<? extends Filter> filterClass)
+            throws FilterInitializationException {
         try {
             return filterClass.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -116,7 +118,7 @@ public class ServletContainerImpl implements ServletContainer {
     /**
      * Servlet statistics DTO.
      */
-    public class ServletStats {
+    public final class ServletStats {
 
         private Date initializedAt;
         private Date lastRequestedAt;

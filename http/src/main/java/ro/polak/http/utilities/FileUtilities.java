@@ -40,14 +40,15 @@ public final class FileUtilities {
 
         String filenameNormalized = filename.toLowerCase();
         String ext = "";
-        int pos;
+        int positionOfSlash = filenameNormalized.lastIndexOf('/');
 
-        if ((pos = filenameNormalized.lastIndexOf('/')) != -1) {
-            filenameNormalized = filenameNormalized.substring(pos + 1);
+        if (positionOfSlash != -1) {
+            filenameNormalized = filenameNormalized.substring(positionOfSlash + 1);
         }
 
-        if ((pos = filenameNormalized.lastIndexOf('.')) != -1) {
-            ext = filenameNormalized.substring(pos + 1);
+        int positionOfDot = filenameNormalized.lastIndexOf('.');
+        if (positionOfDot != -1) {
+            ext = filenameNormalized.substring(positionOfDot + 1);
         }
 
         return ext;

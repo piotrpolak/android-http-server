@@ -24,8 +24,15 @@ import ro.polak.http.servlet.impl.ServletContextImpl;
  */
 public class ServletContextHelper {
 
+    /**
+     * Resolves servlet mapping for a given path. A null is returned when no mapping is found for given path.
+     *
+     * @param servletContext
+     * @param path
+     * @return
+     */
     //@Nullable
-    public ServletMapping getResolvedServletMapping(final ServletContext servletContext, String path) {
+    public ServletMapping getResolvedServletMapping(final ServletContext servletContext, final String path) {
         Objects.requireNonNull(servletContext);
         for (ServletMapping servletMapping : servletContext.getServletMappings()) {
             String inContextPath = getPathInContext(servletContext, path);
@@ -37,8 +44,15 @@ public class ServletContextHelper {
         return null;
     }
 
+    /**
+     * Resolves servlet context for a given path. A null is returned when no context is found for given path.
+     *
+     * @param servletContexts
+     * @param path
+     * @return
+     */
     //@Nullable
-    public ServletContextImpl getResolvedContext(final List<ServletContextImpl> servletContexts, String path) {
+    public ServletContextImpl getResolvedContext(final List<ServletContextImpl> servletContexts, final String path) {
         for (ServletContextImpl servletContext : servletContexts) {
             if (path.startsWith(servletContext.getContextPath())) {
                 return servletContext;

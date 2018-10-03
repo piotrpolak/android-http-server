@@ -23,11 +23,13 @@ import static api.logic.APIResponse.MEDIA_TYPE_APPLICATION_JSON;
 /**
  * SMS Send method API endpoint.
  */
-public class SmsSend extends HttpServlet {
+public final class SmsSend extends HttpServlet {
 
     public static final String TO_PARAMETER_NAME = "to";
     public static final String IS_TEST_PARAMETER_NAME = "test";
     private static final String MESSAGE_PARAMETER_NAME = "message";
+    private static final int MAX_SMS_LENGTH = 160;
+    private static final int PHONE_NUMBER_LENGTH = 9;
 
     @Override
     public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
@@ -46,12 +48,12 @@ public class SmsSend extends HttpServlet {
             return;
         }
 
-        if (message.length() > 160) {
+        if (message.length() > MAX_SMS_LENGTH) {
             sendError(response, "Parameter message too long");
             return;
         }
 
-        if (to.length() < 9) {
+        if (to.length() < PHONE_NUMBER_LENGTH) {
             sendError(response, "Parameter to too short");
             return;
         }
@@ -69,7 +71,7 @@ public class SmsSend extends HttpServlet {
         }
     }
 
-    private void sendError(HttpServletResponse response, String errorMessage) throws ServletException {
+    private void sendError(final HttpServletResponse response, final String errorMessage) throws ServletException {
         try {
             APIResponse apiResponse = new APIResponse(APIResponse.CODE_ERROR, errorMessage);
             response.getWriter().print(apiResponse.toString());

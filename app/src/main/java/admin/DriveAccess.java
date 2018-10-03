@@ -78,7 +78,8 @@ public class DriveAccess extends HttpServlet {
         StringBuilder directories = new StringBuilder();
         File[] files = baseDirectory.listFiles();
         if (files == null) {
-            doc.writeln("<div class=\"alert alert-danger\" role=\"alert\"><strong>Oh snap!</strong> Unable to read files.</div>");
+            doc.writeln("<div class=\"alert alert-danger\" role=\"alert\">"
+                    + "<strong>Oh snap!</strong> Unable to read files.</div>");
         } else {
             if (files.length == 0) {
                 doc.writeln("<div class=\"alert alert-info\" role=\"alert\">There are no files in this directory.</div>");
@@ -86,7 +87,8 @@ public class DriveAccess extends HttpServlet {
                 for (File file : files) {
                     if (file.isDirectory()) {
                         directories
-                                .append("<p class=\"filemanager\"><img src=\"/assets/img/folder.png\" alt=\"folder\" /> <a href=\"/admin/DriveAccess?"
+                                .append("<p class=\"filemanager\"><img src=\"/assets/img/folder.png\""
+                                        + " alt=\"folder\" /> <a href=\"/admin/DriveAccess?"
                                         + StringUtilities.urlEncode(path
                                         + file.getName() + "/")
                                         + "\">"
@@ -110,20 +112,27 @@ public class DriveAccess extends HttpServlet {
     }
 
     private void renderFunctionDisabled(final HttpServletResponse response, final HTMLDocument doc) {
-        doc.writeln("<div class=\"alert alert-warning\" role=\"alert\">Drive Access option has been disabled in configuration.</div>");
+        doc.writeln("<div class=\"alert alert-warning\" role=\"alert\">"
+                + "Drive Access option has been disabled in configuration.</div>");
         doc.writeln("<p>See <b>httpd.properties</b>, parameter <b>_managementEnableDriveAccess</b> must be <b>On</b>.</p>");
         response.getWriter().print(doc.toString());
     }
 
     private void renderBreadcrubms(final HTMLDocument doc, final String path) {
         doc.writeln("<ol class=\"breadcrumb\">");
-        doc.writeln("<li><a href=\"/admin/DriveAccess?" + StringUtilities.urlEncode("/") + "\"><img src=\"/assets/img/home.png\" alt=\"home\"></a></li>");
+        doc.writeln("<li><a href=\"/admin/DriveAccess?"
+                + StringUtilities.urlEncode("/")
+                + "\"><img src=\"/assets/img/home.png\" alt=\"home\"></a></li>");
         StringTokenizer st = new StringTokenizer(path.replace('\\', '/'), "/");
         String currentPath = "/";
         while (st.hasMoreTokens()) {
             String directory = st.nextToken();
             currentPath += directory + "/";
-            doc.writeln("<li><a href=\"/admin/DriveAccess?" + StringUtilities.urlEncode(currentPath) + "\">" + directory + "</a></li>");
+            doc.writeln("<li><a href=\"/admin/DriveAccess?"
+                    + StringUtilities.urlEncode(currentPath)
+                    + "\">"
+                    + directory
+                    + "</a></li>");
         }
 
         doc.writeln("</ol>");

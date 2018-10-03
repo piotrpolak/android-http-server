@@ -35,7 +35,7 @@ import ro.polak.http.utilities.DateProvider;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201710
  */
-public class ServiceContainer {
+public final class ServiceContainer {
 
     private static final int MAX_THREADS_MULTIPLIER = 3;
     private HttpServletRequestImplFactory requestWrapperFactory;

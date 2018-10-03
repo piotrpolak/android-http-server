@@ -131,7 +131,9 @@ public class ServletResourceProvider implements ResourceProvider {
             }
 
             @Override
-            public void doFilter(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException {
+            public void doFilter(final HttpServletRequest request,
+                                 final HttpServletResponse response,
+                                 final FilterChain filterChain) throws ServletException {
                 servlet.service(request, response);
             }
         });

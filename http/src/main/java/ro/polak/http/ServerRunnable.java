@@ -129,7 +129,8 @@ public class ServerRunnable implements Runnable {
         }
     }
 
-    private void sendRedirectToDirectorySlashedPath(final HttpResponseImpl response, final String originalPath) throws IOException {
+    private void sendRedirectToDirectorySlashedPath(final HttpResponseImpl response, final String originalPath)
+            throws IOException {
         response.setStatus(HttpServletResponse.STATUS_MOVED_PERMANENTLY);
         response.getHeaders().setHeader(Headers.HEADER_LOCATION, originalPath + "/");
         response.flush();
@@ -208,7 +209,7 @@ public class ServerRunnable implements Runnable {
     }
 
     /**
-     * Helper class describing directory index
+     * Helper class describing directory index.
      */
     private static class DirectoryIndexDescriptor {
         private ResourceProvider resourceProvider;

@@ -55,6 +55,7 @@ public abstract class BaseMainService extends Service implements ServerGui {
 
     private static final Logger LOGGER = Logger.getLogger(BaseMainService.class.getName());
     private static final int NOTIFICATION_ID = 0;
+    private static final int DEFAULT_HTTP_PORT = 80;
 
     @Nullable
     private BaseMainActivity activity = null;
@@ -62,11 +63,17 @@ public abstract class BaseMainService extends Service implements ServerGui {
     private final IBinder binder = new LocalBinder();
     private boolean isServiceStarted = false;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(final Intent intent) {
         return binder;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
         isServiceStarted = true;
@@ -88,10 +95,13 @@ public abstract class BaseMainService extends Service implements ServerGui {
      * @return
      */
     @NonNull
-    protected BaseAndroidServerConfigFactory getServerConfigFactory(Context context) {
+    protected BaseAndroidServerConfigFactory getServerConfigFactory(final Context context) {
         return new BaseAndroidServerConfigFactory(context);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onDestroy() {
         if (getServiceState().isWebServerStarted()) {
@@ -108,7 +118,7 @@ public abstract class BaseMainService extends Service implements ServerGui {
      *
      * @param activity
      */
-    public void registerClient(BaseMainActivity activity) {
+    public void registerClient(final BaseMainActivity activity) {
         this.activity = activity;
     }
 
@@ -129,15 +139,30 @@ public abstract class BaseMainService extends Service implements ServerGui {
     public ServiceStateDTO getServiceState() {
         String accessUrl = "Initializing";
         if (controller != null && controller.getWebServer() != null) {
-            int port = controller.getWebServer().getServerConfig().getListenPort();
-            String portString = port != 80 ? ":" + port : "";
-            accessUrl = "http://" + getLocalIpAddress() + portString + '/';
+            accessUrl = "http://"
+                    + getLocalIpAddress()
+                    + getPort(controller.getWebServer().getServerConfig().getListenPort())
+                    + '/';
         }
 
-        boolean isWebserverStarted = controller != null && controller.getWebServer() != null && controller.getWebServer().isRunning();
+        boolean isWebserverStarted = controller != null
+                && controller.getWebServer() != null
+                && controller.getWebServer().isRunning();
+
         return new ServiceStateDTO(isServiceStarted, isWebserverStarted, accessUrl);
     }
 
+    @NonNull
+    private String getPort(final int port) {
+        if (port != DEFAULT_HTTP_PORT) {
+            return ":" + port;
+        }
+        return "";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void start() {
         if (activity != null) {
@@ -149,6 +174,9 @@ public abstract class BaseMainService extends Service implements ServerGui {
         setNotification(getNotificationBuilder(pIntent, "Started", R.drawable.online).build());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void stop() {
         if (activity != null) {
@@ -160,10 +188,15 @@ public abstract class BaseMainService extends Service implements ServerGui {
         setNotification(getNotificationBuilder(pIntent, "Stopped", R.drawable.offline).build());
     }
 
+    /**
+     * Returns the the class of the activity to be registered.
+     *
+     * @return
+     */
     @NonNull
     protected abstract Class<? extends BaseMainActivity> getActivityClass();
 
-    private void doFirstRunChecks(ServerConfigFactory serverConfigFactory) {
+    private void doFirstRunChecks(final ServerConfigFactory serverConfigFactory) {
         ServerConfig serverConfig = serverConfigFactory.getServerConfig();
         String basePath = Environment.getExternalStorageDirectory() + serverConfig.getBasePath();
         String staticDirPath = Environment.getExternalStorageDirectory() + serverConfig.getDocumentRootPath();
@@ -202,12 +235,12 @@ public abstract class BaseMainService extends Service implements ServerGui {
     }
 
 
-    private void setNotification(Notification notification) {
+    private void setNotification(final Notification notification) {
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
-    private Notification.Builder getNotificationBuilder(PendingIntent pIntent, String text, int icon) {
+    private Notification.Builder getNotificationBuilder(final PendingIntent pIntent, final String text, final int icon) {
         return new Notification.Builder(this)
                 .setContentTitle("HTTPServer")
                 .setContentText(text)
@@ -218,7 +251,7 @@ public abstract class BaseMainService extends Service implements ServerGui {
     }
 
     /**
-     * Helper
+     * Helper method returning the current IP address.
      *
      * @return String
      */
@@ -228,7 +261,10 @@ public abstract class BaseMainService extends Service implements ServerGui {
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
             int ipAddress = wifiInfo.getIpAddress();
-            ipAddress = (java.nio.ByteOrder.nativeOrder().equals(java.nio.ByteOrder.LITTLE_ENDIAN)) ? Integer.reverseBytes(ipAddress) : ipAddress;
+            if (java.nio.ByteOrder.nativeOrder().equals(java.nio.ByteOrder.LITTLE_ENDIAN)) {
+                ipAddress = Integer.reverseBytes(ipAddress);
+            }
+
             InetAddress inetAddress = InetAddress.getByAddress(BigInteger.valueOf(ipAddress).toByteArray());
             return inetAddress.getHostAddress();
 
@@ -251,7 +287,16 @@ public abstract class BaseMainService extends Service implements ServerGui {
         return "127.0.0.1";
     }
 
+    /**
+     * Local binder instance.
+     */
     public class LocalBinder extends Binder {
+
+        /**
+         * Returns bounded service instance.
+         *
+         * @return
+         */
         public BaseMainService getService() {
             return BaseMainService.this;
         }
@@ -260,12 +305,12 @@ public abstract class BaseMainService extends Service implements ServerGui {
     /**
      * Represents the service state.
      */
-    public static class ServiceStateDTO {
+    public static final class ServiceStateDTO {
         private boolean isServiceStarted;
         private boolean isWebServerStarted;
         private String accessUrl;
 
-        public ServiceStateDTO(boolean isServiceStarted, boolean isWebServerStarted, String accessUrl) {
+        public ServiceStateDTO(final boolean isServiceStarted, final boolean isWebServerStarted, final String accessUrl) {
             this.isServiceStarted = isServiceStarted;
             this.isWebServerStarted = isWebServerStarted;
             this.accessUrl = accessUrl;

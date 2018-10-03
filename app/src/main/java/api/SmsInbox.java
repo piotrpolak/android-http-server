@@ -25,9 +25,9 @@ import ro.polak.http.servlet.HttpServletResponse;
 import static api.logic.APIResponse.MEDIA_TYPE_APPLICATION_JSON;
 
 /**
- * SMS Inbox method API endpoint
+ * SMS Inbox method API endpoint.
  */
-public class SmsInbox extends HttpServlet {
+public final class SmsInbox extends HttpServlet {
 
     private static final int DEFAULT_MAX_RESULTS = 999;
     private static final String ATTR_MAX_RESULTS = "maxResults";
@@ -36,14 +36,13 @@ public class SmsInbox extends HttpServlet {
 
     @Override
     public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
-        int maxResults = request.getParameter(ATTR_MAX_RESULTS) != null
-                ? Integer.parseInt(request.getParameter(ATTR_MAX_RESULTS)) : DEFAULT_MAX_RESULTS;
-
         SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
         List<SmsBox.Message> messages = smsBox.readMessages(ALL_STRING);
 
         try {
-            APIResponse apiResponse = new APIResponse(APIResponse.CODE_OK, "OK", computeResult(maxResults, messages));
+            APIResponse apiResponse = new APIResponse(APIResponse.CODE_OK,
+                    "OK",
+                    computeResult(getMaxResults(request), messages));
             response.setContentType(MEDIA_TYPE_APPLICATION_JSON);
             response.getWriter().print(apiResponse.toString());
         } catch (JSONException e) {
@@ -51,7 +50,14 @@ public class SmsInbox extends HttpServlet {
         }
     }
 
-    private JSONArray computeResult(int maxResults, List<SmsBox.Message> messages) throws JSONException {
+    private int getMaxResults(final HttpServletRequest request) {
+        if (request.getParameter(ATTR_MAX_RESULTS) != null) {
+            return Integer.parseInt(request.getParameter(ATTR_MAX_RESULTS));
+        }
+        return DEFAULT_MAX_RESULTS;
+    }
+
+    private JSONArray computeResult(final int maxResults, final List<SmsBox.Message> messages) throws JSONException {
         JSONArray result = new JSONArray();
         int i = 0;
         int max = messages.size();

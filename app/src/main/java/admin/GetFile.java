@@ -8,6 +8,7 @@
 package admin;
 
 import android.os.Environment;
+import android.support.annotation.NonNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,7 +48,7 @@ public class GetFile extends HttpServlet {
         boolean fileExists = false;
 
         if (!request.getQueryString().equals("")) {
-            File f = new File(Environment.getExternalStorageDirectory() + StringUtilities.urlDecode(request.getQueryString()));
+            File f = new File(getPathname(request));
             if (f.exists() && f.isFile()) {
                 fileExists = true;
                 try {
@@ -62,6 +63,11 @@ public class GetFile extends HttpServlet {
             response.setStatus(HttpServletResponse.STATUS_NOT_FOUND);
             response.getWriter().print("File does not exist.");
         }
+    }
+
+    @NonNull
+    private String getPathname(final HttpServletRequest request) {
+        return Environment.getExternalStorageDirectory() + StringUtilities.urlDecode(request.getQueryString());
     }
 
     private void serveFile(final File file, final HttpServletResponse response) throws IOException {

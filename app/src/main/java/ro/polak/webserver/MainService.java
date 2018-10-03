@@ -15,12 +15,12 @@ import ro.polak.webserver.base.BaseMainService;
 import ro.polak.webserver.base.impl.BaseAndroidServerConfigFactory;
 
 /**
- * Main application service that holds http server
+ * Main application service that holds http server.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201709
  */
-public class MainService extends BaseMainService {
+public final class MainService extends BaseMainService {
 
     @NonNull
     @Override
@@ -30,7 +30,7 @@ public class MainService extends BaseMainService {
 
     @NonNull
     @Override
-    protected BaseAndroidServerConfigFactory getServerConfigFactory(Context context) {
+    protected BaseAndroidServerConfigFactory getServerConfigFactory(final Context context) {
         return new AndroidServerConfigFactory(context);
     }
 }

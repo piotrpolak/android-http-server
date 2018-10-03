@@ -50,8 +50,12 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     protected abstract Class<? extends BaseMainService> getServiceClass();
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
+
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+        public void onServiceConnected(final ComponentName componentName, final IBinder iBinder) {
             BaseMainService.LocalBinder binder = (BaseMainService.LocalBinder) iBinder;
             mainService = binder.getService();
             mainService.registerClient(BaseMainActivity.this);
@@ -64,14 +68,22 @@ public abstract class BaseMainActivity extends AppCompatActivity {
             }
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
-        public void onServiceDisconnected(ComponentName arg0) {
+        public void onServiceDisconnected(final ComponentName arg0) {
             isMainServiceBound = false;
         }
     };
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(final int requestCode,
+                                           final String[] permissions,
+                                           final int[] grantResults) {
         switch (requestCode) {
             case PERMISSIONS_REQUEST_CODE:
                 if (grantResults.length > 0) {
@@ -90,6 +102,9 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Call this method to force update the state of the service.
+     */
     public void notifyStateChanged() {
         if (isMainServiceBound) {
             BaseMainService.ServiceStateDTO serviceStateDTO = mainService.getServiceState();
@@ -103,6 +118,9 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -110,6 +128,9 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onStop() {
         super.onStop();
@@ -119,8 +140,11 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         doOnCreate();
@@ -177,7 +201,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 
 
     /**
-     * Requests missing mermissions
+     * Requests missing permissions.
      */
     protected void requestPermissions() {
         String[] permissionsNotGrantedYet = getMissingPermissions();
@@ -252,7 +276,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isAnyPermissionMissing(int[] grantResults) {
+    private boolean isAnyPermissionMissing(final int[] grantResults) {
         for (int result : grantResults) {
             if (result != PackageManager.PERMISSION_GRANTED) {
                 return true;
@@ -269,11 +293,12 @@ public abstract class BaseMainActivity extends AppCompatActivity {
 
     private void showMustAcceptPermissions() {
         doShowMustAcceptPermissions();
-        Toast.makeText(getApplicationContext(), "You must grant all permissions to run the server", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),
+                "You must grant all permissions to run the server", Toast.LENGTH_SHORT).show();
     }
 
     /**
-     * To revoke user permissions please execute adb shell pm reset-permissions
+     * To revoke user permissions please execute adb shell pm reset-permissions.
      *
      * @return
      */

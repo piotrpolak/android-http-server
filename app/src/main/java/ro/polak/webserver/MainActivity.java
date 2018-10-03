@@ -185,16 +185,17 @@ public class MainActivity extends BaseMainActivity {
                 builder.setMessage("Are you sure you want to exit?")
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
+                            public void onClick(final DialogInterface dialog, final int id) {
                                 if (isMainServiceBound) {
                                     requestServiceStop();
                                 } else {
-                                    Toast.makeText(getApplicationContext(), "Background service not bound!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(),
+                                            "Background service not bound!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
+                            public void onClick(final DialogInterface dialog, final int id) {
                                 dialog.cancel();
                             }
                         });
@@ -208,7 +209,8 @@ public class MainActivity extends BaseMainActivity {
                         mainService.getController().start();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Background service not bound!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),
+                            "Background service not bound!", Toast.LENGTH_SHORT).show();
                 }
             }
         }

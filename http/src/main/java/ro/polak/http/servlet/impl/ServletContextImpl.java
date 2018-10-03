@@ -35,6 +35,8 @@ import ro.polak.http.utilities.StringUtilities;
 public class ServletContextImpl implements ServletContext {
 
     private static final Logger LOGGER = Logger.getLogger(ServletContextImpl.class.getName());
+    private static final int MS_IN_SECOND = 1000;
+    public static final int MAX_AGE_IN_PAST = -100;
 
     private final ServerConfig serverConfig;
     private final SessionStorage sessionStorage;
@@ -172,7 +174,7 @@ public class ServletContextImpl implements ServletContext {
     public void handleSession(final HttpSessionImpl session, final HttpResponseImpl response) throws IOException {
         Cookie cookie = new Cookie(HttpSessionImpl.COOKIE_NAME, "");
         if (session.isInvalidated()) {
-            cookie.setMaxAge(-100);
+            cookie.setMaxAge(MAX_AGE_IN_PAST);
 
             sessionStorage.removeSession(session);
             LOGGER.log(Level.FINE, "Invalidated session {0}",
@@ -186,7 +188,7 @@ public class ServletContextImpl implements ServletContext {
     }
 
     private boolean isSessionExpired(final HttpSessionImpl session) {
-        return System.currentTimeMillis() - session.getMaxInactiveInterval() * 1000 > session.getLastAccessedTime();
+        return System.currentTimeMillis() - session.getMaxInactiveInterval() * MS_IN_SECOND > session.getLastAccessedTime();
     }
 
     /**

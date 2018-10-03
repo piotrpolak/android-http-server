@@ -57,12 +57,7 @@ public class RangeParser implements Parser<List<Range>> {
 
     private Range getRange(String[] values) throws MalformedInputException {
         try {
-            Range range = new Range();
-            range.setFrom(Long.parseLong(values[0].trim()));
-            range.setTo(Long.parseLong(values[1].trim()));
-
-            return range;
-
+            return new Range(Long.parseLong(values[0].trim()), Long.parseLong(values[1].trim()));
         } catch (NumberFormatException e) {
             throw new MalformedInputException("Invalid range value, unable to parse numeric values " + e.getMessage());
         }

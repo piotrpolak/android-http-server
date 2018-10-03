@@ -17,9 +17,6 @@ public final class Range {
     private long from;
     private long to;
 
-    public Range() {
-    }
-
     public Range(final long from, final long to) {
         this.from = from;
         this.to = to;
@@ -29,15 +26,7 @@ public final class Range {
         return from;
     }
 
-    public void setFrom(long from) {
-        this.from = from;
-    }
-
     public long getTo() {
         return to;
-    }
-
-    public void setTo(long to) {
-        this.to = to;
     }
 }

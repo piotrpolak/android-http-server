@@ -42,7 +42,7 @@ import static java.util.TimeZone.getTimeZone;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public final class HttpRequestImpl implements HttpServletRequest {
+public class HttpRequestImpl implements HttpServletRequest {
 
     public static final String METHOD_CONNECT = "CONNECT";
     public static final String METHOD_DELETE = "DELETE";

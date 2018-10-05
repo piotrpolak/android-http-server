@@ -34,6 +34,7 @@ import static org.mockito.Mockito.when;
 public class HttpRequestImplTest {
 
     private HttpRequestImpl httpRequestImpl;
+    private HttpRequestImpl.HttpRequestImplBuilder builder;
     private RequestStatus requestStatus;
     private InputStream inputStream;
     private ServletContextImpl servletContext;
@@ -66,26 +67,28 @@ public class HttpRequestImplTest {
 
         servletContext = mock(ServletContextImpl.class);
 
-        httpRequestImpl = new HttpRequestImpl();
-        httpRequestImpl.setStatus(requestStatus);
-        httpRequestImpl.setPostParameters(postParameters);
-        httpRequestImpl.setGetParameters(getParameters);
-        httpRequestImpl.setScheme("http");
-        httpRequestImpl.setCookies(cookies);
-        httpRequestImpl.setHeaders(headers);
-        httpRequestImpl.setInputStream(inputStream);
-        httpRequestImpl.setLocalPort(123);
-        httpRequestImpl.setLocalAddr("localAddr");
-        httpRequestImpl.setLocalName("localName");
-        httpRequestImpl.setRemotePort(987);
-        httpRequestImpl.setRemoteAddr("remoteAddr");
-        httpRequestImpl.setRemoteHost("remoteHost");
-        httpRequestImpl.setServerPort(8080);
-        httpRequestImpl.setServerName("serverName");
-        httpRequestImpl.setSecure(true);
-        httpRequestImpl.setServletContext(servletContext);
-        httpRequestImpl.setMultipart(true);
-        httpRequestImpl.setUploadedFiles(new HashSet<UploadedFile>());
+        builder = HttpRequestImpl.createNewBuilder()
+                .withStatus(requestStatus)
+                .withPostParameters(postParameters)
+                .withGetParameters(getParameters)
+                .withScheme("http")
+                .withCookies(cookies)
+                .withHeaders(headers)
+                .withInputStream(inputStream)
+                .withLocalPort(123)
+                .withLocalAddr("localAddr")
+                .withLocalName("localName")
+                .withRemotePort(987)
+                .withRemoteAddr("remoteAddr")
+                .withRemoteHost("remoteHost")
+                .withServerPort(8080)
+                .withServerName("serverName")
+                .withSecure(true)
+                .withServletContext(servletContext)
+                .withMultipart(true)
+                .withUploadedFiles(new HashSet<UploadedFile>());
+
+        httpRequestImpl = builder.build();
     }
 
     @Test
@@ -168,7 +171,7 @@ public class HttpRequestImplTest {
         Headers headers = new Headers();
         headers.setHeader("intKey", "3333");
         headers.setHeader("unableToParseKey", "AAAA");
-        httpRequestImpl.setHeaders(headers);
+        httpRequestImpl = builder.withHeaders(headers).build();
 
         assertThat(httpRequestImpl.getIntHeader("missingIntKey"), is(-1));
         assertThat(httpRequestImpl.getIntHeader("intKey"), is(3333));
@@ -179,7 +182,7 @@ public class HttpRequestImplTest {
     public void shouldReturnContentLength() {
         Headers headers = new Headers();
         headers.setHeader(Headers.HEADER_CONTENT_LENGTH, "1234");
-        httpRequestImpl.setHeaders(headers);
+        httpRequestImpl = builder.withHeaders(headers).build();
 
         assertThat(httpRequestImpl.getContentLength(), is(1234));
     }
@@ -188,7 +191,7 @@ public class HttpRequestImplTest {
     public void shouldReturnContentType() {
         Headers headers = new Headers();
         headers.setHeader(Headers.HEADER_CONTENT_TYPE, "SOME_TYPE/TEXT");
-        httpRequestImpl.setHeaders(headers);
+        httpRequestImpl = builder.withHeaders(headers).build();
 
         assertThat(httpRequestImpl.getContentType(), is("SOME_TYPE/TEXT"));
     }
@@ -205,7 +208,7 @@ public class HttpRequestImplTest {
         cookies.put("someName", cookie1);
         cookies.put("someOtherName", cookie2);
         cookies.put(HttpSessionImpl.COOKIE_NAME, sessionCookie);
-        httpRequestImpl.setCookies(cookies);
+        httpRequestImpl = builder.withCookies(cookies).build();
 
         assertThat(httpRequestImpl.getCookies().length, is(cookies.size()));
         assertThat(Arrays.asList(httpRequestImpl.getCookies()), hasItems(cookie1, cookie2, sessionCookie));
@@ -221,7 +224,7 @@ public class HttpRequestImplTest {
         Headers headers = new Headers();
         headers.setHeader("If-Modified-Since", "Thu, 15 Jan 2015 16:30:13 GMT");
         headers.setHeader("If-Modified-Since-MALFORMED", "Malformed Value");
-        httpRequestImpl.setHeaders(headers);
+        httpRequestImpl = builder.withHeaders(headers).build();
         assertThat(httpRequestImpl.getDateHeader("If-Modified-Since"), is(1421339413000L));
         assertThat(httpRequestImpl.getDateHeader("If-Modified-Since-MALFORMED"), is(-1L));
         assertThat(httpRequestImpl.getDateHeader("Inexisting"), is(-1L));
@@ -232,7 +235,7 @@ public class HttpRequestImplTest {
         Map<String, Cookie> cookies = new HashMap<>();
         Cookie sessionCookie = new Cookie(HttpSessionImpl.COOKIE_NAME, "sessionId");
         cookies.put(HttpSessionImpl.COOKIE_NAME, sessionCookie);
-        httpRequestImpl.setCookies(cookies);
+        httpRequestImpl = builder.withCookies(cookies).build();
         httpRequestImpl.setServletContext(servletContext);
         when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionImpl("sessionId", System.currentTimeMillis()));
         assertThat(httpRequestImpl.getSession(), is(instanceOf(HttpSessionImpl.class)));
@@ -243,7 +246,7 @@ public class HttpRequestImplTest {
         Map<String, Cookie> cookies = new HashMap<>();
         Cookie sessionCookie = new Cookie(HttpSessionImpl.COOKIE_NAME, "sessionId");
         cookies.put(HttpSessionImpl.COOKIE_NAME, sessionCookie);
-        httpRequestImpl.setCookies(cookies);
+        httpRequestImpl = builder.withCookies(cookies).build();
         httpRequestImpl.setServletContext(servletContext);
         when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionImpl("sessionId", System.currentTimeMillis()));
         assertThat(httpRequestImpl.getSession(), is(instanceOf(HttpSessionImpl.class)));
@@ -254,7 +257,12 @@ public class HttpRequestImplTest {
     public void shouldParseUrlFromHost() {
         Headers headers = new Headers();
         headers.setHeader(Headers.HEADER_HOST, "example.com:3366");
-        httpRequestImpl.setHeaders(headers);
+        httpRequestImpl = builder.withHeaders(headers).build();
         assertThat(httpRequestImpl.getRequestURL().toString(), is("http://example.com:8080/someuri"));
+    }
+
+    @Test
+    public void shouldBuildTwoIndependentInstances() {
+        assertThat(builder.build(), is(not(builder.build())));
     }
 }

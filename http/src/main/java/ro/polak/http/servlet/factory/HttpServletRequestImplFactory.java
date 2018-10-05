@@ -120,7 +120,7 @@ public class HttpServletRequestImplFactory {
     public HttpRequestImpl createFromSocket(final Socket socket)
             throws IOException, ProtocolException {
 
-        HttpRequestImpl request = new HttpRequestImpl();
+        HttpRequestImpl.HttpRequestImplBuilder builder = HttpRequestImpl.createNewBuilder();
 
         InputStream in = socket.getInputStream();
         // The order matters
@@ -142,71 +142,71 @@ public class HttpServletRequestImplFactory {
             throw new UnsupportedProtocolException("Protocol " + status.getProtocol() + " is not supported");
         }
 
-        request.setInputStream(in);
-        assignSocketMetadata(socket, request);
-        request.setStatus(status);
-        request.setPathTranslated(request.getRequestURI()); // TODO There is no way to make it work under Android
+        builder.withInputStream(in);
+        assignSocketMetadata(socket, builder);
+        builder.withStatus(status);
+        builder.withPathTranslated(status.getUri()); // TODO There is no way to make it work under Android
 
         // This will be overwritten when running servlet
-        request.setServletContext(new ServletContextImpl("/",
+        builder.withServletContext(new ServletContextImpl("/",
                 Collections.<ServletMapping>emptyList(),
                 Collections.<FilterMapping>emptyList(),
                 Collections.<String, Object>emptyMap(),
                 null,
                 null
         ));
-        request.setPathInfo("");
-        request.setRemoteUser(null);
-        request.setPrincipal(null);
+        builder.withPathInfo("");
+        builder.withRemoteUser(null);
+        builder.withPrincipal(null);
 
         try {
-            request.setGetParameters(queryStringParser.parse(status.getQueryString()));
+            builder.withGetParameters(queryStringParser.parse(status.getQueryString()));
         } catch (MalformedInputException e) {
             // This should never happen
         }
 
+        Headers headers = new Headers();
         String headersString = getHeaders(in);
         if (headersString.length() > MINUMUM_HEADER_LINE_LENGTH) {
             try {
-                request.setHeaders(headersParser.parse(headersString));
+                headers = headersParser.parse(headersString);
             } catch (MalformedInputException e) {
                 throw new ProtocolException("Malformed request headers");
             }
-
-            request.setCookies(getCookies(request.getHeaders()));
         } else {
             // TODO Use a dedicated builder to avoid uninitialized request properties
             // TODO Write a test that sends a request containing status line only
-            request.setHeaders(new Headers()); // Setting implicit empty headers
-            request.setCookies(Collections.<String, Cookie>emptyMap());
+            headers = new Headers();
         }
 
-        if (request.getMethod().equalsIgnoreCase(HttpRequestImpl.METHOD_POST)) {
+        builder.withHeaders(headers);
+        builder.withCookies(getCookies(headers));
+
+        if (status.getMethod().equalsIgnoreCase(HttpRequestImpl.METHOD_POST)) {
             try {
-                handlePostRequest(request, in);
+                handlePostRequest(builder, in, headers);
             } catch (MalformedInputException e) {
                 throw new ProtocolException("Malformed post input");
             }
         }
 
-        return request;
+        return builder.build();
     }
 
     private boolean isValidProtocol(final String protocol) {
         return protocol.equalsIgnoreCase("HTTP/1.0") || protocol.equalsIgnoreCase("HTTP/1.1");
     }
 
-    private void assignSocketMetadata(final Socket socket, final HttpRequestImpl request) {
-        request.setSecure(false);
-        request.setScheme(DEFAULT_SCHEME);
-        request.setRemoteAddr(socket.getInetAddress().getHostAddress());
-        request.setRemotePort(((InetSocketAddress) socket.getRemoteSocketAddress()).getPort());
-        request.setRemoteHost(((InetSocketAddress) socket.getRemoteSocketAddress()).getHostName());
-        request.setLocalAddr(socket.getLocalAddress().getHostAddress());
-        request.setLocalPort(socket.getLocalPort());
-        request.setServerPort(socket.getLocalPort());
-        request.setLocalName(socket.getLocalAddress().getHostName());
-        request.setServerName(socket.getInetAddress().getHostName());
+    private void assignSocketMetadata(final Socket socket, final HttpRequestImpl.HttpRequestImplBuilder builder) {
+        builder.withSecure(false)
+                .withScheme(DEFAULT_SCHEME)
+                .withRemoteAddr(socket.getInetAddress().getHostAddress())
+                .withRemotePort(((InetSocketAddress) socket.getRemoteSocketAddress()).getPort())
+                .withRemoteHost(((InetSocketAddress) socket.getRemoteSocketAddress())
+                        .getHostName()).withLocalAddr(socket.getLocalAddress().getHostAddress())
+                .withLocalPort(socket.getLocalPort()).withServerPort(socket.getLocalPort())
+                .withLocalName(socket.getLocalAddress().getHostName())
+                .withServerName(socket.getInetAddress().getHostName());
     }
 
     private Map<String, Cookie> getCookies(final Headers headers) {
@@ -286,12 +286,14 @@ public class HttpServletRequestImplFactory {
         return headersString.substring(headersString.length() - headersEndSymbolLength, headersString.length());
     }
 
-    private void handlePostRequest(final HttpRequestImpl request, final InputStream in)
+    private void handlePostRequest(final HttpRequestImpl.HttpRequestImplBuilder builder,
+                                   final InputStream in,
+                                   final Headers headers)
             throws IOException, MalformedInputException {
         int postLength;
-        if (request.getHeaders().containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
+        if (headers.containsHeader(Headers.HEADER_CONTENT_LENGTH)) {
             try {
-                postLength = Integer.parseInt(request.getHeaders().getHeader(Headers.HEADER_CONTENT_LENGTH));
+                postLength = Integer.parseInt(headers.getHeader(Headers.HEADER_CONTENT_LENGTH));
             } catch (NumberFormatException e) {
                 throw new MalformedInputException(e.getMessage());
             }
@@ -310,20 +312,22 @@ public class HttpServletRequestImplFactory {
                     + POST_MAX_LENGTH + "b");
         }
 
-        if (isMultipartRequest(request)) {
-            handlePostMultipartRequest(request, in, postLength);
+        if (isMultipartRequest(headers)) {
+            handlePostMultipartRequest(builder, headers, in, postLength);
         } else {
-            handlePostPlainRequest(request, in, postLength);
+            handlePostPlainRequest(builder, in, postLength);
         }
     }
 
-    private boolean isMultipartRequest(final HttpRequestImpl request) {
-        return request.getHeaders().containsHeader(Headers.HEADER_CONTENT_TYPE)
-                && request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE).toLowerCase()
+    private boolean isMultipartRequest(final Headers headers) {
+        return headers.containsHeader(Headers.HEADER_CONTENT_TYPE)
+                && headers.getHeader(Headers.HEADER_CONTENT_TYPE).toLowerCase()
                 .startsWith(MULTIPART_FORM_DATA_HEADER_START);
     }
 
-    private void handlePostPlainRequest(final HttpRequestImpl request, final InputStream in, final int postLength)
+    private void handlePostPlainRequest(final HttpRequestImpl.HttpRequestImplBuilder builder,
+                                        final InputStream in,
+                                        final int postLength)
             throws IOException, MalformedInputException {
         byte[] buffer;
         buffer = new byte[1];
@@ -335,15 +339,18 @@ public class HttpServletRequestImplFactory {
             }
         }
         Statistics.addBytesReceived(postLine.length());
-        request.setPostParameters(queryStringParser.parse(postLine.toString()));
+        builder.withPostParameters(queryStringParser.parse(postLine.toString()));
     }
 
-    private void handlePostMultipartRequest(final HttpRequestImpl request, final InputStream in, final int postLength)
+    private void handlePostMultipartRequest(final HttpRequestImpl.HttpRequestImplBuilder builder,
+                                            final Headers headers,
+                                            final InputStream in,
+                                            final int postLength)
             throws IOException, MalformedInputException {
 
-        String boundary = request.getHeaders().getHeader(Headers.HEADER_CONTENT_TYPE);
+        String boundary = headers.getHeader(Headers.HEADER_CONTENT_TYPE);
         int boundaryPosition = boundary.toLowerCase().indexOf(BOUNDARY_START);
-        request.setMultipart(true);
+        builder.withMultipart(true);
         if (boundaryPosition > -1) {
             int boundaryStartPos = boundaryPosition + BOUNDARY_START.length();
             if (boundaryStartPos < boundary.length()) {
@@ -353,8 +360,7 @@ public class HttpServletRequestImplFactory {
                                 tempPath, MULTIPART_BUFFER_LENGTH);
                 mrh.handle();
 
-                request.setPostParameters(mrh.getPost());
-                request.setUploadedFiles(mrh.getUploadedFiles());
+                builder.withPostParameters(mrh.getPost()).withUploadedFiles(mrh.getUploadedFiles());
             }
         }
     }

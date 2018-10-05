@@ -142,10 +142,10 @@ public class ServerRunnable implements Runnable {
      * @param request
      * @param response
      */
-    private void setDefaultResponseHeaders(final HttpRequestImpl request, final HttpResponseImpl response) {
+    private void setDefaultResponseHeaders(final HttpServletRequest request, final HttpResponseImpl response) {
         boolean isKeepAlive = false;
-        if (request.getHeaders().containsHeader(Headers.HEADER_CONNECTION)) {
-            isKeepAlive = request.getHeaders().getHeader(Headers.HEADER_CONNECTION).equalsIgnoreCase("keep-alive");
+        if (request.getHeader(Headers.HEADER_CONNECTION) != null) {
+            isKeepAlive = request.getHeader(Headers.HEADER_CONNECTION).equalsIgnoreCase("keep-alive");
         }
 
         response.setKeepAlive(isKeepAlive && serverConfig.isKeepAlive());

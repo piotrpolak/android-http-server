@@ -70,6 +70,7 @@ public class HttpRequestImpl implements HttpServletRequest {
     private Collection<UploadedFile> uploadedFiles;
     private HttpSessionImpl session;
     private boolean sessionWasRequested = false;
+
     private ServletContextImpl servletContext;
     private Map<String, Object> attributes;
     private String characterEncoding = StandardCharsets.UTF_8.name();
@@ -92,7 +93,7 @@ public class HttpRequestImpl implements HttpServletRequest {
     /**
      * Default constructor.
      */
-    public HttpRequestImpl() {
+    private HttpRequestImpl() {
         Statistics.incrementRequestHandled();
         postParameters = new HashMap<>();
         getParameters = new HashMap<>();
@@ -632,101 +633,15 @@ public class HttpRequestImpl implements HttpServletRequest {
     }
 
     /**
-     * Sets the servlet context.
+     * Only needed for Servlet loader.
      *
      * @param servletContext
+     * @deprecated
      */
     public void setServletContext(final ServletContextImpl servletContext) {
         this.servletContext = servletContext;
     }
 
-    public void setRemoteAddr(final String remoteAddr) {
-        this.remoteAddr = remoteAddr;
-    }
-
-    public void setHeaders(final Headers headers) {
-        this.headers = headers;
-    }
-
-    public void setUploadedFiles(final Collection<UploadedFile> uploadedFiles) {
-        this.uploadedFiles = uploadedFiles;
-    }
-
-    public void setGetParameters(final Map<String, String> getParameters) {
-        this.getParameters = getParameters;
-    }
-
-    public void setPostParameters(final Map<String, String> postParameters) {
-        this.postParameters = postParameters;
-    }
-
-    public void setStatus(final RequestStatus status) {
-        this.status = status;
-    }
-
-    public void setCookies(final Map<String, Cookie> cookies) {
-        this.cookies = cookies;
-    }
-
-    public void setInputStream(final InputStream in) {
-        this.in = in;
-    }
-
-    public void setLocalPort(final int localPort) {
-        this.localPort = localPort;
-    }
-
-    public void setRemoteHost(final String remoteHost) {
-        this.remoteHost = remoteHost;
-    }
-
-    public void setRemotePort(final int remotePort) {
-        this.remotePort = remotePort;
-    }
-
-    public void setLocalAddr(final String localAddr) {
-        this.localAddr = localAddr;
-    }
-
-    public void setServerPort(final int serverPort) {
-        this.serverPort = serverPort;
-    }
-
-    public void setLocalName(final String localName) {
-        this.localName = localName;
-    }
-
-    public void setServerName(final String serverName) {
-        this.serverName = serverName;
-    }
-
-    public void setScheme(final String scheme) {
-        this.scheme = scheme;
-    }
-
-    public void setSecure(final boolean secure) {
-        isSecure = secure;
-    }
-
-    public void setMultipart(final boolean multipart) {
-        isMultipart = multipart;
-    }
-
-    public void setPathTranslated(final String pathTranslated) {
-        this.pathTranslated = pathTranslated;
-    }
-
-    public void setPathInfo(final String pathInfo) {
-        this.pathInfo = pathInfo;
-    }
-
-    public void setRemoteUser(final String remoteUser) {
-        this.remoteUser = remoteUser;
-    }
-
-    public void setPrincipal(final Principal principal) {
-        this.principal = principal;
-    }
 
     /**
      * Returns requested host name.
@@ -742,5 +657,169 @@ public class HttpRequestImpl implements HttpServletRequest {
             host = getLocalAddr();
         }
         return host;
+    }
+
+    public static HttpRequestImplBuilder createNewBuilder() {
+        return new HttpRequestImplBuilder();
+    }
+
+    /**
+     * Builder.
+     */
+    public static final class HttpRequestImplBuilder {
+        private HttpRequestImpl internal;
+
+        private HttpRequestImplBuilder() {
+            internal = new HttpRequestImpl();
+        }
+
+        /**
+         * Sets the servlet context.
+         *
+         * @param servletContext
+         */
+        public HttpRequestImplBuilder withServletContext(final ServletContextImpl servletContext) {
+            internal.servletContext = servletContext;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withRemoteAddr(final String remoteAddr) {
+            internal.remoteAddr = remoteAddr;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withHeaders(final Headers headers) {
+            internal.headers = headers;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withUploadedFiles(final Collection<UploadedFile> uploadedFiles) {
+            internal.uploadedFiles = uploadedFiles;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withGetParameters(final Map<String, String> getParameters) {
+            internal.getParameters = getParameters;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withPostParameters(final Map<String, String> postParameters) {
+            internal.postParameters = postParameters;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withStatus(final RequestStatus status) {
+            internal.status = status;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withCookies(final Map<String, Cookie> cookies) {
+            internal.cookies = cookies;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withInputStream(final InputStream in) {
+            internal.in = in;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withLocalPort(final int localPort) {
+            internal.localPort = localPort;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withRemoteHost(final String remoteHost) {
+            internal.remoteHost = remoteHost;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withRemotePort(final int remotePort) {
+            internal.remotePort = remotePort;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withLocalAddr(final String localAddr) {
+            internal.localAddr = localAddr;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withServerPort(final int serverPort) {
+            internal.serverPort = serverPort;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withLocalName(final String localName) {
+            internal.localName = localName;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withServerName(final String serverName) {
+            internal.serverName = serverName;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withScheme(final String scheme) {
+            internal.scheme = scheme;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withSecure(final boolean secure) {
+            internal.isSecure = secure;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withMultipart(final boolean multipart) {
+            internal.isMultipart = multipart;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withPathTranslated(final String pathTranslated) {
+            internal.pathTranslated = pathTranslated;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withPathInfo(final String pathInfo) {
+            internal.pathInfo = pathInfo;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withRemoteUser(final String remoteUser) {
+            internal.remoteUser = remoteUser;
+            return this;
+        }
+
+        public HttpRequestImplBuilder withPrincipal(final Principal principal) {
+            internal.principal = principal;
+            return this;
+        }
+
+        public HttpRequestImpl build() {
+            HttpRequestImpl result = new HttpRequestImpl();
+            result.servletContext = internal.servletContext;
+            result.remoteAddr = internal.remoteAddr;
+            result.headers = internal.headers;
+            result.uploadedFiles = internal.uploadedFiles;
+            result.getParameters = internal.getParameters;
+            result.postParameters = internal.postParameters;
+            result.status = internal.status;
+            result.cookies = internal.cookies;
+            result.in = internal.in;
+            result.localPort = internal.localPort;
+            result.remotePort = internal.remotePort;
+            result.remoteHost = internal.remoteHost;
+            result.localAddr = internal.localAddr;
+            result.serverPort = internal.serverPort;
+            result.localName = internal.localName;
+            result.serverName = internal.serverName;
+            result.scheme = internal.scheme;
+            result.isSecure = internal.isSecure;
+            result.isMultipart = internal.isMultipart;
+            result.pathTranslated = internal.pathTranslated;
+            result.pathInfo = internal.pathInfo;
+            result.remoteUser = internal.remoteUser;
+            result.principal = internal.principal;
+
+            return result;
+        }
     }
 }

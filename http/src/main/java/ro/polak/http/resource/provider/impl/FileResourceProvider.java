@@ -22,14 +22,15 @@ import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
-import ro.polak.http.servlet.impl.HttpRequestImpl;
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.Range;
 import ro.polak.http.servlet.helper.RangeHelper;
+import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.utilities.FileUtilities;
 import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.StringUtilities;
-import ro.polak.http.utilities.FileUtilities;
 
 /**
  * File system asset resource provider.
@@ -50,6 +51,7 @@ public class FileResourceProvider implements ResourceProvider {
 
     /**
      * Default constructor.
+     *
      * @param rangeParser
      * @param rangeHelper
      * @param rangePartHeaderSerializer
@@ -129,7 +131,7 @@ public class FileResourceProvider implements ResourceProvider {
         response.flush();
     }
 
-    private void loadPartialContent(final HttpRequestImpl request,
+    private void loadPartialContent(final HttpServletRequest request,
                                     final HttpResponseImpl response,
                                     final File file) throws IOException {
         List<Range> ranges;

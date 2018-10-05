@@ -36,9 +36,27 @@ import java.util.Set;
  */
 public abstract class BaseMainActivity extends AppCompatActivity {
 
-    protected static final int PERMISSIONS_REQUEST_CODE = 5543;
-    protected BaseMainService mainService;
-    protected boolean isMainServiceBound = false;
+    private static final int PERMISSIONS_REQUEST_CODE = 5543;
+    private BaseMainService mainService;
+    private boolean isMainServiceBound = false;
+
+    /**
+     * Returns the main service.
+     *
+     * @return
+     */
+    protected BaseMainService getMainService() {
+        return mainService;
+    }
+
+    /**
+     * Tells whether the main service is bound.
+     *
+     * @return
+     */
+    protected boolean isMainServiceBound() {
+        return isMainServiceBound;
+    }
 
     /**
      * Returns the class of the main service.

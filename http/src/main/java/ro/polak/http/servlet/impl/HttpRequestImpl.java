@@ -42,7 +42,9 @@ import static java.util.TimeZone.getTimeZone;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
+// CHECKSTYLE.OFF: FinalClassCheck - the class is not final for testing purposes
 public class HttpRequestImpl implements HttpServletRequest {
+// CHECKSTYLE.ON: FinalClassCheck
 
     public static final String METHOD_CONNECT = "CONNECT";
     public static final String METHOD_DELETE = "DELETE";

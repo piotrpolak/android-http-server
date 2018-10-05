@@ -186,7 +186,7 @@ public class MainActivity extends BaseMainActivity {
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             public void onClick(final DialogInterface dialog, final int id) {
-                                if (isMainServiceBound) {
+                                if (isMainServiceBound()) {
                                     requestServiceStop();
                                 } else {
                                     Toast.makeText(getApplicationContext(),
@@ -202,11 +202,11 @@ public class MainActivity extends BaseMainActivity {
                 builder.create().show();
 
             } else if (id == actionButton.getId()) {
-                if (isMainServiceBound) {
-                    if (mainService.getServiceState().isWebServerStarted()) {
-                        mainService.getController().stop();
+                if (isMainServiceBound()) {
+                    if (getMainService().getServiceState().isWebServerStarted()) {
+                        getMainService().getController().stop();
                     } else {
-                        mainService.getController().start();
+                        getMainService().getController().start();
                     }
                 } else {
                     Toast.makeText(getApplicationContext(),

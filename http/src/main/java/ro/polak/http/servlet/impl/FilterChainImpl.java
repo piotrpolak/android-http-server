@@ -8,7 +8,7 @@
 package ro.polak.http.servlet.impl;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
+import java.util.Deque;
 
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.Filter;
@@ -24,9 +24,9 @@ import ro.polak.http.servlet.HttpServletResponse;
  */
 public class FilterChainImpl implements FilterChain {
 
-    private ArrayDeque<Filter> filters;
+    private Deque<Filter> filters;
 
-    public FilterChainImpl(final ArrayDeque<Filter> filters) {
+    public FilterChainImpl(final Deque<Filter> filters) {
         this.filters = filters;
     }
 

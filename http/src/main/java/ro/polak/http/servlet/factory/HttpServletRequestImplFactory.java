@@ -68,6 +68,10 @@ public class HttpServletRequestImplFactory {
     private static final String HEADERS_END_DELIMINATOR = "\n\r\n";
     private static final int MINUMUM_HEADER_LINE_LENGTH = 3;
     private static final String MULTIPART_FORM_DATA_HEADER_START = "multipart/form-data";
+    private static final String DEFAULT_SERVLET_CONTEXT_PATH = "/";
+    private static final char NEWLINE = '\n';
+    private static final String HTTP_1_0 = "HTTP/1.0";
+    private static final String HTTP_1_1 = "HTTP/1.1";
 
     private final Parser<Headers> headersParser;
     private final Parser<Map<String, String>> queryStringParser;
@@ -142,22 +146,7 @@ public class HttpServletRequestImplFactory {
             throw new UnsupportedProtocolException("Protocol " + status.getProtocol() + " is not supported");
         }
 
-        builder.withInputStream(in);
         assignSocketMetadata(socket, builder);
-        builder.withStatus(status);
-        builder.withPathTranslated(status.getUri()); // TODO There is no way to make it work under Android
-
-        // This will be overwritten when running servlet
-        builder.withServletContext(new ServletContextImpl("/",
-                Collections.<ServletMapping>emptyList(),
-                Collections.<FilterMapping>emptyList(),
-                Collections.<String, Object>emptyMap(),
-                null,
-                null
-        ));
-        builder.withPathInfo("");
-        builder.withRemoteUser(null);
-        builder.withPrincipal(null);
 
         try {
             builder.withGetParameters(queryStringParser.parse(status.getQueryString()));
@@ -165,22 +154,17 @@ public class HttpServletRequestImplFactory {
             // This should never happen
         }
 
-        Headers headers = new Headers();
-        String headersString = getHeaders(in);
-        if (headersString.length() > MINUMUM_HEADER_LINE_LENGTH) {
-            try {
-                headers = headersParser.parse(headersString);
-            } catch (MalformedInputException e) {
-                throw new ProtocolException("Malformed request headers");
-            }
-        } else {
-            // TODO Use a dedicated builder to avoid uninitialized request properties
-            // TODO Write a test that sends a request containing status line only
-            headers = new Headers();
-        }
+        Headers headers = computeHeaders(in);
 
-        builder.withHeaders(headers);
-        builder.withCookies(getCookies(headers));
+        builder.withServletContext(getImplicitServletContext())
+                .withInputStream(in)
+                .withStatus(status)
+                .withPathTranslated(status.getUri()) // TODO There is no way to make it work under Android
+                .withPathInfo("")
+                .withRemoteUser(null)
+                .withPrincipal(null)
+                .withHeaders(headers)
+                .withCookies(getCookies(headers));
 
         if (status.getMethod().equalsIgnoreCase(HttpRequestImpl.METHOD_POST)) {
             try {
@@ -193,8 +177,44 @@ public class HttpServletRequestImplFactory {
         return builder.build();
     }
 
+    /**
+     * Implicit servlet context will be overwritten when running a servlet.
+     *
+     * @return
+     */
+    private ServletContextImpl getImplicitServletContext() {
+        return new ServletContextImpl(DEFAULT_SERVLET_CONTEXT_PATH,
+                Collections.<ServletMapping>emptyList(),
+                Collections.<FilterMapping>emptyList(),
+                Collections.<String, Object>emptyMap(),
+                null,
+                null
+        );
+    }
+
+    /**
+     * Reads and computes headers.
+     *
+     * @param in
+     * @return
+     * @throws IOException
+     */
+    private Headers computeHeaders(final InputStream in) throws IOException {
+        String headersString = getHeadersString(in);
+        if (headersString.length() > MINUMUM_HEADER_LINE_LENGTH) {
+            try {
+                return headersParser.parse(headersString);
+            } catch (MalformedInputException e) {
+                throw new ProtocolException("Malformed request headers");
+            }
+        }
+
+        // TODO Write a test that sends a request containing status line only
+        return new Headers();
+    }
+
     private boolean isValidProtocol(final String protocol) {
-        return protocol.equalsIgnoreCase("HTTP/1.0") || protocol.equalsIgnoreCase("HTTP/1.1");
+        return protocol.equalsIgnoreCase(HTTP_1_0) || protocol.equalsIgnoreCase(HTTP_1_1);
     }
 
     private void assignSocketMetadata(final Socket socket, final HttpRequestImpl.HttpRequestImplBuilder builder) {
@@ -202,8 +222,8 @@ public class HttpServletRequestImplFactory {
                 .withScheme(DEFAULT_SCHEME)
                 .withRemoteAddr(socket.getInetAddress().getHostAddress())
                 .withRemotePort(((InetSocketAddress) socket.getRemoteSocketAddress()).getPort())
-                .withRemoteHost(((InetSocketAddress) socket.getRemoteSocketAddress())
-                        .getHostName()).withLocalAddr(socket.getLocalAddress().getHostAddress())
+                .withRemoteHost(((InetSocketAddress) socket.getRemoteSocketAddress()).getHostName())
+                .withLocalAddr(socket.getLocalAddress().getHostAddress())
                 .withLocalPort(socket.getLocalPort()).withServerPort(socket.getLocalPort())
                 .withLocalName(socket.getLocalAddress().getHostName())
                 .withServerName(socket.getInetAddress().getHostName());
@@ -230,7 +250,7 @@ public class HttpServletRequestImplFactory {
 
             ++length;
 
-            if (buffer[0] == '\n') {
+            if (buffer[0] == NEWLINE) {
                 break;
             }
             statusLine.append((char) buffer[0]);
@@ -261,7 +281,7 @@ public class HttpServletRequestImplFactory {
         return statusLine.toString();
     }
 
-    private String getHeaders(final InputStream in) throws IOException {
+    private String getHeadersString(final InputStream in) throws IOException {
         StringBuilder headersString = new StringBuilder();
         byte[] buffer;
         buffer = new byte[1];

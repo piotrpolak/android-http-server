@@ -15,7 +15,7 @@ import java.io.File;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class UploadedFile {
+public final class UploadedFile {
 
     private final String postFieldName;
     private final String fileName;

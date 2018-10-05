@@ -19,5 +19,13 @@ import ro.polak.http.exception.ServletException;
  */
 public interface FilterChain {
 
+    /**
+     * Filters use the FilterChain to invoke the next filter in the chain.
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws ServletException
+     */
     void doFilter(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException;
 }

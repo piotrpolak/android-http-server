@@ -17,7 +17,7 @@ import java.util.Date;
 public class DateProvider {
 
     /**
-     * Returns current date.
+     * Returns the current date.
      *
      * @return
      */

@@ -14,7 +14,7 @@ import java.util.Locale;
 import static java.util.TimeZone.getTimeZone;
 
 /**
- * FileUtilities.
+ * Thread safe date utilities.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200804
@@ -27,7 +27,7 @@ public final class DateUtilities {
     }
 
     /**
-     * Formats date into the RFC 822 GMT format.
+     * Formats date into the RFC 822 GMT format. Thread safe.
      *
      * @param date
      * @return

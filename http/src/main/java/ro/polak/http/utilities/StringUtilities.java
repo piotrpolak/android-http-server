@@ -47,7 +47,7 @@ public final class StringUtilities {
     public static String generateRandom(final int length) {
         StringBuilder randomString = new StringBuilder(length);
 
-        // ThreadLocalRandom requires API min 21
+        // ThreadLocalRandom requires Android API min 21
         Random random = new Random();
 
         // ASCI 97 - 122

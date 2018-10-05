@@ -59,11 +59,6 @@ One of the design goals was to keep the resulting artifact **small in size** and
 in terms of dependency on other libraries - **it does not require any third party component**,
 all HTTP protocol implementation is based on parsing data read from raw TCP sockets.
 
-All application code is targeted to Java 7. It also compiles for Android SDK versions < 19
-(try with resources is not supported, use
-[IOUtilities.closeSilently(closeable)](../../tree/master/http/src/main/java/ro/polak/http/utilities/IOUtilities.java)
-in a `finally` block as an alternative when closing streams).
-
 Once the [ro.polak.http](../../tree/master/http/src/main/java/) package is mature enough it will be
 released as an independent artifact.
 
@@ -75,6 +70,16 @@ The subproject can be tested in the following way:
 
 The original package code has been refactored and covered with unit and integration tests.
 Code coverage should be kept above 90%.
+
+### Android SDK compatibility issues
+
+All application code is targeted to Java 7. It also compiles for Android SDK versions < 19
+(try with resources is not supported, use
+[IOUtilities.closeSilently(closeable)](../../tree/master/http/src/main/java/ro/polak/http/utilities/IOUtilities.java)
+in a `finally` block as an alternative when closing streams).
+
+Another compatibility constraint is that `Random` instead of `ThreadLocalRandom` is used for
+generating random sequences in [StringUtilities](../../tree/master/http/src/main/java/ro/polak/http/utilities/StringUtilities.java)
 
 ## Mutation testing
 

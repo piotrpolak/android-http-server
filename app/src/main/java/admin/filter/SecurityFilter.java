@@ -56,7 +56,13 @@ public class SecurityFilter implements Filter {
     }
 
     private String getLoginUri(final HttpServletRequest request) {
-        return "/Login?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI()
-                + (!"".equals(request.getQueryString()) ? "?" + request.getQueryString() : "");
+        String uri = "/Login?" + RELOCATE_PARAM_NAME + "=" + request.getRequestURI();
+
+
+        if (!"".equals(request.getQueryString())) {
+            uri += "?" + request.getQueryString();
+        }
+
+        return uri;
     }
 }

@@ -157,7 +157,7 @@ public class ServletContextImpl implements ServletContext {
      * @return
      */
     public HttpSessionImpl createNewSession() {
-        HttpSessionImpl session = new HttpSessionImpl(StringUtilities.generateRandom());
+        HttpSessionImpl session = new HttpSessionImpl(StringUtilities.generateRandom(), System.currentTimeMillis());
         session.setServletContext(this);
         LOGGER.log(Level.FINE, "Created a new session {0}",
                 new Object[]{session.getId()});

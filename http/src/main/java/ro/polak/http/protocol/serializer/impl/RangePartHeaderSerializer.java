@@ -25,6 +25,12 @@ public class RangePartHeaderSerializer implements Serializer<RangePartHeader> {
     private static final String NEW_LINE = "\r\n";
     private static final String DASH_DASH = "--";
 
+    /*
+     * It stands for 0-0 length from
+     * --BBBOOUUNNNDDAARRYY\r\nContent-Type: application/pdf\r\nContent-Range: bytes 0-0/0\r\n\r\n
+     */
+    private static final int RANGE_DIGITS_LENGTH = 3;
+
     /**
      * {@inheritDoc}
      */
@@ -79,7 +85,7 @@ public class RangePartHeaderSerializer implements Serializer<RangePartHeader> {
         }
 
         String partHeader = serialize(new RangePartHeader(new Range(0L, 0L), boundary, contentType, 0L));
-        int partHeaderWithoutDigits = partHeader.length() - 3;
+        int partHeaderWithoutDigits = partHeader.length() - RANGE_DIGITS_LENGTH;
 
         long partHeadersLength = 0;
 

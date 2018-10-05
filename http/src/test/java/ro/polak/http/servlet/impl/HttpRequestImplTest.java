@@ -234,7 +234,7 @@ public class HttpRequestImplTest {
         cookies.put(HttpSessionImpl.COOKIE_NAME, sessionCookie);
         httpRequestImpl.setCookies(cookies);
         httpRequestImpl.setServletContext(servletContext);
-        when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionImpl("sessionId"));
+        when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionImpl("sessionId", System.currentTimeMillis()));
         assertThat(httpRequestImpl.getSession(), is(instanceOf(HttpSessionImpl.class)));
     }
 
@@ -245,7 +245,7 @@ public class HttpRequestImplTest {
         cookies.put(HttpSessionImpl.COOKIE_NAME, sessionCookie);
         httpRequestImpl.setCookies(cookies);
         httpRequestImpl.setServletContext(servletContext);
-        when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionImpl("sessionId"));
+        when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionImpl("sessionId", System.currentTimeMillis()));
         assertThat(httpRequestImpl.getSession(), is(instanceOf(HttpSessionImpl.class)));
         assertThat(httpRequestImpl.getSession().equals(httpRequestImpl.getSession()), is(true));
     }

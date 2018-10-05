@@ -38,6 +38,7 @@ import ro.polak.http.utilities.DateProvider;
 public final class ServiceContainer {
 
     private static final int MAX_THREADS_MULTIPLIER = 3;
+    private static final int DEFAULT_TIME_UNITS = 20;
     private HttpServletRequestImplFactory requestWrapperFactory;
     private HttpServletResponseImplFactory responseFactory;
     private ThreadPoolExecutor threadPoolExecutor;
@@ -66,7 +67,7 @@ public final class ServiceContainer {
         );
 
         threadPoolExecutor = new ThreadPoolExecutor(1, serverConfig.getMaxServerThreads(),
-                20, TimeUnit.SECONDS,
+                DEFAULT_TIME_UNITS, TimeUnit.SECONDS,
                 new ArrayBlockingQueue<Runnable>(serverConfig.getMaxServerThreads() * MAX_THREADS_MULTIPLIER),
                 Executors.defaultThreadFactory(),
                 new ServiceUnavailableHandler(responseFactory)

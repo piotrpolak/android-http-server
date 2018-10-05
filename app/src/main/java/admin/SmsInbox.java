@@ -8,6 +8,8 @@
 package admin;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,11 +40,19 @@ public class SmsInbox extends HttpServlet {
         SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
 
         String threadId = request.getParameter(THREAD_ID_PARAM_NAME);
-        String whereString = (threadId != null) ? THREAD_ID_PARAM_NAME + "=" + threadId : null;
+        String whereString = getWhereString(threadId);
         List<SmsBox.Message> messages = smsBox.readMessages(whereString);
 
         HTMLDocument doc = renderDocument(threadId, whereString, getThreadMessageTree(messages));
         response.getWriter().print(doc.toString());
+    }
+
+    @Nullable
+    private String getWhereString(final String threadId) {
+        if (threadId != null) {
+            return THREAD_ID_PARAM_NAME + "=" + threadId;
+        }
+        return null;
     }
 
     private Map<Integer, List<SmsBox.Message>> getThreadMessageTree(final List<SmsBox.Message> messages) {
@@ -79,7 +89,7 @@ public class SmsInbox extends HttpServlet {
                 doc.writeln("<div class=\"panel panel-default\">");
                 doc.writeln("<div class=\"panel-heading\">" + message.getAddress() + "</div>");
                 doc.writeln("<div class=\"panel-body "
-                        + (message.isIncoming() ? "text-left" : "text-right bg-success") + "\">");
+                        + getMessageCssClass(message) + "\">");
                 doc.writeln("<p><b>" + simpleDateFormat.format(message.getDate()) + "</b></p>");
                 doc.writeln("<p>" + message.getBody() + "</p>");
                 doc.writeln("<p><a class=\"btn btn-primary\" href=\"/admin/SmsInbox?thread_id="
@@ -109,7 +119,7 @@ public class SmsInbox extends HttpServlet {
                     }
                     useBr = true;
 
-                    doc.writeln("<div class=\"" + (message.isIncoming() ? "text-left" : "text-right bg-success") + "\">");
+                    doc.writeln("<div class=\"" + getMessageCssClass(message) + "\">");
                     doc.writeln("<p><b>" + simpleDateFormat.format(message.getDate()) + "</b></p>");
                     doc.writeln("<p>" + message.getBody() + "</p>");
                     doc.writeln("</div>");
@@ -119,5 +129,13 @@ public class SmsInbox extends HttpServlet {
             }
         }
         return doc;
+    }
+
+    @NonNull
+    private String getMessageCssClass(final SmsBox.Message message) {
+        if (message.isIncoming()) {
+            return "text-left";
+        }
+        return "text-right bg-success";
     }
 }

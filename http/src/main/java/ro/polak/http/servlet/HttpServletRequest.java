@@ -54,12 +54,13 @@ public interface HttpServletRequest extends ServletRequest {
      * Returns any extra path information associated with the URL the client sent when it made this request.
      *
      * @return
-     * @see https://stackoverflow.com/questions/4931323/whats-the-difference-between-getrequesturi-and-getpathinfo-methods-in-httpservl
+     * @see https://stackoverflow.com/q/4931323
      */
     String getPathInfo();
 
     /**
-     * Returns the login of the user making this request, if the user has been authenticated, or null if the user has not been authenticated.
+     * Returns the login of the user making this request, if the user has been authenticated.
+     * Returns null if the user has not been authenticated.
      *
      * @return
      */

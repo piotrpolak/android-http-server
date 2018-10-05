@@ -35,7 +35,7 @@ public class FileSessionStorageTest {
 
     @Test
     public void shouldPersistRestoreAndRemoveSession() throws IOException {
-        HttpSessionImpl sessionWrapper = new HttpSessionImpl(VALID_SESSION_ID);
+        HttpSessionImpl sessionWrapper = new HttpSessionImpl(VALID_SESSION_ID, System.currentTimeMillis());
         sessionWrapper.setAttribute("attributeName", "SomeValue");
         fileSessionStorage.persistSession(sessionWrapper);
 
@@ -51,7 +51,7 @@ public class FileSessionStorageTest {
 
     @Test
     public void shouldPersistSessionAndOverWriteFile() throws IOException {
-        HttpSessionImpl sessionWrapper = new HttpSessionImpl(VALID_SESSION_ID);
+        HttpSessionImpl sessionWrapper = new HttpSessionImpl(VALID_SESSION_ID, System.currentTimeMillis());
         sessionWrapper.setAttribute("attributeName", "SomeValue");
         fileSessionStorage.persistSession(sessionWrapper);
 
@@ -59,7 +59,7 @@ public class FileSessionStorageTest {
         assertThat(sessionWrapper, is(not(nullValue())));
         assertThat((String) sessionWrapper.getAttribute("attributeName"), is("SomeValue"));
 
-        HttpSessionImpl session2Wrapper = new HttpSessionImpl(VALID_SESSION_ID);
+        HttpSessionImpl session2Wrapper = new HttpSessionImpl(VALID_SESSION_ID, System.currentTimeMillis());
         session2Wrapper.setAttribute("otherName", "OtherValue");
         fileSessionStorage.persistSession(session2Wrapper);
 
@@ -76,19 +76,19 @@ public class FileSessionStorageTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldValidateSessionNameLength() throws IOException {
-        HttpSessionImpl sessionWrapper = new HttpSessionImpl("abcX8");
+        HttpSessionImpl sessionWrapper = new HttpSessionImpl("abcX8", System.currentTimeMillis());
         fileSessionStorage.persistSession(sessionWrapper);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldValidateSessionNameNull() throws IOException {
-        HttpSessionImpl sessionWrapper = new HttpSessionImpl(null);
+        HttpSessionImpl sessionWrapper = new HttpSessionImpl(null, System.currentTimeMillis());
         fileSessionStorage.persistSession(sessionWrapper);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldValidateSessionNameIllegalCharacters() throws IOException {
-        HttpSessionImpl sessionWrapper = new HttpSessionImpl(ILLEGAL_SESSION_ID);
+        HttpSessionImpl sessionWrapper = new HttpSessionImpl(ILLEGAL_SESSION_ID, System.currentTimeMillis());
         fileSessionStorage.persistSession(sessionWrapper);
     }
 
@@ -118,7 +118,7 @@ public class FileSessionStorageTest {
         new File(nonWritableDirectory).setWritable(false);
 
         FileSessionStorage fileSessionStorage = new FileSessionStorage(nonWritableDirectory);
-        HttpSessionImpl sessionWrapper = new HttpSessionImpl(VALID_SESSION_ID);
+        HttpSessionImpl sessionWrapper = new HttpSessionImpl(VALID_SESSION_ID, System.currentTimeMillis());
         sessionWrapper.setAttribute("attributeName", "SomeValue");
         fileSessionStorage.persistSession(sessionWrapper);
     }
@@ -128,7 +128,7 @@ public class FileSessionStorageTest {
         String nonExistentDirectory = "/tmp/nonexistent-" + Math.random() + "/";
         assertThat(new File(nonExistentDirectory).exists(), is(false));
         SessionStorage sessionStorage = new FileSessionStorage(nonExistentDirectory);
-        sessionStorage.persistSession(new HttpSessionImpl(VALID_SESSION_ID));
+        sessionStorage.persistSession(new HttpSessionImpl(VALID_SESSION_ID, System.currentTimeMillis()));
     }
 
 }

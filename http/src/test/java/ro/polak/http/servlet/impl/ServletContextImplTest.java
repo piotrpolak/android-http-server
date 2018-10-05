@@ -56,7 +56,7 @@ public class ServletContextImplTest {
 
     @Test
     public void shouldSetCookieAndPersistForValidSession() throws IOException {
-        HttpSessionImpl session = new HttpSessionImpl("123");
+        HttpSessionImpl session = new HttpSessionImpl("123", System.currentTimeMillis());
         servletContext.handleSession(session, response);
         verify(sessionStorage, times(1)).persistSession(session);
 
@@ -73,7 +73,7 @@ public class ServletContextImplTest {
 
     @Test
     public void shouldEraseCookieAndRemoveForInvalidatedSession() throws IOException {
-        HttpSessionImpl session = new HttpSessionImpl("123");
+        HttpSessionImpl session = new HttpSessionImpl("123", System.currentTimeMillis());
         session.invalidate();
         servletContext.handleSession(session, response);
         verify(sessionStorage, times(1)).removeSession(session);
@@ -91,7 +91,7 @@ public class ServletContextImplTest {
 
     @Test
     public void shouldReturnSessionForValidSID() throws IOException {
-        HttpSessionImpl session = new HttpSessionImpl("123");
+        HttpSessionImpl session = new HttpSessionImpl("123", System.currentTimeMillis());
         when(sessionStorage.getSession("123")).thenReturn(session);
         HttpSessionImpl sessionRead = servletContext.getSession("123");
         assertThat(sessionRead, is(not(nullValue())));
@@ -100,7 +100,7 @@ public class ServletContextImplTest {
 
     @Test
     public void shouldRemoveExpiredSession() throws IOException {
-        HttpSessionImpl session = new HttpSessionImpl("123");
+        HttpSessionImpl session = new HttpSessionImpl("123", System.currentTimeMillis());
         session.setLastAccessedTime(System.currentTimeMillis() - session.getMaxInactiveInterval() * 1000 - 1);
         when(sessionStorage.getSession("123")).thenReturn(session);
         HttpSessionImpl sessionRead = servletContext.getSession("123");

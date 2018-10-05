@@ -39,11 +39,13 @@ public class HttpSessionImpl implements HttpSession, Serializable {
 
     /**
      * @param id
+     * @param creationTime
      */
-    public HttpSessionImpl(final String id) {
+    public HttpSessionImpl(final String id, final long creationTime) {
         this.id = id;
-        attributes = new HashMap<>();
-        creationTime = lastAccessedTime = System.currentTimeMillis();
+        this.attributes = new HashMap<>();
+        this.creationTime = creationTime;
+        this.lastAccessedTime = creationTime;
     }
 
     /**

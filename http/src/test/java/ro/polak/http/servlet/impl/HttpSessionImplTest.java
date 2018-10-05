@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.util.Collections;
 
 import ro.polak.http.servlet.ServletContext;
-import ro.polak.http.servlet.impl.HttpSessionImpl;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -19,7 +18,7 @@ public class HttpSessionImplTest {
 
     @Before
     public void setUp() {
-        session = new HttpSessionImpl("123");
+        session = new HttpSessionImpl("123", System.currentTimeMillis());
         session.setAttribute("attribute", "value");
     }
 

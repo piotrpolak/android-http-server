@@ -24,7 +24,7 @@ import ro.polak.http.exception.protocol.UnsupportedProtocolException;
 import ro.polak.http.exception.protocol.UriTooLongProtocolException;
 
 /**
- * {@inheritDoc}
+ * Default implementation of HttpErrorHandlerResolver.
  */
 public class HttpErrorHandlerResolverImpl implements HttpErrorHandlerResolver {
 

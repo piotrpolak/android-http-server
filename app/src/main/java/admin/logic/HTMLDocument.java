@@ -115,8 +115,12 @@ public final class HTMLDocument {
             out.append("        <ul class=\"nav navbar-nav\">\n");
 
             for (Map.Entry<String, String> entry : menuElements.entrySet()) {
-                out.append("            <li" + (ownerClass.equals(entry.getKey()) ? " class=\"active\"" : "")
-                        + "><a href=\"/admin/" + entry.getKey() + "\">" + entry.getValue() + "</a></li>\n");
+                out.append("            <li");
+
+                if (ownerClass.equals(entry.getKey())) {
+                    out.append(" class=\"active\"");
+                }
+                out.append("><a href=\"/admin/" + entry.getKey() + "\">" + entry.getValue() + "</a></li>\n");
             }
 
             out.append("        </ul>\n");

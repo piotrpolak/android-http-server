@@ -70,7 +70,7 @@ public class ServletResourceProviderTest {
 
     @Test
     public void shouldHandleSessionOnTerminateIfSessionExists() throws IOException {
-        when(request.getSession(false)).thenReturn(new HttpSessionImpl("1"));
+        when(request.getSession(false)).thenReturn(new HttpSessionImpl("1", System.currentTimeMillis()));
         servletResourceProvider.load("/", request, response);
         verify(servletContext, times(1)).handleSession(any(HttpSessionImpl.class),
                 any(HttpResponseImpl.class));

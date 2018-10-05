@@ -21,6 +21,17 @@ import ro.polak.http.Headers;
  */
 public interface HttpServletRequest extends ServletRequest {
 
+    String METHOD_CONNECT = "CONNECT";
+    String METHOD_DELETE = "DELETE";
+    String METHOD_GET = "GET";
+    String METHOD_HEAD = "HEAD";
+    String METHOD_OPTIONS = "OPTIONS";
+    String METHOD_PURGE = "PURGE";
+    String METHOD_PATCH = "PATCH";
+    String METHOD_POST = "POST";
+    String METHOD_PUT = "PUT";
+    String METHOD_TRACE = "TRACE";
+
     /**
      * Returns the name of the authentication scheme used to protect the servlet.
      *

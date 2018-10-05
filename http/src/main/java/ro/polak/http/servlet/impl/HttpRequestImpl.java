@@ -46,16 +46,6 @@ import static java.util.TimeZone.getTimeZone;
 public class HttpRequestImpl implements HttpServletRequest {
 // CHECKSTYLE.ON: FinalClassCheck
 
-    public static final String METHOD_CONNECT = "CONNECT";
-    public static final String METHOD_DELETE = "DELETE";
-    public static final String METHOD_GET = "GET";
-    public static final String METHOD_HEAD = "HEAD";
-    public static final String METHOD_OPTIONS = "OPTIONS";
-    public static final String METHOD_PURGE = "PURGE";
-    public static final String METHOD_PATCH = "PATCH";
-    public static final String METHOD_POST = "POST";
-    public static final String METHOD_PUT = "PUT";
-    public static final String METHOD_TRACE = "TRACE";
     private static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
     private static final int HTTP_PORT = 80;
     private static final int HTTPS_PORT = 433;

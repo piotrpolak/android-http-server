@@ -17,6 +17,7 @@ import java.util.Map;
 import ro.polak.http.Headers;
 import ro.polak.http.RequestStatus;
 import ro.polak.http.servlet.Cookie;
+import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.UploadedFile;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -43,7 +44,7 @@ public class HttpRequestImplTest {
     @Before
     public void setUp() {
         requestStatus = new RequestStatus();
-        requestStatus.setMethod(HttpRequestImpl.METHOD_GET);
+        requestStatus.setMethod(HttpServletRequest.METHOD_GET);
         requestStatus.setQueryString("a=1&b=2");
         requestStatus.setUri("/someuri");
         requestStatus.setProtocol("HTTP/1.1");
@@ -93,7 +94,7 @@ public class HttpRequestImplTest {
 
     @Test
     public void shouldReturnCorrectValuesGetters() {
-        requestStatus.setMethod(HttpRequestImpl.METHOD_GET);
+        requestStatus.setMethod(HttpServletRequest.METHOD_GET);
         httpRequestImpl.setAttribute("name", "value");
         assertThat((List<String>) (Collections.list(httpRequestImpl.getAttributeNames())), hasSize(1));
         assertThat((List<String>) (Collections.list(httpRequestImpl.getAttributeNames())), hasItems("name"));
@@ -135,7 +136,7 @@ public class HttpRequestImplTest {
 
     @Test
     public void shouldReturnGetRequestParametersMapOnGetMethod() {
-        requestStatus.setMethod(HttpRequestImpl.METHOD_GET);
+        requestStatus.setMethod(HttpServletRequest.METHOD_GET);
         assertThat(httpRequestImpl.getParameter("getKey"), is("getValue"));
         assertThat(((Map<String, String>) httpRequestImpl.getParameterMap()), hasKey("getKey"));
         assertThat(((Map<String, String>) httpRequestImpl.getParameterMap()), not(hasKey("postKey")));
@@ -146,7 +147,7 @@ public class HttpRequestImplTest {
 
     @Test
     public void shouldReturnPostRequestParametersMapOnPostMethod() {
-        requestStatus.setMethod(HttpRequestImpl.METHOD_POST);
+        requestStatus.setMethod(HttpServletRequest.METHOD_POST);
         assertThat(httpRequestImpl.getPostParameter("postKey"), is("postValue"));
         assertThat(((Map<String, String>) httpRequestImpl.getParameterMap()), hasKey("postKey"));
         assertThat(((Map<String, String>) httpRequestImpl.getParameterMap()), not(hasKey("getKey")));
@@ -157,7 +158,7 @@ public class HttpRequestImplTest {
 
     @Test
     public void shouldReturnPostRequestParametersMapOnPutMethod() {
-        requestStatus.setMethod(HttpRequestImpl.METHOD_PUT);
+        requestStatus.setMethod(HttpServletRequest.METHOD_PUT);
         assertThat(httpRequestImpl.getPostParameter("postKey"), is("postValue"));
         assertThat(((Map<String, String>) httpRequestImpl.getParameterMap()), hasKey("postKey"));
         assertThat(((Map<String, String>) httpRequestImpl.getParameterMap()), not(hasKey("getKey")));

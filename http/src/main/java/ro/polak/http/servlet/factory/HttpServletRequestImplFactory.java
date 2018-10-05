@@ -35,6 +35,7 @@ import ro.polak.http.exception.protocol.UriTooLongProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.servlet.Cookie;
+import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.impl.HttpRequestImpl;
 import ro.polak.http.servlet.impl.ServletContextImpl;
 
@@ -166,7 +167,7 @@ public class HttpServletRequestImplFactory {
                 .withHeaders(headers)
                 .withCookies(getCookies(headers));
 
-        if (status.getMethod().equalsIgnoreCase(HttpRequestImpl.METHOD_POST)) {
+        if (status.getMethod().equalsIgnoreCase(HttpServletRequest.METHOD_POST)) {
             try {
                 handlePostRequest(builder, in, headers);
             } catch (MalformedInputException e) {

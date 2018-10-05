@@ -21,7 +21,7 @@ import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.impl.MimeTypeMappingImpl;
 import ro.polak.http.resource.provider.ResourceProvider;
-import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
@@ -37,9 +37,9 @@ public class ServerConfigImpl implements ServerConfig {
 
 
     private static final List<String> SUPPORTED_METHODS = Arrays.asList(
-            HttpRequestImpl.METHOD_GET,
-            HttpRequestImpl.METHOD_POST,
-            HttpRequestImpl.METHOD_HEAD
+            HttpServletRequest.METHOD_GET,
+            HttpServletRequest.METHOD_POST,
+            HttpServletRequest.METHOD_HEAD
     );
 
     private static final String ATTRIBUTE_PORT = "server.port";

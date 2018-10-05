@@ -16,14 +16,14 @@ import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.protocol.serializer.Serializer;
-import ro.polak.http.servlet.impl.HttpRequestImpl;
-import ro.polak.http.servlet.impl.HttpResponseImpl;
-import ro.polak.http.servlet.impl.HttpSessionImpl;
 import ro.polak.http.servlet.Servlet;
 import ro.polak.http.servlet.ServletConfig;
 import ro.polak.http.servlet.ServletContainer;
-import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.servlet.helper.StreamHelper;
+import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpSessionImpl;
+import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.servlet.loader.SampleServlet;
 
 import static org.mockito.Matchers.any;

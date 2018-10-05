@@ -87,7 +87,7 @@ public class FileResourceProvider implements ResourceProvider {
         File file = getFile(path);
 
         // A server MUST ignore a Range header field received with a request method other than GET.
-        boolean isGetRequest = request.getMethod().equals(HttpRequestImpl.METHOD_GET);
+        boolean isGetRequest = request.getMethod().equals(HttpServletRequest.METHOD_GET);
         boolean isPartialRequest = isGetRequest && request.getHeaders().containsHeader(Headers.HEADER_RANGE);
 
         if (isPartialRequest) {
@@ -119,7 +119,7 @@ public class FileResourceProvider implements ResourceProvider {
         response.getHeaders().setHeader(Headers.HEADER_ACCEPT_RANGES, "bytes");
         response.flushHeaders();
 
-        if (!request.getMethod().equals(HttpRequestImpl.METHOD_HEAD)) {
+        if (!request.getMethod().equals(HttpServletRequest.METHOD_HEAD)) {
             InputStream fileInputStream = new FileInputStream(file);
             try {
                 response.serveStream(fileInputStream);

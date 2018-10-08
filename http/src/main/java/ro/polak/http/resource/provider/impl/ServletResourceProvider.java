@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -53,6 +54,8 @@ import ro.polak.http.servlet.impl.FilterChainImpl;
 public class ServletResourceProvider implements ResourceProvider {
 
     private static final Logger LOGGER = Logger.getLogger(ServletResourceProvider.class.getName());
+    private static final String DEFAULT_RESPONSE_CONTENT_TYPE = "text/html";
+    private static final String HEADER_VALUE_NO_CACHE = "no-cache";
 
     private final ServletContainer servletContainer;
     private final List<ServletContextImpl> servletContexts;
@@ -125,8 +128,8 @@ public class ServletResourceProvider implements ResourceProvider {
     private FilterChainImpl getFilterChain(final String path, final ServletContextImpl servletContext, final Servlet servlet)
             throws FilterInitializationException, ServletException {
 
-        ArrayDeque<Filter> arrayDeque = new ArrayDeque<>(getFilterMappingsForPath(path, servletContext));
-        arrayDeque.add(new Filter() {
+        Deque<Filter> deque = new ArrayDeque<>(getFilterMappingsForPath(path, servletContext));
+        deque.add(new Filter() {
             @Override
             public void init(final FilterConfig filterConfig) {
                 // Do nothing
@@ -139,7 +142,7 @@ public class ServletResourceProvider implements ResourceProvider {
                 servlet.service(request, response);
             }
         });
-        return new FilterChainImpl(arrayDeque);
+        return new FilterChainImpl(deque);
     }
 
     private List<Filter> getFilterMappingsForPath(final String path, final ServletContextImpl servletContext)
@@ -176,11 +179,11 @@ public class ServletResourceProvider implements ResourceProvider {
 
         if (!response.isCommitted()) {
             if (response.getContentType() == null) {
-                response.setContentType("text/html");
+                response.setContentType(DEFAULT_RESPONSE_CONTENT_TYPE);
             }
 
-            response.getHeaders().setHeader(Headers.HEADER_CACHE_CONTROL, "no-cache");
-            response.getHeaders().setHeader(Headers.HEADER_PRAGMA, "no-cache");
+            response.getHeaders().setHeader(Headers.HEADER_CACHE_CONTROL, HEADER_VALUE_NO_CACHE);
+            response.getHeaders().setHeader(Headers.HEADER_PRAGMA, HEADER_VALUE_NO_CACHE);
         }
 
         response.flush();

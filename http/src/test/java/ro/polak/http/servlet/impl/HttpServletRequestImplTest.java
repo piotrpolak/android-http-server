@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 public class HttpServletRequestImplTest {
 
     private HttpServletRequestImpl httpServletRequestImpl;
-    private HttpServletRequestImpl.HttpRequestImplBuilder builder;
+    private HttpServletRequestImpl.Builder builder;
     private RequestStatus requestStatus;
     private InputStream inputStream;
     private ServletContextImpl servletContext;

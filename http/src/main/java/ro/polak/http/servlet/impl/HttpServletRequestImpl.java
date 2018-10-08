@@ -651,17 +651,20 @@ public class HttpServletRequestImpl implements HttpServletRequest {
         return host;
     }
 
-    public static HttpRequestImplBuilder createNewBuilder() {
-        return new HttpRequestImplBuilder();
+    public static Builder createNewBuilder() {
+        return new Builder();
     }
 
     /**
      * Builder.
      */
-    public static final class HttpRequestImplBuilder {
+    public static final class Builder {
         private HttpServletRequestImpl internal;
 
-        private HttpRequestImplBuilder() {
+        /**
+         * The constructor is private so that it can only be used trough HttpServletRequestImpl#createNewBuilder().
+         */
+        private Builder() {
             internal = new HttpServletRequestImpl();
         }
 
@@ -670,117 +673,117 @@ public class HttpServletRequestImpl implements HttpServletRequest {
          *
          * @param servletContext
          */
-        public HttpRequestImplBuilder withServletContext(final ServletContextImpl servletContext) {
+        public Builder withServletContext(final ServletContextImpl servletContext) {
             internal.servletContext = servletContext;
             return this;
         }
 
-        public HttpRequestImplBuilder withRemoteAddr(final String remoteAddr) {
+        public Builder withRemoteAddr(final String remoteAddr) {
             internal.remoteAddr = remoteAddr;
             return this;
         }
 
-        public HttpRequestImplBuilder withHeaders(final Headers headers) {
+        public Builder withHeaders(final Headers headers) {
             internal.headers = headers;
             return this;
         }
 
-        public HttpRequestImplBuilder withUploadedFiles(final Collection<UploadedFile> uploadedFiles) {
+        public Builder withUploadedFiles(final Collection<UploadedFile> uploadedFiles) {
             internal.uploadedFiles = uploadedFiles;
             return this;
         }
 
-        public HttpRequestImplBuilder withGetParameters(final Map<String, String> getParameters) {
+        public Builder withGetParameters(final Map<String, String> getParameters) {
             internal.getParameters = getParameters;
             return this;
         }
 
-        public HttpRequestImplBuilder withPostParameters(final Map<String, String> postParameters) {
+        public Builder withPostParameters(final Map<String, String> postParameters) {
             internal.postParameters = postParameters;
             return this;
         }
 
-        public HttpRequestImplBuilder withStatus(final RequestStatus status) {
+        public Builder withStatus(final RequestStatus status) {
             internal.status = status;
             return this;
         }
 
-        public HttpRequestImplBuilder withCookies(final Map<String, Cookie> cookies) {
+        public Builder withCookies(final Map<String, Cookie> cookies) {
             internal.cookies = cookies;
             return this;
         }
 
-        public HttpRequestImplBuilder withInputStream(final InputStream in) {
+        public Builder withInputStream(final InputStream in) {
             internal.in = in;
             return this;
         }
 
-        public HttpRequestImplBuilder withLocalPort(final int localPort) {
+        public Builder withLocalPort(final int localPort) {
             internal.localPort = localPort;
             return this;
         }
 
-        public HttpRequestImplBuilder withRemoteHost(final String remoteHost) {
+        public Builder withRemoteHost(final String remoteHost) {
             internal.remoteHost = remoteHost;
             return this;
         }
 
-        public HttpRequestImplBuilder withRemotePort(final int remotePort) {
+        public Builder withRemotePort(final int remotePort) {
             internal.remotePort = remotePort;
             return this;
         }
 
-        public HttpRequestImplBuilder withLocalAddr(final String localAddr) {
+        public Builder withLocalAddr(final String localAddr) {
             internal.localAddr = localAddr;
             return this;
         }
 
-        public HttpRequestImplBuilder withServerPort(final int serverPort) {
+        public Builder withServerPort(final int serverPort) {
             internal.serverPort = serverPort;
             return this;
         }
 
-        public HttpRequestImplBuilder withLocalName(final String localName) {
+        public Builder withLocalName(final String localName) {
             internal.localName = localName;
             return this;
         }
 
-        public HttpRequestImplBuilder withServerName(final String serverName) {
+        public Builder withServerName(final String serverName) {
             internal.serverName = serverName;
             return this;
         }
 
-        public HttpRequestImplBuilder withScheme(final String scheme) {
+        public Builder withScheme(final String scheme) {
             internal.scheme = scheme;
             return this;
         }
 
-        public HttpRequestImplBuilder withSecure(final boolean secure) {
+        public Builder withSecure(final boolean secure) {
             internal.isSecure = secure;
             return this;
         }
 
-        public HttpRequestImplBuilder withMultipart(final boolean multipart) {
+        public Builder withMultipart(final boolean multipart) {
             internal.isMultipart = multipart;
             return this;
         }
 
-        public HttpRequestImplBuilder withPathTranslated(final String pathTranslated) {
+        public Builder withPathTranslated(final String pathTranslated) {
             internal.pathTranslated = pathTranslated;
             return this;
         }
 
-        public HttpRequestImplBuilder withPathInfo(final String pathInfo) {
+        public Builder withPathInfo(final String pathInfo) {
             internal.pathInfo = pathInfo;
             return this;
         }
 
-        public HttpRequestImplBuilder withRemoteUser(final String remoteUser) {
+        public Builder withRemoteUser(final String remoteUser) {
             internal.remoteUser = remoteUser;
             return this;
         }
 
-        public HttpRequestImplBuilder withPrincipal(final Principal principal) {
+        public Builder withPrincipal(final Principal principal) {
             internal.principal = principal;
             return this;
         }

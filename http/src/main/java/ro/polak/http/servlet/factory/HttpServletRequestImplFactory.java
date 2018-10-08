@@ -125,7 +125,7 @@ public class HttpServletRequestImplFactory {
     public HttpServletRequestImpl createFromSocket(final Socket socket)
             throws IOException, ProtocolException {
 
-        HttpServletRequestImpl.HttpRequestImplBuilder builder = HttpServletRequestImpl.createNewBuilder();
+        HttpServletRequestImpl.Builder builder = HttpServletRequestImpl.createNewBuilder();
 
         InputStream in = socket.getInputStream();
         // The order matters
@@ -218,7 +218,7 @@ public class HttpServletRequestImplFactory {
         return protocol.equalsIgnoreCase(HTTP_1_0) || protocol.equalsIgnoreCase(HTTP_1_1);
     }
 
-    private void assignSocketMetadata(final Socket socket, final HttpServletRequestImpl.HttpRequestImplBuilder builder) {
+    private void assignSocketMetadata(final Socket socket, final HttpServletRequestImpl.Builder builder) {
         builder.withSecure(false)
                 .withScheme(DEFAULT_SCHEME)
                 .withRemoteAddr(socket.getInetAddress().getHostAddress())
@@ -307,7 +307,7 @@ public class HttpServletRequestImplFactory {
         return headersString.substring(headersString.length() - headersEndSymbolLength, headersString.length());
     }
 
-    private void handlePostRequest(final HttpServletRequestImpl.HttpRequestImplBuilder builder,
+    private void handlePostRequest(final HttpServletRequestImpl.Builder builder,
                                    final InputStream in,
                                    final Headers headers)
             throws IOException, MalformedInputException {
@@ -346,7 +346,7 @@ public class HttpServletRequestImplFactory {
                 .startsWith(MULTIPART_FORM_DATA_HEADER_START);
     }
 
-    private void handlePostPlainRequest(final HttpServletRequestImpl.HttpRequestImplBuilder builder,
+    private void handlePostPlainRequest(final HttpServletRequestImpl.Builder builder,
                                         final InputStream in,
                                         final int postLength)
             throws IOException, MalformedInputException {
@@ -363,7 +363,7 @@ public class HttpServletRequestImplFactory {
         builder.withPostParameters(queryStringParser.parse(postLine.toString()));
     }
 
-    private void handlePostMultipartRequest(final HttpServletRequestImpl.HttpRequestImplBuilder builder,
+    private void handlePostMultipartRequest(final HttpServletRequestImpl.Builder builder,
                                             final Headers headers,
                                             final InputStream in,
                                             final int postLength)

@@ -65,7 +65,7 @@ public interface HttpServletRequest extends ServletRequest {
      * Returns any extra path information associated with the URL the client sent when it made this request.
      *
      * @return
-     * @see https://stackoverflow.com/q/4931323
+     * @see <a href="https://stackoverflow.com/q/4931323">Path info clarification</a>
      */
     String getPathInfo();
 

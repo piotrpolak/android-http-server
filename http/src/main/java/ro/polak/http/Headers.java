@@ -15,7 +15,7 @@ import java.util.TreeMap;
  * HTTP headers representation.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @see https://tools.ietf.org/html/rfc2616#section-4.2
+ * @see <a href="https://tools.ietf.org/html/rfc2616#section-4.2">Headers documentation</a>
  * @since 200802
  */
 public class Headers {

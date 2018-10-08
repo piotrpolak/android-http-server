@@ -13,7 +13,7 @@ import java.io.OutputStream;
  * Allows flushing buffer in chunks.
  *
  * @author Piotr Polak piotr [at] polak [dot] ro
- * @see https://en.wikipedia.org/wiki/Chunked_transfer_encoding
+ * @see <a href="https://en.wikipedia.org/wiki/Chunked_transfer_encoding">Chunked transfer encoding</a>
  * @since 201010
  */
 public class ChunkedPrintWriter extends ServletPrintWriter {

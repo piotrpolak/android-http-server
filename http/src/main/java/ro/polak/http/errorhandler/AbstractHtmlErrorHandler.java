@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
@@ -73,16 +73,16 @@ public abstract class AbstractHtmlErrorHandler extends AbstractPlainTextHttpErro
         String msg = doc.toString();
 
         response.getWriter().write(msg);
-        ((HttpResponseImpl) response).flush();
+        ((HttpServletResponseImpl) response).flush();
     }
 
     private void serveFile(final HttpServletResponse response, final File file) throws IOException {
         response.setContentLength(file.length());
-        ((HttpResponseImpl) response).flushHeaders();
+        ((HttpServletResponseImpl) response).flushHeaders();
         InputStream inputStream = new FileInputStream(file);
         try {
-            ((HttpResponseImpl) response).serveStream(inputStream);
-            ((HttpResponseImpl) response).flush();
+            ((HttpServletResponseImpl) response).serveStream(inputStream);
+            ((HttpServletResponseImpl) response).flush();
         } finally {
             IOUtilities.closeSilently(inputStream);
         }

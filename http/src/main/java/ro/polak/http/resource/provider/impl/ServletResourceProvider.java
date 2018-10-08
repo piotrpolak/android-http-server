@@ -29,7 +29,7 @@ import ro.polak.http.servlet.FilterChain;
 import ro.polak.http.servlet.FilterConfig;
 import ro.polak.http.servlet.impl.FilterConfigImpl;
 import ro.polak.http.servlet.impl.HttpRequestImpl;
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.impl.HttpSessionImpl;
@@ -83,7 +83,9 @@ public class ServletResourceProvider implements ResourceProvider {
      * {@inheritDoc}
      */
     @Override
-    public void load(final String path, final HttpRequestImpl request, final HttpResponseImpl response) throws IOException {
+    public void load(final String path,
+                     final HttpRequestImpl request,
+                     final HttpServletResponseImpl response) throws IOException {
         ServletContextImpl servletContext = servletContextHelper.getResolvedContext(servletContexts, path);
         Objects.requireNonNull(servletContext);
         ServletMapping servletMapping = servletContextHelper.getResolvedServletMapping(servletContext, path);
@@ -160,7 +162,7 @@ public class ServletResourceProvider implements ResourceProvider {
      * @param response
      * @throws IOException
      */
-    private void terminate(final HttpRequestImpl request, final HttpResponseImpl response) throws IOException {
+    private void terminate(final HttpRequestImpl request, final HttpServletResponseImpl response) throws IOException {
         freeUploadedUnprocessedFiles(request.getUploadedFiles());
 
         HttpSessionImpl session = (HttpSessionImpl) request.getSession(false);

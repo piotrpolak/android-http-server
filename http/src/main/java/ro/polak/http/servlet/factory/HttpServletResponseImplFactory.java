@@ -14,7 +14,7 @@ import ro.polak.http.Headers;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.servlet.Cookie;
 import ro.polak.http.servlet.helper.StreamHelper;
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 
 /**
  * Utility facilitating creating new responses out of the socket.
@@ -49,7 +49,10 @@ public class HttpServletResponseImplFactory {
      * @param socket
      * @return
      */
-    public HttpResponseImpl createFromSocket(final Socket socket) throws IOException {
-        return new HttpResponseImpl(headersSerializer, cookieHeaderSerializer, streamHelper, socket.getOutputStream());
+    public HttpServletResponseImpl createFromSocket(final Socket socket) throws IOException {
+        return new HttpServletResponseImpl(headersSerializer,
+                cookieHeaderSerializer,
+                streamHelper,
+                socket.getOutputStream());
     }
 }

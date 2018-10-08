@@ -15,7 +15,7 @@ import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 
-public class HttpResponseImplIT extends AbstractIT {
+public class HttpServletResponseImplIT extends AbstractIT {
 
     @Test
     public void shouldPrintHeadersFirstWhenWritingToOutputStream() throws IOException {

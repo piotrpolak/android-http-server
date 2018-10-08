@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import ro.polak.http.FileUtils;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.servlet.helper.RangeHelper;
 import ro.polak.http.servlet.helper.StreamHelper;
 
@@ -22,12 +22,12 @@ import static org.mockito.Mockito.mock;
 public class AbstractHtmlErrorHandlerTest {
 
     private static OutputStream outputStream;
-    private static HttpResponseImpl response;
+    private static HttpServletResponseImpl response;
 
     @Before
     public void setUp() {
         outputStream = new ByteArrayOutputStream();
-        response = new HttpResponseImpl(
+        response = new HttpServletResponseImpl(
                 mock(Serializer.class),
                 mock(Serializer.class),
                 new StreamHelper(new RangeHelper(), new RangePartHeaderSerializer()),

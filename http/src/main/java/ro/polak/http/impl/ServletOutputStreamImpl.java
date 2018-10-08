@@ -10,7 +10,7 @@ package ro.polak.http.impl;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.servlet.ServletOutputStream;
 
 /**
@@ -21,7 +21,7 @@ import ro.polak.http.servlet.ServletOutputStream;
 public class ServletOutputStreamImpl extends ServletOutputStream {
 
     private final OutputStream outputStream;
-    private final HttpResponseImpl response;
+    private final HttpServletResponseImpl response;
 
     /**
      * Default constructor.
@@ -29,7 +29,7 @@ public class ServletOutputStreamImpl extends ServletOutputStream {
      * @param outputStream
      * @param httpResponse
      */
-    public ServletOutputStreamImpl(final OutputStream outputStream, final HttpResponseImpl httpResponse) {
+    public ServletOutputStreamImpl(final OutputStream outputStream, final HttpServletResponseImpl httpResponse) {
         this.outputStream = outputStream;
         this.response = httpResponse;
     }

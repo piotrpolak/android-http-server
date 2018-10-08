@@ -34,7 +34,7 @@ import ro.polak.http.utilities.IOUtilities;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 200802
  */
-public class HttpResponseImpl implements HttpServletResponse {
+public class HttpServletResponseImpl implements HttpServletResponse {
 
     private static final String NEW_LINE = "\r\n";
     private static final String TRANSFER_ENCODING_CHUNKED = "chunked";
@@ -63,10 +63,10 @@ public class HttpResponseImpl implements HttpServletResponse {
      * @param streamHelper
      * @param outputStream
      */
-    public HttpResponseImpl(final Serializer<Headers> headersSerializer,
-                            final Serializer<Cookie> cookieHeaderSerializer,
-                            final StreamHelper streamHelper,
-                            final OutputStream outputStream) {
+    public HttpServletResponseImpl(final Serializer<Headers> headersSerializer,
+                                   final Serializer<Cookie> cookieHeaderSerializer,
+                                   final StreamHelper streamHelper,
+                                   final OutputStream outputStream) {
         this.headersSerializer = headersSerializer;
         this.streamHelper = streamHelper;
         this.cookieHeaderSerializer = cookieHeaderSerializer;

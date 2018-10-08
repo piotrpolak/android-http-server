@@ -27,7 +27,7 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.Range;
 import ro.polak.http.servlet.helper.RangeHelper;
 import ro.polak.http.servlet.impl.HttpRequestImpl;
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.utilities.FileUtilities;
 import ro.polak.http.utilities.IOUtilities;
 import ro.polak.http.utilities.StringUtilities;
@@ -83,7 +83,9 @@ public class FileResourceProvider implements ResourceProvider {
      * {@inheritDoc}
      */
     @Override
-    public void load(final String path, final HttpRequestImpl request, final HttpResponseImpl response) throws IOException {
+    public void load(final String path,
+                     final HttpRequestImpl request,
+                     final HttpServletResponseImpl response) throws IOException {
         File file = getFile(path);
 
         // A server MUST ignore a Range header field received with a request method other than GET.
@@ -110,7 +112,7 @@ public class FileResourceProvider implements ResourceProvider {
     }
 
     private void loadCompleteContent(final HttpRequestImpl request,
-                                     final HttpResponseImpl response,
+                                     final HttpServletResponseImpl response,
                                      final File file) throws IOException {
 
         response.setContentType(mimeTypeMapping.getMimeTypeByExtension(FileUtilities.getExtension(file.getName())));
@@ -132,7 +134,7 @@ public class FileResourceProvider implements ResourceProvider {
     }
 
     private void loadPartialContent(final HttpServletRequest request,
-                                    final HttpResponseImpl response,
+                                    final HttpServletResponseImpl response,
                                     final File file) throws IOException {
         List<Range> ranges;
         try {

@@ -18,7 +18,7 @@ import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.impl.HttpRequestImpl;
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.utilities.IOUtilities;
 
 /**
@@ -71,7 +71,7 @@ public class AssetResourceProvider implements ResourceProvider {
      * {@inheritDoc}
      */
     @Override
-    public void load(final String path, final HttpRequestImpl request, final HttpResponseImpl response) {
+    public void load(final String path, final HttpRequestImpl request, final HttpServletResponseImpl response) {
         String assetPath = getAssetPath(path);
         InputStream inputStream = null;
         try {

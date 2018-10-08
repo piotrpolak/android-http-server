@@ -33,7 +33,7 @@ public class ServletContextImplTest {
 
     private SessionStorage sessionStorage;
     private ServletContextImpl servletContext;
-    private HttpResponseImpl response;
+    private HttpServletResponseImpl response;
 
     @Before
     public void setUp() {
@@ -47,7 +47,7 @@ public class ServletContextImplTest {
                 sessionStorage
         );
         servletContext.setAttribute("attribute", "value");
-        response = new HttpResponseImpl(mock(
+        response = new HttpServletResponseImpl(mock(
                 Serializer.class),
                 mock(Serializer.class),
                 mock(StreamHelper.class),

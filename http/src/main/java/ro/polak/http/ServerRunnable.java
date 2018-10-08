@@ -19,7 +19,7 @@ import ro.polak.http.exception.MethodNotAllowedException;
 import ro.polak.http.exception.NotFoundException;
 import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.impl.HttpRequestImpl;
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.factory.HttpServletRequestImplFactory;
 import ro.polak.http.servlet.HttpServletResponse;
@@ -70,7 +70,7 @@ public class ServerRunnable implements Runnable {
      */
     @Override
     public void run() {
-        HttpResponseImpl response = null;
+        HttpServletResponseImpl response = null;
 
         try {
             try {
@@ -113,7 +113,7 @@ public class ServerRunnable implements Runnable {
         }
     }
 
-    private void handleDirectoryIndex(final HttpResponseImpl response,
+    private void handleDirectoryIndex(final HttpServletResponseImpl response,
                                       final HttpRequestImpl request,
                                       final String requestedPath) throws IOException {
         DirectoryIndexDescriptor indexDescriptor = loadDirectoryIndexResource(requestedPath);
@@ -129,7 +129,7 @@ public class ServerRunnable implements Runnable {
         }
     }
 
-    private void sendRedirectToDirectorySlashedPath(final HttpResponseImpl response, final String originalPath)
+    private void sendRedirectToDirectorySlashedPath(final HttpServletResponseImpl response, final String originalPath)
             throws IOException {
         response.setStatus(HttpServletResponse.STATUS_MOVED_PERMANENTLY);
         response.getHeaders().setHeader(Headers.HEADER_LOCATION, originalPath + "/");
@@ -142,7 +142,7 @@ public class ServerRunnable implements Runnable {
      * @param request
      * @param response
      */
-    private void setDefaultResponseHeaders(final HttpServletRequest request, final HttpResponseImpl response) {
+    private void setDefaultResponseHeaders(final HttpServletRequest request, final HttpServletResponseImpl response) {
         boolean isKeepAlive = false;
         if (request.getHeader(Headers.HEADER_CONNECTION) != null) {
             isKeepAlive = request.getHeader(Headers.HEADER_CONNECTION).equalsIgnoreCase("keep-alive");

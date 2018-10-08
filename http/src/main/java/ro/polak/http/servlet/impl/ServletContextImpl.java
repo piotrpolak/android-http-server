@@ -171,7 +171,7 @@ public class ServletContextImpl implements ServletContext {
      * @param response
      * @throws IOException
      */
-    public void handleSession(final HttpSessionImpl session, final HttpResponseImpl response) throws IOException {
+    public void handleSession(final HttpSessionImpl session, final HttpServletResponseImpl response) throws IOException {
         Cookie cookie = new Cookie(HttpSessionImpl.COOKIE_NAME, "");
         if (session.isInvalidated()) {
             cookie.setMaxAge(MAX_AGE_IN_PAST);

@@ -10,7 +10,7 @@ package ro.polak.http.errorhandler;
 import java.io.IOException;
 
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 
 /**
  * Abstract Http Error Handler.
@@ -37,7 +37,7 @@ public abstract class AbstractPlainTextHttpErrorHandler implements HttpErrorHand
         response.setContentType("text/plain");
         response.setContentLength(message.length());
         response.getWriter().write(message);
-        ((HttpResponseImpl) response).flush();
+        ((HttpServletResponseImpl) response).flush();
     }
 
     /**

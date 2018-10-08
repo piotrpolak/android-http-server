@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.servlet.factory.HttpServletResponseImplFactory;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,7 +30,7 @@ public class ServiceUnavailableHandlerTest {
     public void setUp() throws Exception {
         outputStream = new ByteArrayOutputStream();
         factory = mock(HttpServletResponseImplFactory.class);
-        HttpResponseImpl response = mock(HttpResponseImpl.class);
+        HttpServletResponseImpl response = mock(HttpServletResponseImpl.class);
         printWriter = new PrintWriter(outputStream);
         when(response.getWriter()).thenReturn(printWriter);
 

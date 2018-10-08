@@ -6,8 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
-import ro.polak.http.impl.ServletOutputStreamImpl;
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -20,7 +19,7 @@ public class OutputStreamImplTest {
     public void shouldFlushHeadersOnFirstUseForInts() throws IOException {
         OutputStream out = mock(OutputStream.class);
         int data = 1;
-        HttpResponseImpl response = mock(HttpResponseImpl.class);
+        HttpServletResponseImpl response = mock(HttpServletResponseImpl.class);
         ServletOutputStreamImpl outW = new ServletOutputStreamImpl(out, response);
         try {
             when(response.isCommitted()).thenReturn(false);
@@ -40,7 +39,7 @@ public class OutputStreamImplTest {
 
         byte[] data = "Hello World".getBytes(Charset.defaultCharset());
 
-        HttpResponseImpl response = mock(HttpResponseImpl.class);
+        HttpServletResponseImpl response = mock(HttpServletResponseImpl.class);
         ServletOutputStreamImpl outW = new ServletOutputStreamImpl(out, response);
         try {
             when(response.isCommitted()).thenReturn(false);
@@ -61,7 +60,7 @@ public class OutputStreamImplTest {
 
         byte[] data = "Hello World".getBytes(Charset.defaultCharset());
 
-        HttpResponseImpl response = mock(HttpResponseImpl.class);
+        HttpServletResponseImpl response = mock(HttpServletResponseImpl.class);
         ServletOutputStreamImpl outW = new ServletOutputStreamImpl(out, response);
         try {
             when(response.isCommitted()).thenReturn(false);
@@ -79,7 +78,7 @@ public class OutputStreamImplTest {
     @Test
     public void shouldForwardFlush() throws IOException {
         OutputStream out = mock(OutputStream.class);
-        HttpResponseImpl response = mock(HttpResponseImpl.class);
+        HttpServletResponseImpl response = mock(HttpServletResponseImpl.class);
         ServletOutputStreamImpl outW = new ServletOutputStreamImpl(out, response);
         try {
             outW.flush();
@@ -92,7 +91,7 @@ public class OutputStreamImplTest {
     @Test
     public void shouldForwardClose() throws IOException {
         OutputStream out = mock(OutputStream.class);
-        HttpResponseImpl response = mock(HttpResponseImpl.class);
+        HttpServletResponseImpl response = mock(HttpServletResponseImpl.class);
         ServletOutputStreamImpl outW = new ServletOutputStreamImpl(out, response);
         outW.close();
         verify(out, times(1)).close();

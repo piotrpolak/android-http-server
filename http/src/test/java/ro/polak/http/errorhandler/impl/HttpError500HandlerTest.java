@@ -9,7 +9,7 @@ import org.mockito.MockitoAnnotations;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 
 public class HttpError500HandlerTest {
 
-    private static HttpResponseImpl httpServletResponse;
+    private static HttpServletResponseImpl httpServletResponse;
     private static PrintWriter printWriter;
     private static HttpError500Handler httpError500Handler;
 
@@ -29,7 +29,7 @@ public class HttpError500HandlerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        httpServletResponse = mock(HttpResponseImpl.class);
+        httpServletResponse = mock(HttpServletResponseImpl.class);
         printWriter = mock(PrintWriter.class);
         when(httpServletResponse.getWriter()).thenReturn(printWriter);
         httpError500Handler = new HttpError500Handler();

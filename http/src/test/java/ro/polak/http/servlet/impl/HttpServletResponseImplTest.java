@@ -15,46 +15,46 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
-public class HttpResponseImplTest {
+public class HttpServletResponseImplTest {
 
-    private HttpResponseImpl httpResponseImpl;
+    private HttpServletResponseImpl httpServletResponseImpl;
 
     @Before
     public void setUp() {
-        httpResponseImpl = new HttpResponseImpl(mock(Serializer.class),
+        httpServletResponseImpl = new HttpServletResponseImpl(mock(Serializer.class),
                 mock(Serializer.class), mock(StreamHelper.class), mock(OutputStream.class));
     }
 
     @Test(expected = IllegalStateException.class)
     public void shouldNotAllowHeadersToBeFlushedTwice() throws IOException {
         try {
-            httpResponseImpl.flushHeaders();
+            httpServletResponseImpl.flushHeaders();
         } catch (IllegalStateException e) {
             fail("Should not throw exception on the first call");
         }
 
-        httpResponseImpl.flushHeaders();
+        httpServletResponseImpl.flushHeaders();
     }
 
     @Test
     public void shouldRedirectProperly() throws IOException {
         String url = "/SomeUrl";
-        httpResponseImpl.sendRedirect(url);
-        assertThat(httpResponseImpl.getStatus(), is("HTTP/1.1 301 Moved Permanently"));
-        assertThat(httpResponseImpl.getHeaders().getHeader(Headers.HEADER_LOCATION), is(url));
+        httpServletResponseImpl.sendRedirect(url);
+        assertThat(httpServletResponseImpl.getStatus(), is("HTTP/1.1 301 Moved Permanently"));
+        assertThat(httpServletResponseImpl.getHeaders().getHeader(Headers.HEADER_LOCATION), is(url));
     }
 
     @Test
     public void shouldNotCreateASinglePrintWriter() throws IOException {
-        assertThat(httpResponseImpl.getWriter().equals(httpResponseImpl.getWriter()), is(true));
+        assertThat(httpServletResponseImpl.getWriter().equals(httpServletResponseImpl.getWriter()), is(true));
     }
 
     @Test
     public void shouldSetHeadersProperly() {
-        httpResponseImpl.setHeader("StringValue", "value");
-        httpResponseImpl.setIntHeader("IntValue", 1);
+        httpServletResponseImpl.setHeader("StringValue", "value");
+        httpServletResponseImpl.setIntHeader("IntValue", 1);
 
-        assertThat(httpResponseImpl.getHeaders().getHeader("StringValue"), is("value"));
-        assertThat(httpResponseImpl.getHeaders().getHeader("IntValue"), is("1"));
+        assertThat(httpServletResponseImpl.getHeaders().getHeader("StringValue"), is("value"));
+        assertThat(httpServletResponseImpl.getHeaders().getHeader("IntValue"), is("1"));
     }
 }

@@ -21,7 +21,7 @@ import ro.polak.http.servlet.ServletConfig;
 import ro.polak.http.servlet.ServletContainer;
 import ro.polak.http.servlet.helper.StreamHelper;
 import ro.polak.http.servlet.impl.HttpRequestImpl;
-import ro.polak.http.servlet.impl.HttpResponseImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.servlet.impl.HttpSessionImpl;
 import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.servlet.loader.SampleServlet;
@@ -38,7 +38,7 @@ public class ServletResourceProviderTest {
     private static ServletContextImpl servletContext;
     private static ServletResourceProvider servletResourceProvider;
     private static HttpRequestImpl request;
-    private static HttpResponseImpl response;
+    private static HttpServletResponseImpl response;
 
     @Before
     public void setUp() throws ServletException, ServletInitializationException {
@@ -58,7 +58,7 @@ public class ServletResourceProviderTest {
                 Arrays.asList(servletContext)
         );
 
-        response = new HttpResponseImpl(mock(
+        response = new HttpServletResponseImpl(mock(
                 Serializer.class),
                 mock(Serializer.class),
                 mock(StreamHelper.class),
@@ -73,7 +73,7 @@ public class ServletResourceProviderTest {
         when(request.getSession(false)).thenReturn(new HttpSessionImpl("1", System.currentTimeMillis()));
         servletResourceProvider.load("/", request, response);
         verify(servletContext, times(1)).handleSession(any(HttpSessionImpl.class),
-                any(HttpResponseImpl.class));
+                any(HttpServletResponseImpl.class));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class ServletResourceProviderTest {
         when(request.getSession(false)).thenReturn(null);
         servletResourceProvider.load("/", request, response);
         verify(servletContext, times(0)).handleSession(any(HttpSessionImpl.class),
-                any(HttpResponseImpl.class));
+                any(HttpServletResponseImpl.class));
     }
 
     @Test(expected = UnexpectedSituationException.class)

@@ -44,6 +44,7 @@ import ro.polak.http.servlet.helper.RangeHelper;
 import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.session.storage.FileSessionStorage;
 import ro.polak.http.session.storage.SessionStorage;
+import ro.polak.http.utilities.DateProvider;
 
 /**
  * Default server config factory.
@@ -54,6 +55,9 @@ import ro.polak.http.session.storage.SessionStorage;
 public class DefaultServerConfigFactory implements ServerConfigFactory {
 
     private static final Logger LOGGER = Logger.getLogger(DefaultServerConfigFactory.class.getName());
+    private static final long SERVLET_TIME_TO_LIVE_IN_MS = 1800L * 1000L;
+    private static final long MONITORING_INTERVAL_IN_MS = SERVLET_TIME_TO_LIVE_IN_MS / 10L;
+
     /**
      * {@inheritDoc}
      */
@@ -221,7 +225,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
 
     private ServletResourceProvider getServletResourceProvider(final ServerConfig serverConfig) {
         return new ServletResourceProvider(
-                new ServletContainerImpl(),
+                new ServletContainerImpl(new DateProvider(), SERVLET_TIME_TO_LIVE_IN_MS, MONITORING_INTERVAL_IN_MS),
                 getServletContexts(serverConfig)
         );
     }

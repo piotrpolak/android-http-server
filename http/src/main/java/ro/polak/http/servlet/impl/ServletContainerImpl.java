@@ -10,7 +10,10 @@ package ro.polak.http.servlet.impl;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 import ro.polak.http.exception.FilterInitializationException;
 import ro.polak.http.exception.ServletException;
@@ -21,6 +24,7 @@ import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.Servlet;
 import ro.polak.http.servlet.ServletConfig;
 import ro.polak.http.servlet.ServletContainer;
+import ro.polak.http.utilities.DateProvider;
 
 /**
  * Manages life cycle of servlets.
@@ -30,11 +34,47 @@ import ro.polak.http.servlet.ServletContainer;
  */
 public class ServletContainerImpl implements ServletContainer {
 
+    private static final Logger LOGGER = Logger.getLogger(ServletContainerImpl.class.getName());
+
     private final Map<Class<? extends HttpServlet>, Servlet> servlets = new ConcurrentHashMap<>();
     private final Map<Class<? extends Filter>, Filter> filters = new ConcurrentHashMap<>();
     private final Map<Class<? extends HttpServlet>, ServletStats> servletStats = new ConcurrentHashMap<>();
 
-    // TODO Implement timeout
+    private final Timer timer = new Timer();
+    private final DateProvider dateProvider;
+
+    public ServletContainerImpl(final DateProvider dateProvider,
+                                final long servletTimeToLiveInMs,
+                                final long monitoringIntervalInMs) {
+        this.dateProvider = dateProvider;
+
+        if (monitoringIntervalInMs == 0) {
+            return;
+        }
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                final long nowMs = dateProvider.now().getTime();
+                Map<Class<? extends HttpServlet>, ServletStats> stats = getServletStats();
+
+                if (stats.keySet().size() == 0) {
+                    LOGGER.info("Running outdated servlets check - no servlets registered.");
+                    return;
+                }
+
+                LOGGER.info("Running outdated servlets check.");
+
+                for (Map.Entry<Class<? extends HttpServlet>, ServletStats> entry : stats.entrySet()) {
+                    if (nowMs - entry.getValue().getLastRequestedAt().getTime() > servletTimeToLiveInMs) {
+                        LOGGER.info("Destroying outdated servlet " + entry.getKey().getName());
+                        shutdownServlet(servlets.get(entry.getKey()));
+                    }
+                }
+            }
+        }, monitoringIntervalInMs, monitoringIntervalInMs);
+    }
 
     /**
      * {@inheritDoc}
@@ -44,7 +84,7 @@ public class ServletContainerImpl implements ServletContainer {
             throws ServletInitializationException, ServletException {
 
         if (servlets.containsKey(servletClass)) {
-            servletStats.get(servletClass).setLastRequestedAt(new Date());
+            servletStats.get(servletClass).setLastRequestedAt(dateProvider.now());
             return servlets.get(servletClass);
         }
 
@@ -100,10 +140,15 @@ public class ServletContainerImpl implements ServletContainer {
     @Override
     public void shutdown() {
         for (Map.Entry<Class<? extends HttpServlet>, Servlet> entry : servlets.entrySet()) {
-            entry.getValue().destroy();
-            servlets.remove(entry.getKey());
-            servletStats.remove(entry.getKey());
+            shutdownServlet(entry.getValue());
         }
+        timer.cancel();
+    }
+
+    private void shutdownServlet(final Servlet servlet) {
+        servlet.destroy();
+        servlets.remove(servlet.getClass());
+        servletStats.remove(servlet.getClass());
     }
 
     /**
@@ -124,16 +169,16 @@ public class ServletContainerImpl implements ServletContainer {
         private Date lastRequestedAt;
 
         public ServletStats() {
-            initializedAt = new Date();
-            lastRequestedAt = new Date();
+            initializedAt = dateProvider.now();
+            lastRequestedAt = dateProvider.now();
         }
 
         public Date getInitializedAt() {
-            return initializedAt;
+            return new Date(initializedAt.getTime());
         }
 
         public Date getLastRequestedAt() {
-            return lastRequestedAt;
+            return new Date(lastRequestedAt.getTime());
         }
 
         public void setLastRequestedAt(final Date lastRequestedAt) {

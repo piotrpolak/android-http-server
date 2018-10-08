@@ -9,8 +9,8 @@ import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.ServletConfig;
-import ro.polak.http.servlet.impl.ServletContainerImpl;
 import ro.polak.http.servlet.loader.SampleServlet;
+import ro.polak.http.utilities.DateProvider;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -25,8 +25,8 @@ public class ServletContainerImplTest {
     private ServletConfig servletConfig;
 
     @Before
-    public void setUp() throws ServletInitializationException {
-        servletContainer = new ServletContainerImpl();
+    public void setUp() {
+        servletContainer = new ServletContainerImpl(new DateProvider(), 0, 0);
         servletConfig = mock(ServletConfig.class);
     }
 
@@ -70,6 +70,21 @@ public class ServletContainerImplTest {
     @Test(expected = ServletInitializationException.class)
     public void shouldThrowException() throws ServletException, ServletInitializationException {
         servletContainer.getServletForClass(InvalidServletWithPrivateConstructor.class, servletConfig);
+    }
+
+
+    @Test
+    public void shouldDestroyOutdatedServlet() throws ServletException, ServletInitializationException, InterruptedException {
+        servletContainer = new ServletContainerImpl(new DateProvider(), 50, 50);
+        SampleServlet servlet = (SampleServlet) servletContainer.getServletForClass(SampleServlet.class, servletConfig);
+        assertThat(servlet, is(not(nullValue())));
+
+        Thread.sleep(200);
+
+        SampleServlet servlet2 = (SampleServlet) servletContainer.getServletForClass(SampleServlet.class, servletConfig);
+
+        assertThat(servlet, is(not(nullValue())));
+        assertThat(servlet == servlet2, is(false));
     }
 
     public class InvalidServletWithPrivateConstructor extends HttpServlet {

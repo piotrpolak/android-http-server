@@ -16,7 +16,6 @@ import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.impl.HttpServletRequestImpl;
 import ro.polak.http.utilities.StringUtilities;
 
 /**
@@ -42,7 +41,7 @@ public class Login extends HttpServlet {
 
         doc.writeln("<h2>HTTP Server Login</h2>");
 
-        if (request.getMethod().equals(HttpServletRequestImpl.METHOD_POST)) {
+        if (request.getMethod().equals(HttpServletRequest.METHOD_POST)) {
             if (ac.doLogin(request.getPostParameter("login"), request.getPostParameter("password"))) {
 
                 LOGGER.fine("Successfully logged in");

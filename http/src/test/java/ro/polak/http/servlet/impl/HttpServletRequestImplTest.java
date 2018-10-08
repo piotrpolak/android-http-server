@@ -236,8 +236,7 @@ public class HttpServletRequestImplTest {
         Map<String, Cookie> cookies = new HashMap<>();
         Cookie sessionCookie = new Cookie(HttpSessionImpl.COOKIE_NAME, "sessionId");
         cookies.put(HttpSessionImpl.COOKIE_NAME, sessionCookie);
-        httpServletRequestImpl = builder.withCookies(cookies).build();
-        httpServletRequestImpl.setServletContext(servletContext);
+        httpServletRequestImpl = builder.withCookies(cookies).withServletContext(servletContext).build();
         when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionImpl("sessionId", System.currentTimeMillis()));
         assertThat(httpServletRequestImpl.getSession(), is(instanceOf(HttpSessionImpl.class)));
     }
@@ -247,8 +246,7 @@ public class HttpServletRequestImplTest {
         Map<String, Cookie> cookies = new HashMap<>();
         Cookie sessionCookie = new Cookie(HttpSessionImpl.COOKIE_NAME, "sessionId");
         cookies.put(HttpSessionImpl.COOKIE_NAME, sessionCookie);
-        httpServletRequestImpl = builder.withCookies(cookies).build();
-        httpServletRequestImpl.setServletContext(servletContext);
+        httpServletRequestImpl = builder.withCookies(cookies).withServletContext(servletContext).build();
         when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionImpl("sessionId", System.currentTimeMillis()));
         assertThat(httpServletRequestImpl.getSession(), is(instanceOf(HttpSessionImpl.class)));
         assertThat(httpServletRequestImpl.getSession().equals(httpServletRequestImpl.getSession()), is(true));

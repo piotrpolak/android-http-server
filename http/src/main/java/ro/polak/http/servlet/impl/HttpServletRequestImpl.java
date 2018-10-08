@@ -43,7 +43,7 @@ import static java.util.TimeZone.getTimeZone;
  * @since 200802
  */
 // CHECKSTYLE.OFF: FinalClassCheck - the class is not final for testing purposes
-public class HttpRequestImpl implements HttpServletRequest {
+public class HttpServletRequestImpl implements HttpServletRequest {
 // CHECKSTYLE.ON: FinalClassCheck
 
     private static final String DATE_FORMAT = "EEE, d MMM yyyy HH:mm:ss z";
@@ -85,7 +85,7 @@ public class HttpRequestImpl implements HttpServletRequest {
     /**
      * Default constructor.
      */
-    private HttpRequestImpl() {
+    private HttpServletRequestImpl() {
         Statistics.incrementRequestHandled();
         postParameters = new HashMap<>();
         getParameters = new HashMap<>();
@@ -659,10 +659,10 @@ public class HttpRequestImpl implements HttpServletRequest {
      * Builder.
      */
     public static final class HttpRequestImplBuilder {
-        private HttpRequestImpl internal;
+        private HttpServletRequestImpl internal;
 
         private HttpRequestImplBuilder() {
-            internal = new HttpRequestImpl();
+            internal = new HttpServletRequestImpl();
         }
 
         /**
@@ -785,8 +785,8 @@ public class HttpRequestImpl implements HttpServletRequest {
             return this;
         }
 
-        public HttpRequestImpl build() {
-            HttpRequestImpl result = new HttpRequestImpl();
+        public HttpServletRequestImpl build() {
+            HttpServletRequestImpl result = new HttpServletRequestImpl();
             result.servletContext = internal.servletContext;
             result.remoteAddr = internal.remoteAddr;
             result.headers = internal.headers;

@@ -17,8 +17,7 @@ import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.protocol.parser.impl.RequestStatusParser;
 import ro.polak.http.servlet.Cookie;
-import ro.polak.http.servlet.factory.HttpServletRequestImplFactory;
-import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpServletRequestImpl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -77,7 +76,7 @@ public class HttpServletRequestImplFactoryTest {
     public void shouldAssignNoCookieOnMalformedCookieString() throws Exception {
         headers.setHeader(Headers.HEADER_COOKIE, "ANYTHING");
         when(cookieParser.parse(any(String.class))).thenThrow(new MalformedInputException("ANY"));
-        HttpRequestImpl request = factory.createFromSocket(socket);
+        HttpServletRequestImpl request = factory.createFromSocket(socket);
         assertThat(request.getCookies().length, is(0));
         verify(cookieParser, times(1)).parse(any(String.class));
     }
@@ -85,7 +84,7 @@ public class HttpServletRequestImplFactoryTest {
     @Test
     public void shouldAssignNoCookieAndNoHeadersOnNoHeadersString() throws Exception {
         when(socket.getInputStream()).thenReturn(new ByteArrayInputStream("GET / HTTP/1.0\r\n\r\n".getBytes()));
-        HttpRequestImpl request = factory.createFromSocket(socket);
+        HttpServletRequestImpl request = factory.createFromSocket(socket);
         assertThat(request.getCookies().length, is(0));
         assertThat(request.getHeaders().keySet().size(), is(0));
     }

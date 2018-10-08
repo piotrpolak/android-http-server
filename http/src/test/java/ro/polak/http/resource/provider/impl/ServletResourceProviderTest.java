@@ -20,7 +20,7 @@ import ro.polak.http.servlet.Servlet;
 import ro.polak.http.servlet.ServletConfig;
 import ro.polak.http.servlet.ServletContainer;
 import ro.polak.http.servlet.helper.StreamHelper;
-import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpServletRequestImpl;
 import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.servlet.impl.HttpSessionImpl;
 import ro.polak.http.servlet.impl.ServletContextImpl;
@@ -37,7 +37,7 @@ public class ServletResourceProviderTest {
     private static ServletContainer servletContainer;
     private static ServletContextImpl servletContext;
     private static ServletResourceProvider servletResourceProvider;
-    private static HttpRequestImpl request;
+    private static HttpServletRequestImpl request;
     private static HttpServletResponseImpl response;
 
     @Before
@@ -64,7 +64,7 @@ public class ServletResourceProviderTest {
                 mock(StreamHelper.class),
                 mock(OutputStream.class));
 
-        request = mock(HttpRequestImpl.class);
+        request = mock(HttpServletRequestImpl.class);
         when(request.getServletContext()).thenReturn(servletContext);
     }
 

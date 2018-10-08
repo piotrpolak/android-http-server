@@ -26,7 +26,7 @@ import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.Range;
 import ro.polak.http.servlet.helper.RangeHelper;
-import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpServletRequestImpl;
 import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.utilities.FileUtilities;
 import ro.polak.http.utilities.IOUtilities;
@@ -84,7 +84,7 @@ public class FileResourceProvider implements ResourceProvider {
      */
     @Override
     public void load(final String path,
-                     final HttpRequestImpl request,
+                     final HttpServletRequestImpl request,
                      final HttpServletResponseImpl response) throws IOException {
         File file = getFile(path);
 
@@ -111,7 +111,7 @@ public class FileResourceProvider implements ResourceProvider {
         return new File(basePath + uri);
     }
 
-    private void loadCompleteContent(final HttpRequestImpl request,
+    private void loadCompleteContent(final HttpServletRequestImpl request,
                                      final HttpServletResponseImpl response,
                                      final File file) throws IOException {
 

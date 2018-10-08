@@ -36,7 +36,7 @@ import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 import ro.polak.http.servlet.Cookie;
 import ro.polak.http.servlet.HttpServletRequest;
-import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpServletRequestImpl;
 import ro.polak.http.servlet.impl.ServletContextImpl;
 
 /**
@@ -122,10 +122,10 @@ public class HttpServletRequestImplFactory {
      * @param socket
      * @return
      */
-    public HttpRequestImpl createFromSocket(final Socket socket)
+    public HttpServletRequestImpl createFromSocket(final Socket socket)
             throws IOException, ProtocolException {
 
-        HttpRequestImpl.HttpRequestImplBuilder builder = HttpRequestImpl.createNewBuilder();
+        HttpServletRequestImpl.HttpRequestImplBuilder builder = HttpServletRequestImpl.createNewBuilder();
 
         InputStream in = socket.getInputStream();
         // The order matters
@@ -218,7 +218,7 @@ public class HttpServletRequestImplFactory {
         return protocol.equalsIgnoreCase(HTTP_1_0) || protocol.equalsIgnoreCase(HTTP_1_1);
     }
 
-    private void assignSocketMetadata(final Socket socket, final HttpRequestImpl.HttpRequestImplBuilder builder) {
+    private void assignSocketMetadata(final Socket socket, final HttpServletRequestImpl.HttpRequestImplBuilder builder) {
         builder.withSecure(false)
                 .withScheme(DEFAULT_SCHEME)
                 .withRemoteAddr(socket.getInetAddress().getHostAddress())
@@ -307,7 +307,7 @@ public class HttpServletRequestImplFactory {
         return headersString.substring(headersString.length() - headersEndSymbolLength, headersString.length());
     }
 
-    private void handlePostRequest(final HttpRequestImpl.HttpRequestImplBuilder builder,
+    private void handlePostRequest(final HttpServletRequestImpl.HttpRequestImplBuilder builder,
                                    final InputStream in,
                                    final Headers headers)
             throws IOException, MalformedInputException {
@@ -346,7 +346,7 @@ public class HttpServletRequestImplFactory {
                 .startsWith(MULTIPART_FORM_DATA_HEADER_START);
     }
 
-    private void handlePostPlainRequest(final HttpRequestImpl.HttpRequestImplBuilder builder,
+    private void handlePostPlainRequest(final HttpServletRequestImpl.HttpRequestImplBuilder builder,
                                         final InputStream in,
                                         final int postLength)
             throws IOException, MalformedInputException {
@@ -363,7 +363,7 @@ public class HttpServletRequestImplFactory {
         builder.withPostParameters(queryStringParser.parse(postLine.toString()));
     }
 
-    private void handlePostMultipartRequest(final HttpRequestImpl.HttpRequestImplBuilder builder,
+    private void handlePostMultipartRequest(final HttpServletRequestImpl.HttpRequestImplBuilder builder,
                                             final Headers headers,
                                             final InputStream in,
                                             final int postLength)

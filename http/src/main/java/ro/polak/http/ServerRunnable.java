@@ -18,7 +18,7 @@ import ro.polak.http.exception.AccessDeniedException;
 import ro.polak.http.exception.MethodNotAllowedException;
 import ro.polak.http.exception.NotFoundException;
 import ro.polak.http.resource.provider.ResourceProvider;
-import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpServletRequestImpl;
 import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.factory.HttpServletRequestImplFactory;
@@ -75,7 +75,7 @@ public class ServerRunnable implements Runnable {
         try {
             try {
                 response = responseFactory.createFromSocket(socket);
-                HttpRequestImpl request = requestFactory.createFromSocket(socket);
+                HttpServletRequestImpl request = requestFactory.createFromSocket(socket);
 
                 LOGGER.log(Level.INFO, "Handling request {0} {1}", new Object[]{
                         request.getMethod(), request.getRequestURI()
@@ -114,7 +114,7 @@ public class ServerRunnable implements Runnable {
     }
 
     private void handleDirectoryIndex(final HttpServletResponseImpl response,
-                                      final HttpRequestImpl request,
+                                      final HttpServletRequestImpl request,
                                       final String requestedPath) throws IOException {
         DirectoryIndexDescriptor indexDescriptor = loadDirectoryIndexResource(requestedPath);
         if (indexDescriptor == null) {

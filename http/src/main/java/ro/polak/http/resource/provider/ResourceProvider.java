@@ -9,7 +9,7 @@ package ro.polak.http.resource.provider;
 
 import java.io.IOException;
 
-import ro.polak.http.servlet.impl.HttpRequestImpl;
+import ro.polak.http.servlet.impl.HttpServletRequestImpl;
 import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 
 /**
@@ -37,7 +37,7 @@ public interface ResourceProvider {
      * @return
      * @throws IOException
      */
-    void load(String path, HttpRequestImpl request, HttpServletResponseImpl response) throws IOException;
+    void load(String path, HttpServletRequestImpl request, HttpServletResponseImpl response) throws IOException;
 
     /**
      * Shuts down the resource provider, closes all open resources.

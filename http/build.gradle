@@ -14,7 +14,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.2.2'
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
     }
 }
 

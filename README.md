@@ -13,6 +13,7 @@ to build a common web application.
 
 * [Key features](#key-features)
 * [Building the application](#building-the-application)
+    * [Installing Android SDK from command line](#installing-android-sdk-from-command-line)
 * [The http subproject and the idea behind it](#the-http-subproject-and-the-idea-behind-it)
 * [Mutation testing](#mutation-testing)
 * [Running standalone server (CLI)](#running-standalone-server-cli)
@@ -44,7 +45,22 @@ to build a common web application.
 The provided Gradle wrapper should be used to build the application:
 
 ```bash
-./gradlew build
+./gradlew clean build
+```
+
+## Installing Android SDK from command line
+
+When running the full build for the first time you must first install the Android SDK. You might either install it manually
+or use the following script that downloads and installs all required dependencies to `~/android-sdk`.
+
+```bash
+./installsdk.sh
+```
+
+To make things work after you logout and login back, configure the `ANDROID_HOME` environment variable:
+
+```bash
+echo "\n\mexport ANDROID_HOME=~/android-sdk" >> ~/.bashrc
 ```
 
 ## The http subproject and the idea behind it

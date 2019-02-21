@@ -26,12 +26,14 @@ dependencies {
 }
 
 
-task(bootRun, dependsOn: fatJar) << {
-    print "$buildDir/libs/cli.jar"
-    javaexec {
-        main = "-jar"
-        args = [
-                "$buildDir/libs/cli-all.jar"
-        ]
+task(bootRun, dependsOn: fatJar) {
+    doLast {
+        print "$buildDir/libs/cli.jar"
+        javaexec {
+            main = "-jar"
+            args = [
+                    "$buildDir/libs/cli-all.jar"
+            ]
+        }
     }
 }

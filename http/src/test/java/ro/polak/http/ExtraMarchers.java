@@ -28,7 +28,7 @@ public class ExtraMarchers {
             boolean isUtilityClass = false;
             try {
                 isUtilityClass = isInstantiable(clazz);
-            } catch (ClassNotFoundException | InstantiationException e) {
+            } catch (InstantiationException | NoSuchMethodException | InvocationTargetException e) {
                 // Swallowed
             }
 
@@ -50,9 +50,7 @@ public class ExtraMarchers {
                 boolean isNonUtilityClass = true;
                 try {
                     isNonUtilityClass = !isInstantiable(clazz);
-                } catch (ClassNotFoundException e) {
-                    mismatchDescription.appendText(" The class is not found. " + e);
-                } catch (InstantiationException e) {
+                } catch (InstantiationException | InvocationTargetException | NoSuchMethodException e) {
                     mismatchDescription.appendText(" The class can not be instantiated. " + e);
                 }
 
@@ -82,10 +80,11 @@ public class ExtraMarchers {
             }
         }
 
-        private boolean isInstantiable(final Class clazz) throws ClassNotFoundException, InstantiationException {
+        private boolean isInstantiable(final Class clazz)
+                throws InstantiationException, NoSuchMethodException, InvocationTargetException {
             boolean hasPrivateConstructor = false;
             try {
-                clazz.newInstance();
+                clazz.getDeclaredConstructor().newInstance();
             } catch (IllegalAccessException e) {
                 hasPrivateConstructor = true;
             }

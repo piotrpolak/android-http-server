@@ -225,7 +225,6 @@ public interface HttpServletRequest extends ServletRequest {
      * Returns headers of the request.
      *
      * @return headers of the request
-     * @deprecated
      */
     Headers getHeaders();
 

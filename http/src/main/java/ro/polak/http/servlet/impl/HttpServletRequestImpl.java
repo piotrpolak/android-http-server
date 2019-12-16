@@ -628,7 +628,6 @@ public class HttpServletRequestImpl implements HttpServletRequest {
      * Only needed for Servlet loader.
      *
      * @param servletContext
-     * @deprecated
      */
     public void setServletContext(final ServletContextImpl servletContext) {
         this.servletContext = servletContext;

@@ -26,7 +26,7 @@ import ro.polak.http.servlet.impl.HttpSessionImpl;
 import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.servlet.loader.SampleServlet;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

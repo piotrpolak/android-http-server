@@ -7,6 +7,7 @@
 
 package ro.polak.http.servlet.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
@@ -119,8 +120,8 @@ public class ServletContainerImpl implements ServletContainer {
     private Servlet instantiateServlet(final Class<? extends HttpServlet> serverClass)
             throws ServletInitializationException {
         try {
-            return serverClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return serverClass.getDeclaredConstructor().newInstance();
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
             throw new ServletInitializationException(e);
         }
     }
@@ -128,8 +129,8 @@ public class ServletContainerImpl implements ServletContainer {
     private Filter instantiateFilter(final Class<? extends Filter> filterClass)
             throws FilterInitializationException {
         try {
-            return filterClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return filterClass.getDeclaredConstructor().newInstance();
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
             throw new FilterInitializationException(e);
         }
     }

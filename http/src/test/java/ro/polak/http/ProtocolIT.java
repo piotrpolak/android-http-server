@@ -28,8 +28,8 @@ import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
@@ -121,14 +121,14 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.code(), is(200));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, containsString(commonValue));
 
         Response response2 = client.newCall(request2).execute();
         assertThat(response2.isSuccessful(), is(true));
         assertThat(response2.code(), is(200));
         String response2BodyString = response2.body().string();
-        assertThat(response2BodyString, not(isEmptyOrNullString()));
+        assertThat(response2BodyString, is(not(emptyOrNullString())));
         assertThat(response2BodyString, containsString(commonValue));
 
         return true;
@@ -159,7 +159,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.code(), is(200));
         assertThat(response.header(Headers.HEADER_CONTENT_LENGTH), is("11"));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, is("Static file"));
     }
 
@@ -180,7 +180,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.code(), is(200));
 //        assertThat(response.header(Headers.HEADER_CONTENT_LENGTH), is(not(nullValue())));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, containsString("Session page hits: " + count));
 
         return true;
@@ -197,7 +197,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(false));
         assertThat(response.code(), is(404));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, containsString("File Not Found"));
     }
 
@@ -231,7 +231,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(false));
         assertThat(response.code(), is(405));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, containsString("Method Not Allowed"));
     }
 
@@ -266,7 +266,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(false));
         assertThat(response.code(), is(414));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, containsString("URI Too Long"));
     }
 
@@ -301,7 +301,7 @@ public class ProtocolIT extends AbstractIT {
         Response response = client.newCall(request).execute();
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.code(), is(200));
-        assertThat(response.body().string(), not(isEmptyOrNullString()));
+        assertThat(response.body().string(), is(not(emptyOrNullString())));
     }
 
     @Test
@@ -325,7 +325,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(false));
         assertThat(response.code(), is(400));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, containsString("Bad Request"));
     }
 
@@ -340,7 +340,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(false));
         assertThat(response.code(), is(400));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, containsString("Bad Request"));
     }
 
@@ -352,7 +352,7 @@ public class ProtocolIT extends AbstractIT {
 
         Request request = new Request.Builder()
                 .url(getFullUrl("/example/"))
-                .method("POST", RequestBody.create(null, new byte[0]))
+                .method("POST", RequestBody.create(new byte[0]))
                 .post(formBody)
                 .build();
 
@@ -360,7 +360,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.code(), is(200));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
     }
 
     @Test
@@ -381,7 +381,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.code(), is(200));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
     }
 
     @Test
@@ -390,8 +390,8 @@ public class ProtocolIT extends AbstractIT {
         RequestBody formBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("someParam", "someValue")
-                .addFormDataPart("file", "somefile.dat", RequestBody.create(
-                        MediaType.parse("application/octet-stream"), uploadFile))
+                .addFormDataPart("file", "somefile.dat",
+                        RequestBody.create(uploadFile, MediaType.parse("application/octet-stream")))
                 .build();
 
         Request request = new Request.Builder()
@@ -403,7 +403,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.code(), is(200));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
     }
 
     @Test
@@ -466,7 +466,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(false));
         assertThat(response.code(), is(500));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, containsString("Error 500"));
         assertThat(responseBodyString, containsString("UnexpectedSituationException"));
     }
@@ -485,7 +485,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.header(Headers.HEADER_CONTENT_RANGE), is("bytes 0-5/11"));
         assertThat(response.header(Headers.HEADER_CONTENT_LENGTH), is("6"));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, is("Static"));
     }
 
@@ -542,7 +542,7 @@ public class ProtocolIT extends AbstractIT {
                 is(expectedResponseStr.length()));
 
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, is(expectedResponseStr));
 
     }
@@ -559,7 +559,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(false));
         assertThat(response.code(), is(416));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, containsString("Range Not Satisfiable"));
     }
 
@@ -575,7 +575,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(false));
         assertThat(response.code(), is(400));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, not(isEmptyOrNullString()));
+        assertThat(responseBodyString, is(not(emptyOrNullString())));
         assertThat(responseBodyString, containsString("Bad Request"));
     }
 

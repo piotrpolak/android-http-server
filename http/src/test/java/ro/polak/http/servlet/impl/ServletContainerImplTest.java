@@ -15,6 +15,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 
@@ -85,7 +86,7 @@ public class ServletContainerImplTest {
         SampleServlet servlet2 = (SampleServlet) servletContainer.getServletForClass(SampleServlet.class, servletConfig);
 
         assertThat(servlet, is(not(nullValue())));
-        assertThat(servlet == servlet2, is(false));
+        assertThat(servlet, is(not(sameInstance(servlet2))));
     }
     // CHECKSTYLE.ON: MagicNumber
 

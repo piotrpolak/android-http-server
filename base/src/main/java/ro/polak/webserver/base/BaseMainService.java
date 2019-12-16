@@ -13,6 +13,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Icon;
 import android.content.res.AssetManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -240,6 +241,7 @@ public abstract class BaseMainService extends Service implements ServerGui {
         notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
+    @SuppressWarnings("deprecation")
     private Notification.Builder getNotificationBuilder(final PendingIntent pIntent, final String text, final int icon) {
         return new Notification.Builder(this)
                 .setContentTitle("HTTPServer")
@@ -275,7 +277,7 @@ public abstract class BaseMainService extends Service implements ServerGui {
                     for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
                         InetAddress inetAddress = enumIpAddr.nextElement();
                         if (!inetAddress.isLoopbackAddress()) {
-                            return Formatter.formatIpAddress(inetAddress.hashCode());
+                            return inetAddress.getHostAddress();
                         }
                     }
                 }

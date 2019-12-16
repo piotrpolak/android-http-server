@@ -14,7 +14,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.6'
     }
 }
 
@@ -22,8 +22,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.+'
-    testCompile 'org.hamcrest:hamcrest-library:2.1'
-    testCompile 'com.squareup.okhttp3:okhttp:3.13.1'
+    testCompile 'org.hamcrest:hamcrest-library:2.2'
+    testCompile 'com.squareup.okhttp3:okhttp:4.2.2'
     testCompile project(path: ':cli')
 }
 

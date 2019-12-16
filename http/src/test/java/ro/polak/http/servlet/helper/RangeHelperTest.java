@@ -8,11 +8,12 @@ import java.util.Collections;
 import java.util.List;
 
 import ro.polak.http.servlet.Range;
-import ro.polak.http.servlet.helper.RangeHelper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+// CHECKSTYLE.OFF: JavadocType
+// CHECKSTYLE.OFF: MagicNumber
 public class RangeHelperTest {
 
     private RangeHelper rangeHelper = new RangeHelper();
@@ -85,3 +86,5 @@ public class RangeHelperTest {
         assertThat(rangeHelper.isSatisfiable(Arrays.asList(new Range(0, 0), new Range(-1, 0)), 5), is(false));
     }
 }
+// CHECKSTYLE.ON: MagicNumber
+// CHECKSTYLE.ON: JavadocType

@@ -10,6 +10,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
 public class MultipartHeadersPartParserTest {
 
     private static Parser<MultipartHeadersPart> multipartHeadersPartParser
@@ -17,7 +18,10 @@ public class MultipartHeadersPartParserTest {
 
     @Test
     public void shouldParseValidAttachmentHeader() throws MalformedInputException {
-        MultipartHeadersPart headers = multipartHeadersPartParser.parse("Content-Disposition: attachment; name=\"FIELDNAME\"; filename=\"FILE.PDF\"\nContent-type: application/pdf");
+        // CHECKSTYLE.OFF: LineLength
+        MultipartHeadersPart headers = multipartHeadersPartParser
+                .parse("Content-Disposition: attachment; name=\"FIELDNAME\"; filename=\"FILE.PDF\"\nContent-type: application/pdf");
+        // CHECKSTYLE.ON: LineLength
 
         assertThat(headers.getFileName(), is("FILE.PDF"));
         assertThat(headers.getName(), is("FIELDNAME"));
@@ -26,7 +30,10 @@ public class MultipartHeadersPartParserTest {
 
     @Test
     public void shouldParseValidAttachmentHeaderCaseInsensitive() throws MalformedInputException {
-        MultipartHeadersPart headers = multipartHeadersPartParser.parse("CONTENT-DISPOSITION: attachment; NAME=\"FIELDNAME\"; FILENAME=\"FILE.PDF\"\nContent-TYPE: application/pdf");
+        // CHECKSTYLE.OFF: LineLength
+        MultipartHeadersPart headers = multipartHeadersPartParser
+                .parse("CONTENT-DISPOSITION: attachment; NAME=\"FIELDNAME\"; FILENAME=\"FILE.PDF\"\nContent-TYPE: application/pdf");
+        // CHECKSTYLE.ON: LineLength
 
         assertThat(headers.getFileName(), is("FILE.PDF"));
         assertThat(headers.getName(), is("FIELDNAME"));
@@ -61,3 +68,4 @@ public class MultipartHeadersPartParserTest {
         multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text");
     }
 }
+// CHECKSTYLE.ON: JavadocType

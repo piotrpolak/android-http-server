@@ -52,9 +52,9 @@ public final class StringUtilities {
 
         // ASCI 97 - 122
         while (randomString.length() < length) {
-            // CHECKSTYLE.OFF: MagicNumberCheck
+            // CHECKSTYLE.OFF: MagicNumber
             randomString.append((char) (random.nextInt(25) + 97));
-            // CHECKSTYLE.ON: MagicNumberCheck
+            // CHECKSTYLE.ON: MagicNumber
         }
         return randomString.toString();
     }

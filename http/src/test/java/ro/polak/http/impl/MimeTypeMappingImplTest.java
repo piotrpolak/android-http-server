@@ -12,6 +12,7 @@ import ro.polak.http.MimeTypeMapping;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
 public class MimeTypeMappingImplTest {
 
     @Test
@@ -46,3 +47,4 @@ public class MimeTypeMappingImplTest {
         stream.close();
     }
 }
+// CHECKSTYLE.ON: JavadocType

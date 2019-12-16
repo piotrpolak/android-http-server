@@ -19,6 +19,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+// CHECKSTYLE.OFF: JavadocType
+// CHECKSTYLE.OFF: MagicNumber
 public class CookieHeaderSerializerTest {
 
     private static CookieHeaderSerializer cookieHeaderSerializer;
@@ -46,7 +48,7 @@ public class CookieHeaderSerializerTest {
         Cookie cookie = new Cookie("name", "value");
         cookie.setMaxAge(maxAgeSeconds);
         String serializedCookie = cookieHeaderSerializer.serialize(cookie);
-        Date date = new Date(System.currentTimeMillis() + Long.valueOf(maxAgeSeconds) * 1000l);
+        Date date = new Date(System.currentTimeMillis() + Long.valueOf(maxAgeSeconds) * 1000L);
         String expiresValue = DateUtilities.dateFormat(date);
         assertThat(getExpiresValue(serializedCookie), is(expiresValue));
     }
@@ -82,7 +84,7 @@ public class CookieHeaderSerializerTest {
         assertThat(serializedCookie, is("name=" + StringUtilities.urlEncode(value)));
     }
 
-    private String getExpiresValue(String serializedCookie) {
+    private String getExpiresValue(final String serializedCookie) {
         String expiresStartString = "Expires=";
         int expiresStart = serializedCookie.indexOf(expiresStartString) + expiresStartString.length();
         String expiredToken = serializedCookie.substring(expiresStart);
@@ -94,7 +96,7 @@ public class CookieHeaderSerializerTest {
         return expiredToken.trim();
     }
 
-    private String[] getCookieParts(String serializedCookie) {
+    private String[] getCookieParts(final String serializedCookie) {
         String[] serializedCookieParts = serializedCookie.split(";");
         for (int i = 0; i < serializedCookieParts.length; i++) {
             serializedCookieParts[i] = serializedCookieParts[i].trim();
@@ -102,3 +104,5 @@ public class CookieHeaderSerializerTest {
         return serializedCookieParts;
     }
 }
+// CHECKSTYLE.ON: MagicNumber
+// CHECKSTYLE.ON: JavadocType

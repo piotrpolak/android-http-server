@@ -2,13 +2,12 @@ package ro.polak.http.controller.impl;
 
 import org.junit.Test;
 
-import ro.polak.http.controller.impl.ControllerImpl;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+// CHECKSTYLE.OFF: JavadocType
 public class LoggingUncaughtExceptionHandlerTest {
 
     @Test
@@ -23,3 +22,4 @@ public class LoggingUncaughtExceptionHandlerTest {
         verify(throwable, times(1)).getStackTrace();
     }
 }
+// CHECKSTYLE.ON: JavadocType

@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
 public class DateProviderTest {
 
     @Test
@@ -15,5 +16,5 @@ public class DateProviderTest {
         DateProvider dateProvider = new DateProvider();
         assertThat(dateProvider.now().getTime(), is(lessThanOrEqualTo(new Date().getTime())));
     }
-
 }
+// CHECKSTYLE.ON: JavadocType

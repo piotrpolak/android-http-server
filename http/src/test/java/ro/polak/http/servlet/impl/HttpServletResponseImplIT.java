@@ -15,6 +15,7 @@ import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
 public class HttpServletResponseImplIT extends AbstractIT {
 
     @Test
@@ -44,3 +45,4 @@ public class HttpServletResponseImplIT extends AbstractIT {
         socket.close();
     }
 }
+// CHECKSTYLE.ON: JavadocType

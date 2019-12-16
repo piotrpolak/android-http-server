@@ -27,6 +27,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+// CHECKSTYLE.OFF: JavadocType
 public class HttpServletRequestImplFactoryTest {
 
     private static HttpServletRequestImplFactory factory;
@@ -68,7 +69,8 @@ public class HttpServletRequestImplFactoryTest {
 
     @Test(expected = UnsupportedProtocolException.class)
     public void shouldThrowUnsuportedProtocolExceptionIllegalProtocol() throws Exception {
-        when(socket.getInputStream()).thenReturn(new ByteArrayInputStream("GET / MALF/1.0\r\nHeader1: someValue\r\n\r\n".getBytes()));
+        when(socket.getInputStream())
+                .thenReturn(new ByteArrayInputStream("GET / MALF/1.0\r\nHeader1: someValue\r\n\r\n".getBytes()));
         factory.createFromSocket(socket);
     }
 
@@ -89,3 +91,4 @@ public class HttpServletRequestImplFactoryTest {
         assertThat(request.getHeaders().keySet().size(), is(0));
     }
 }
+// CHECKSTYLE.ON: JavadocType

@@ -9,6 +9,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
+// CHECKSTYLE.OFF: JavadocType
 public class UploadedFileTest {
 
     private static String tempPath = System.getProperty("java.io.tmpdir") + "/";
@@ -88,9 +89,10 @@ public class UploadedFileTest {
         }
     }
 
-    private void cleanupFile(File file) throws IOException {
+    private void cleanupFile(final File file) throws IOException {
         if (file.exists() && !file.delete()) {
             throw new IOException("Unable to delete " + file.getAbsolutePath());
         }
     }
 }
+// CHECKSTYLE.ON: JavadocType

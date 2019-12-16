@@ -1,5 +1,15 @@
 package ro.polak.http;
 
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,17 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
 import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -35,9 +34,12 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
 /**
- * @url https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
- * @url https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+ * The core integration test that verifies protocol compliance.
+ * <p>
+ * See https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+ * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
  */
+// CHECKSTYLE.OFF: MagicNumber
 public class ProtocolIT extends AbstractIT {
 
     private static final String NEW_LINE = "\r\n";
@@ -70,9 +72,7 @@ public class ProtocolIT extends AbstractIT {
             out = socket.getOutputStream();
             out.write(requestBody.getBytes());
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            while (in.readLine() != null) {
-                // Simulate reading
-            }
+            simulateReading(in);
 
         } catch (IOException e) {
             fail("The test failed too early due IOException" + e.getMessage());
@@ -82,10 +82,18 @@ public class ProtocolIT extends AbstractIT {
         while (i++ < 10) {
             // The following code will cause error on a closed socket
             Thread.sleep(100);
-            out.write("X" .getBytes());
+            out.write("X".getBytes());
             out.flush();
         }
     }
+
+    // CHECKSTYLE.OFF: EmptyBlock
+    private void simulateReading(final BufferedReader in) throws IOException {
+        while (in.readLine() != null) {
+            // Simulate reading
+        }
+    }
+    // CHECKSTYLE.ON: EmptyBlock
 
     @Test
     public void shouldServeDirectoryForServletIndex() throws IOException {
@@ -97,7 +105,8 @@ public class ProtocolIT extends AbstractIT {
         assertThat(shouldServeDirectoryFile("/", "/index.html", "Index file"), is(true));
     }
 
-    private boolean shouldServeDirectoryFile(String pathShort, String pathFull, String commonValue) throws IOException {
+    private boolean shouldServeDirectoryFile(final String pathShort, final String pathFull, final String commonValue)
+            throws IOException {
         Request request = new Request.Builder()
                 .url(getFullUrl(pathShort))
                 .get()
@@ -160,7 +169,7 @@ public class ProtocolIT extends AbstractIT {
         assertThat(shouldOpenAndCloseSession(2), is(true));
     }
 
-    private boolean shouldOpenAndCloseSession(int count) throws IOException {
+    private boolean shouldOpenAndCloseSession(final int count) throws IOException {
         Request request = new Request.Builder()
                 .url(getFullUrl("/example/Session"))
                 .get()
@@ -408,7 +417,9 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.code(), is(200));
         String responseBodyString = response.body().string();
+        // CHECKSTYLE.OFF: LineLength
         assertThat(responseBodyString, is("This is an example of chunked transfer type. Chunked transfer type can be used when the final length of the data is not known."));
+        // CHECKSTYLE.ON: LineLength
     }
 
     private File createRandomContentsFile() throws IOException {
@@ -597,7 +608,7 @@ public class ProtocolIT extends AbstractIT {
         assertResponsesWithHttpCode(requestBuilder, 505);
     }
 
-    private void assertResponsesWithHttpCode(RequestBuilder requestBuilder, int code) throws IOException {
+    private void assertResponsesWithHttpCode(final RequestBuilder requestBuilder, final int code) throws IOException {
         String requestBody = requestBuilder.toString();
 
         Socket socket = getSocket();
@@ -623,7 +634,7 @@ public class ProtocolIT extends AbstractIT {
         }
     }
 
-    private String getTooLongUri(int length) {
+    private String getTooLongUri(final int length) {
         // 2048 characters seems reasonable
         // see http://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
         char[] uri = new char[length + 1];
@@ -636,25 +647,27 @@ public class ProtocolIT extends AbstractIT {
     }
 
     /**
-     * All credits go to gncabrera
+     * All credits go to gncabrera.
      *
      * @see <a href="https://stackoverflow.com/a/34884863/2298527">https://stackoverflow.com/a/34884863/2298527</a>
      */
-    public class MyCookieJar implements CookieJar {
+    public final class MyCookieJar implements CookieJar {
 
         private List<Cookie> cookies;
 
         @Override
-        public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+        public void saveFromResponse(final HttpUrl url, final List<Cookie> cookies) {
             this.cookies = cookies;
         }
 
         @Override
-        public List<Cookie> loadForRequest(HttpUrl url) {
-            if (cookies != null)
+        public List<Cookie> loadForRequest(final HttpUrl url) {
+            if (cookies != null) {
                 return cookies;
-            return new ArrayList<Cookie>();
+            }
+            return new ArrayList<>();
 
         }
     }
 }
+// CHECKSTYLE.ON: MagicNumber

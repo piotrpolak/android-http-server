@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
 public class HeadersTest {
 
     private Headers headers;
@@ -64,3 +65,4 @@ public class HeadersTest {
         assertThat(headers.getHeader("Cookie"), is("1234"));
     }
 }
+// CHECKSTYLE.ON: JavadocType

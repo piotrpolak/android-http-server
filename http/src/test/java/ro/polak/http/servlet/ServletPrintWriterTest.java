@@ -5,6 +5,7 @@ import org.junit.Test;
 import static junit.framework.TestCase.fail;
 import static org.mockito.Mockito.mock;
 
+// CHECKSTYLE.OFF: JavadocType
 public class ServletPrintWriterTest {
 
     @Test(expected = IllegalStateException.class)
@@ -18,3 +19,4 @@ public class ServletPrintWriterTest {
         servletPrintWriter.writeEnd();
     }
 }
+// CHECKSTYLE.ON: JavadocType

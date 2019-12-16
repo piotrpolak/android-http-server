@@ -12,6 +12,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
+// CHECKSTYLE.OFF: JavadocType
 public class HttpSessionImplTest {
 
     private HttpSessionImpl session;
@@ -22,12 +23,13 @@ public class HttpSessionImplTest {
         session.setAttribute("attribute", "value");
     }
 
+    // CHECKSTYLE.OFF: MagicNumber
     @Test
     public void shouldReturnTheSameValuesByNull() {
         assertThat(session.getId(), is("123"));
 
-        session.setLastAccessedTime(3344l);
-        assertThat(session.getLastAccessedTime(), is(3344l));
+        session.setLastAccessedTime(3344L);
+        assertThat(session.getLastAccessedTime(), is(3344L));
 
         session.setMaxInactiveInterval(6677);
         assertThat(session.getMaxInactiveInterval(), is(6677));
@@ -36,6 +38,7 @@ public class HttpSessionImplTest {
         session.setServletContext(servletContext);
         assertThat(session.getServletContext(), is(servletContext));
     }
+    // CHECKSTYLE.ON: MagicNumber
 
     @Test
     public void shouldGraduallyRemoveAttributeByOverwritingByNull() {
@@ -65,11 +68,13 @@ public class HttpSessionImplTest {
         assertThat(session.isNew(), is(true));
     }
 
+    // CHECKSTYLE.OFF: MagicNumber
     @Test
     public void shouldNotBeNewIfAccessTimeIsTheSameAsCreationTime() {
         session.setLastAccessedTime(session.getCreationTime() + 30);
         assertThat(session.isNew(), is(false));
     }
+    // CHECKSTYLE.ON: MagicNumber
 
     @Test
     public void shouldInvalidateSession() {
@@ -108,3 +113,4 @@ public class HttpSessionImplTest {
         session.getAttributeNames();
     }
 }
+// CHECKSTYLE.ON: JavadocType

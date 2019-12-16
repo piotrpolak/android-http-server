@@ -32,6 +32,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+// CHECKSTYLE.OFF: JavadocType
 public class ServletResourceProviderTest {
 
     private static ServletContainer servletContainer;
@@ -92,3 +93,4 @@ public class ServletResourceProviderTest {
         servletResourceProvider.load("/", request, response);
     }
 }
+// CHECKSTYLE.ON: JavadocType

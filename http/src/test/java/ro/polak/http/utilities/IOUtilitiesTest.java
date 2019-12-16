@@ -16,6 +16,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static ro.polak.http.ExtraMarchers.utilityClass;
 
+// CHECKSTYLE.OFF: JavadocType
 public class IOUtilitiesTest {
 
     @Test
@@ -38,7 +39,7 @@ public class IOUtilitiesTest {
     }
 
     @Test
-    public void shouldCloseNullClosableSilently() throws IOException {
+    public void shouldCloseNullClosableSilently() {
         try {
             IOUtilities.closeSilently(null);
         } catch (Exception e) {
@@ -55,3 +56,4 @@ public class IOUtilitiesTest {
         assertThat(out.toString(), is(input));
     }
 }
+// CHECKSTYLE.ON: JavadocType

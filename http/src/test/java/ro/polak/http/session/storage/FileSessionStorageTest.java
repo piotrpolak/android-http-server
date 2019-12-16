@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNot.not;
 
+// CHECKSTYLE.OFF: JavadocType
 public class FileSessionStorageTest {
 
     private static final String VALID_SESSION_ID = "sessionidsjdfhgskldjfsghldkfjsgg";
@@ -117,10 +118,10 @@ public class FileSessionStorageTest {
         String nonWritableDirectory = FileUtils.createTempDirectory();
         new File(nonWritableDirectory).setWritable(false);
 
-        FileSessionStorage fileSessionStorage = new FileSessionStorage(nonWritableDirectory);
+        FileSessionStorage storage = new FileSessionStorage(nonWritableDirectory);
         HttpSessionImpl sessionWrapper = new HttpSessionImpl(VALID_SESSION_ID, System.currentTimeMillis());
         sessionWrapper.setAttribute("attributeName", "SomeValue");
-        fileSessionStorage.persistSession(sessionWrapper);
+        storage.persistSession(sessionWrapper);
     }
 
     @Test(expected = IOException.class)
@@ -130,5 +131,5 @@ public class FileSessionStorageTest {
         SessionStorage sessionStorage = new FileSessionStorage(nonExistentDirectory);
         sessionStorage.persistSession(new HttpSessionImpl(VALID_SESSION_ID, System.currentTimeMillis()));
     }
-
 }
+// CHECKSTYLE.ON: JavadocType

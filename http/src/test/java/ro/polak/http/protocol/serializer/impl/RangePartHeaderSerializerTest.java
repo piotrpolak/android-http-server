@@ -14,6 +14,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 
+// CHECKSTYLE.OFF: JavadocType
+// CHECKSTYLE.OFF: MagicNumber
 public class RangePartHeaderSerializerTest {
 
     private final RangePartHeaderSerializer rangePartHeaderSerializer = new RangePartHeaderSerializer();
@@ -39,7 +41,8 @@ public class RangePartHeaderSerializerTest {
         String boundary = "BBBOOUUNNNDDAARRYY";
         String contentType = "application/pdf";
         long totalLength = 12345L;
-        long computedLength = rangePartHeaderSerializer.getPartHeadersLength(Collections.singletonList(range), boundary, contentType, totalLength);
+        long computedLength = rangePartHeaderSerializer
+                .getPartHeadersLength(Collections.singletonList(range), boundary, contentType, totalLength);
 
         assertThat(computedLength, is(0L));
     }
@@ -55,9 +58,12 @@ public class RangePartHeaderSerializerTest {
         String serialized = rangePartHeaderSerializer.serialize(rangePartHeader);
 
         long serializedLength = serialized.length();
-        long computedLength = rangePartHeaderSerializer.getPartHeadersLength(Arrays.asList(range, range), boundary, contentType, totalLength);
+        long computedLength = rangePartHeaderSerializer
+                .getPartHeadersLength(Arrays.asList(range, range), boundary, contentType, totalLength);
         long firstLineLength = "\r\n".length();
         long lastLineLength = ("\r\n--" + boundary + "--\r\n\r\n").length();
         assertThat(computedLength, is(firstLineLength + 2 * serializedLength + lastLineLength));
     }
 }
+// CHECKSTYLE.ON: MagicNumber
+// CHECKSTYLE.ON: JavadocType

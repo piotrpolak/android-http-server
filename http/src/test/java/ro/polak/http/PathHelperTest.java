@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
 public class PathHelperTest {
 
     private static PathHelper pathHelper = new PathHelper();
@@ -29,3 +30,4 @@ public class PathHelperTest {
         assertThat(pathHelper.isDirectoryPath("somepath/"), is(true));
     }
 }
+// CHECKSTYLE.ON: JavadocType

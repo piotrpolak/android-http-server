@@ -1,15 +1,16 @@
 package ro.polak.http.protocol.parser.impl;
 
 import org.junit.Test;
-
-import java.util.Map;
-
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
+
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
+// CHECKSTYLE.OFF: MagicNumber
 public class QueryStringParserTest {
 
     @Test
@@ -68,3 +69,5 @@ public class QueryStringParserTest {
         assertThat(parameters.get("param4"), is("A B = % *"));
     }
 }
+// CHECKSTYLE.ON: MagicNumber
+// CHECKSTYLE.ON: JavadocType

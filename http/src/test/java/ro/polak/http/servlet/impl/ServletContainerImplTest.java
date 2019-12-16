@@ -2,7 +2,6 @@ package ro.polak.http.servlet.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.servlet.HttpServlet;
@@ -19,6 +18,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 
+// CHECKSTYLE.OFF: JavadocType
 public class ServletContainerImplTest {
 
     private ServletContainerImpl servletContainer;
@@ -72,9 +72,10 @@ public class ServletContainerImplTest {
         servletContainer.getServletForClass(InvalidServletWithPrivateConstructor.class, servletConfig);
     }
 
-
+    // CHECKSTYLE.OFF: MagicNumber
     @Test
-    public void shouldDestroyOutdatedServlet() throws ServletException, ServletInitializationException, InterruptedException {
+    public void shouldDestroyOutdatedServlet()
+            throws ServletException, ServletInitializationException, InterruptedException {
         servletContainer = new ServletContainerImpl(new DateProvider(), 50, 50);
         SampleServlet servlet = (SampleServlet) servletContainer.getServletForClass(SampleServlet.class, servletConfig);
         assertThat(servlet, is(not(nullValue())));
@@ -86,16 +87,18 @@ public class ServletContainerImplTest {
         assertThat(servlet, is(not(nullValue())));
         assertThat(servlet == servlet2, is(false));
     }
+    // CHECKSTYLE.ON: MagicNumber
 
-    public class InvalidServletWithPrivateConstructor extends HttpServlet {
+    public final class InvalidServletWithPrivateConstructor extends HttpServlet {
 
         private InvalidServletWithPrivateConstructor() {
 
         }
 
         @Override
-        public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
+        public void service(final HttpServletRequest request, final HttpServletResponse response) {
             // To comply with HttpServlet interface only
         }
     }
 }
+// CHECKSTYLE.ON: JavadocType

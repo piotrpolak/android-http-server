@@ -10,6 +10,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
 public class HeadersParserTest {
 
     private static Parser<Headers> headersParser = new HeadersParser();
@@ -101,7 +102,10 @@ public class HeadersParserTest {
 
     @Test
     public void shouldParseMultilineHeaderWithSingleLeadingSpace() throws MalformedInputException {
-        Headers headers = headersParser.parse("Word-Of-The-Day: The Fox Jumps Over\r\n the\r\n brown dog.\r\nAnother: Another\r\n multiline\r\n header\r\nCookie: ABCD");
+        // CHECKSTYLE.OFF: LineLength
+        Headers headers = headersParser
+                .parse("Word-Of-The-Day: The Fox Jumps Over\r\n the\r\n brown dog.\r\nAnother: Another\r\n multiline\r\n header\r\nCookie: ABCD");
+        // CHECKSTYLE.ON: LineLength
 
         assertThat(headers.containsHeader("Word-Of-The-Day"), is(true));
         assertThat(headers.containsHeader("Another"), is(true));
@@ -115,7 +119,8 @@ public class HeadersParserTest {
 
     @Test
     public void shouldParseWrongMultilineHeaderWithSingleLeadingSpace() throws MalformedInputException {
-        Headers headers = headersParser.parse(" Word-Of-The-Day: The Fox Jumps Over\r\n the\r\n brown dog.\r\nCookie: ABCD");
+        Headers headers = headersParser
+                .parse(" Word-Of-The-Day: The Fox Jumps Over\r\n the\r\n brown dog.\r\nCookie: ABCD");
 
         assertThat(headers.getHeader("Word-Of-The-Day"), is(nullValue()));
 
@@ -125,7 +130,8 @@ public class HeadersParserTest {
 
     @Test
     public void shouldParseMultilineHeaderWithSingleLeadingTab() throws MalformedInputException {
-        Headers headers = headersParser.parse("Word-Of-The-Day: The Fox Jumps Over\r\n\tthe\r\n\t brown dog.\r\nCookie: ABCD");
+        Headers headers = headersParser
+                .parse("Word-Of-The-Day: The Fox Jumps Over\r\n\tthe\r\n\t brown dog.\r\nCookie: ABCD");
 
         assertThat(headers.containsHeader("Word-Of-The-Day"), is(true));
         assertThat(headers.getHeader("Word-Of-The-Day"), is("The Fox Jumps Over the brown dog."));
@@ -136,7 +142,8 @@ public class HeadersParserTest {
 
     @Test
     public void shouldParseMultilineHeaderWithLeadingSpaces() throws MalformedInputException {
-        Headers headers = headersParser.parse("Word-Of-The-Day: The Fox Jumps Over\r\n        the\r\n        brown dog.\r\nCookie: ABCD");
+        Headers headers = headersParser
+                .parse("Word-Of-The-Day: The Fox Jumps Over\r\n        the\r\n        brown dog.\r\nCookie: ABCD");
 
         assertThat(headers.containsHeader("Word-Of-The-Day"), is(true));
         assertThat(headers.getHeader("Word-Of-The-Day"), is("The Fox Jumps Over the brown dog."));
@@ -166,3 +173,4 @@ public class HeadersParserTest {
         assertThat(headers.getHeader("Accept"), is("application/xml,application/json"));
     }
 }
+// CHECKSTYLE.ON: JavadocType

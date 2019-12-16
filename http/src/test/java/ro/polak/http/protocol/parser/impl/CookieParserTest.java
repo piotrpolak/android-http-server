@@ -13,6 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsMapContaining.hasKey;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
 public class CookieParserTest {
 
     private static Parser<Map<String, Cookie>> cookieParser = new CookieParser();
@@ -63,3 +64,4 @@ public class CookieParserTest {
         assertThat(cookies.size(), is(0));
     }
 }
+// CHECKSTYLE.ON: JavadocType

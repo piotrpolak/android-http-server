@@ -11,6 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 
+// CHECKSTYLE.OFF: JavadocType
 public class HttpServletTest {
 
     @Test
@@ -39,3 +40,4 @@ public class HttpServletTest {
         }
     }
 }
+// CHECKSTYLE.ON: JavadocType

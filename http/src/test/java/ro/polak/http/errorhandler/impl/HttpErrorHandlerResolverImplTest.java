@@ -11,6 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
+// CHECKSTYLE.OFF: JavadocType
 public class HttpErrorHandlerResolverImplTest {
 
     @Test
@@ -21,3 +22,4 @@ public class HttpErrorHandlerResolverImplTest {
         assertThat(handler, is(instanceOf(HttpError500Handler.class)));
     }
 }
+// CHECKSTYLE.ON: JavadocType

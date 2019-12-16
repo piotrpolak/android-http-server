@@ -6,6 +6,8 @@ import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.ServletConfig;
 
+// CHECKSTYLE.OFF: DesignForExtension JavadocType
+// CHECKSTYLE.OFF: JavadocType
 public class SampleServlet extends HttpServlet {
 
     private int initializedCounter = 0;
@@ -14,7 +16,7 @@ public class SampleServlet extends HttpServlet {
     private ServletConfig servletConfig;
 
     @Override
-    public void init(ServletConfig servletConfig) throws ServletException {
+    public void init(final ServletConfig servletConfig) throws ServletException {
         this.servletConfig = servletConfig;
         init();
     }
@@ -32,7 +34,7 @@ public class SampleServlet extends HttpServlet {
     }
 
     @Override
-    public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
+    public void service(final HttpServletRequest request, final HttpServletResponse response) {
         // Do nothing, this is used for test only
     }
 
@@ -48,3 +50,5 @@ public class SampleServlet extends HttpServlet {
         return servletConfig;
     }
 }
+// CHECKSTYLE.ON: JavadocType
+// CHECKSTYLE.ON: DesignForExtension

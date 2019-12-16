@@ -5,6 +5,8 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+// CHECKSTYLE.OFF: JavadocType
+// CHECKSTYLE.OFF: MagicNumber
 public class CookieTest {
 
     @Test(expected = IllegalArgumentException.class)
@@ -48,7 +50,7 @@ public class CookieTest {
 
     @Test
     public void shouldAllowLongValues() {
-        Cookie cookie = new Cookie("someName", 1545454454544844l);
+        Cookie cookie = new Cookie("someName", 1545454454544844L);
         assertThat(cookie.getValue(), is("1545454454544844"));
     }
 
@@ -58,3 +60,5 @@ public class CookieTest {
         assertThat(cookie.getValue(), is("22.33"));
     }
 }
+// CHECKSTYLE.ON: MagicNumber
+// CHECKSTYLE.ON: JavadocType

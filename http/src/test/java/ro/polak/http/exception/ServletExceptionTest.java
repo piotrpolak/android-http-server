@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
+// CHECKSTYLE.OFF: JavadocType
 public class ServletExceptionTest {
 
     @Test
@@ -28,3 +29,4 @@ public class ServletExceptionTest {
         assertThat(exception.getCause(), is(e));
     }
 }
+// CHECKSTYLE.ON: JavadocType

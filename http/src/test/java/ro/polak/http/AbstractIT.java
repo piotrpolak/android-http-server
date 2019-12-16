@@ -1,6 +1,8 @@
 package ro.polak.http;
 
 import org.junit.BeforeClass;
+import ro.polak.http.cli.DefaultServerConfigFactory;
+import ro.polak.http.configuration.ServerConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,19 +11,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-import ro.polak.http.cli.DefaultServerConfigFactory;
-import ro.polak.http.configuration.ServerConfig;
-
 import static junit.framework.TestCase.fail;
 
-/**
- * https://zeroturnaround.com/rebellabs/the-correct-way-to-use-integration-tests-in-your-build-process/
- */
+// CHECKSTYLE.OFF: JavadocType
 public class AbstractIT {
 
+    protected static final String HOST = "localhost";
+    protected static final int PORT = 8080;
+
     private static ServerSocket serverSocket;
-    protected final String HOST = "localhost";
-    protected final int PORT = 8080;
     private static File httpdConfigFile;
     private static String tempDirectory;
 
@@ -39,8 +37,21 @@ public class AbstractIT {
         }
     }
 
-    protected String getFullUrl(String path) {
+    /**
+     * Builds the full request URL.
+     */
+    protected String getFullUrl(final String path) {
         return "http://" + HOST + ":" + PORT + path;
+    }
+
+    /**
+     * Builds socket to the predefined host and port.
+     */
+    protected Socket getSocket() throws IOException {
+        Socket socket;
+        socket = new Socket(HOST, PORT);
+        socket.setSoTimeout(0);
+        return socket;
     }
 
     private static ServerConfig getPreparedConfig() throws IOException {
@@ -65,7 +76,8 @@ public class AbstractIT {
         return serverConfig;
     }
 
-    private static void handleFile(ServerConfig serverConfig, String relativePath, String contents) throws IOException {
+    private static void handleFile(final ServerConfig serverConfig, final String relativePath, final String contents)
+            throws IOException {
         File documentRoot = new File(serverConfig.getDocumentRootPath());
         if (!documentRoot.exists() && !documentRoot.mkdir()) {
             throw new IOException("Unable to mkdir " + documentRoot.getAbsolutePath());
@@ -97,11 +109,6 @@ public class AbstractIT {
             }
         }).getServerConfig();
     }
-
-    protected Socket getSocket() throws IOException {
-        Socket socket;
-        socket = new Socket(HOST, PORT);
-        socket.setSoTimeout(0);
-        return socket;
-    }
 }
+// CHECKSTYLE.ON: JavadocType
+

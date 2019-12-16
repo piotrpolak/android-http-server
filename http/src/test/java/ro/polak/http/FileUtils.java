@@ -1,14 +1,15 @@
 package ro.polak.http;
 
+import ro.polak.http.impl.ServerConfigImplTest;
+import ro.polak.http.utilities.IOUtilities;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import ro.polak.http.impl.ServerConfigImplTest;
-import ro.polak.http.utilities.IOUtilities;
-
+// CHECKSTYLE.OFF: JavadocType
 public final class FileUtils {
 
     private FileUtils() {
@@ -34,7 +35,7 @@ public final class FileUtils {
      * @return
      * @throws IOException
      */
-    public static File writeToTempFile(String contents) throws IOException {
+    public static File writeToTempFile(final String contents) throws IOException {
         File file = File.createTempFile("temp", ".util");
         file.deleteOnExit();
         writeToFile(file, contents);
@@ -48,7 +49,7 @@ public final class FileUtils {
      * @param contents
      * @throws IOException
      */
-    public static void writeToFile(File file, String contents) throws IOException {
+    public static void writeToFile(final File file, final String contents) throws IOException {
         BufferedWriter writer = null;
         try {
             writer = new BufferedWriter(new FileWriter(file));
@@ -60,3 +61,4 @@ public final class FileUtils {
         }
     }
 }
+// CHECKSTYLE.ON: JavadocType

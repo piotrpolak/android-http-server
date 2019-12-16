@@ -15,6 +15,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+// CHECKSTYLE.OFF: JavadocType
 public class ServerRunnableTest {
 
     @Test
@@ -37,3 +38,4 @@ public class ServerRunnableTest {
         verify(socket, times(1)).close();
     }
 }
+// CHECKSTYLE.ON: JavadocType

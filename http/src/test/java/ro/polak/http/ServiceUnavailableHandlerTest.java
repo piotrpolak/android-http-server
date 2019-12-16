@@ -18,6 +18,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+// CHECKSTYLE.OFF: JavadocType
 public class ServiceUnavailableHandlerTest {
 
     private static HttpServletResponseImplFactory factory;
@@ -53,3 +54,4 @@ public class ServiceUnavailableHandlerTest {
         assertThat(outputStream.toString(), containsString("503"));
     }
 }
+// CHECKSTYLE.ON: JavadocType

@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
+// CHECKSTYLE.OFF: JavadocType
 public class UnexpectedSituationExceptionTest {
 
     @Test
@@ -27,5 +28,5 @@ public class UnexpectedSituationExceptionTest {
         Exception exception = new UnexpectedSituationException(e);
         assertThat(exception.getCause(), is(e));
     }
-
 }
+// CHECKSTYLE.ON: JavadocType

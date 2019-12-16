@@ -10,6 +10,8 @@ import ro.polak.http.servlet.Range;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
+// CHECKSTYLE.OFF: MagicNumber
 public class RangeParserTest {
 
     @Test
@@ -79,3 +81,5 @@ public class RangeParserTest {
         rangeParser.parse("octets=1-100");
     }
 }
+// CHECKSTYLE.ON: MagicNumber
+// CHECKSTYLE.ON: JavadocType

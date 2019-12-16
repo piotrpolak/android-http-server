@@ -9,6 +9,7 @@ import ro.polak.http.protocol.parser.Parser;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
 public class RequestStatusParserTest {
 
     @Test
@@ -39,3 +40,4 @@ public class RequestStatusParserTest {
         requestStatusParser.parse("GET HTTP/1.1");
     }
 }
+// CHECKSTYLE.ON: JavadocType

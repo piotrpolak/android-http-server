@@ -10,6 +10,8 @@ import ro.polak.http.protocol.parser.MalformedInputException;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
+// CHECKSTYLE.OFF: MagicNumber
 public class LocaleParserTest {
 
     private static final LocaleParser LOCALE_PARSER = new LocaleParser();
@@ -69,3 +71,5 @@ public class LocaleParserTest {
         assertThat(locales.get(3), is(new Locale("ru")));
     }
 }
+// CHECKSTYLE.ON: MagicNumber
+// CHECKSTYLE.ON: JavadocType

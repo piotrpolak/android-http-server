@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
+// CHECKSTYLE.OFF: JavadocType
 public class HttpServletResponseImplTest {
 
     private HttpServletResponseImpl httpServletResponseImpl;
@@ -58,3 +59,4 @@ public class HttpServletResponseImplTest {
         assertThat(httpServletResponseImpl.getHeaders().getHeader("IntValue"), is("1"));
     }
 }
+// CHECKSTYLE.ON: JavadocType

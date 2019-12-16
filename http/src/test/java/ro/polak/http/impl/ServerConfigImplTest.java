@@ -5,19 +5,20 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import ro.polak.http.FileUtils;
+import ro.polak.http.configuration.ServerConfig;
+import ro.polak.http.configuration.impl.ServerConfigImpl;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
-import ro.polak.http.FileUtils;
-import ro.polak.http.configuration.ServerConfig;
-import ro.polak.http.configuration.impl.ServerConfigImpl;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
+// CHECKSTYLE.OFF: JavadocType
+// CHECKSTYLE.OFF: MagicNumber
 public class ServerConfigImplTest {
 
     public static final String OVERWRITTEN_VALUE = "OVERWRITTEN";
@@ -26,16 +27,16 @@ public class ServerConfigImplTest {
 
     private Properties backup;
 
-    private static final String DEFAULT_CONFIG_DATA = "server.port=8090\n" +
-            "server.static.path=wwwx\n" +
-            "server.static.directoryIndex=index.php,index.html\n" +
-            "server.mimeType.defaultMimeType=mime/text\n" +
-            "server.mimeType.filePath=mime.mime\n" +
-            "server.maxThreads=3\n" +
-            "server.keepAlive.enabled=true\n" +
-            "server.errorDocument.404=error404.html\n" +
-            "server.errorDocument.403=error403.html\n" +
-            ADDITIONAL_ATTRIBUTE_NAME + "=" + ORIGINAL_VALUE + "\n";
+    private static final String DEFAULT_CONFIG_DATA = "server.port=8090\n"
+            + "server.static.path=wwwx\n"
+            + "server.static.directoryIndex=index.php,index.html\n"
+            + "server.mimeType.defaultMimeType=mime/text\n"
+            + "server.mimeType.filePath=mime.mime\n"
+            + "server.maxThreads=3\n"
+            + "server.keepAlive.enabled=true\n"
+            + "server.errorDocument.404=error404.html\n"
+            + "server.errorDocument.403=error403.html\n"
+            + ADDITIONAL_ATTRIBUTE_NAME + "=" + ORIGINAL_VALUE + "\n";
 
     private static String workingDirectory;
     private static String tempDirectory;
@@ -72,17 +73,6 @@ public class ServerConfigImplTest {
         }
 
         System.setProperties(backup);
-    }
-
-    public void writeFiles(String configData) throws IOException {
-        configFile = new File(workingDirectory + "httpd.properties");
-        mimeFile = new File(workingDirectory + "mime.mime");
-        try {
-            mimeFile.createNewFile();
-        } catch (IOException e) {
-        }
-
-        FileUtils.writeToFile(configFile, configData);
     }
 
     @Test
@@ -151,4 +141,17 @@ public class ServerConfigImplTest {
 //        assertThat(serverConfig.getMimeTypeMapping().getMimeTypeByExtension("ANY"), is("mime/text"));
         assertThat(serverConfig.getAttribute(ADDITIONAL_ATTRIBUTE_NAME), is("YET_ANOTHER_VALUE"));
     }
+
+    private void writeFiles(final String configData) throws IOException {
+        configFile = new File(workingDirectory + "httpd.properties");
+        mimeFile = new File(workingDirectory + "mime.mime");
+        try {
+            mimeFile.createNewFile();
+        } catch (IOException e) {
+        }
+
+        FileUtils.writeToFile(configFile, configData);
+    }
 }
+// CHECKSTYLE.ON: MagicNumber
+// CHECKSTYLE.ON: JavadocType

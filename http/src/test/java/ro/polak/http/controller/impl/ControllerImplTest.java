@@ -13,7 +13,6 @@ import ro.polak.http.FileUtils;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.WebServer;
-import ro.polak.http.controller.impl.ControllerImpl;
 import ro.polak.http.gui.ServerGui;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,6 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
+// CHECKSTYLE.OFF: JavadocType
 public class ControllerImplTest {
 
     private static ServerConfigFactory serverConfigFactory;
@@ -119,3 +119,4 @@ public class ControllerImplTest {
         controllerImpl.stop();
     }
 }
+// CHECKSTYLE.ON: JavadocType

@@ -8,17 +8,19 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 
+// CHECKSTYLE.OFF: JavadocType
+// CHECKSTYLE.OFF: HideUtilityClassConstructor
 public class ExtraMarchers {
 
-    private static final UtilityClassMatcher utilClassMatcher = new UtilityClassMatcher();
+    private static final UtilityClassMatcher UTIL_CLASS_MATCHER = new UtilityClassMatcher();
 
     public static Matcher<? super Class<?>> utilityClass() {
-        return utilClassMatcher;
+        return UTIL_CLASS_MATCHER;
     }
 
     private static class UtilityClassMatcher extends TypeSafeMatcher<Class<?>> {
         @Override
-        protected boolean matchesSafely(Class<?> clazz) {
+        protected boolean matchesSafely(final Class<?> clazz) {
             if (!isFinal(clazz)) {
                 return false;
             }
@@ -39,7 +41,7 @@ public class ExtraMarchers {
         }
 
         @Override
-        protected void describeMismatchSafely(Class<?> clazz, Description mismatchDescription) {
+        protected void describeMismatchSafely(final Class<?> clazz, final Description mismatchDescription) {
             if (clazz == null) {
                 super.describeMismatch(clazz, mismatchDescription);
             } else {
@@ -65,22 +67,22 @@ public class ExtraMarchers {
         }
 
         @Override
-        public void describeTo(Description description) {
+        public void describeTo(final Description description) {
             // Not supported
         }
 
-        private void callPrivateConstructor(Class clazz) {
+        private void callPrivateConstructor(final Class clazz) {
             try {
                 Constructor<?> constructor = clazz.getDeclaredConstructor();
                 constructor.setAccessible(true);
                 constructor.newInstance();
-            } catch (NoSuchMethodException | IllegalAccessException |
-                    InstantiationException | InvocationTargetException e) {
+            } catch (NoSuchMethodException | IllegalAccessException
+                    | InstantiationException | InvocationTargetException e) {
                 // Swallowed
             }
         }
 
-        private boolean isInstantiable(Class clazz) throws ClassNotFoundException, InstantiationException {
+        private boolean isInstantiable(final Class clazz) throws ClassNotFoundException, InstantiationException {
             boolean hasPrivateConstructor = false;
             try {
                 clazz.newInstance();
@@ -90,8 +92,11 @@ public class ExtraMarchers {
             return hasPrivateConstructor;
         }
 
-        private boolean isFinal(Class<?> clazz) {
+        private boolean isFinal(final Class<?> clazz) {
             return Modifier.isFinal(clazz.getModifiers());
         }
     }
 }
+// CHECKSTYLE.ON: HideUtilityClassConstructor
+// CHECKSTYLE.ON: JavadocType
+

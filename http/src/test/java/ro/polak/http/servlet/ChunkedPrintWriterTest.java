@@ -7,11 +7,14 @@ import java.io.ByteArrayOutputStream;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
 public class ChunkedPrintWriterTest {
+
+    private static final int ONE_KILO = 1024;
 
     @Test
     public void shouldSerializeDataProperly() {
-        ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+        ByteArrayOutputStream out = new ByteArrayOutputStream(ONE_KILO);
         ChunkedPrintWriter printWriter = new ChunkedPrintWriter(out);
 
         printWriter.print("Wiki");
@@ -24,7 +27,7 @@ public class ChunkedPrintWriterTest {
 
     @Test
     public void shouldAppendNewLineProperly() {
-        ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+        ByteArrayOutputStream out = new ByteArrayOutputStream(ONE_KILO);
         ChunkedPrintWriter printWriter = new ChunkedPrintWriter(out);
 
         printWriter.print("Wiki");
@@ -35,7 +38,7 @@ public class ChunkedPrintWriterTest {
 
     @Test
     public void shouldEncodeLengthAsHex() {
-        ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+        ByteArrayOutputStream out = new ByteArrayOutputStream(ONE_KILO);
         ChunkedPrintWriter printWriter = new ChunkedPrintWriter(out);
 
         printWriter.print("SomeTextLongerThanSixteenCharacters");
@@ -47,3 +50,4 @@ public class ChunkedPrintWriterTest {
         assertThat(new String(out.toByteArray()), is("23\r\nSomeTextLongerThanSixteenCharacters\r\n0\r\n\r\n"));
     }
 }
+// CHECKSTYLE.ON: JavadocType

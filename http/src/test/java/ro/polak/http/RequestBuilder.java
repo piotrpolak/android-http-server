@@ -3,9 +3,13 @@ package ro.polak.http;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.protocol.serializer.impl.HeadersSerializer;
 
-public class RequestBuilder {
+/**
+ * Makes it easier to build requests for tests.
+ */
+public final class RequestBuilder {
 
-    private final String NEW_LINE = "\r\n";
+    private static final String NEW_LINE = "\r\n";
+
     private String method;
     private String uri;
     private String protocol = "HTTP/1.1";
@@ -17,22 +21,22 @@ public class RequestBuilder {
         return rb;
     }
 
-    public RequestBuilder get(String uri) {
+    public RequestBuilder get(final String uri) {
         return method("GET", uri);
     }
 
-    public RequestBuilder withProtocol(String protocol) {
+    public RequestBuilder withProtocol(final String protocol) {
         this.protocol = protocol;
         return this;
     }
 
-    public RequestBuilder method(String method, String uri) {
+    public RequestBuilder method(final String method, final String uri) {
         this.method = method;
         this.uri = uri;
         return this;
     }
 
-    public RequestBuilder withHeader(String name, String value) {
+    public RequestBuilder withHeader(final String name, final String value) {
         headers.setHeader(name, value);
         return this;
     }
@@ -42,11 +46,12 @@ public class RequestBuilder {
         return this;
     }
 
-    public RequestBuilder withHost(String value) {
+    public RequestBuilder withHost(final String value) {
         this.withHeader("Host", value);
         return this;
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
 

@@ -16,6 +16,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+// CHECKSTYLE.OFF: JavadocType
 public class WebServerTest {
 
     @Test
@@ -86,6 +87,7 @@ public class WebServerTest {
         assertThat(webServer.isRunning(), is(false));
     }
 
+    // CHECKSTYLE.OFF: MagicNumber
     private ServerConfig getDefaultServerConfig() throws IOException {
         ServerConfig serverConfig = mock(ServerConfig.class);
         when(serverConfig.getDocumentRootPath()).thenReturn("/tmp/SomePathThatDoesNotExist");
@@ -93,4 +95,6 @@ public class WebServerTest {
         when(serverConfig.getMaxServerThreads()).thenReturn(99);
         return serverConfig;
     }
+    // CHECKSTYLE.ON: MagicNumber
 }
+// CHECKSTYLE.ON: JavadocType

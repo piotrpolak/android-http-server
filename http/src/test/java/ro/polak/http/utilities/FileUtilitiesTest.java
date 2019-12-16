@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static ro.polak.http.ExtraMarchers.utilityClass;
 
+// CHECKSTYLE.OFF: JavadocType
 public class FileUtilitiesTest {
 
     @Test
@@ -22,6 +23,7 @@ public class FileUtilitiesTest {
         assertThat(FileUtilities.getExtension(null), is(nullValue()));
     }
 
+    // CHECKSTYLE.OFF: MagicNumber
     @Test
     public void shouldFormatFileSize() {
         assertThat(FileUtilities.fileSizeUnits(1), is("1 B"));
@@ -32,4 +34,6 @@ public class FileUtilitiesTest {
         assertThat(FileUtilities.fileSizeUnits(1073741824), is("1.00 GB"));
         assertThat(FileUtilities.fileSizeUnits(1073741825), is("1.00 GB"));
     }
+    // CHECKSTYLE.OFF: MagicNumber
 }
+// CHECKSTYLE.ON: JavadocType

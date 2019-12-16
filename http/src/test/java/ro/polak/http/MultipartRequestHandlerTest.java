@@ -1,13 +1,6 @@
 package ro.polak.http;
 
 import org.junit.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
-
 import ro.polak.http.exception.protocol.PayloadTooLargeProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
@@ -15,16 +8,24 @@ import ro.polak.http.protocol.parser.impl.HeadersParser;
 import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
 import ro.polak.http.servlet.UploadedFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
 
+// CHECKSTYLE.OFF: JavadocType
+// CHECKSTYLE.OFF: MagicNumber
 public class MultipartRequestHandlerTest {
 
     private static final String BOUNDARY = "------------BOUNDARY";
     private static final String TEMPORARY_UPLOADS_DIRECTORY
             = System.getProperty("java.io.tmpdir") + "/";
-    private static final Parser<MultipartHeadersPart> parser = new MultipartHeadersPartParser(
+    private static final Parser<MultipartHeadersPart> PARSER = new MultipartHeadersPartParser(
             new HeadersParser()
     );
 
@@ -36,7 +37,7 @@ public class MultipartRequestHandlerTest {
                 .withField("field_3", "C123")
                 .build();
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
                 data.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         try {
@@ -60,7 +61,7 @@ public class MultipartRequestHandlerTest {
                 .withField("field_2", "------------BOUNDARY-")
                 .build();
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
                 data.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         try {
@@ -84,7 +85,7 @@ public class MultipartRequestHandlerTest {
                 .withFile("FIELDNAME", "FILE.PDF", "application/pdf", "ABCD")
                 .build();
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
                 data.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
         try {
             mrh.handle();
@@ -96,7 +97,7 @@ public class MultipartRequestHandlerTest {
 
         assertThat(mrh.getPost().get("field_1"), is("A123"));
         assertThat(mrh.getUploadedFiles().size(), is(1));
-        assertThat(mrh.getUploadedFiles().iterator().next().getFile().length(), is(4l));
+        assertThat(mrh.getUploadedFiles().iterator().next().getFile().length(), is(4L));
         // TODO Check file content
     }
 
@@ -108,7 +109,7 @@ public class MultipartRequestHandlerTest {
                 .withFile("FIELDNAME_01", "FILE.PDF", "application/pdf", "ABCD")
                 .build();
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
                 data.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
         try {
             mrh.handle();
@@ -124,7 +125,7 @@ public class MultipartRequestHandlerTest {
         Iterator<UploadedFile> uploadedFiles = mrh.getUploadedFiles().iterator();
 
         assertThat(uploadedFiles.next().getFile().length(), is(0L));
-        assertThat(uploadedFiles.next().getFile().length(), is(4l));
+        assertThat(uploadedFiles.next().getFile().length(), is(4L));
         // TODO Check file content
     }
 
@@ -149,7 +150,7 @@ public class MultipartRequestHandlerTest {
                 .build();
 
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
                 data.length(), shortBoundary, TEMPORARY_UPLOADS_DIRECTORY, 1);
         try {
             mrh.handle();
@@ -179,7 +180,7 @@ public class MultipartRequestHandlerTest {
                 .withField("field_3", "C123")
                 .build();
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
                 data.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         try {
@@ -195,7 +196,7 @@ public class MultipartRequestHandlerTest {
             throws MalformedInputException, IOException {
         String data = "--123";
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
                 data.length() * 2, BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         mrh.handle();
@@ -205,12 +206,12 @@ public class MultipartRequestHandlerTest {
     public void shouldStopParsingOnWrongContentLengthInBeforeBoundary()
             throws MalformedInputException {
 
-        String data = "--------------------------------------------------------" +
-                new MultipartInputBuilder(BOUNDARY)
-                        .withField("field_1", "A123")
-                        .build();
+        String data = "--------------------------------------------------------"
+                + new MultipartInputBuilder(BOUNDARY)
+                .withField("field_1", "A123")
+                .build();
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data), 5,
+        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data), 5,
                 BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         try {
@@ -232,7 +233,7 @@ public class MultipartRequestHandlerTest {
                 .withField("field_3", "C123")
                 .build();
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(parser, getStreamOutOfString(data),
+        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
                 begin.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         try {
@@ -242,20 +243,20 @@ public class MultipartRequestHandlerTest {
         }
     }
 
-    private InputStream getStreamOutOfString(String data) {
+    private InputStream getStreamOutOfString(final String data) {
         return new ByteArrayInputStream(data.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
      * Builds multipart input.
      */
-    private static class MultipartInputBuilder {
+    private static final class MultipartInputBuilder {
 
         private static final String NEW_LINE = "\r\n";
         private StringBuilder contents = new StringBuilder();
         private String boundary;
 
-        private MultipartInputBuilder(String boundary) {
+        private MultipartInputBuilder(final String boundary) {
             this.boundary = boundary;
 
             addBoundary();
@@ -265,7 +266,7 @@ public class MultipartRequestHandlerTest {
             contents.append("--").append(boundary).append(NEW_LINE);
         }
 
-        public MultipartInputBuilder withField(String fieldName, String fieldValue) {
+        public MultipartInputBuilder withField(final String fieldName, final String fieldValue) {
             contents.append("Content-Disposition: form-data; name=\"").append(fieldName).append("\"")
                     .append(NEW_LINE)
                     .append(NEW_LINE)
@@ -276,7 +277,8 @@ public class MultipartRequestHandlerTest {
             return this;
         }
 
-        public MultipartInputBuilder withFile(String fieldName, String fileName, String contentType, String fileContents) {
+        public MultipartInputBuilder withFile(final String fieldName, final String fileName,
+                                              final String contentType, final String fileContents) {
             contents.append("Content-Disposition: attachment; name=\"").append(fieldName).append("\"; ")
                     .append("filename=\"").append(fileName).append("\"")
                     .append(NEW_LINE)
@@ -296,3 +298,5 @@ public class MultipartRequestHandlerTest {
         }
     }
 }
+// CHECKSTYLE.ON: MagicNumber
+// CHECKSTYLE.ON: JavadocType

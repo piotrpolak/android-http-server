@@ -29,6 +29,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+// CHECKSTYLE.OFF: JavadocType
 public class ServletContextImplTest {
 
     private SessionStorage sessionStorage;
@@ -98,6 +99,7 @@ public class ServletContextImplTest {
         assertThat(sessionRead.getServletContext(), is((ServletContext) servletContext));
     }
 
+    // CHECKSTYLE.OFF: MagicNumber
     @Test
     public void shouldRemoveExpiredSession() throws IOException {
         HttpSessionImpl session = new HttpSessionImpl("123", System.currentTimeMillis());
@@ -107,6 +109,7 @@ public class ServletContextImplTest {
         verify(sessionStorage, times(1)).removeSession(session);
         assertThat(sessionRead, is(nullValue()));
     }
+    // CHECKSTYLE.ON: MagicNumber
 
     @Test
     public void shouldCreateSessionWithCorrectContext() {
@@ -130,3 +133,4 @@ public class ServletContextImplTest {
         assertThat(Collections.list(servletContext.getAttributeNames()).size(), Matchers.is(0));
     }
 }
+// CHECKSTYLE.ON: JavadocType

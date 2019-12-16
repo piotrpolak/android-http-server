@@ -17,6 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+// CHECKSTYLE.OFF: JavadocType
 public class HttpError500HandlerTest {
 
     private static HttpServletResponseImpl httpServletResponse;
@@ -68,5 +69,5 @@ public class HttpError500HandlerTest {
         String output = arg.getValue();
         assertThat(output, containsString(">java.lang.RuntimeException<"));
     }
-
 }
+// CHECKSTYLE.ON: JavadocType

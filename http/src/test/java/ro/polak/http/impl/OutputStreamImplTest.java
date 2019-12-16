@@ -13,6 +13,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+// CHECKSTYLE.OFF: JavadocType
 public class OutputStreamImplTest {
 
     @Test
@@ -97,3 +98,4 @@ public class OutputStreamImplTest {
         verify(out, times(1)).close();
     }
 }
+// CHECKSTYLE.ON: JavadocType

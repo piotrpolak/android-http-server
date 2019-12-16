@@ -32,6 +32,8 @@ import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+// CHECKSTYLE.OFF: JavadocType
+// CHECKSTYLE.OFF: MagicNumber
 public class HttpServletRequestImplTest {
 
     private HttpServletRequestImpl httpServletRequestImpl;
@@ -131,7 +133,8 @@ public class HttpServletRequestImplTest {
 
         List<Locale> locales = Collections.list(httpServletRequestImpl.getLocales());
         assertThat(locales, contains(new Locale("pl"), new Locale("en"), new Locale("ro"), new Locale("ru")));
-        assertThat((List<String>) (Collections.list(httpServletRequestImpl.getHeaderNames())), hasItems(Headers.HEADER_ACCEPT_LANGUAGE));
+        assertThat((List<String>) (Collections.list(httpServletRequestImpl.getHeaderNames())),
+                hasItems(Headers.HEADER_ACCEPT_LANGUAGE));
     }
 
     @Test
@@ -169,10 +172,10 @@ public class HttpServletRequestImplTest {
 
     @Test
     public void shouldParseNumericHeader() {
-        Headers headers = new Headers();
-        headers.setHeader("intKey", "3333");
-        headers.setHeader("unableToParseKey", "AAAA");
-        httpServletRequestImpl = builder.withHeaders(headers).build();
+        Headers customHeaders = new Headers();
+        customHeaders.setHeader("intKey", "3333");
+        customHeaders.setHeader("unableToParseKey", "AAAA");
+        httpServletRequestImpl = builder.withHeaders(customHeaders).build();
 
         assertThat(httpServletRequestImpl.getIntHeader("missingIntKey"), is(-1));
         assertThat(httpServletRequestImpl.getIntHeader("intKey"), is(3333));
@@ -181,18 +184,18 @@ public class HttpServletRequestImplTest {
 
     @Test
     public void shouldReturnContentLength() {
-        Headers headers = new Headers();
-        headers.setHeader(Headers.HEADER_CONTENT_LENGTH, "1234");
-        httpServletRequestImpl = builder.withHeaders(headers).build();
+        Headers customHeaders = new Headers();
+        customHeaders.setHeader(Headers.HEADER_CONTENT_LENGTH, "1234");
+        httpServletRequestImpl = builder.withHeaders(customHeaders).build();
 
         assertThat(httpServletRequestImpl.getContentLength(), is(1234));
     }
 
     @Test
     public void shouldReturnContentType() {
-        Headers headers = new Headers();
-        headers.setHeader(Headers.HEADER_CONTENT_TYPE, "SOME_TYPE/TEXT");
-        httpServletRequestImpl = builder.withHeaders(headers).build();
+        Headers customHeaders = new Headers();
+        customHeaders.setHeader(Headers.HEADER_CONTENT_TYPE, "SOME_TYPE/TEXT");
+        httpServletRequestImpl = builder.withHeaders(customHeaders).build();
 
         assertThat(httpServletRequestImpl.getContentType(), is("SOME_TYPE/TEXT"));
     }
@@ -222,10 +225,10 @@ public class HttpServletRequestImplTest {
 
     @Test
     public void shouldParseDateHeader() {
-        Headers headers = new Headers();
-        headers.setHeader("If-Modified-Since", "Thu, 15 Jan 2015 16:30:13 GMT");
-        headers.setHeader("If-Modified-Since-MALFORMED", "Malformed Value");
-        httpServletRequestImpl = builder.withHeaders(headers).build();
+        Headers customHeaders = new Headers();
+        customHeaders.setHeader("If-Modified-Since", "Thu, 15 Jan 2015 16:30:13 GMT");
+        customHeaders.setHeader("If-Modified-Since-MALFORMED", "Malformed Value");
+        httpServletRequestImpl = builder.withHeaders(customHeaders).build();
         assertThat(httpServletRequestImpl.getDateHeader("If-Modified-Since"), is(1421339413000L));
         assertThat(httpServletRequestImpl.getDateHeader("If-Modified-Since-MALFORMED"), is(-1L));
         assertThat(httpServletRequestImpl.getDateHeader("Inexisting"), is(-1L));
@@ -237,7 +240,8 @@ public class HttpServletRequestImplTest {
         Cookie sessionCookie = new Cookie(HttpSessionImpl.COOKIE_NAME, "sessionId");
         cookies.put(HttpSessionImpl.COOKIE_NAME, sessionCookie);
         httpServletRequestImpl = builder.withCookies(cookies).withServletContext(servletContext).build();
-        when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionImpl("sessionId", System.currentTimeMillis()));
+        when(servletContext.getSession("sessionId"))
+                .thenReturn(new HttpSessionImpl("sessionId", System.currentTimeMillis()));
         assertThat(httpServletRequestImpl.getSession(), is(instanceOf(HttpSessionImpl.class)));
     }
 
@@ -247,16 +251,17 @@ public class HttpServletRequestImplTest {
         Cookie sessionCookie = new Cookie(HttpSessionImpl.COOKIE_NAME, "sessionId");
         cookies.put(HttpSessionImpl.COOKIE_NAME, sessionCookie);
         httpServletRequestImpl = builder.withCookies(cookies).withServletContext(servletContext).build();
-        when(servletContext.getSession("sessionId")).thenReturn(new HttpSessionImpl("sessionId", System.currentTimeMillis()));
+        when(servletContext.getSession("sessionId"))
+                .thenReturn(new HttpSessionImpl("sessionId", System.currentTimeMillis()));
         assertThat(httpServletRequestImpl.getSession(), is(instanceOf(HttpSessionImpl.class)));
         assertThat(httpServletRequestImpl.getSession().equals(httpServletRequestImpl.getSession()), is(true));
     }
 
     @Test
     public void shouldParseUrlFromHost() {
-        Headers headers = new Headers();
-        headers.setHeader(Headers.HEADER_HOST, "example.com:3366");
-        httpServletRequestImpl = builder.withHeaders(headers).build();
+        Headers customHeaders = new Headers();
+        customHeaders.setHeader(Headers.HEADER_HOST, "example.com:3366");
+        httpServletRequestImpl = builder.withHeaders(customHeaders).build();
         assertThat(httpServletRequestImpl.getRequestURL().toString(), is("http://example.com:8080/someuri"));
     }
 
@@ -265,3 +270,5 @@ public class HttpServletRequestImplTest {
         assertThat(builder.build(), is(not(builder.build())));
     }
 }
+// CHECKSTYLE.ON: MagicNumber
+// CHECKSTYLE.ON: JavadocType

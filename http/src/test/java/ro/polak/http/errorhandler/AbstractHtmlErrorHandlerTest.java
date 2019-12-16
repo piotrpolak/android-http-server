@@ -2,23 +2,23 @@ package ro.polak.http.errorhandler;
 
 import org.junit.Before;
 import org.junit.Test;
+import ro.polak.http.FileUtils;
+import ro.polak.http.protocol.serializer.Serializer;
+import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
+import ro.polak.http.servlet.helper.RangeHelper;
+import ro.polak.http.servlet.helper.StreamHelper;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import ro.polak.http.FileUtils;
-import ro.polak.http.protocol.serializer.Serializer;
-import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
-import ro.polak.http.servlet.impl.HttpServletResponseImpl;
-import ro.polak.http.servlet.helper.RangeHelper;
-import ro.polak.http.servlet.helper.StreamHelper;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.mock;
 
+// CHECKSTYLE.OFF: JavadocType
 public class AbstractHtmlErrorHandlerTest {
 
     private static OutputStream outputStream;
@@ -63,8 +63,10 @@ public class AbstractHtmlErrorHandlerTest {
     }
 
     private static class SampleHtmlErrorHanlder extends AbstractHtmlErrorHandler {
-        public SampleHtmlErrorHanlder(String status, String message, String explanation, String errorDocumentPath) {
+        SampleHtmlErrorHanlder(final String status, final String message, final String explanation,
+                                      final String errorDocumentPath) {
             super(status, message, explanation, errorDocumentPath);
         }
     }
 }
+// CHECKSTYLE.ON: JavadocType

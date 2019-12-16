@@ -20,6 +20,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
 
+// CHECKSTYLE.OFF: JavadocType
+// CHECKSTYLE.OFF: MagicNumber
 public class StreamHelperTest {
 
     public static final String BOUNDARY = "someboundary";
@@ -142,9 +144,10 @@ public class StreamHelperTest {
     private class SliceHelper {
         private Random random = new Random();
 
-        public byte[] getSliceForRanges(byte[] input, List<Range> ranges) {
+        public byte[] getSliceForRanges(final byte[] input, final List<Range> ranges) {
             long totalLength = rangeHelper.getTotalLength(ranges);
-            long headersPartLength = rangePartHeaderSerializer.getPartHeadersLength(ranges, BOUNDARY, CONTENT_TYPE, TOTAL_LENGTH);
+            long headersPartLength
+                    = rangePartHeaderSerializer.getPartHeadersLength(ranges, BOUNDARY, CONTENT_TYPE, TOTAL_LENGTH);
 
             byte[] output = new byte[(int) (totalLength + headersPartLength)];
             random.nextBytes(output);
@@ -165,13 +168,13 @@ public class StreamHelperTest {
             return output;
         }
 
-        private int appendRangeSlice(byte[] input, byte[] output, int destPos, Range range) {
+        private int appendRangeSlice(final byte[] input, final byte[] output, final int destPos, final Range range) {
             byte[] slice = Arrays.copyOfRange(input, (int) range.getFrom(), (int) range.getTo() + 1);
             System.arraycopy(slice, 0, output, destPos, slice.length);
             return slice.length;
         }
 
-        private int appendRangePartHeader(byte[] output, int destPos, Range range) {
+        private int appendRangePartHeader(final byte[] output, final int destPos, final Range range) {
             RangePartHeader rangePartHeader = new RangePartHeader(range, BOUNDARY, CONTENT_TYPE, TOTAL_LENGTH);
             byte[] slice = (NEW_LINE + rangePartHeaderSerializer.serialize(rangePartHeader))
                     .getBytes(StandardCharsets.UTF_8);
@@ -179,7 +182,7 @@ public class StreamHelperTest {
             return slice.length;
         }
 
-        private int appendLastBoundaryDeliminator(byte[] output, int destPos) {
+        private int appendLastBoundaryDeliminator(final byte[] output, final int destPos) {
             byte[] slice = (NEW_LINE + rangePartHeaderSerializer.serializeLastBoundaryDeliminator(BOUNDARY))
                     .getBytes(StandardCharsets.UTF_8);
             System.arraycopy(slice, 0, output, destPos, slice.length);
@@ -187,3 +190,5 @@ public class StreamHelperTest {
         }
     }
 }
+// CHECKSTYLE.ON: MagicNumber
+// CHECKSTYLE.ON: JavadocType

@@ -9,6 +9,7 @@ import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+// CHECKSTYLE.OFF: JavadocType
 public class HeadersSerializerTest {
 
     private static Serializer<Headers> headersSerializer = new HeadersSerializer();
@@ -37,3 +38,4 @@ public class HeadersSerializerTest {
         ));
     }
 }
+// CHECKSTYLE.ON: JavadocType

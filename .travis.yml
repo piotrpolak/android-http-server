@@ -4,7 +4,7 @@ language: java
 install:
   - ./gradlew :http:assemble -PskipAndroidBuild
 script:
-  - ./gradlew :http:check -PskipAndroidBuild -Djava.io.tmpdir=$HOME/.cache/
+  - ./gradlew :http:check -PskipAndroidBuild -Djava.io.tmpdir=$HOME/.cache/ --stacktrace
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

@@ -6,6 +6,7 @@ Small but powerful multithreaded web server written completely in Java SE and th
 [![codecov](https://codecov.io/gh/piotrpolak/android-http-server/branch/master/graph/badge.svg)](https://codecov.io/gh/piotrpolak/android-http-server)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ce45bf2bf46f46fe94e48b22c17dcd2a)](https://www.codacy.com/app/piotrpolak/android-http-server)
 
+
 The server implements most of the HTTP 1.1 specification and provides custom servlet API that can be
 used to handle dynamic pages. The servlet API is designed after the official `javax.servlet` API
 yet it is not compatible. Dynamic pages support cookies, sessions, file uploads and anything else
@@ -86,6 +87,9 @@ The subproject can be tested in the following way:
 
 The original package code has been refactored and covered with unit and integration tests.
 Code coverage should be kept above 90%.
+
+[![codecov](https://codecov.io/gh/piotrpolak/android-http-server/branch/master/graphs/icicle.svg
+)](https://codecov.io/gh/piotrpolak/android-http-server)
 
 ### Android SDK compatibility issues
 

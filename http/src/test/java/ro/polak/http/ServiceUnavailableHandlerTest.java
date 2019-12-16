@@ -2,17 +2,16 @@ package ro.polak.http;
 
 import org.junit.Before;
 import org.junit.Test;
+import ro.polak.http.servlet.factory.HttpServletResponseImplFactory;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import ro.polak.http.servlet.impl.HttpServletResponseImpl;
-import ro.polak.http.servlet.factory.HttpServletResponseImplFactory;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -46,7 +45,9 @@ public class ServiceUnavailableHandlerTest {
 
     @Test
     public void shouldHandleServerRunnable() throws Exception {
-        serviceUnavailableHandler.rejectedExecution(mock(ServerRunnable.class), null);
+        ServerRunnable serverRunnable = mock(ServerRunnable.class);
+        when(serverRunnable.getSocket()).thenReturn(mock(Socket.class));
+        serviceUnavailableHandler.rejectedExecution(serverRunnable, null);
         verify(factory, times(1)).createFromSocket(any(Socket.class));
         printWriter.flush();
         assertThat(outputStream.toString(), containsString("503"));

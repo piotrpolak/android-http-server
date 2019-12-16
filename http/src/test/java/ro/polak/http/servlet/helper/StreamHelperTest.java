@@ -2,7 +2,9 @@ package ro.polak.http.servlet.helper;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.matchers.ArrayEquals;
+import ro.polak.http.RangePartHeader;
+import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
+import ro.polak.http.servlet.Range;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,10 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-import ro.polak.http.RangePartHeader;
-import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
-import ro.polak.http.servlet.Range;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -50,7 +48,7 @@ public class StreamHelperTest {
         streamHelper.serveMultiRangeStream(inputStream, outputStream);
         byte[] out = outputStream.toByteArray();
         assertThat(out.length, is(greaterThan(0)));
-        assertThat(out, new ArrayEquals(inputBytes));
+        assertThat(out, equalTo(inputBytes));
     }
 
     @Test
@@ -64,7 +62,7 @@ public class StreamHelperTest {
         byte[] out = outputStream.toByteArray();
         assertThat(out.length, is(equalTo((int) rangeHelper.getTotalLength(Arrays.asList(range)))));
 
-        assertThat(out, new ArrayEquals(inputBytesSliced));
+        assertThat(out, equalTo(inputBytesSliced));
     }
 
     @Test
@@ -78,7 +76,7 @@ public class StreamHelperTest {
         byte[] out = outputStream.toByteArray();
         assertThat(out.length, is(equalTo((int) rangeHelper.getTotalLength(Arrays.asList(range)))));
 
-        assertThat(out, new ArrayEquals(inputBytesSliced));
+        assertThat(out, equalTo(inputBytesSliced));
     }
 
     @Test
@@ -94,7 +92,7 @@ public class StreamHelperTest {
         byte[] out = outputStream.toByteArray();
         assertThat(out.length, is(equalTo(inputBytesSliced.length)));
 
-        assertThat(out, new ArrayEquals(inputBytesSliced));
+        assertThat(out, equalTo(inputBytesSliced));
     }
 
     @Test
@@ -110,7 +108,7 @@ public class StreamHelperTest {
         byte[] out = outputStream.toByteArray();
         assertThat(out.length, is(equalTo(inputBytesSliced.length)));
 
-        assertThat(out, new ArrayEquals(inputBytesSliced));
+        assertThat(out, equalTo(inputBytesSliced));
     }
 
     @Test
@@ -127,7 +125,7 @@ public class StreamHelperTest {
         byte[] out = outputStream.toByteArray();
 
         assertThat(out.length, is(equalTo(inputBytesSliced.length)));
-        assertThat(out, new ArrayEquals(inputBytesSliced));
+        assertThat(out, equalTo(inputBytesSliced));
     }
 
     @Test
@@ -135,7 +133,7 @@ public class StreamHelperTest {
         byte[] sample = {0, 1, 2, 3, 4};
         List<Range> ranges = new ArrayList<>();
         ranges.add(new Range(2, 4));
-        assertThat(sliceHelper.getSliceForRanges(sample, ranges), new ArrayEquals(new byte[]{
+        assertThat(sliceHelper.getSliceForRanges(sample, ranges), equalTo(new byte[]{
                 2, 3, 4
         }));
     }

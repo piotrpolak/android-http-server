@@ -25,11 +25,11 @@ public final class ServletContextBuilder {
     private final List<ServletMapping> servletMappings = new ArrayList<>();
     private final List<FilterMapping> filterMappings = new ArrayList<>();
     private final Map<String, Object> attributes = new HashMap<>();
+    private final DeploymentDescriptorBuilder parent;
+    private final SessionStorage sessionStorage;
+    private final ServerConfig serverConfig;
 
     private String contextPath;
-    private DeploymentDescriptorBuilder parent;
-    private SessionStorage sessionStorage;
-    private ServerConfig serverConfig;
 
     /**
      * Creates a mapping builder. This constructor should be package scoped.

@@ -3,17 +3,18 @@ package ro.polak.http.session.storage;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import ro.polak.http.FileUtils;
+import ro.polak.http.OsUtils;
+import ro.polak.http.servlet.impl.HttpSessionImpl;
 
 import java.io.File;
 import java.io.IOException;
-
-import ro.polak.http.FileUtils;
-import ro.polak.http.servlet.impl.HttpSessionImpl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assume.assumeFalse;
 
 // CHECKSTYLE.OFF: JavadocType
 public class FileSessionStorageTest {
@@ -115,6 +116,8 @@ public class FileSessionStorageTest {
 
     @Test(expected = IOException.class)
     public void shouldThrowExceptionWhenUnableToCreateSessionDirectory() throws IOException {
+        assumeFalse(OsUtils.isWindows());
+
         String nonWritableDirectory = FileUtils.createTempDirectory();
         new File(nonWritableDirectory).setWritable(false);
 

@@ -1,16 +1,16 @@
 package ro.polak.http;
 
 import org.junit.Test;
+import ro.polak.http.configuration.ServerConfig;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
 
-import ro.polak.http.configuration.ServerConfig;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -33,6 +33,8 @@ public class WebServerTest {
 
     @Test
     public void shouldNotStartServerOnTempPathDoesNotExists() throws IOException {
+        assumeFalse(OsUtils.isWindows());
+
         ServerSocket serverSocket = mock(ServerSocket.class);
 
         File file = new File("/proc/someprotectedresource");
@@ -48,6 +50,8 @@ public class WebServerTest {
 
     @Test
     public void shouldNotStartServerOnTempPathNonWritable() throws IOException {
+        assumeFalse(OsUtils.isWindows());
+
         ServerSocket serverSocket = mock(ServerSocket.class);
 
         File file = new File("/proc/");

@@ -9,6 +9,8 @@ package ro.polak.http.utilities;
 
 import java.io.File;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 /**
@@ -81,7 +83,9 @@ public final class FileUtilities {
         }
 
         double size = (double) length;
-        DecimalFormat format = new DecimalFormat("####0.00");
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+        DecimalFormat format = (DecimalFormat) nf;
+        format.applyPattern("####0.00");
 
         if (length < BYTES_IN_MEGABYTE) {
             return format.format(size / BYTES_IN_KILOBYTE) + " KB";

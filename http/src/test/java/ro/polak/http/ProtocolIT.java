@@ -220,6 +220,15 @@ public class ProtocolIT extends AbstractIT {
     }
 
     @Test
+    public void shouldReturn403ForbiddenOnBlockedByFilterOnNonExistentUrl() throws IOException {
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
+                .get("/example/secured/thisUrlDoesNotExist")
+                .withCloseConnection();
+
+        assertResponsesWithHttpCode(requestBuilder, 403);
+    }
+
+    @Test
     public void shouldReturn405MethodNotAllowed() throws IOException {
         // Connect is not yet implemented
         Request request = new Request.Builder()

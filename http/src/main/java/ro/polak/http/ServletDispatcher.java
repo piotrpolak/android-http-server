@@ -7,15 +7,6 @@
 
 package ro.polak.http;
 
-import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.exception.FilterInitializationException;
@@ -39,6 +30,15 @@ import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.servlet.impl.HttpSessionImpl;
 import ro.polak.http.servlet.impl.ServletConfigImpl;
 import ro.polak.http.servlet.impl.ServletContextImpl;
+
+import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Servlet resource provider.
@@ -82,17 +82,19 @@ public class ServletDispatcher implements Loadable {
             throw new NotFoundException("No servlet context resolved.");
         }
         ServletMapping servletMapping = servletContextHelper.getResolvedServletMapping(servletContext, path);
-        if (servletMapping == null) {
-            throw new NotFoundException("No servlet mapping found.");
-        }
 
         request.setServletContext(servletContext);
 
-        Servlet servlet = getServlet(servletMapping, new ServletConfigImpl(servletContext));
-
-        response.setStatus(HttpServletResponse.STATUS_OK);
         try {
-            FilterChainImpl filterChain = getFilterChain(path, servletContext, servlet);
+            FilterChainImpl filterChain;
+            if (servletMapping != null) {
+                Servlet servlet = getServlet(servletMapping, new ServletConfigImpl(servletContext));
+                response.setStatus(HttpServletResponse.STATUS_OK);
+                filterChain = getFilterChain(path, servletContext, servlet);
+            } else {
+                filterChain = getFilterChain(path, servletContext, null);
+            }
+
             filterChain.doFilter(request, response);
             terminate(request, response);
         } catch (ServletException | FilterInitializationException e) {
@@ -122,19 +124,22 @@ public class ServletDispatcher implements Loadable {
             throws FilterInitializationException, ServletException {
 
         Deque<Filter> deque = new ArrayDeque<>(getFilterMappingsForPath(path, servletContext));
-        deque.add(new Filter() {
-            @Override
-            public void init(final FilterConfig filterConfig) {
-                // Do nothing
-            }
 
-            @Override
-            public void doFilter(final HttpServletRequest request,
-                                 final HttpServletResponse response,
-                                 final FilterChain filterChain) throws ServletException {
-                servlet.service(request, response);
-            }
-        });
+        if (servlet != null) {
+            deque.add(new Filter() {
+                @Override
+                public void init(final FilterConfig filterConfig) {
+                    // Do nothing
+                }
+
+                @Override
+                public void doFilter(final HttpServletRequest request,
+                                     final HttpServletResponse response,
+                                     final FilterChain filterChain) throws ServletException {
+                    servlet.service(request, response);
+                }
+            });
+        }
         return new FilterChainImpl(deque);
     }
 

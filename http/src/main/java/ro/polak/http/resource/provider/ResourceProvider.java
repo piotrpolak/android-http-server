@@ -7,10 +7,7 @@
 
 package ro.polak.http.resource.provider;
 
-import java.io.IOException;
-
-import ro.polak.http.servlet.impl.HttpServletRequestImpl;
-import ro.polak.http.servlet.impl.HttpServletResponseImpl;
+import ro.polak.http.Loadable;
 
 /**
  * Interface used for loading certain types of HTTP resources.
@@ -18,7 +15,7 @@ import ro.polak.http.servlet.impl.HttpServletResponseImpl;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201610
  */
-public interface ResourceProvider {
+public interface ResourceProvider extends Loadable {
 
     /**
      * Tells whether this resource provider can load such a resource.
@@ -27,20 +24,4 @@ public interface ResourceProvider {
      * @return
      */
     boolean canLoad(String path);
-
-    /**
-     * Loads the resource by URI, returns true if the resource was found or an error was served.
-     *
-     * @param path
-     * @param request
-     * @param response
-     * @return
-     * @throws IOException
-     */
-    void load(String path, HttpServletRequestImpl request, HttpServletResponseImpl response) throws IOException;
-
-    /**
-     * Shuts down the resource provider, closes all open resources.
-     */
-    void shutdown();
 }

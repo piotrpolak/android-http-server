@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
-package ro.polak.http.resource.provider.impl;
+package ro.polak.http.resource.provider;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -21,7 +21,6 @@ import ro.polak.http.exception.protocol.RangeNotSatisfiableProtocolException;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
-import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.Range;

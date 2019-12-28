@@ -72,6 +72,7 @@ public class AbstractIT {
 
         handleFile(serverConfig, "staticfile.html", "Static file");
         handleFile(serverConfig, "index.html", "Index file");
+        handleFile(serverConfig, "static" + File.separator + "index.html", "Index file");
 
         return serverConfig;
     }
@@ -87,6 +88,11 @@ public class AbstractIT {
         if (file.exists() && !file.delete()) {
             throw new IOException("Unable to delete " + file.getAbsolutePath());
         }
+
+        if (relativePath.contains(File.separator)) {
+            mkdirs(file);
+        }
+
         if (!file.createNewFile()) {
             throw new IOException("Unable to create " + file.getAbsolutePath());
         }
@@ -94,6 +100,13 @@ public class AbstractIT {
         PrintWriter writer = new PrintWriter(file, StandardCharsets.UTF_8.name());
         writer.print(contents);
         writer.close();
+    }
+
+    private static void mkdirs(final File file) throws IOException {
+        File directory = new File(file.getParentFile().getAbsolutePath());
+        if (!directory.exists() && !directory.mkdirs()) {
+            throw new IOException("Unable to mkdir " + directory.getAbsolutePath());
+        }
     }
 
     private static ServerConfig getServerConfig() {

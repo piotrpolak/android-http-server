@@ -21,6 +21,7 @@ import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.impl.MimeTypeMappingImpl;
 import ro.polak.http.resource.provider.ResourceProvider;
+import ro.polak.http.ServletDispatcher;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.utilities.IOUtilities;
 
@@ -65,7 +66,8 @@ public class ServerConfigImpl implements ServerConfig {
     private String errorDocument404Path;
     private String errorDocument403Path;
     private List<ResourceProvider> resourceProviders = Collections.emptyList();
-    private Properties properties = new Properties();
+    private Properties properties;
+    private ServletDispatcher servletDispatcher;
 
     public ServerConfigImpl(final String basePath, final String tempPath, final Properties properties) {
         this.tempPath = tempPath;
@@ -313,10 +315,27 @@ public class ServerConfigImpl implements ServerConfig {
     }
 
     /**
+     * Assigns servlet dispatcher to the config.
+     *
+     * @param servletDispatcher
+     */
+    public void setServletDispatcher(final ServletDispatcher servletDispatcher) {
+        this.servletDispatcher = servletDispatcher;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
     public String getAttribute(final String name) {
         return getResolvedProperty(properties, name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ServletDispatcher getServletDispatcher() {
+        return servletDispatcher;
     }
 }

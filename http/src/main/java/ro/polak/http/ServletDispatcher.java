@@ -5,7 +5,7 @@
  * Copyright (c) Piotr Polak 2008-2017
  **************************************************/
 
-package ro.polak.http.resource.provider.impl;
+package ro.polak.http;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -13,35 +13,32 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import ro.polak.http.Headers;
 import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.exception.FilterInitializationException;
+import ro.polak.http.exception.NotFoundException;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.exception.UnexpectedSituationException;
-import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.Filter;
 import ro.polak.http.servlet.FilterChain;
 import ro.polak.http.servlet.FilterConfig;
+import ro.polak.http.servlet.HttpServletRequest;
+import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.servlet.Servlet;
+import ro.polak.http.servlet.ServletContainer;
+import ro.polak.http.servlet.UploadedFile;
+import ro.polak.http.servlet.helper.ServletContextHelper;
+import ro.polak.http.servlet.impl.FilterChainImpl;
 import ro.polak.http.servlet.impl.FilterConfigImpl;
 import ro.polak.http.servlet.impl.HttpServletRequestImpl;
 import ro.polak.http.servlet.impl.HttpServletResponseImpl;
-import ro.polak.http.servlet.HttpServletRequest;
-import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.impl.HttpSessionImpl;
-import ro.polak.http.servlet.Servlet;
 import ro.polak.http.servlet.impl.ServletConfigImpl;
-import ro.polak.http.servlet.ServletContainer;
-import ro.polak.http.servlet.ServletContext;
-import ro.polak.http.servlet.helper.ServletContextHelper;
 import ro.polak.http.servlet.impl.ServletContextImpl;
-import ro.polak.http.servlet.UploadedFile;
-import ro.polak.http.servlet.impl.FilterChainImpl;
 
 /**
  * Servlet resource provider.
@@ -51,9 +48,9 @@ import ro.polak.http.servlet.impl.FilterChainImpl;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
  */
-public class ServletResourceProvider implements ResourceProvider {
+public class ServletDispatcher implements Loadable {
 
-    private static final Logger LOGGER = Logger.getLogger(ServletResourceProvider.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ServletDispatcher.class.getName());
     private static final String DEFAULT_RESPONSE_CONTENT_TYPE = "text/html";
     private static final String HEADER_VALUE_NO_CACHE = "no-cache";
 
@@ -67,19 +64,10 @@ public class ServletResourceProvider implements ResourceProvider {
      * @param servletContainer
      * @param servletContexts
      */
-    public ServletResourceProvider(final ServletContainer servletContainer,
-                                   final List<ServletContextImpl> servletContexts) {
+    public ServletDispatcher(final ServletContainer servletContainer,
+                             final List<ServletContextImpl> servletContexts) {
         this.servletContainer = servletContainer;
         this.servletContexts = servletContexts;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean canLoad(final String path) {
-        ServletContext servletContext = servletContextHelper.getResolvedContext(servletContexts, path);
-        return servletContext != null && servletContextHelper.getResolvedServletMapping(servletContext, path) != null;
     }
 
     /**
@@ -90,8 +78,13 @@ public class ServletResourceProvider implements ResourceProvider {
                      final HttpServletRequestImpl request,
                      final HttpServletResponseImpl response) throws IOException {
         ServletContextImpl servletContext = servletContextHelper.getResolvedContext(servletContexts, path);
-        Objects.requireNonNull(servletContext);
+        if (servletContext == null) {
+            throw new NotFoundException("No servlet context resolved.");
+        }
         ServletMapping servletMapping = servletContextHelper.getResolvedServletMapping(servletContext, path);
+        if (servletMapping == null) {
+            throw new NotFoundException("No servlet mapping found.");
+        }
 
         request.setServletContext(servletContext);
 

@@ -30,6 +30,7 @@ import example.NotFound;
 import example.Session;
 import example.Streaming;
 import example.filter.FakeSecuredFilter;
+import ro.polak.http.DefaultServlet;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.configuration.DeploymentDescriptorBuilder;
@@ -37,8 +38,8 @@ import ro.polak.http.configuration.impl.ServerConfigImpl;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
-import ro.polak.http.resource.provider.impl.FileResourceProvider;
-import ro.polak.http.resource.provider.impl.ServletResourceProvider;
+import ro.polak.http.resource.provider.FileResourceProvider;
+import ro.polak.http.ServletDispatcher;
 import ro.polak.http.servlet.impl.ServletContainerImpl;
 import ro.polak.http.servlet.helper.RangeHelper;
 import ro.polak.http.servlet.impl.ServletContextImpl;
@@ -180,12 +181,16 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         }
 
         serverConfig.setResourceProviders(selectActiveResourceProviders(serverConfig));
+        serverConfig.setServletDispatcher(getServletDispatcher(serverConfig));
+
         return serverConfig;
     }
 
     private List<ServletContextImpl> getServletContexts(final ServerConfig serverConfig) {
         DeploymentDescriptorBuilder deploymentDescriptorBuilder
                 = getDeploymentDescriptorBuilder(new FileSessionStorage(serverConfig.getTempPath()), serverConfig);
+
+        appendDefaultServlet(deploymentDescriptorBuilder, serverConfig);
 
         List<ServletContextImpl> servletContexts = deploymentDescriptorBuilder.build();
 
@@ -196,6 +201,19 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         }
 
         return servletContexts;
+    }
+
+    private void appendDefaultServlet(DeploymentDescriptorBuilder deploymentDescriptorBuilder, ServerConfig serverConfig) {
+        deploymentDescriptorBuilder
+                .addServletContext()
+                    .withContextPath("/")
+                    .withAttribute("ResourceProviders", serverConfig.getResourceProviders())
+                    .withAttribute("DirectoryIndex", serverConfig.getDirectoryIndex())
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^.*$"))
+                        .withServletClass(DefaultServlet.class)
+                    .end()
+                .end();
     }
 
     /**
@@ -213,7 +231,6 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
             resourceProviders.add(resourceProvider);
         }
 
-        resourceProviders.add(getServletResourceProvider(serverConfig));
         return resourceProviders;
     }
 
@@ -223,8 +240,8 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
                 serverConfig.getDocumentRootPath());
     }
 
-    private ServletResourceProvider getServletResourceProvider(final ServerConfig serverConfig) {
-        return new ServletResourceProvider(
+    private ServletDispatcher getServletDispatcher(final ServerConfig serverConfig) {
+        return new ServletDispatcher(
                 new ServletContainerImpl(new DateProvider(), SERVLET_TIME_TO_LIVE_IN_MS, MONITORING_INTERVAL_IN_MS),
                 getServletContexts(serverConfig)
         );

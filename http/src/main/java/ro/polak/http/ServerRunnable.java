@@ -16,13 +16,10 @@ import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.errorhandler.HttpErrorHandlerResolver;
 import ro.polak.http.exception.AccessDeniedException;
 import ro.polak.http.exception.MethodNotAllowedException;
-import ro.polak.http.exception.NotFoundException;
-import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.impl.HttpServletRequestImpl;
 import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.factory.HttpServletRequestImplFactory;
-import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.factory.HttpServletResponseImplFactory;
 import ro.polak.http.utilities.IOUtilities;
 
@@ -88,15 +85,8 @@ public class ServerRunnable implements Runnable {
                 }
 
                 validateRequest(request);
-
                 setDefaultResponseHeaders(request, response);
-
-                ResourceProvider resourceProvider = getResourceProvider(requestedPath);
-                if (resourceProvider != null) {
-                    resourceProvider.load(requestedPath, request, response);
-                } else {
-                    handleDirectoryIndex(response, request, requestedPath);
-                }
+                serverConfig.getServletDispatcher().load(requestedPath, request, response);
             } catch (RuntimeException e) {
                 if (response != null) {
                     httpErrorHandlerResolver.getHandler(e).serve(response);
@@ -113,29 +103,6 @@ public class ServerRunnable implements Runnable {
         }
     }
 
-    private void handleDirectoryIndex(final HttpServletResponseImpl response,
-                                      final HttpServletRequestImpl request,
-                                      final String requestedPath) throws IOException {
-        DirectoryIndexDescriptor indexDescriptor = loadDirectoryIndexResource(requestedPath);
-        if (indexDescriptor == null) {
-            throw new NotFoundException();
-        } else {
-            if (!pathHelper.isDirectoryPath(requestedPath)) {
-                sendRedirectToDirectorySlashedPath(response, requestedPath);
-            } else {
-                indexDescriptor.getResourceProvider().load(
-                        indexDescriptor.getDirectoryPath(), request, response);
-            }
-        }
-    }
-
-    private void sendRedirectToDirectorySlashedPath(final HttpServletResponseImpl response, final String originalPath)
-            throws IOException {
-        response.setStatus(HttpServletResponse.STATUS_MOVED_PERMANENTLY);
-        response.getHeaders().setHeader(Headers.HEADER_LOCATION, originalPath + "/");
-        response.flush();
-    }
-
     /**
      * Sets default response headers.
      *
@@ -150,27 +117,6 @@ public class ServerRunnable implements Runnable {
 
         response.setKeepAlive(isKeepAlive && serverConfig.isKeepAlive());
         response.getHeaders().setHeader(Headers.HEADER_SERVER, WebServer.SIGNATURE);
-    }
-
-    private DirectoryIndexDescriptor loadDirectoryIndexResource(final String path) {
-        String normalizedDirectoryPath = pathHelper.getNormalizedDirectoryPath(path);
-        for (String index : serverConfig.getDirectoryIndex()) {
-            String directoryIndexPath = normalizedDirectoryPath + index;
-            ResourceProvider resourceProvider = getResourceProvider(directoryIndexPath);
-            if (resourceProvider != null) {
-                return new DirectoryIndexDescriptor(resourceProvider, directoryIndexPath);
-            }
-        }
-        return null;
-    }
-
-    private ResourceProvider getResourceProvider(final String path) {
-        for (ResourceProvider resourceProvider : serverConfig.getResourceProviders()) {
-            if (resourceProvider.canLoad(path)) {
-                return resourceProvider;
-            }
-        }
-        return null;
     }
 
     /**
@@ -206,26 +152,5 @@ public class ServerRunnable implements Runnable {
      */
     protected Socket getSocket() {
         return socket;
-    }
-
-    /**
-     * Helper class describing directory index.
-     */
-    private static class DirectoryIndexDescriptor {
-        private ResourceProvider resourceProvider;
-        private String directoryPath;
-
-        DirectoryIndexDescriptor(final ResourceProvider resourceProvider, final String indexFilePath) {
-            this.resourceProvider = resourceProvider;
-            this.directoryPath = indexFilePath;
-        }
-
-        public ResourceProvider getResourceProvider() {
-            return resourceProvider;
-        }
-
-        public String getDirectoryPath() {
-            return directoryPath;
-        }
     }
 }

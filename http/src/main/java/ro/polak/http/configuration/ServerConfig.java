@@ -11,6 +11,7 @@ import java.util.List;
 
 import ro.polak.http.MimeTypeMapping;
 import ro.polak.http.resource.provider.ResourceProvider;
+import ro.polak.http.ServletDispatcher;
 
 /**
  * Server configuration.
@@ -111,4 +112,11 @@ public interface ServerConfig {
      * @return
      */
     String getAttribute(String name);
+
+    /**
+     * Returns a servlet dispatcher.
+     *
+     * @return
+     */
+    ServletDispatcher getServletDispatcher();
 }

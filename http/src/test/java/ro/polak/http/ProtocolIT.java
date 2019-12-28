@@ -105,6 +105,19 @@ public class ProtocolIT extends AbstractIT {
         assertThat(shouldServeDirectoryFile("/", "/index.html", "Index file"), is(true));
     }
 
+    @Test
+    public void shouldRedirectToDirectoryIndexOnMissingTrailingSlash() throws IOException {
+        Request request = new Request.Builder()
+                .url(getFullUrl("/static"))
+                .get()
+                .build();
+
+        Response response = client.newCall(request).execute();
+        assertThat(response.code(), is(301));
+        assertThat(response.header("Location"), is(not(nullValue())));
+        assertThat(response.header("Location"), is("/static/"));
+    }
+
     private boolean shouldServeDirectoryFile(final String pathShort, final String pathFull, final String commonValue)
             throws IOException {
         Request request = new Request.Builder()
@@ -132,19 +145,6 @@ public class ProtocolIT extends AbstractIT {
         assertThat(response2BodyString, containsString(commonValue));
 
         return true;
-    }
-
-    @Test
-    public void shouldRedirectToDirectoryIndexOnMissingTrailingSlash() throws IOException {
-        Request request = new Request.Builder()
-                .url(getFullUrl("/example"))
-                .get()
-                .build();
-
-        Response response = client.newCall(request).execute();
-        assertThat(response.code(), is(301));
-        assertThat(response.header("Location"), is(not(nullValue())));
-        assertThat(response.header("Location"), is("/example/"));
     }
 
     @Test

@@ -16,6 +16,7 @@ import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.protocol.serializer.Serializer;
+import ro.polak.http.ServletDispatcher;
 import ro.polak.http.servlet.Servlet;
 import ro.polak.http.servlet.ServletConfig;
 import ro.polak.http.servlet.ServletContainer;
@@ -33,11 +34,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 // CHECKSTYLE.OFF: JavadocType
-public class ServletResourceProviderTest {
+public class ServletDispatcherTest {
 
     private static ServletContainer servletContainer;
     private static ServletContextImpl servletContext;
-    private static ServletResourceProvider servletResourceProvider;
+    private static ServletDispatcher servletDispatcher;
     private static HttpServletRequestImpl request;
     private static HttpServletResponseImpl response;
 
@@ -54,7 +55,7 @@ public class ServletResourceProviderTest {
         when(servletContext.getServletMappings()).thenReturn(Arrays.asList(servletMapping));
         when(servletContext.getFilterMappings()).thenReturn(Collections.<FilterMapping>emptyList());
 
-        servletResourceProvider = new ServletResourceProvider(
+        servletDispatcher = new ServletDispatcher(
                 servletContainer,
                 Arrays.asList(servletContext)
         );
@@ -72,7 +73,7 @@ public class ServletResourceProviderTest {
     @Test
     public void shouldHandleSessionOnTerminateIfSessionExists() throws IOException {
         when(request.getSession(false)).thenReturn(new HttpSessionImpl("1", System.currentTimeMillis()));
-        servletResourceProvider.load("/", request, response);
+        servletDispatcher.load("/", request, response);
         verify(servletContext, times(1)).handleSession(any(HttpSessionImpl.class),
                 any(HttpServletResponseImpl.class));
     }
@@ -80,7 +81,7 @@ public class ServletResourceProviderTest {
     @Test
     public void shouldNotHandleSessionOnTerminateIfSessionExists() throws IOException {
         when(request.getSession(false)).thenReturn(null);
-        servletResourceProvider.load("/", request, response);
+        servletDispatcher.load("/", request, response);
         verify(servletContext, times(0)).handleSession(any(HttpSessionImpl.class),
                 any(HttpServletResponseImpl.class));
     }
@@ -90,7 +91,7 @@ public class ServletResourceProviderTest {
             throws IOException, ServletException, ServletInitializationException {
         when(servletContainer.getServletForClass(any(Class.class), any(ServletConfig.class)))
                 .thenThrow(new ServletInitializationException(new Exception()));
-        servletResourceProvider.load("/", request, response);
+        servletDispatcher.load("/", request, response);
     }
 }
 // CHECKSTYLE.ON: JavadocType

@@ -18,7 +18,7 @@ import ro.polak.http.Loadable;
 public interface ResourceProvider extends Loadable {
 
     /**
-     * Tells whether this resource provider can load such a resource.
+     * Tells whether this resource provider can load resource for given path.
      *
      * @param path
      * @return

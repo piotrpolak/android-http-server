@@ -38,7 +38,7 @@ import ro.polak.http.configuration.impl.ServerConfigImpl;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
 import ro.polak.http.resource.provider.ResourceProvider;
-import ro.polak.http.resource.provider.FileResourceProvider;
+import ro.polak.http.resource.provider.FileSystemResourceProvider;
 import ro.polak.http.ServletDispatcher;
 import ro.polak.http.servlet.impl.ServletContainerImpl;
 import ro.polak.http.servlet.helper.RangeHelper;
@@ -234,8 +234,8 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         return resourceProviders;
     }
 
-    private FileResourceProvider getFileResourceProvider(final ServerConfig serverConfig) {
-        return new FileResourceProvider(new RangeParser(), new RangeHelper(),
+    private FileSystemResourceProvider getFileResourceProvider(final ServerConfig serverConfig) {
+        return new FileSystemResourceProvider(new RangeParser(), new RangeHelper(),
                 new RangePartHeaderSerializer(), serverConfig.getMimeTypeMapping(),
                 serverConfig.getDocumentRootPath());
     }

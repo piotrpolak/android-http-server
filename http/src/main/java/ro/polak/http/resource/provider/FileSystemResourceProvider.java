@@ -39,7 +39,7 @@ import ro.polak.http.utilities.StringUtilities;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201509
  */
-public class FileResourceProvider implements ResourceProvider {
+public class FileSystemResourceProvider implements ResourceProvider {
 
     private final RangeParser rangeParser;
     private final RangeHelper rangeHelper;
@@ -57,11 +57,11 @@ public class FileResourceProvider implements ResourceProvider {
      * @param mimeTypeMapping
      * @param basePath
      */
-    public FileResourceProvider(final RangeParser rangeParser,
-                                final RangeHelper rangeHelper,
-                                final RangePartHeaderSerializer rangePartHeaderSerializer,
-                                final MimeTypeMapping mimeTypeMapping,
-                                final String basePath) {
+    public FileSystemResourceProvider(final RangeParser rangeParser,
+                                      final RangeHelper rangeHelper,
+                                      final RangePartHeaderSerializer rangePartHeaderSerializer,
+                                      final MimeTypeMapping mimeTypeMapping,
+                                      final String basePath) {
         this.rangeParser = rangeParser;
         this.rangeHelper = rangeHelper;
         this.rangePartHeaderSerializer = rangePartHeaderSerializer;

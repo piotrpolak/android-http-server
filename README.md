@@ -266,6 +266,61 @@ class DeploymentDescriptorFactory {
 }
 ```
 
+## Serving static contents
+
+Serving static resources is implemented using [DefaultServlet](../../tree/master/http/src/main/java/ro/polak/http/DefaultServlet.java)
+- the servlet is automatically registered as the very last element of [DeploymentDescriptorBuilder](../../tree/master/http/src/main/java/ro/polak/http/configuration/DeploymentDescriptorBuilder.java)
+acting as a fallback resource.
+
+The actual resource loading is implemented by registering an instance [ResourceProvider](../../tree/master/http/src/main/java/ro/polak/http/resource/provider/ResourceProvider.java)
+in the server config.
+
+Currently there are two resource providers implemented 
+
+* File system resources [FileSystemResourceProvider](../../tree/master/http/src/main/java/ro/polak/http/resource/provider/FileSystemResourceProvider.java)
+* Android APK resources [AssetResourceProvider](../../tree/master/base/src/main/java/ro/polak/webserver/base/AssetResourceProvider.java)
+ 
+### Sample dummy implementation of a ResourceProvider
+
+```java
+package ro.polak.http.resource.provider;
+
+import ro.polak.http.servlet.impl.HttpServletRequestImpl;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
+
+import java.io.IOException;
+
+public class DummyResourceProvider implements ResourceProvider {
+
+    /**
+     * Tells whether this resource provider can load resource for given path.
+     */
+    @Override
+    public boolean canLoad(final String path) {
+        return false; // TODO Add some logic
+    }
+
+    /**
+     * Loads the resource for the given path by copying the stream to the response.getOutputStream().
+     */
+    @Override
+    public void load(final String path,
+                     final HttpServletRequestImpl request,
+                     final HttpServletResponseImpl response) throws IOException {
+
+        // TODO Load the stream to response.getOutputStream();
+    }
+
+    /**
+     * Shuts down the resource provider if necessary, usually closes all open resources.
+     */
+    @Override
+    public void shutdown() {
+    }
+}
+```
+
+
 ## Templating support
 
 

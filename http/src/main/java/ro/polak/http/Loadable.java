@@ -21,7 +21,7 @@ import java.io.IOException;
 public interface Loadable {
 
     /**
-     * Loads the resource by URI, returns true if the resource was found or an error was served.
+     * Loads the resource for the given path by copying the stream to the response.getOutputStream().
      *
      * @param path
      * @param request
@@ -32,7 +32,7 @@ public interface Loadable {
     void load(String path, HttpServletRequestImpl request, HttpServletResponseImpl response) throws IOException;
 
     /**
-     * Shuts down the resource provider, closes all open resources.
+     * Shuts down the resource provider if necessary, usually closes all open resources.
      */
     void shutdown();
 }

@@ -45,9 +45,9 @@ public class HttpServletResponseImpl implements HttpServletResponse {
     private final Serializer<Headers> headersSerializer;
     private final StreamHelper streamHelper;
     private final Serializer<Cookie> cookieHeaderSerializer;
+    private final OutputStream outputStream;
 
     private Headers headers;
-    private OutputStream outputStream;
     private ServletOutputStream wrappedOutputStream;
     private ServletPrintWriter printWriter;
     private boolean isCommitted;

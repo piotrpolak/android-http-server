@@ -19,16 +19,16 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import example.Chunked;
-import example.ChunkedWithDelay;
-import example.Cookies;
-import example.Forbidden;
-import example.ForbiddenByFilter;
-import example.Index;
-import example.InternalServerError;
-import example.NotFound;
-import example.Session;
-import example.Streaming;
+import example.ChunkedServlet;
+import example.ChunkedWithDelayServlet;
+import example.CookiesServlet;
+import example.ForbiddenServlet;
+import example.ForbiddenByFilterServlet;
+import example.IndexServlet;
+import example.InternalServerErrorServlet;
+import example.NotFoundServlet;
+import example.SessionServlet;
+import example.StreamingServlet;
 import example.filter.FakeSecuredFilter;
 import ro.polak.http.DefaultServlet;
 import ro.polak.http.configuration.ServerConfig;
@@ -122,47 +122,47 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Chunked$"))
-                        .withServletClass(Chunked.class)
+                        .withServletClass(ChunkedServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/ChunkedWithDelay$"))
-                        .withServletClass(ChunkedWithDelay.class)
+                        .withServletClass(ChunkedWithDelayServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Cookies$"))
-                        .withServletClass(Cookies.class)
+                        .withServletClass(CookiesServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Forbidden$"))
-                        .withServletClass(Forbidden.class)
+                        .withServletClass(ForbiddenServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Index$"))
-                        .withServletClass(Index.class)
+                        .withServletClass(IndexServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/$"))
-                        .withServletClass(Index.class)
+                        .withServletClass(IndexServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/InternalServerError$"))
-                        .withServletClass(InternalServerError.class)
+                        .withServletClass(InternalServerErrorServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/NotFound$"))
-                        .withServletClass(NotFound.class)
+                        .withServletClass(NotFoundServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Session$"))
-                        .withServletClass(Session.class)
+                        .withServletClass(SessionServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Streaming$"))
-                        .withServletClass(Streaming.class)
+                        .withServletClass(StreamingServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/secured/ForbiddenByFilter"))
-                        .withServletClass(ForbiddenByFilter.class)
+                        .withServletClass(ForbiddenByFilterServlet.class)
                     .end()
                 .end();
     }

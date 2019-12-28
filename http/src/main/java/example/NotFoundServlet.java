@@ -16,7 +16,7 @@ import ro.polak.http.servlet.HttpServlet;
 /**
  * Not found page example page.
  */
-public class NotFound extends HttpServlet {
+public class NotFoundServlet extends HttpServlet {
 
     /**
      * {@inheritDoc}

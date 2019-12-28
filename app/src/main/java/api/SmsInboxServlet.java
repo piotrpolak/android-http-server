@@ -27,7 +27,7 @@ import static api.logic.APIResponse.MEDIA_TYPE_APPLICATION_JSON;
 /**
  * SMS Inbox method API endpoint.
  */
-public final class SmsInbox extends HttpServlet {
+public final class SmsInboxServlet extends HttpServlet {
 
     private static final int DEFAULT_MAX_RESULTS = 999;
     private static final String ATTR_MAX_RESULTS = "maxResults";

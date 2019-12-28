@@ -2,26 +2,26 @@
  * Android Web Server
  * Based on JavaLittleWebServer (2008)
  * <p/>
- * Copyright (c) Piotr Polak 2008-2017
+ * Copyright (c) Piotr Polak 2008-2016
  **************************************************/
 
-package example;
+package admin;
 
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServlet;
 
 /**
- * Internal server error page example page.
+ * Logout servlet. The logout procedure is captured in a LogoutFilter.
  */
-public class InternalServerError extends HttpServlet {
+public class LogoutServlet extends HttpServlet {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
-        throw new ServletException("Something bad has just happened");
+        // Logout using filter
     }
 }

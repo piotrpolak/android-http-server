@@ -15,7 +15,7 @@ import ro.polak.http.servlet.HttpServletResponse;
 /**
  * Session usage example page.
  */
-public class Session extends HttpServlet {
+public class SessionServlet extends HttpServlet {
 
     /**
      * {@inheritDoc}

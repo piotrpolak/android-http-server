@@ -18,7 +18,7 @@ import ro.polak.http.servlet.HttpServletResponse;
 /**
  * Writing to output stream.
  */
-public class Streaming extends HttpServlet {
+public class StreamingServlet extends HttpServlet {
 
     /**
      * {@inheritDoc}

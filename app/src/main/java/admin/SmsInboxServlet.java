@@ -28,7 +28,7 @@ import ro.polak.http.servlet.HttpServletResponse;
 /**
  * SMS Inbox controller.
  */
-public class SmsInbox extends HttpServlet {
+public class SmsInboxServlet extends HttpServlet {
 
     public static final String THREAD_ID_PARAM_NAME = "thread_id";
 

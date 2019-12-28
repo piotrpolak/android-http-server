@@ -16,7 +16,7 @@ import ro.polak.http.servlet.HttpServletResponse;
 /**
  * Admin panel front page.
  */
-public class Index extends HttpServlet {
+public class IndexServlet extends HttpServlet {
 
     /**
      * {@inheritDoc}

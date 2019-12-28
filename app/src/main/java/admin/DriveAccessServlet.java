@@ -26,7 +26,7 @@ import ro.polak.http.utilities.StringUtilities;
 /**
  * Drive access servlet.
  */
-public class DriveAccess extends HttpServlet {
+public class DriveAccessServlet extends HttpServlet {
 
     private static final String ADMIN_DRIVE_ACCESS_ENABLED = "admin.driveAccess.enabled";
 

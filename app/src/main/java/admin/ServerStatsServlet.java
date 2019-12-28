@@ -17,7 +17,7 @@ import ro.polak.http.utilities.FileUtilities;
 /**
  * Statistics.
  */
-public class ServerStats extends HttpServlet {
+public class ServerStatsServlet extends HttpServlet {
 
     /**
      * {@inheritDoc}

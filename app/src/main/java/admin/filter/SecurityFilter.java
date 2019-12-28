@@ -18,7 +18,7 @@ import ro.polak.http.servlet.FilterConfig;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 
-import static admin.Login.RELOCATE_PARAM_NAME;
+import static admin.LoginServlet.RELOCATE_PARAM_NAME;
 
 /**
  * Provides a security check before executing the servlet logic.

@@ -21,9 +21,9 @@ import ro.polak.http.utilities.StringUtilities;
 /**
  * Admin login page.
  */
-public class Login extends HttpServlet {
+public class LoginServlet extends HttpServlet {
 
-    private static final Logger LOGGER = Logger.getLogger(Login.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(LoginServlet.class.getName());
     public static final String RELOCATE_PARAM_NAME = "relocate";
 
     /**

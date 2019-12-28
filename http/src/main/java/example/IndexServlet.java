@@ -17,7 +17,7 @@ import ro.polak.http.servlet.HttpServlet;
 /**
  * Hello page example page.
  */
-public class Index extends HttpServlet {
+public class IndexServlet extends HttpServlet {
 
     /**
      * {@inheritDoc}

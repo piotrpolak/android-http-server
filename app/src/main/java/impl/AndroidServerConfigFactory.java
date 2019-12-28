@@ -11,16 +11,16 @@ import android.content.Context;
 
 import java.util.regex.Pattern;
 
-import admin.DriveAccess;
-import admin.GetFile;
-import admin.Index;
-import admin.Login;
-import admin.Logout;
-import admin.ServerStats;
+import admin.DriveAccessServlet;
+import admin.GetFileServlet;
+import admin.IndexServlet;
+import admin.LoginServlet;
+import admin.LogoutServlet;
+import admin.ServerStatsServlet;
 import admin.filter.LogoutFilter;
 import admin.filter.SecurityFilter;
-import api.SmsInbox;
-import api.SmsSend;
+import api.SmsInboxServlet;
+import api.SmsSendServlet;
 import ro.polak.http.configuration.DeploymentDescriptorBuilder;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.session.storage.SessionStorage;
@@ -49,11 +49,11 @@ public class AndroidServerConfigFactory extends BaseAndroidServerConfigFactory {
                     .withContextPath("/api/1.0")
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/sms/inbox"))
-                        .withServletClass(SmsInbox.class)
+                        .withServletClass(SmsInboxServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/sms/send"))
-                        .withServletClass(SmsSend.class)
+                        .withServletClass(SmsSendServlet.class)
                     .end()
                 .end()
 
@@ -70,35 +70,35 @@ public class AndroidServerConfigFactory extends BaseAndroidServerConfigFactory {
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/DriveAccess$"))
-                        .withServletClass(DriveAccess.class)
+                        .withServletClass(DriveAccessServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/GetFile$"))
-                        .withServletClass(GetFile.class)
+                        .withServletClass(GetFileServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Index$"))
-                        .withServletClass(Index.class)
+                        .withServletClass(IndexServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/$"))
-                        .withServletClass(Index.class)
+                        .withServletClass(IndexServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Login$"))
-                        .withServletClass(Login.class)
+                        .withServletClass(LoginServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Logout$"))
-                        .withServletClass(Logout.class)
+                        .withServletClass(LogoutServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/ServerStats$"))
-                        .withServletClass(ServerStats.class)
+                        .withServletClass(ServerStatsServlet.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/SmsInbox$"))
-                        .withServletClass(admin.SmsInbox.class)
+                        .withServletClass(admin.SmsInboxServlet.class)
                     .end()
                 .end();
     }

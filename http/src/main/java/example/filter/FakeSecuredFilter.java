@@ -39,8 +39,7 @@ public class FakeSecuredFilter implements Filter {
     @Override
     public void doFilter(final HttpServletRequest request,
                          final HttpServletResponse response,
-                         final FilterChain filterChain)
-            throws IOException, ServletException {
+                         final FilterChain filterChain) throws IOException, ServletException {
         throw new AccessDeniedException();
     }
 }

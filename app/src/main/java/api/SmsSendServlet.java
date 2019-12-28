@@ -23,7 +23,7 @@ import static api.logic.APIResponse.MEDIA_TYPE_APPLICATION_JSON;
 /**
  * SMS Send method API endpoint.
  */
-public final class SmsSend extends HttpServlet {
+public final class SmsSendServlet extends HttpServlet {
 
     public static final String TO_PARAMETER_NAME = "to";
     public static final String IS_TEST_PARAMETER_NAME = "test";

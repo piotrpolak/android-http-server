@@ -29,7 +29,7 @@ import ro.polak.http.utilities.StringUtilities;
 /**
  * Servlet user to retrieve a static file.
  */
-public class GetFile extends HttpServlet {
+public class GetFileServlet extends HttpServlet {
 
     private static final String ATTR_ADMIN_DRIVE_ACCESS_ENABLED = "admin.driveAccess.enabled";
 

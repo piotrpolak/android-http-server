@@ -18,7 +18,7 @@ import ro.polak.http.servlet.HttpServlet;
 /**
  * Cookie usage example page.
  */
-public class Cookies extends HttpServlet {
+public class CookiesServlet extends HttpServlet {
 
     private static final String PAGE_HITS_COOKIE_NAME = "page_hits";
     private static final String FIRST_VISITED_AT_COOKIE_NAME = "first_visited_at";

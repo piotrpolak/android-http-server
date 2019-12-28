@@ -7,22 +7,24 @@
 
 package example;
 
-import ro.polak.http.exception.AccessDeniedException;
+import java.io.PrintWriter;
+
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServlet;
 
 /**
- * Forbidden page example.
+ * Forbidden by filter page example.
  */
-public class Forbidden extends HttpServlet {
+public class ForbiddenByFilterServlet extends HttpServlet {
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
-        throw new AccessDeniedException();
+        PrintWriter printWriter = response.getWriter();
+        printWriter.println("Hello World!");
     }
 }

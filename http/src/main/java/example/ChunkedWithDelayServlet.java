@@ -17,9 +17,12 @@ import ro.polak.http.servlet.HttpServletResponse;
 import static ro.polak.http.Headers.HEADER_TRANSFER_ENCODING;
 
 /**
- * Chunked transfer example.
+ * Chunked transfer with delay example.
  */
-public class Chunked extends HttpServlet {
+public class ChunkedWithDelayServlet extends HttpServlet {
+
+    private static final int CHUNKS_COUNT = 100;
+    private static final int SLEEP_LENGTH_IN_MS = 30;
 
     /**
      * {@inheritDoc}
@@ -28,8 +31,16 @@ public class Chunked extends HttpServlet {
     public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
         response.getHeaders().setHeader(HEADER_TRANSFER_ENCODING, "chunked");
         PrintWriter printWriter = response.getWriter();
-        printWriter.print("This is an example of chunked transfer type. ");
-        printWriter.flush();
-        printWriter.print("Chunked transfer type can be used when the final length of the data is not known.");
+        printWriter.println("<table style='height: 40px; width: 100%; border: 0; cellspacing: 0;'>");
+        printWriter.println("<tr><td style='background-color: green'></td>");
+        for (int i = 0; i < CHUNKS_COUNT; i++) {
+            try {
+                Thread.sleep(SLEEP_LENGTH_IN_MS);
+            } catch (InterruptedException e) {
+            }
+            printWriter.println("<td style='background-color: black'></td>");
+            printWriter.flush();
+        }
+        printWriter.println("<tr></table>");
     }
 }

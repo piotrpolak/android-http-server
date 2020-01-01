@@ -2,12 +2,16 @@ package ro.polak.http;
 
 import org.junit.Before;
 import org.junit.Test;
-import ro.polak.http.servlet.factory.HttpServletResponseImplFactory;
-import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+
+import ro.polak.http.configuration.ServerConfig;
+import ro.polak.http.errorhandler.HttpErrorHandlerResolver;
+import ro.polak.http.servlet.factory.HttpServletRequestImplFactory;
+import ro.polak.http.servlet.factory.HttpServletResponseImplFactory;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -46,9 +50,10 @@ public class ServiceUnavailableHandlerTest {
 
     @Test
     public void shouldHandleServerRunnable() throws Exception {
-        ServerRunnable serverRunnable = mock(ServerRunnable.class);
-        when(serverRunnable.getSocket()).thenReturn(mock(Socket.class));
-        serviceUnavailableHandler.rejectedExecution(serverRunnable, null);
+        ServerRunnable runnable = new ServerRunnable(mock(Socket.class), mock(ServerConfig.class),
+                mock(HttpServletRequestImplFactory.class), factory,
+                mock(HttpErrorHandlerResolver.class), mock(PathHelper.class));
+        serviceUnavailableHandler.rejectedExecution(runnable, null);
         verify(factory, times(1)).createFromSocket(any(Socket.class));
         printWriter.flush();
         assertThat(outputStream.toString(), containsString("503"));

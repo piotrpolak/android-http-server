@@ -7,6 +7,15 @@
 
 package ro.polak.http;
 
+import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.exception.FilterInitializationException;
@@ -30,15 +39,6 @@ import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.servlet.impl.HttpSessionImpl;
 import ro.polak.http.servlet.impl.ServletConfigImpl;
 import ro.polak.http.servlet.impl.ServletContextImpl;
-
-import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Servlet resource provider.
@@ -140,6 +140,10 @@ public class ServletDispatcher implements Loadable {
                 }
             });
         }
+        if (deque.isEmpty()) {
+            throw new NotFoundException();
+        }
+
         return new FilterChainImpl(deque);
     }
 

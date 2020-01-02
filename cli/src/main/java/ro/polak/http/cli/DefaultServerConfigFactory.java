@@ -118,6 +118,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
                     .withContextPath("/example")
                     .addFilter()
                         .withUrlPattern(Pattern.compile("^/secured/.*$"))
+                        .withUrlExcludedPattern(Pattern.compile("^/secured/Logout$"))
                         .withFilterClass(FakeSecuredFilter.class)
                     .end()
                     .addServlet()

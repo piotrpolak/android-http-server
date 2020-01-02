@@ -220,6 +220,15 @@ public class ProtocolIT extends AbstractIT {
     }
 
     @Test
+    public void shouldReturn200AndRespectFilterExclude() throws IOException {
+        RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
+                .get("/example/secured/Logout")
+                .withCloseConnection();
+
+        assertResponsesWithHttpCode(requestBuilder, 404);
+    }
+
+    @Test
     public void shouldReturn403ForbiddenOnBlockedByFilterOnNonExistentUrl() throws IOException {
         RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .get("/example/secured/thisUrlDoesNotExist")

@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.configuration.impl.ServletMappingImpl;
+import ro.polak.http.exception.NotFoundException;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.exception.UnexpectedSituationException;
@@ -80,6 +81,15 @@ public class ServletDispatcherTest {
 
     @Test
     public void shouldNotHandleSessionOnTerminateIfSessionExists() throws IOException {
+        when(request.getSession(false)).thenReturn(null);
+        servletDispatcher.load("/", request, response);
+        verify(servletContext, times(0)).handleSession(any(HttpSessionImpl.class),
+                any(HttpServletResponseImpl.class));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void shouldThrowExceptionWhenThereIsNoContext() throws IOException {
+        when(servletContext.getContextPath()).thenReturn("/overwritten");
         when(request.getSession(false)).thenReturn(null);
         servletDispatcher.load("/", request, response);
         verify(servletContext, times(0)).handleSession(any(HttpSessionImpl.class),

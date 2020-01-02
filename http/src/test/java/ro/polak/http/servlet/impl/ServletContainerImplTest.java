@@ -12,6 +12,7 @@ import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.ServletConfig;
+import ro.polak.http.servlet.ServletContext;
 import ro.polak.http.servlet.loader.SampleFilter;
 import ro.polak.http.servlet.loader.SampleServlet;
 import ro.polak.http.utilities.DateProvider;
@@ -19,6 +20,7 @@ import ro.polak.http.utilities.DateProvider;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.core.Is.is;
@@ -35,7 +37,7 @@ public class ServletContainerImplTest {
     public void setUp() {
         servletContainer = new ServletContainerImpl(new DateProvider(), 0, 0);
         servletConfig = mock(ServletConfig.class);
-        filterConfig = mock(FilterConfig.class);
+        filterConfig = new FilterConfigImpl(mock(ServletContext.class));
     }
 
     @Test
@@ -53,6 +55,7 @@ public class ServletContainerImplTest {
 
         assertThat(filter, is(not(nullValue())));
         assertThat(filter.getFilterConfig(), is(equalTo(filterConfig)));
+        assertThat(filter.getFilterConfig().getServletContext(), is(notNullValue()));
     }
 
     @Test

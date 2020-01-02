@@ -2,11 +2,14 @@ package ro.polak.http;
 
 import org.junit.Test;
 import ro.polak.http.configuration.ServerConfig;
+import ro.polak.http.resource.provider.ResourceProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.Arrays;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -14,6 +17,8 @@ import static org.junit.Assume.assumeFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 // CHECKSTYLE.OFF: JavadocType
@@ -79,7 +84,7 @@ public class WebServerTest {
     }
 
     @Test
-    public void shouldStartServerIfEverythingIsOk() throws IOException {
+    public void shouldStartServerIfEverythingIsOkAndShutDownResourceProviders() throws IOException {
         ServerSocket serverSocket = mock(ServerSocket.class);
         ServerConfig serverConfig = getDefaultServerConfig();
 
@@ -88,6 +93,9 @@ public class WebServerTest {
         assertThat(webServer.isRunning(), is(true));
         assertThat(webServer.getServerConfig(), is(serverConfig));
         webServer.stopServer();
+
+        verify(serverConfig.getResourceProviders().get(0), times(1)).shutdown();
+
         assertThat(webServer.isRunning(), is(false));
     }
 
@@ -97,6 +105,8 @@ public class WebServerTest {
         when(serverConfig.getDocumentRootPath()).thenReturn("/tmp/SomePathThatDoesNotExist");
         when(serverConfig.getTempPath()).thenReturn(FileUtils.createTempDirectory());
         when(serverConfig.getMaxServerThreads()).thenReturn(99);
+        when(serverConfig.getResourceProviders())
+                .thenReturn(Arrays.asList(mock(ResourceProvider.class)));
         return serverConfig;
     }
     // CHECKSTYLE.ON: MagicNumber

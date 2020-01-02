@@ -12,6 +12,7 @@ import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.ServletConfig;
+import ro.polak.http.servlet.loader.SampleFilter;
 import ro.polak.http.servlet.loader.SampleServlet;
 import ro.polak.http.utilities.DateProvider;
 
@@ -44,6 +45,14 @@ public class ServletContainerImplTest {
         assertThat(servlet, is(not(nullValue())));
         assertThat(servlet.getInitializedCounter(), is(equalTo(1)));
         assertThat(servlet.getServletConfig(), is(equalTo(servletConfig)));
+    }
+
+    @Test
+    public void shouldInitializeFilter() throws Exception {
+        SampleFilter filter = (SampleFilter) servletContainer.getFilterForClass(SampleFilter.class, filterConfig);
+
+        assertThat(filter, is(not(nullValue())));
+        assertThat(filter.getFilterConfig(), is(equalTo(filterConfig)));
     }
 
     @Test

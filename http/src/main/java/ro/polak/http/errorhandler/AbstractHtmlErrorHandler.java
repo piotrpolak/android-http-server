@@ -15,6 +15,7 @@ import java.io.InputStream;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.utilities.IOUtilities;
+import ro.polak.http.utilities.StringUtilities;
 
 /**
  * Abstract Http Error Handler.
@@ -53,7 +54,7 @@ public abstract class AbstractHtmlErrorHandler extends AbstractPlainTextHttpErro
         response.setStatus(getStatus());
         response.setContentType("text/html");
 
-        if (errorDocumentPath == null || errorDocumentPath.equals("")) {
+        if (StringUtilities.isEmpty(errorDocumentPath)) {
             serveDocument(response);
         } else {
             File file = new File(errorDocumentPath);

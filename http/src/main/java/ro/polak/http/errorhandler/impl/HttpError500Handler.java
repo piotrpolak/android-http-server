@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 
 import ro.polak.http.errorhandler.AbstractHtmlErrorHandler;
 import ro.polak.http.servlet.HttpServletResponse;
+import ro.polak.http.utilities.StringUtilities;
 
 /**
  * 500 Internal Server Error HTTP error handler.
@@ -37,7 +38,7 @@ public class HttpError500Handler extends AbstractHtmlErrorHandler {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<p style=\"color: red; font-weight: bold;\">");
-        if (e.getMessage() != null && !e.getMessage().equals("")) {
+        if (!StringUtilities.isEmpty(e.getMessage())) {
             stringBuilder.append(e.getMessage() + " ");
         }
         stringBuilder.append(e.getClass().getName() + "</p>\n")

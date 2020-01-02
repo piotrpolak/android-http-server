@@ -23,6 +23,7 @@ import ro.polak.http.exception.NotFoundException;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.exception.UnexpectedSituationException;
+import ro.polak.http.servlet.BasicAbstractFilter;
 import ro.polak.http.servlet.Filter;
 import ro.polak.http.servlet.FilterChain;
 import ro.polak.http.servlet.FilterConfig;
@@ -126,12 +127,7 @@ public class ServletDispatcher implements Loadable {
         Deque<Filter> deque = new ArrayDeque<>(getFilterMappingsForPath(path, servletContext));
 
         if (servlet != null) {
-            deque.add(new Filter() {
-                @Override
-                public void init(final FilterConfig filterConfig) {
-                    // Do nothing
-                }
-
+            deque.add(new BasicAbstractFilter() {
                 @Override
                 public void doFilter(final HttpServletRequest request,
                                      final HttpServletResponse response,

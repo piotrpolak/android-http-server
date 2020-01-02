@@ -7,13 +7,9 @@
 
 package example.filter;
 
-import java.io.IOException;
-
 import ro.polak.http.exception.AccessDeniedException;
-import ro.polak.http.exception.ServletException;
-import ro.polak.http.servlet.Filter;
+import ro.polak.http.servlet.BasicAbstractFilter;
 import ro.polak.http.servlet.FilterChain;
-import ro.polak.http.servlet.FilterConfig;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 
@@ -23,15 +19,7 @@ import ro.polak.http.servlet.HttpServletResponse;
  * @author Piotr Polak piotr [at] polak [dot] ro
  * @since 201803
  */
-public class FakeSecuredFilter implements Filter {
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void init(final FilterConfig filterConfig) throws ServletException {
-        // Do nothing
-    }
+public class FakeSecuredAbstractFilter extends BasicAbstractFilter {
 
     /**
      * {@inheritDoc}
@@ -39,7 +27,7 @@ public class FakeSecuredFilter implements Filter {
     @Override
     public void doFilter(final HttpServletRequest request,
                          final HttpServletResponse response,
-                         final FilterChain filterChain) throws IOException, ServletException {
+                         final FilterChain filterChain) {
         throw new AccessDeniedException();
     }
 }

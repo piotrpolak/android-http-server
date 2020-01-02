@@ -7,11 +7,8 @@
 
 package admin.filter;
 
-import java.io.IOException;
-
 import admin.logic.AccessControl;
 import ro.polak.http.configuration.ServerConfig;
-import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.Filter;
 import ro.polak.http.servlet.FilterChain;
 import ro.polak.http.servlet.FilterConfig;
@@ -30,7 +27,7 @@ public class LogoutFilter implements Filter {
      * {@inheritDoc}
      */
     @Override
-    public void init(final FilterConfig filterConfig) throws ServletException {
+    public void init(final FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
         serverConfig = (ServerConfig) filterConfig.getServletContext()
                 .getAttribute(ServerConfig.class.getName());
@@ -41,7 +38,7 @@ public class LogoutFilter implements Filter {
      */
     @Override
     public void doFilter(final HttpServletRequest request, final HttpServletResponse response,
-                         final FilterChain filterChain) throws IOException, ServletException {
+                         final FilterChain filterChain) {
 
         new AccessControl(serverConfig, request.getSession()).logout();
         response.sendRedirect(filterConfig.getServletContext().getContextPath() + "/Login");

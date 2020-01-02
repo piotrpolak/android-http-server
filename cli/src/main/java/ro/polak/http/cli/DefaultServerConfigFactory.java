@@ -29,7 +29,7 @@ import example.InternalServerErrorServlet;
 import example.NotFoundServlet;
 import example.SessionServlet;
 import example.StreamingServlet;
-import example.filter.FakeSecuredFilter;
+import example.filter.FakeSecuredAbstractFilter;
 import ro.polak.http.DefaultServlet;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServerConfigFactory;
@@ -119,7 +119,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
                     .addFilter()
                         .withUrlPattern(Pattern.compile("^/secured/.*$"))
                         .withUrlExcludedPattern(Pattern.compile("^/secured/Logout$"))
-                        .withFilterClass(FakeSecuredFilter.class)
+                        .withFilterClass(FakeSecuredAbstractFilter.class)
                     .end()
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/Chunked$"))

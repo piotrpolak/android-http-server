@@ -6,9 +6,8 @@ import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.configuration.impl.FilterMappingImpl;
 import ro.polak.http.configuration.impl.ServletMappingImpl;
-import ro.polak.http.servlet.Filter;
+import ro.polak.http.servlet.BasicAbstractFilter;
 import ro.polak.http.servlet.FilterChain;
-import ro.polak.http.servlet.FilterConfig;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.impl.ServletContextImpl;
@@ -81,9 +80,9 @@ public class ServletContextHelperTest {
     @Test
     public void shouldReturnFilteredFilters() {
         List<FilterMapping> filterMappings = new ArrayList<>();
-        filterMappings.add(new FilterMappingImpl(Pattern.compile("^/secured/.*$"), null, FakeFilter.class));
-        filterMappings.add(new FilterMappingImpl(Pattern.compile("^/secured/abc.*$"), null, FakeFilter.class));
-        filterMappings.add(new FilterMappingImpl(Pattern.compile("^/demo/.*$"), null, FakeFilter.class));
+        filterMappings.add(new FilterMappingImpl(Pattern.compile("^/secured/.*$"), null, FakeAbstractFilter.class));
+        filterMappings.add(new FilterMappingImpl(Pattern.compile("^/secured/abc.*$"), null, FakeAbstractFilter.class));
+        filterMappings.add(new FilterMappingImpl(Pattern.compile("^/demo/.*$"), null, FakeAbstractFilter.class));
         when(servletContext.getFilterMappings()).thenReturn(filterMappings);
         assertThat(servletContextHelper.getFilterMappingsForPath(servletContext, "/context/secured/abc"), hasSize(2));
     }
@@ -91,22 +90,16 @@ public class ServletContextHelperTest {
     @Test
     public void shouldReturnFilteredFiltersWithExclude() {
         List<FilterMapping> filterMappings = new ArrayList<>();
-        filterMappings.add(new FilterMappingImpl(Pattern.compile("^/secured/.*$"), null, FakeFilter.class));
+        filterMappings.add(new FilterMappingImpl(Pattern.compile("^/secured/.*$"), null, FakeAbstractFilter.class));
         filterMappings.add(new FilterMappingImpl(Pattern.compile("^/secured/abc.*$"),
-                Pattern.compile("^/secured/abc/exclude.*$"), FakeFilter.class));
-        filterMappings.add(new FilterMappingImpl(Pattern.compile("^/demo/.*$"), null, FakeFilter.class));
+                Pattern.compile("^/secured/abc/exclude.*$"), FakeAbstractFilter.class));
+        filterMappings.add(new FilterMappingImpl(Pattern.compile("^/demo/.*$"), null, FakeAbstractFilter.class));
         when(servletContext.getFilterMappings()).thenReturn(filterMappings);
         assertThat(servletContextHelper.getFilterMappingsForPath(servletContext, "/context/secured/abc/excluded"),
                 hasSize(1));
     }
 
-    public static class FakeFilter implements Filter {
-
-        @Override
-        public void init(final FilterConfig filterConfig) {
-            // Do nothing
-        }
-
+    public static class FakeAbstractFilter extends BasicAbstractFilter {
         @Override
         public void doFilter(final HttpServletRequest request, final HttpServletResponse response,
                              final FilterChain filterChain) {

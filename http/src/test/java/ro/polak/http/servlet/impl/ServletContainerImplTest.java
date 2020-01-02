@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import ro.polak.http.exception.FilterInitializationException;
 import ro.polak.http.exception.ServletInitializationException;
-import ro.polak.http.servlet.Filter;
+import ro.polak.http.servlet.BasicAbstractFilter;
 import ro.polak.http.servlet.FilterChain;
 import ro.polak.http.servlet.FilterConfig;
 import ro.polak.http.servlet.HttpServlet;
@@ -81,7 +81,7 @@ public class ServletContainerImplTest {
 
     @Test(expected = FilterInitializationException.class)
     public void shouldThrowExceptionWhenInitializingInvalidFilter() throws Exception {
-        servletContainer.getFilterForClass(InvalidFilterWithPrivateConstructor.class, filterConfig);
+        servletContainer.getFilterForClass(InvalidAbstractFilterWithPrivateConstructor.class, filterConfig);
     }
 
     // CHECKSTYLE.OFF: MagicNumber
@@ -112,14 +112,9 @@ public class ServletContainerImplTest {
         }
     }
 
-    public static final class InvalidFilterWithPrivateConstructor implements Filter {
+    public static final class InvalidAbstractFilterWithPrivateConstructor extends BasicAbstractFilter {
 
-        private InvalidFilterWithPrivateConstructor() {
-        }
-
-        @Override
-        public void init(final FilterConfig filterConfig) {
-            // To comply with Filter interface only
+        private InvalidAbstractFilterWithPrivateConstructor() {
         }
 
         @Override

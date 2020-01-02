@@ -32,7 +32,7 @@ public class SecurityFilter implements Filter {
      * {@inheritDoc}
      */
     @Override
-    public void init(final FilterConfig filterConfig) throws ServletException {
+    public void init(final FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
         serverConfig = (ServerConfig) filterConfig.getServletContext()
                 .getAttribute(ServerConfig.class.getName());

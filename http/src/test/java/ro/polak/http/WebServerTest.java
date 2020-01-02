@@ -1,15 +1,15 @@
 package ro.polak.http;
 
 import org.junit.Test;
-import ro.polak.http.configuration.ServerConfig;
-import ro.polak.http.resource.provider.ResourceProvider;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.Arrays;
+
+import ro.polak.http.configuration.ServerConfig;
+import ro.polak.http.resource.provider.ResourceProvider;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;

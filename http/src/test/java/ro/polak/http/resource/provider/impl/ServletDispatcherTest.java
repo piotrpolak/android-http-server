@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.regex.Pattern;
 
+import ro.polak.http.ServletDispatcher;
 import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.configuration.impl.ServletMappingImpl;
@@ -17,7 +18,6 @@ import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.exception.UnexpectedSituationException;
 import ro.polak.http.protocol.serializer.Serializer;
-import ro.polak.http.ServletDispatcher;
 import ro.polak.http.servlet.Servlet;
 import ro.polak.http.servlet.ServletConfig;
 import ro.polak.http.servlet.ServletContainer;

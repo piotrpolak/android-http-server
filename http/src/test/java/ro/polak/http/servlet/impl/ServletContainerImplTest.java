@@ -2,8 +2,12 @@ package ro.polak.http.servlet.impl;
 
 import org.junit.Before;
 import org.junit.Test;
-import ro.polak.http.exception.ServletException;
+
+import ro.polak.http.exception.FilterInitializationException;
 import ro.polak.http.exception.ServletInitializationException;
+import ro.polak.http.servlet.Filter;
+import ro.polak.http.servlet.FilterChain;
+import ro.polak.http.servlet.FilterConfig;
 import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
@@ -24,15 +28,17 @@ public class ServletContainerImplTest {
 
     private ServletContainerImpl servletContainer;
     private ServletConfig servletConfig;
+    private FilterConfig filterConfig;
 
     @Before
     public void setUp() {
         servletContainer = new ServletContainerImpl(new DateProvider(), 0, 0);
         servletConfig = mock(ServletConfig.class);
+        filterConfig = mock(FilterConfig.class);
     }
 
     @Test
-    public void shouldInitializeServlet() throws ServletException, ServletInitializationException {
+    public void shouldInitializeServlet() throws Exception {
         SampleServlet servlet = (SampleServlet) servletContainer.getServletForClass(SampleServlet.class, servletConfig);
 
         assertThat(servlet, is(not(nullValue())));
@@ -41,7 +47,7 @@ public class ServletContainerImplTest {
     }
 
     @Test
-    public void shouldReturnServletFromPool() throws ServletException, ServletInitializationException {
+    public void shouldReturnServletFromPool() throws Exception {
         SampleServlet servlet = (SampleServlet) servletContainer.getServletForClass(SampleServlet.class, servletConfig);
 
         assertThat(servlet, is(not(nullValue())));
@@ -59,7 +65,7 @@ public class ServletContainerImplTest {
     }
 
     @Test
-    public void shouldShutdownProperly() throws ServletException, ServletInitializationException {
+    public void shouldShutdownProperly() throws Exception {
         SampleServlet servlet = (SampleServlet) servletContainer.getServletForClass(SampleServlet.class, servletConfig);
 
         assertThat(servletContainer.getServletStats().size(), is(1));
@@ -69,14 +75,18 @@ public class ServletContainerImplTest {
     }
 
     @Test(expected = ServletInitializationException.class)
-    public void shouldThrowException() throws ServletException, ServletInitializationException {
+    public void shouldThrowExceptionWhenInitializingInvalidServlet() throws Exception {
         servletContainer.getServletForClass(InvalidServletWithPrivateConstructor.class, servletConfig);
+    }
+
+    @Test(expected = FilterInitializationException.class)
+    public void shouldThrowExceptionWhenInitializingInvalidFilter() throws Exception {
+        servletContainer.getFilterForClass(InvalidFilterWithPrivateConstructor.class, filterConfig);
     }
 
     // CHECKSTYLE.OFF: MagicNumber
     @Test
-    public void shouldDestroyOutdatedServlet()
-            throws ServletException, ServletInitializationException, InterruptedException {
+    public void shouldDestroyOutdatedServlet() throws Exception {
         servletContainer = new ServletContainerImpl(new DateProvider(), 50, 50);
         SampleServlet servlet = (SampleServlet) servletContainer.getServletForClass(SampleServlet.class, servletConfig);
         assertThat(servlet, is(not(nullValue())));
@@ -90,7 +100,7 @@ public class ServletContainerImplTest {
     }
     // CHECKSTYLE.ON: MagicNumber
 
-    public final class InvalidServletWithPrivateConstructor extends HttpServlet {
+    public static final class InvalidServletWithPrivateConstructor extends HttpServlet {
 
         private InvalidServletWithPrivateConstructor() {
 
@@ -99,6 +109,24 @@ public class ServletContainerImplTest {
         @Override
         public void service(final HttpServletRequest request, final HttpServletResponse response) {
             // To comply with HttpServlet interface only
+        }
+    }
+
+    public static final class InvalidFilterWithPrivateConstructor implements Filter {
+
+        private InvalidFilterWithPrivateConstructor() {
+        }
+
+        @Override
+        public void init(final FilterConfig filterConfig) {
+            // To comply with Filter interface only
+        }
+
+        @Override
+        public void doFilter(final HttpServletRequest request, final HttpServletResponse response,
+                             final FilterChain filterChain) {
+            // To comply with Filter interface only
+
         }
     }
 }

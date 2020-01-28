@@ -61,7 +61,7 @@ or use the following script that downloads and installs all required dependencie
 To make things work after you logout and login back, configure the `ANDROID_HOME` environment variable:
 
 ```bash
-echo "\n\mexport ANDROID_HOME=~/android-sdk" >> ~/.bashrc
+echo "export ANDROID_HOME=~/android-sdk" >> ~/.bashrc && source ~/.bashrc
 ```
 
 ## The http subproject and the idea behind it

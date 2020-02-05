@@ -6,4 +6,4 @@ wget https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -P/tmp
     export ANDROID_HOME=~/android-sdk && \
     mkdir -p ~/.android && \
     touch ~/.android/repositories.cfg && \
-    yes | $ANDROID_HOME/tools/bin/sdkmanager "platform-tools" "platforms;android-25"
+    yes | $ANDROID_HOME/tools/bin/sdkmanager "platform-tools" "platforms;android-26"

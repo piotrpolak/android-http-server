@@ -31,6 +31,13 @@ public final class SmsSendServlet extends HttpServlet {
     private static final int MAX_SMS_LENGTH = 160;
     private static final int PHONE_NUMBER_LENGTH = 9;
 
+    private SmsBox smsBox;
+
+    @Override
+    public void init() {
+        smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
+    }
+
     @Override
     public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
 
@@ -60,7 +67,6 @@ public final class SmsSendServlet extends HttpServlet {
 
         try {
             if (!"1".equals(test)) {
-                SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
                 smsBox.sendMessage(to, message);
             }
 

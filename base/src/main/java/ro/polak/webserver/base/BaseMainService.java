@@ -13,7 +13,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Icon;
 import android.content.res.AssetManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -22,7 +21,6 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.format.Formatter;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,7 +77,10 @@ public abstract class BaseMainService extends Service implements ServerGui {
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
         isServiceStarted = true;
 
-        ServerConfigFactory serverConfigFactory = getServerConfigFactory(this);
+        if (activity == null) {
+            throw new NullPointerException("Activity must be set at this point.");
+        }
+        ServerConfigFactory serverConfigFactory = getServerConfigFactory(activity);
 
         doFirstRunChecks(serverConfigFactory);
 
@@ -272,9 +273,9 @@ public abstract class BaseMainService extends Service implements ServerGui {
 
         } catch (Exception e) {
             try {
-                for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
                     NetworkInterface intf = en.nextElement();
-                    for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                         InetAddress inetAddress = enumIpAddr.nextElement();
                         if (!inetAddress.isLoopbackAddress()) {
                             return inetAddress.getHostAddress();

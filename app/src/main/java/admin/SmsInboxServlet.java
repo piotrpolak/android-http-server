@@ -32,13 +32,18 @@ public class SmsInboxServlet extends HttpServlet {
 
     public static final String THREAD_ID_PARAM_NAME = "thread_id";
 
+    private SmsBox smsBox;
+
+    @Override
+    public void init() {
+        smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
-        SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
-
         String threadId = request.getParameter(THREAD_ID_PARAM_NAME);
         String whereString = getWhereString(threadId);
         List<SmsBox.Message> messages = smsBox.readMessages(whereString);

@@ -34,9 +34,15 @@ public final class SmsInboxServlet extends HttpServlet {
     private static final String ALL_STRING = "";
     private static final MessageDTOMapper MAPPER = new MessageDTOMapper();
 
+    private SmsBox smsBox;
+
+    @Override
+    public void init() {
+        smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
+    }
+
     @Override
     public void service(final HttpServletRequest request, final HttpServletResponse response) throws ServletException {
-        SmsBox smsBox = new SmsBox(((Activity) getServletContext().getAttribute("android.content.Context")));
         List<SmsBox.Message> messages = smsBox.readMessages(ALL_STRING);
 
         try {

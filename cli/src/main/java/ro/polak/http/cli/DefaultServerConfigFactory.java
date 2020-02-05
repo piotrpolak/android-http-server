@@ -204,7 +204,8 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         return servletContexts;
     }
 
-    private void appendDefaultServlet(DeploymentDescriptorBuilder deploymentDescriptorBuilder, ServerConfig serverConfig) {
+    private void appendDefaultServlet(final DeploymentDescriptorBuilder deploymentDescriptorBuilder,
+                                      final ServerConfig serverConfig) {
         deploymentDescriptorBuilder
                 .addServletContext()
                     .withContextPath("/")

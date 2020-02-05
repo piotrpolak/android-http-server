@@ -23,8 +23,8 @@ import ro.polak.http.configuration.DeploymentDescriptorBuilder;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
+import ro.polak.http.resource.provider.FileSystemResourceProvider;
 import ro.polak.http.resource.provider.ResourceProvider;
-import ro.polak.http.resource.provider.impl.FileResourceProvider;
 import ro.polak.http.servlet.helper.RangeHelper;
 import ro.polak.http.session.storage.SessionStorage;
 import ro.polak.webserver.base.AssetResourceProvider;
@@ -104,7 +104,7 @@ public class BaseAndroidServerConfigFactory extends DefaultServerConfigFactory {
             AssetManager assetManager = ((Context) context).getResources().getAssets();
             return new AssetResourceProvider(assetManager, assetBasePath);
         } else {
-            return new FileResourceProvider(new RangeParser(), new RangeHelper(),
+            return new FileSystemResourceProvider(new RangeParser(), new RangeHelper(),
                     new RangePartHeaderSerializer(), mimeTypeMapping, "./app/src/main/assets/" + assetBasePath);
         }
     }

@@ -1,10 +1,36 @@
-language: java
+language: android
+jdk: oraclejdk8
+
+env:
+  global:
+    - ANDROID_API_LEVEL=26
+    - ANDROID_BUILD_TOOLS_VERSION=3.5.0
+
+android:
+  licenses:
+    - 'android-sdk-preview-license-.+'
+    - 'android-sdk-license-.+'
+    - 'google-gdk-license-.+'
+  components:
+    - tools
+    - platform-tools
+    # The BuildTools version used by your project
+    - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+    # The SDK version used to compile your project
+    - android-$ANDROID_API_LEVEL
+    # Additional components
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
+    - addon-google_apis-google-$ANDROID_API_LEVEL
+
+
 
 # http/settings.gradle Added here to enable http subproject to be built without the root project
 install:
   - ./gradlew :http:assemble -PskipAndroidBuild
 script:
-  - ./gradlew :http:check -PskipAndroidBuild -Djava.io.tmpdir=$HOME/.cache/ --stacktrace
+  - ./gradlew check -Djava.io.tmpdir=$HOME/.cache/ --stacktrace
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

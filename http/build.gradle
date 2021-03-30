@@ -14,7 +14,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.6'
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.6.0'
     }
 }
 
@@ -50,6 +50,7 @@ pitest {
     threads = 4
     outputFormats = ['XML', 'HTML']
     timestampedReports = false
+    junit5PluginVersion = '0.12'
 }
 
 check.dependsOn jacocoTestReport

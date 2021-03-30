@@ -1,6 +1,6 @@
 package ro.polak.http;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -46,12 +46,12 @@ import static org.junit.jupiter.api.Assertions.fail;
 public final class ProtocolIT extends AbstractIT {
 
     private static final String NEW_LINE = "\r\n";
-    public static final String DASH_DASH = "--";
+    private static final String DASH_DASH = "--";
     private static OkHttpClient client;
     private static final int TIMEOUT_IN_SECONDS = 600;
 
-    @BeforeEach
-    public void init() {
+    @BeforeAll
+    public static void initHttpClient() {
         client = new OkHttpClient().newBuilder()
                 .followRedirects(false)
                 .followSslRedirects(false)
@@ -678,7 +678,7 @@ public final class ProtocolIT extends AbstractIT {
      *
      * @see <a href="https://stackoverflow.com/a/34884863/2298527">https://stackoverflow.com/a/34884863/2298527</a>
      */
-    public final class MyCookieJar implements CookieJar {
+    public static final class MyCookieJar implements CookieJar {
 
         private List<Cookie> cookies;
 

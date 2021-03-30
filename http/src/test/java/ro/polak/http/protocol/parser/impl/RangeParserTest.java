@@ -1,14 +1,16 @@
 package ro.polak.http.protocol.parser.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.util.List;
 
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.servlet.Range;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 // CHECKSTYLE.OFF: JavadocType
 // CHECKSTYLE.OFF: MagicNumber
@@ -45,40 +47,71 @@ public class RangeParserTest {
         assertThat(rageList.get(1).getTo(), is(301L));
     }
 
-    @Test(expected = MalformedInputException.class)
-    public void shouldThrowExceptionOnMissingLength() throws MalformedInputException {
-        RangeParser rangeParser = new RangeParser();
-        rangeParser.parse("bytes=100-");
+    @Test
+    public void shouldThrowExceptionOnMissingLength() {
+        final RangeParser rangeParser = new RangeParser();
+
+        assertThrows(MalformedInputException.class, new Executable() {
+            @Override
+            public void execute() throws MalformedInputException {
+                rangeParser.parse("bytes=100-");
+            }
+        });
     }
 
-    @Test(expected = MalformedInputException.class)
-    public void shouldThrowExceptionOnMissingValues() throws MalformedInputException {
-        RangeParser rangeParser = new RangeParser();
-        rangeParser.parse("bytes=");
+    @Test
+    public void shouldThrowExceptionOnMissingValues() {
+        final RangeParser rangeParser = new RangeParser();
+        assertThrows(MalformedInputException.class, new Executable() {
+            @Override
+            public void execute() throws MalformedInputException {
+                rangeParser.parse("bytes=");
+            }
+        });
     }
 
-    @Test(expected = MalformedInputException.class)
-    public void shouldThrowExceptionWhenMissingFromValue() throws MalformedInputException {
-        RangeParser rangeParser = new RangeParser();
-        rangeParser.parse("bytes=-200");
+    @Test
+    public void shouldThrowExceptionWhenMissingFromValue() {
+        final RangeParser rangeParser = new RangeParser();
+        assertThrows(MalformedInputException.class, new Executable() {
+            @Override
+            public void execute() throws MalformedInputException {
+                rangeParser.parse("bytes=-200");
+            }
+        });
     }
 
-    @Test(expected = MalformedInputException.class)
-    public void shouldThrowExceptionNonParsableValues() throws MalformedInputException {
-        RangeParser rangeParser = new RangeParser();
-        rangeParser.parse("bytes=1-a");
+    @Test
+    public void shouldThrowExceptionNonParsableValues() {
+        final RangeParser rangeParser = new RangeParser();
+        assertThrows(MalformedInputException.class, new Executable() {
+            @Override
+            public void execute() throws MalformedInputException {
+                rangeParser.parse("bytes=1-a");
+            }
+        });
     }
 
-    @Test(expected = MalformedInputException.class)
-    public void shouldThrowExceptionOnIncompleteRange() throws MalformedInputException {
-        RangeParser rangeParser = new RangeParser();
-        rangeParser.parse("bytes=1");
+    @Test
+    public void shouldThrowExceptionOnIncompleteRange() {
+        final RangeParser rangeParser = new RangeParser();
+        assertThrows(MalformedInputException.class, new Executable() {
+            @Override
+            public void execute() throws MalformedInputException {
+                rangeParser.parse("bytes=1");
+            }
+        });
     }
 
-    @Test(expected = MalformedInputException.class)
-    public void shouldThrowExceptionOnUnrecognizedUnit() throws MalformedInputException {
-        RangeParser rangeParser = new RangeParser();
-        rangeParser.parse("octets=1-100");
+    @Test
+    public void shouldThrowExceptionOnUnrecognizedUnit() {
+        final RangeParser rangeParser = new RangeParser();
+        assertThrows(MalformedInputException.class, new Executable() {
+            @Override
+            public void execute() throws MalformedInputException {
+                rangeParser.parse("octets=1-100");
+            }
+        });
     }
 }
 // CHECKSTYLE.ON: MagicNumber

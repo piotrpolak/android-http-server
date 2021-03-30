@@ -1,17 +1,18 @@
 package ro.polak.http.impl;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import ro.polak.http.FileUtils;
-import ro.polak.http.configuration.ServerConfig;
-import ro.polak.http.configuration.impl.ServerConfigImpl;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+
+import ro.polak.http.FileUtils;
+import ro.polak.http.configuration.ServerConfig;
+import ro.polak.http.configuration.impl.ServerConfigImpl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -19,7 +20,7 @@ import static org.hamcrest.Matchers.is;
 
 // CHECKSTYLE.OFF: JavadocType
 // CHECKSTYLE.OFF: MagicNumber
-public class ServerConfigImplTest {
+public final class ServerConfigImplTest {
 
     public static final String OVERWRITTEN_VALUE = "OVERWRITTEN";
     public static final String ORIGINAL_VALUE = "somevalue";
@@ -44,25 +45,25 @@ public class ServerConfigImplTest {
     private static File mimeFile;
 
 
-    @BeforeClass
+    @BeforeAll
     public static void setuUp() throws IOException {
         workingDirectory = FileUtils.createTempDirectory();
         tempDirectory = FileUtils.createTempDirectory();
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanUp() {
         new File(workingDirectory).delete();
         new File(tempDirectory).delete();
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         backup = System.getProperties();
         System.setProperties(new Properties());
     }
 
-    @After
+    @AfterEach
     public void cleanUpAfterTest() throws IOException {
         if (configFile != null && configFile.exists() && !configFile.delete()) {
             throw new IOException("Unable to delete " + configFile.getAbsolutePath());

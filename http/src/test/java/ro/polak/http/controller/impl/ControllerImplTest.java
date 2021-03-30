@@ -1,8 +1,9 @@
 package ro.polak.http.controller.impl;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -10,30 +11,31 @@ import java.net.ServerSocket;
 import javax.net.ServerSocketFactory;
 
 import ro.polak.http.FileUtils;
+import ro.polak.http.WebServer;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServerConfigFactory;
-import ro.polak.http.WebServer;
 import ro.polak.http.gui.ServerGui;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 // CHECKSTYLE.OFF: JavadocType
-public class ControllerImplTest {
+public final class ControllerImplTest {
 
     private static ServerConfigFactory serverConfigFactory;
     private static ServerSocketFactory serverSocketFactory;
     private static ServerConfig serverConfig;
     private static ServerGui serverGui;
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         serverConfig = mock(ServerConfig.class);
         serverConfigFactory = mock(ServerConfigFactory.class);
@@ -50,7 +52,7 @@ public class ControllerImplTest {
         serverGui = mock(ServerGui.class);
     }
 
-    @After
+    @AfterEach
     public void shutDown() {
         Thread.currentThread().setDefaultUncaughtExceptionHandler(null);
     }
@@ -89,13 +91,19 @@ public class ControllerImplTest {
         verify(serverGui, times(1)).stop();
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldThrowExceptionOnIllegalStart() {
-        ControllerImpl controllerImpl = new ControllerImpl(serverConfigFactory, serverSocketFactory,
+        final ControllerImpl controllerImpl = new ControllerImpl(serverConfigFactory, serverSocketFactory,
                 serverGui);
 
         controllerImpl.start();
-        controllerImpl.start();
+
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() {
+                controllerImpl.start();
+            }
+        });
     }
 
     @Test
@@ -111,12 +119,16 @@ public class ControllerImplTest {
         }
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldThrowExceptionOnIllegalStop() {
-        ControllerImpl controllerImpl = new ControllerImpl(serverConfigFactory, serverSocketFactory,
+        final ControllerImpl controllerImpl = new ControllerImpl(serverConfigFactory, serverSocketFactory,
                 serverGui);
-
-        controllerImpl.stop();
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() {
+                controllerImpl.stop();
+            }
+        });
     }
 }
 // CHECKSTYLE.ON: JavadocType

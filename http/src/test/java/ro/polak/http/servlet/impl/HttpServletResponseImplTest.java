@@ -1,7 +1,8 @@
 package ro.polak.http.servlet.impl;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,23 +11,24 @@ import ro.polak.http.Headers;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.servlet.helper.StreamHelper;
 
-import static junit.framework.TestCase.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 
 // CHECKSTYLE.OFF: JavadocType
-public class HttpServletResponseImplTest {
+public final class HttpServletResponseImplTest {
 
     private HttpServletResponseImpl httpServletResponseImpl;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         httpServletResponseImpl = new HttpServletResponseImpl(mock(Serializer.class),
                 mock(Serializer.class), mock(StreamHelper.class), mock(OutputStream.class));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldNotAllowHeadersToBeFlushedTwice() throws IOException {
         try {
             httpServletResponseImpl.flushHeaders();
@@ -34,11 +36,16 @@ public class HttpServletResponseImplTest {
             fail("Should not throw exception on the first call");
         }
 
-        httpServletResponseImpl.flushHeaders();
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() throws IllegalStateException, IOException {
+                httpServletResponseImpl.flushHeaders();
+            }
+        });
     }
 
     @Test
-    public void shouldRedirectProperly() throws IOException {
+    public void shouldRedirectProperly() {
         String url = "/SomeUrl";
         httpServletResponseImpl.sendRedirect(url);
         assertThat(httpServletResponseImpl.getStatus(), is("HTTP/1.1 301 Moved Permanently"));
@@ -46,8 +53,8 @@ public class HttpServletResponseImplTest {
     }
 
     @Test
-    public void shouldNotCreateASinglePrintWriter() throws IOException {
-        assertThat(httpServletResponseImpl.getWriter().equals(httpServletResponseImpl.getWriter()), is(true));
+    public void shouldNotCreateASinglePrintWriter() {
+        assertThat(httpServletResponseImpl.getWriter(), is(httpServletResponseImpl.getWriter()));
     }
 
     @Test

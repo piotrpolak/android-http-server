@@ -1,6 +1,6 @@
 package ro.polak.http.errorhandler.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.errorhandler.HttpErrorHandler;

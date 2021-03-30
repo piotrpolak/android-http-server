@@ -1,8 +1,6 @@
 package ro.polak.http;
 
-import org.junit.BeforeClass;
-import ro.polak.http.cli.DefaultServerConfigFactory;
-import ro.polak.http.configuration.ServerConfig;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +9,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-import static junit.framework.TestCase.fail;
+import ro.polak.http.cli.DefaultServerConfigFactory;
+import ro.polak.http.configuration.ServerConfig;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 // CHECKSTYLE.OFF: JavadocType
 public class AbstractIT {
@@ -23,7 +24,7 @@ public class AbstractIT {
     private static File httpdConfigFile;
     private static String tempDirectory;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws IOException {
         if (serverSocket == null) {
             serverSocket = new ServerSocket();

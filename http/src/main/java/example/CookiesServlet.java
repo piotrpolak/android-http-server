@@ -11,9 +11,9 @@ import java.util.Date;
 
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.Cookie;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServlet;
 
 /**
  * Cookie usage example page.

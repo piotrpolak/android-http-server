@@ -1,6 +1,6 @@
 package ro.polak.http.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import ro.polak.http.MimeTypeMapping;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 // CHECKSTYLE.OFF: JavadocType
 public class MimeTypeMappingImplTest {

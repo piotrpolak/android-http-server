@@ -1,14 +1,14 @@
 package ro.polak.http.protocol.parser.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Locale;
 
 import ro.polak.http.protocol.parser.MalformedInputException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 // CHECKSTYLE.OFF: JavadocType
 // CHECKSTYLE.OFF: MagicNumber

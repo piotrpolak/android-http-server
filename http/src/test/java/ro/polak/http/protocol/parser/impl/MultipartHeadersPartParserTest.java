@@ -1,6 +1,7 @@
 package ro.polak.http.protocol.parser.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import ro.polak.http.MultipartHeadersPart;
 import ro.polak.http.protocol.parser.MalformedInputException;
@@ -8,7 +9,8 @@ import ro.polak.http.protocol.parser.Parser;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 // CHECKSTYLE.OFF: JavadocType
 public class MultipartHeadersPartParserTest {
@@ -58,14 +60,24 @@ public class MultipartHeadersPartParserTest {
         assertThat(headers.getContentType(), is(nullValue()));
     }
 
-    @Test(expected = MalformedInputException.class)
-    public void shouldThrowMalformedInputException() throws MalformedInputException {
-        multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text\" filename=\"text");
+    @Test
+    public void shouldThrowMalformedInputException() {
+        assertThrows(MalformedInputException.class, new Executable() {
+            @Override
+            public void execute() throws MalformedInputException {
+                multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text\" filename=\"text");
+            }
+        });
     }
 
-    @Test(expected = MalformedInputException.class)
-    public void shouldThrowMalformedInputExceptionForMissingClosing() throws MalformedInputException {
-        multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text");
+    @Test
+    public void shouldThrowMalformedInputExceptionForMissingClosing() {
+        assertThrows(MalformedInputException.class, new Executable() {
+            @Override
+            public void execute() throws MalformedInputException {
+                multipartHeadersPartParser.parse("Content-Disposition: form-data; name=\"text");
+            }
+        });
     }
 }
 // CHECKSTYLE.ON: JavadocType

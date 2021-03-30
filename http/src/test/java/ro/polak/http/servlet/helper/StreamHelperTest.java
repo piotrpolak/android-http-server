@@ -1,10 +1,7 @@
 package ro.polak.http.servlet.helper;
 
-import org.junit.Before;
-import org.junit.Test;
-import ro.polak.http.RangePartHeader;
-import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
-import ro.polak.http.servlet.Range;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,6 +12,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import ro.polak.http.RangePartHeader;
+import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
+import ro.polak.http.servlet.Range;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
@@ -22,7 +23,7 @@ import static org.hamcrest.Matchers.is;
 
 // CHECKSTYLE.OFF: JavadocType
 // CHECKSTYLE.OFF: MagicNumber
-public class StreamHelperTest {
+public final class StreamHelperTest {
 
     public static final String BOUNDARY = "someboundary";
     public static final String CONTENT_TYPE = "application/pdf";
@@ -37,7 +38,7 @@ public class StreamHelperTest {
     private final StreamHelper streamHelper = new StreamHelper(rangeHelper, rangePartHeaderSerializer);
     private final SliceHelper sliceHelper = new SliceHelper();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         inputBytes = new byte[1024 * 5];
         new Random().nextBytes(inputBytes);

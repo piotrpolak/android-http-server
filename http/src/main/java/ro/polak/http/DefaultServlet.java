@@ -7,6 +7,10 @@
 
 package ro.polak.http;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
 import ro.polak.http.exception.NotFoundException;
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.resource.provider.ResourceProvider;
@@ -16,10 +20,6 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.ServletConfig;
 import ro.polak.http.servlet.impl.HttpServletRequestImpl;
 import ro.polak.http.servlet.impl.HttpServletResponseImpl;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * Default servlet serving static files etc.

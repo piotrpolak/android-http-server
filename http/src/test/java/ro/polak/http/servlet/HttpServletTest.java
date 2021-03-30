@@ -1,6 +1,6 @@
 package ro.polak.http.servlet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ro.polak.http.exception.ServletException;
 import ro.polak.http.servlet.impl.ServletConfigImpl;

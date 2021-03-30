@@ -1,17 +1,25 @@
 package ro.polak.http.servlet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 // CHECKSTYLE.OFF: JavadocType
 // CHECKSTYLE.OFF: MagicNumber
 public class CookieTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldNotAllowIllegalName() {
-        new Cookie(";illegal", "somevalue");
+
+        assertThrows(IllegalArgumentException.class, new Executable() {
+            @Override
+            public void execute() {
+                new Cookie(";illegal", "somevalue");
+            }
+        });
     }
 
     @Test

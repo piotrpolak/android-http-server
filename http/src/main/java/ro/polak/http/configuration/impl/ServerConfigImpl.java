@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.Properties;
 
 import ro.polak.http.MimeTypeMapping;
+import ro.polak.http.ServletDispatcher;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.impl.MimeTypeMappingImpl;
 import ro.polak.http.resource.provider.ResourceProvider;
-import ro.polak.http.ServletDispatcher;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.utilities.IOUtilities;
 

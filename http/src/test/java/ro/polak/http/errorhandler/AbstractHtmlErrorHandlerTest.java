@@ -1,7 +1,14 @@
 package ro.polak.http.errorhandler;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+
 import ro.polak.http.FileUtils;
 import ro.polak.http.protocol.serializer.Serializer;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
@@ -9,22 +16,18 @@ import ro.polak.http.servlet.helper.RangeHelper;
 import ro.polak.http.servlet.helper.StreamHelper;
 import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 // CHECKSTYLE.OFF: JavadocType
-public class AbstractHtmlErrorHandlerTest {
+public final  class AbstractHtmlErrorHandlerTest {
 
     private static OutputStream outputStream;
     private static HttpServletResponseImpl response;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         outputStream = new ByteArrayOutputStream();
         response = new HttpServletResponseImpl(
@@ -34,11 +37,16 @@ public class AbstractHtmlErrorHandlerTest {
                 outputStream);
     }
 
-    @Test(expected = IOException.class)
+    @Test
     public void shouldThrowExceptionWhenDocumentPathIsMissing() throws Exception {
-        AbstractHtmlErrorHandler handler
+        final AbstractHtmlErrorHandler handler
                 = new SampleHtmlErrorHanlder("500", "", "", "/tmp/nonexistend");
-        handler.serve(response);
+        assertThrows(IOException.class, new Executable() {
+            @Override
+            public void execute() throws IOException {
+                handler.serve(response);
+            }
+        });
     }
 
     @Test
@@ -64,7 +72,7 @@ public class AbstractHtmlErrorHandlerTest {
 
     private static class SampleHtmlErrorHanlder extends AbstractHtmlErrorHandler {
         SampleHtmlErrorHanlder(final String status, final String message, final String explanation,
-                                      final String errorDocumentPath) {
+                               final String errorDocumentPath) {
             super(status, message, explanation, errorDocumentPath);
         }
     }

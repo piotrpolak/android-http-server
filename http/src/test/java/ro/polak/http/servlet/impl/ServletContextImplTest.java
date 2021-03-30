@@ -1,8 +1,8 @@
 package ro.polak.http.servlet.impl;
 
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,23 +20,23 @@ import ro.polak.http.session.storage.SessionStorage;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThan;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 // CHECKSTYLE.OFF: JavadocType
-public class ServletContextImplTest {
+public final class ServletContextImplTest {
 
     private SessionStorage sessionStorage;
     private ServletContextImpl servletContext;
     private HttpServletResponseImpl response;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         ServerConfig serverConfig = mock(ServerConfig.class);
         sessionStorage = mock(SessionStorage.class);

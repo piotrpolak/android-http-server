@@ -1,7 +1,13 @@
 package ro.polak.http.servlet.helper;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
+
 import ro.polak.http.configuration.FilterMapping;
 import ro.polak.http.configuration.ServletMapping;
 import ro.polak.http.configuration.impl.FilterMappingImpl;
@@ -13,11 +19,6 @@ import ro.polak.http.servlet.HttpServletResponse;
 import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.servlet.loader.SampleServlet;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -26,12 +27,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 // CHECKSTYLE.OFF: JavadocType
-public class ServletContextHelperTest {
+public final class ServletContextHelperTest {
 
     private ServletContextImpl servletContext;
     private ServletContextHelper servletContextHelper = new ServletContextHelper();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         servletContext = mock(ServletContextImpl.class);
         when(servletContext.getContextPath()).thenReturn("/context");

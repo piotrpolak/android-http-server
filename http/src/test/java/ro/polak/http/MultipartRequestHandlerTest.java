@@ -1,12 +1,7 @@
 package ro.polak.http;
 
-import org.junit.Test;
-import ro.polak.http.exception.protocol.PayloadTooLargeProtocolException;
-import ro.polak.http.protocol.parser.MalformedInputException;
-import ro.polak.http.protocol.parser.Parser;
-import ro.polak.http.protocol.parser.impl.HeadersParser;
-import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
-import ro.polak.http.servlet.UploadedFile;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -14,9 +9,17 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
+import ro.polak.http.exception.protocol.PayloadTooLargeProtocolException;
+import ro.polak.http.protocol.parser.MalformedInputException;
+import ro.polak.http.protocol.parser.Parser;
+import ro.polak.http.protocol.parser.impl.HeadersParser;
+import ro.polak.http.protocol.parser.impl.MultipartHeadersPartParser;
+import ro.polak.http.servlet.UploadedFile;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 // CHECKSTYLE.OFF: JavadocType
 // CHECKSTYLE.OFF: MagicNumber
@@ -172,7 +175,7 @@ public class MultipartRequestHandlerTest {
         assertThat(mrh.getPost().get("field_11"), is("KKKKKKKKKKK"));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldBeHandledOnceOnly() throws MalformedInputException {
         String data = new MultipartInputBuilder(BOUNDARY)
                 .withField("field_1", "A123")
@@ -180,29 +183,40 @@ public class MultipartRequestHandlerTest {
                 .withField("field_3", "C123")
                 .build();
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
+        final MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
                 data.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
         try {
             mrh.handle();
-            mrh.handle();
+
+            assertThrows(IllegalStateException.class, new Executable() {
+                @Override
+                public void execute() throws IOException, MalformedInputException {
+                    mrh.handle();
+                }
+            });
         } catch (IOException e) {
             fail("Should not throw IOException: " + e.getMessage());
         }
     }
 
-    @Test(expected = IOException.class)
+    @Test
     public void shouldThrowIOExceptionOnEndedBoundary()
             throws MalformedInputException, IOException {
         String data = "--123";
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
+        final MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
                 data.length() * 2, BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
-        mrh.handle();
+        assertThrows(IOException.class, new Executable() {
+            @Override
+            public void execute() throws IOException, MalformedInputException {
+                mrh.handle();
+            }
+        });
     }
 
-    @Test(expected = PayloadTooLargeProtocolException.class)
+    @Test
     public void shouldStopParsingOnWrongContentLengthInBeforeBoundary()
             throws MalformedInputException {
 
@@ -211,18 +225,19 @@ public class MultipartRequestHandlerTest {
                 .withField("field_1", "A123")
                 .build();
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data), 5,
+        final MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data), 5,
                 BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
-        try {
-            mrh.handle();
-        } catch (IOException e) {
-            fail("Should not throw IOException: " + e.getMessage());
-        }
+        assertThrows(PayloadTooLargeProtocolException.class, new Executable() {
+            @Override
+            public void execute() throws IOException, MalformedInputException {
+                mrh.handle();
+            }
+        });
     }
 
 
-    @Test(expected = PayloadTooLargeProtocolException.class)
+    @Test
     public void shouldStopParsingOnWrongContentLengthInBody() throws MalformedInputException {
         String begin = new MultipartInputBuilder(BOUNDARY)
                 .withField("field_1", "A123")
@@ -233,14 +248,15 @@ public class MultipartRequestHandlerTest {
                 .withField("field_3", "C123")
                 .build();
 
-        MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
+        final MultipartRequestHandler mrh = new MultipartRequestHandler(PARSER, getStreamOutOfString(data),
                 begin.length(), BOUNDARY, TEMPORARY_UPLOADS_DIRECTORY, 2048);
 
-        try {
-            mrh.handle();
-        } catch (IOException e) {
-            fail("Should not throw IOException: " + e.getMessage());
-        }
+        assertThrows(PayloadTooLargeProtocolException.class, new Executable() {
+            @Override
+            public void execute() throws IOException, MalformedInputException {
+                mrh.handle();
+            }
+        });
     }
 
     private InputStream getStreamOutOfString(final String data) {

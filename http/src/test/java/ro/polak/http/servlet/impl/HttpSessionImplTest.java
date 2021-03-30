@@ -1,23 +1,25 @@
 package ro.polak.http.servlet.impl;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.util.Collections;
 
 import ro.polak.http.servlet.ServletContext;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 // CHECKSTYLE.OFF: JavadocType
-public class HttpSessionImplTest {
+public final class HttpSessionImplTest {
 
     private HttpSessionImpl session;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         session = new HttpSessionImpl("123", System.currentTimeMillis());
         session.setAttribute("attribute", "value");
@@ -83,34 +85,59 @@ public class HttpSessionImplTest {
         assertThat(session.isInvalidated(), is(true));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldThrowExceptionWhenAccessingInvalidatedSession() {
         session.invalidate();
-        session.getAttribute("attribute");
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() {
+                session.getAttribute("attribute");
+            }
+        });
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldThrowExceptionWhenRemovingFromInvalidatedSession() {
         session.invalidate();
-        session.removeAttribute("attribute");
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() {
+                session.removeAttribute("attribute");
+            }
+        });
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldThrowExceptionWhenPuttingIntoInvalidatedSession() {
         session.invalidate();
-        session.setAttribute("attribute", "value");
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() {
+                session.setAttribute("attribute", "value");
+            }
+        });
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldThrowExceptionWhenReadingAccessTimeInvalidatedSession() {
         session.invalidate();
-        session.getLastAccessedTime();
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() {
+                session.getLastAccessedTime();
+            }
+        });
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldThrowExceptionWhenReadingAttributeNamesInvalidatedSession() {
         session.invalidate();
-        session.getAttributeNames();
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() {
+                session.getAttributeNames();
+            }
+        });
     }
 }
 // CHECKSTYLE.ON: JavadocType

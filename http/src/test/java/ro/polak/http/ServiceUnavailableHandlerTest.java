@@ -1,7 +1,7 @@
 package ro.polak.http;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
@@ -23,14 +23,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 // CHECKSTYLE.OFF: JavadocType
-public class ServiceUnavailableHandlerTest {
+public final class ServiceUnavailableHandlerTest {
 
     private static HttpServletResponseImplFactory factory;
     private static ServiceUnavailableHandler serviceUnavailableHandler;
     private static ByteArrayOutputStream outputStream;
     private static PrintWriter printWriter;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         outputStream = new ByteArrayOutputStream();
         factory = mock(HttpServletResponseImplFactory.class);

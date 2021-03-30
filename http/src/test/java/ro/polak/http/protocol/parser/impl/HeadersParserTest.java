@@ -1,6 +1,6 @@
 package ro.polak.http.protocol.parser.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ro.polak.http.Headers;
 import ro.polak.http.protocol.parser.MalformedInputException;
@@ -8,7 +8,7 @@ import ro.polak.http.protocol.parser.Parser;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 // CHECKSTYLE.OFF: JavadocType
 public class HeadersParserTest {

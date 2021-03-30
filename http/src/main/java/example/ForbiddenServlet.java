@@ -9,9 +9,9 @@ package example;
 
 import ro.polak.http.exception.AccessDeniedException;
 import ro.polak.http.exception.ServletException;
+import ro.polak.http.servlet.HttpServlet;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-import ro.polak.http.servlet.HttpServlet;
 
 /**
  * Forbidden page example.

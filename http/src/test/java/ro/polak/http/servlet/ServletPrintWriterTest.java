@@ -1,22 +1,30 @@
 package ro.polak.http.servlet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
-import static junit.framework.TestCase.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 
 // CHECKSTYLE.OFF: JavadocType
 public class ServletPrintWriterTest {
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void shouldNotAllowToWriteEndMoreThanOnce() {
-        ServletPrintWriter servletPrintWriter = new ServletPrintWriter(mock(ServletOutputStream.class));
+        final ServletPrintWriter servletPrintWriter = new ServletPrintWriter(mock(ServletOutputStream.class));
         try {
             servletPrintWriter.writeEnd();
         } catch (Throwable e) {
             fail("Should not throw any exception here");
         }
-        servletPrintWriter.writeEnd();
+
+        assertThrows(IllegalStateException.class, new Executable() {
+            @Override
+            public void execute() {
+                servletPrintWriter.writeEnd();
+            }
+        });
     }
 }
 // CHECKSTYLE.ON: JavadocType

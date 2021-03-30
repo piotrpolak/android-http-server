@@ -10,8 +10,8 @@ package ro.polak.http.impl;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 import ro.polak.http.servlet.ServletOutputStream;
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
 
 /**
  * Adds possibility flush headers capability to the ordinary output stream.

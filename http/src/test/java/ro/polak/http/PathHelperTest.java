@@ -1,9 +1,9 @@
 package ro.polak.http;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 // CHECKSTYLE.OFF: JavadocType
 public class PathHelperTest {

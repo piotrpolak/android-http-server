@@ -1,6 +1,6 @@
 package ro.polak.http.protocol.parser.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
@@ -10,8 +10,8 @@ import ro.polak.http.servlet.Cookie;
 import ro.polak.http.utilities.StringUtilities;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsMapContaining.hasKey;
-import static org.junit.Assert.assertThat;
 
 // CHECKSTYLE.OFF: JavadocType
 public class CookieParserTest {

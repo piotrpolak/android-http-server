@@ -1,8 +1,7 @@
 package ro.polak.http.utilities;
 
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
@@ -15,7 +14,7 @@ public class DateUtilitiesTest {
 
     @Test
     public void shouldNotBeInstantiableFinalClass() {
-        Assert.assertThat(DateUtilities.class, CoreMatchers.is(utilityClass()));
+        assertThat(DateUtilities.class, CoreMatchers.is(utilityClass()));
     }
 
     // CHECKSTYLE.OFF: MagicNumber

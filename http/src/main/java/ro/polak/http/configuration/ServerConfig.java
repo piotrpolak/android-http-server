@@ -10,8 +10,8 @@ package ro.polak.http.configuration;
 import java.util.List;
 
 import ro.polak.http.MimeTypeMapping;
-import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.ServletDispatcher;
+import ro.polak.http.resource.provider.ResourceProvider;
 
 /**
  * Server configuration.

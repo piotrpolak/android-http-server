@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 
 import javax.net.ServerSocketFactory;
 
-import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.WebServer;
+import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.controller.Controller;
 import ro.polak.http.gui.ServerGui;
 

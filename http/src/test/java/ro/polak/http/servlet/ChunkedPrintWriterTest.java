@@ -1,11 +1,11 @@
 package ro.polak.http.servlet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 // CHECKSTYLE.OFF: JavadocType
 public class ChunkedPrintWriterTest {

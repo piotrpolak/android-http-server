@@ -1,7 +1,8 @@
 package ro.polak.http.resource.provider.impl;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,6 +29,7 @@ import ro.polak.http.servlet.impl.HttpSessionImpl;
 import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.servlet.loader.SampleServlet;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -35,7 +37,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 // CHECKSTYLE.OFF: JavadocType
-public class ServletDispatcherTest {
+public final class ServletDispatcherTest {
 
     private static ServletContainer servletContainer;
     private static ServletContextImpl servletContext;
@@ -43,7 +45,7 @@ public class ServletDispatcherTest {
     private static HttpServletRequestImpl request;
     private static HttpServletResponseImpl response;
 
-    @Before
+    @BeforeEach
     public void setUp() throws ServletException, ServletInitializationException {
         servletContainer = mock(ServletContainer.class);
 
@@ -87,21 +89,32 @@ public class ServletDispatcherTest {
                 any(HttpServletResponseImpl.class));
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void shouldThrowExceptionWhenThereIsNoContext() throws IOException {
         when(servletContext.getContextPath()).thenReturn("/overwritten");
         when(request.getSession(false)).thenReturn(null);
-        servletDispatcher.load("/", request, response);
+        assertThrows(NotFoundException.class, new Executable() {
+            @Override
+            public void execute() throws IOException {
+                servletDispatcher.load("/", request, response);
+            }
+        });
         verify(servletContext, times(0)).handleSession(any(HttpSessionImpl.class),
                 any(HttpServletResponseImpl.class));
     }
 
-    @Test(expected = UnexpectedSituationException.class)
+    @Test
     public void shouldWrapServletInitializationException()
             throws IOException, ServletException, ServletInitializationException {
         when(servletContainer.getServletForClass(any(Class.class), any(ServletConfig.class)))
                 .thenThrow(new ServletInitializationException(new Exception()));
-        servletDispatcher.load("/", request, response);
+
+        assertThrows(UnexpectedSituationException.class, new Executable() {
+            @Override
+            public void execute() throws IOException {
+                servletDispatcher.load("/", request, response);
+            }
+        });
     }
 }
 // CHECKSTYLE.ON: JavadocType

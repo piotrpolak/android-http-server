@@ -7,10 +7,10 @@
 
 package ro.polak.http;
 
+import java.io.IOException;
+
 import ro.polak.http.servlet.impl.HttpServletRequestImpl;
 import ro.polak.http.servlet.impl.HttpServletResponseImpl;
-
-import java.io.IOException;
 
 /**
  * Interface allowing to load payload into the response.

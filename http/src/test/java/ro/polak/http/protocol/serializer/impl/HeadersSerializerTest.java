@@ -1,6 +1,6 @@
 package ro.polak.http.protocol.serializer.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import ro.polak.http.Headers;
 import ro.polak.http.protocol.serializer.Serializer;

@@ -1,13 +1,13 @@
 package ro.polak.http;
 
-import ro.polak.http.impl.ServerConfigImplTest;
-import ro.polak.http.utilities.IOUtilities;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+
+import ro.polak.http.impl.ServerConfigImplTest;
+import ro.polak.http.utilities.IOUtilities;
 
 // CHECKSTYLE.OFF: JavadocType
 public final class FileUtils {

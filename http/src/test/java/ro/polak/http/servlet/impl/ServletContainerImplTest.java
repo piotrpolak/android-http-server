@@ -1,9 +1,11 @@
 package ro.polak.http.servlet.impl;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import ro.polak.http.exception.FilterInitializationException;
+import ro.polak.http.exception.ServletException;
 import ro.polak.http.exception.ServletInitializationException;
 import ro.polak.http.servlet.BasicAbstractFilter;
 import ro.polak.http.servlet.FilterChain;
@@ -24,16 +26,17 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 // CHECKSTYLE.OFF: JavadocType
-public class ServletContainerImplTest {
+public final class ServletContainerImplTest {
 
     private ServletContainerImpl servletContainer;
     private ServletConfig servletConfig;
     private FilterConfig filterConfig;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         servletContainer = new ServletContainerImpl(new DateProvider(), 0, 0);
         servletConfig = mock(ServletConfig.class);
@@ -86,14 +89,26 @@ public class ServletContainerImplTest {
         assertThat(servlet.getDestroyedCounter(), is(equalTo(1)));
     }
 
-    @Test(expected = ServletInitializationException.class)
-    public void shouldThrowExceptionWhenInitializingInvalidServlet() throws Exception {
-        servletContainer.getServletForClass(InvalidServletWithPrivateConstructor.class, servletConfig);
+    @Test
+    public void shouldThrowExceptionWhenInitializingInvalidServlet() {
+
+        assertThrows(ServletInitializationException.class, new Executable() {
+            @Override
+            public void execute() throws ServletException, ServletInitializationException {
+                servletContainer.getServletForClass(InvalidServletWithPrivateConstructor.class, servletConfig);
+            }
+        });
     }
 
-    @Test(expected = FilterInitializationException.class)
-    public void shouldThrowExceptionWhenInitializingInvalidFilter() throws Exception {
-        servletContainer.getFilterForClass(InvalidAbstractFilterWithPrivateConstructor.class, filterConfig);
+    @Test
+    public void shouldThrowExceptionWhenInitializingInvalidFilter() {
+
+        assertThrows(FilterInitializationException.class, new Executable() {
+            @Override
+            public void execute() throws ServletException, FilterInitializationException {
+                servletContainer.getFilterForClass(InvalidAbstractFilterWithPrivateConstructor.class, filterConfig);
+            }
+        });
     }
 
     // CHECKSTYLE.OFF: MagicNumber

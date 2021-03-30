@@ -1,8 +1,8 @@
 package ro.polak.http.servlet.impl;
 
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 
 // CHECKSTYLE.OFF: JavadocType
 // CHECKSTYLE.OFF: MagicNumber
-public class HttpServletRequestImplTest {
+public final class HttpServletRequestImplTest {
 
     private HttpServletRequestImpl httpServletRequestImpl;
     private HttpServletRequestImpl.Builder builder;
@@ -43,7 +43,7 @@ public class HttpServletRequestImplTest {
     private ServletContextImpl servletContext;
     private Headers headers;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         requestStatus = new RequestStatus();
         requestStatus.setMethod(HttpServletRequest.METHOD_GET);

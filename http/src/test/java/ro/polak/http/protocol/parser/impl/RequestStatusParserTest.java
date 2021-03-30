@@ -1,13 +1,15 @@
 package ro.polak.http.protocol.parser.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import ro.polak.http.RequestStatus;
 import ro.polak.http.protocol.parser.MalformedInputException;
 import ro.polak.http.protocol.parser.Parser;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 // CHECKSTYLE.OFF: JavadocType
 public class RequestStatusParserTest {
@@ -34,10 +36,15 @@ public class RequestStatusParserTest {
         assertThat(requestStatus.getProtocol(), is("HTTP/1.1"));
     }
 
-    @Test(expected = MalformedInputException.class)
-    public void shouldThrowMalformedInputExceptionOnInvalidStatus() throws MalformedInputException {
-        Parser<RequestStatus> requestStatusParser = new RequestStatusParser();
-        requestStatusParser.parse("GET HTTP/1.1");
+    @Test
+    public void shouldThrowMalformedInputExceptionOnInvalidStatus() {
+        final Parser<RequestStatus> requestStatusParser = new RequestStatusParser();
+        assertThrows(MalformedInputException.class, new Executable() {
+            @Override
+            public void execute() throws MalformedInputException {
+                requestStatusParser.parse("GET HTTP/1.1");
+            }
+        });
     }
 }
 // CHECKSTYLE.ON: JavadocType

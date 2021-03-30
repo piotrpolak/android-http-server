@@ -1,6 +1,6 @@
 package ro.polak.http.servlet.impl;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,9 +11,9 @@ import java.net.Socket;
 import ro.polak.http.AbstractIT;
 import ro.polak.http.RequestBuilder;
 
-import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.startsWith;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 // CHECKSTYLE.OFF: JavadocType
 public class HttpServletResponseImplIT extends AbstractIT {

@@ -20,7 +20,8 @@ buildscript {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
     testCompile 'org.mockito:mockito-core:3.2.0'
     testCompile 'org.hamcrest:hamcrest-library:2.2'
     testCompile 'com.squareup.okhttp3:okhttp:4.2.2'
@@ -55,4 +56,8 @@ check.dependsOn jacocoTestReport
 
 checkstyle {
     sourceSets = [project.sourceSets.main, project.sourceSets.test]
+}
+
+test {
+    useJUnitPlatform()
 }

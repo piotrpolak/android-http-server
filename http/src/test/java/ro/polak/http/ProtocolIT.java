@@ -1,17 +1,8 @@
 package ro.polak.http;
 
-import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,14 +15,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static junit.framework.TestCase.fail;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.FormBody;
+import okhttp3.HttpUrl;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * The core integration test that verifies protocol compliance.
@@ -40,14 +43,14 @@ import static org.junit.Assert.assertThat;
  * See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
  */
 // CHECKSTYLE.OFF: MagicNumber
-public class ProtocolIT extends AbstractIT {
+public final class ProtocolIT extends AbstractIT {
 
     private static final String NEW_LINE = "\r\n";
     public static final String DASH_DASH = "--";
     private static OkHttpClient client;
     private static final int TIMEOUT_IN_SECONDS = 600;
 
-    @Before
+    @BeforeEach
     public void init() {
         client = new OkHttpClient().newBuilder()
                 .followRedirects(false)
@@ -58,8 +61,8 @@ public class ProtocolIT extends AbstractIT {
                 .build();
     }
 
-    @Test(expected = IOException.class)
-    public void shouldCloseSocketAfterCloseConnectionRequest() throws IOException, InterruptedException {
+    @Test
+    public void shouldCloseSocketAfterCloseConnectionRequest() {
         String requestBody = RequestBuilder.defaultBuilder()
                 .get("/example/Index")
                 .withHost(HOST + ":" + PORT)
@@ -78,13 +81,19 @@ public class ProtocolIT extends AbstractIT {
             fail("The test failed too early due IOException" + e.getMessage());
         }
 
-        int i = 0;
-        while (i++ < 10) {
-            // The following code will cause error on a closed socket
-            Thread.sleep(100);
-            out.write("X".getBytes());
-            out.flush();
-        }
+        final OutputStream finalOut = out;
+        assertThrows(IOException.class, new Executable() {
+            @Override
+            public void execute() throws IOException, InterruptedException {
+                int i = 0;
+                while (i++ < 10) {
+                    // The following code will cause error on a closed socket
+                    Thread.sleep(100);
+                    finalOut.write("X".getBytes());
+                    finalOut.flush();
+                }
+            }
+        });
     }
 
     // CHECKSTYLE.OFF: EmptyBlock

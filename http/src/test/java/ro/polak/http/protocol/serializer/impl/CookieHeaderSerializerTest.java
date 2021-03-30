@@ -1,7 +1,7 @@
 package ro.polak.http.protocol.serializer.impl;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
@@ -11,22 +11,22 @@ import ro.polak.http.utilities.DateUtilities;
 import ro.polak.http.utilities.StringUtilities;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.startsWith;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 // CHECKSTYLE.OFF: JavadocType
 // CHECKSTYLE.OFF: MagicNumber
-public class CookieHeaderSerializerTest {
+public final class CookieHeaderSerializerTest {
 
     private static CookieHeaderSerializer cookieHeaderSerializer;
     private static DateProvider dateProvider;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         Date now = new Date();
         dateProvider = mock(DateProvider.class);

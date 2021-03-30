@@ -1,9 +1,11 @@
 package ro.polak.http.servlet.factory;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -21,6 +23,7 @@ import ro.polak.http.servlet.impl.HttpServletRequestImpl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -28,7 +31,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 // CHECKSTYLE.OFF: JavadocType
-public class HttpServletRequestImplFactoryTest {
+public final class HttpServletRequestImplFactoryTest {
 
     private static HttpServletRequestImplFactory factory;
     private static Socket socket;
@@ -36,7 +39,7 @@ public class HttpServletRequestImplFactoryTest {
     private static Parser<Headers> headersParser;
     private static Headers headers;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         headers = new Headers();
         headersParser = mock(Parser.class);
@@ -61,17 +64,27 @@ public class HttpServletRequestImplFactoryTest {
         when(socket.getRemoteSocketAddress()).thenReturn(new InetSocketAddress(mock(InetAddress.class), 1));
     }
 
-    @Test(expected = ProtocolException.class)
+    @Test
     public void shouldThrowProtocolExceptionOnMalformedHeaders() throws Exception {
         when(headersParser.parse(any(String.class))).thenThrow(new MalformedInputException("ANY"));
-        factory.createFromSocket(socket);
+        assertThrows(ProtocolException.class, new Executable() {
+            @Override
+            public void execute() throws IOException {
+                factory.createFromSocket(socket);
+            }
+        });
     }
 
-    @Test(expected = UnsupportedProtocolException.class)
-    public void shouldThrowUnsuportedProtocolExceptionIllegalProtocol() throws Exception {
+    @Test
+    public void shouldThrowUnsupportedProtocolExceptionIllegalProtocol() throws Exception {
         when(socket.getInputStream())
                 .thenReturn(new ByteArrayInputStream("GET / MALF/1.0\r\nHeader1: someValue\r\n\r\n".getBytes()));
-        factory.createFromSocket(socket);
+        assertThrows(UnsupportedProtocolException.class, new Executable() {
+            @Override
+            public void execute() throws IOException {
+                factory.createFromSocket(socket);
+            }
+        });
     }
 
     @Test

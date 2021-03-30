@@ -1,7 +1,7 @@
 package ro.polak.http.errorhandler.impl;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.MockitoAnnotations;
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 // CHECKSTYLE.OFF: JavadocType
-public class HttpError500HandlerTest {
+public final class HttpError500HandlerTest {
 
     private static HttpServletResponseImpl httpServletResponse;
     private static PrintWriter printWriter;
@@ -27,7 +27,7 @@ public class HttpError500HandlerTest {
     @Captor
     private ArgumentCaptor<String> arg = ArgumentCaptor.forClass(String.class);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         httpServletResponse = mock(HttpServletResponseImpl.class);

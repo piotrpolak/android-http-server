@@ -93,7 +93,7 @@ public final class WebServer extends Thread {
         }
 
         LOGGER.log(Level.INFO, "Server has been started. Listening on port {0}", new Object[]{
-                serverConfig.getListenPort()
+                serverSocket.getLocalPort()
         });
 
         FileUtilities.clearDirectory(serverConfig.getTempPath());

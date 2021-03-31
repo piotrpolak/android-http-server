@@ -18,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class AbstractIT {
 
     protected static final String HOST = "localhost";
-    protected static final int PORT = 8080;
 
+    private static int port = 0;
     private static ServerSocket serverSocket;
     private static File httpdConfigFile;
     private static String tempDirectory;
@@ -35,14 +35,23 @@ public class AbstractIT {
             if (!webServer.startServer()) {
                 fail("Unable to start server");
             }
+            setPort(serverSocket.getLocalPort());
         }
+    }
+
+    protected static int getPort() {
+        return port;
+    }
+
+    protected static void setPort(final int port) {
+        AbstractIT.port = port;
     }
 
     /**
      * Builds the full request URL.
      */
     protected String getFullUrl(final String path) {
-        return "http://" + HOST + ":" + PORT + path;
+        return "http://" + HOST + ":" + port + path;
     }
 
     /**
@@ -50,7 +59,7 @@ public class AbstractIT {
      */
     protected Socket getSocket() throws IOException {
         Socket socket;
-        socket = new Socket(HOST, PORT);
+        socket = new Socket(HOST, port);
         socket.setSoTimeout(0);
         return socket;
     }
@@ -120,6 +129,16 @@ public class AbstractIT {
             @Override
             protected String getTempPath() {
                 return tempDirectory;
+            }
+
+            /**
+             * Starts the server at the first available port.
+             *
+             * @return
+             */
+            @Override
+            protected int getDefaultListenPort() {
+                return 0;
             }
         }).getServerConfig();
     }

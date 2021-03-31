@@ -22,9 +22,10 @@ import static org.hamcrest.Matchers.is;
 // CHECKSTYLE.OFF: MagicNumber
 public final class ServerConfigImplTest {
 
-    public static final String OVERWRITTEN_VALUE = "OVERWRITTEN";
-    public static final String ORIGINAL_VALUE = "somevalue";
-    public static final String ADDITIONAL_ATTRIBUTE_NAME = "additional.attribute";
+    private static final String OVERWRITTEN_VALUE = "OVERWRITTEN";
+    private static final String ORIGINAL_VALUE = "somevalue";
+    private static final String ADDITIONAL_ATTRIBUTE_NAME = "additional.attribute";
+    private static final int DEFAULT_LISTEN_PORT = 8080;
 
     private Properties backup;
 
@@ -80,7 +81,7 @@ public final class ServerConfigImplTest {
     public void shouldCreateFromPath() throws IOException {
         writeFiles(DEFAULT_CONFIG_DATA + "DefaultMimeType mime/text\n");
 
-        ServerConfig serverConfig = ServerConfigImpl.createFromPath(workingDirectory, tempDirectory);
+        ServerConfig serverConfig = ServerConfigImpl.createFromPath(workingDirectory, tempDirectory, DEFAULT_LISTEN_PORT);
         assertThat(serverConfig.getTempPath(), is(tempDirectory));
         assertThat(serverConfig.getBasePath(), is(workingDirectory));
         assertThat(serverConfig.getDocumentRootPath(), is(workingDirectory + "wwwx"));
@@ -101,14 +102,14 @@ public final class ServerConfigImplTest {
     public void shouldSetDefaultMimeType() throws IOException {
         writeFiles(DEFAULT_CONFIG_DATA);
 
-        ServerConfig serverConfig = ServerConfigImpl.createFromPath(workingDirectory, tempDirectory);
+        ServerConfig serverConfig = ServerConfigImpl.createFromPath(workingDirectory, tempDirectory, DEFAULT_LISTEN_PORT);
         assertThat(serverConfig.getMimeTypeMapping().getMimeTypeByExtension("ANY"), is("mime/text"));
     }
 
     @Test
     public void shouldPreferSystemPropertiesOverFileDefinedOnes() throws IOException {
         writeFiles(DEFAULT_CONFIG_DATA);
-        ServerConfig serverConfig = ServerConfigImpl.createFromPath(workingDirectory, tempDirectory);
+        ServerConfig serverConfig = ServerConfigImpl.createFromPath(workingDirectory, tempDirectory, DEFAULT_LISTEN_PORT);
         assertThat(serverConfig.getAttribute(ADDITIONAL_ATTRIBUTE_NAME), is(ORIGINAL_VALUE));
 
         System.setProperty(ADDITIONAL_ATTRIBUTE_NAME, OVERWRITTEN_VALUE);
@@ -129,7 +130,7 @@ public final class ServerConfigImplTest {
         System.setProperty("server.errorDocument.403", "ERROR403.html");
         System.setProperty(ADDITIONAL_ATTRIBUTE_NAME, "YET_ANOTHER_VALUE");
 
-        ServerConfig serverConfig = new ServerConfigImpl("/tmp/", "/tmp/", new Properties());
+        ServerConfig serverConfig = new ServerConfigImpl("/tmp/", "/tmp/", DEFAULT_LISTEN_PORT, new Properties());
         assertThat(serverConfig.getDocumentRootPath(), is("/tmp/path"));
         assertThat(serverConfig.getDirectoryIndex(), hasItem("i.php"));
         assertThat(serverConfig.getDirectoryIndex(), hasItem("i.html"));

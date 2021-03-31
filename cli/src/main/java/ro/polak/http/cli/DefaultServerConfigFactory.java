@@ -22,8 +22,8 @@ import java.util.regex.Pattern;
 import example.ChunkedServlet;
 import example.ChunkedWithDelayServlet;
 import example.CookiesServlet;
-import example.ForbiddenServlet;
 import example.ForbiddenByFilterServlet;
+import example.ForbiddenServlet;
 import example.IndexServlet;
 import example.InternalServerErrorServlet;
 import example.NotFoundServlet;
@@ -31,17 +31,17 @@ import example.SessionServlet;
 import example.StreamingServlet;
 import example.filter.FakeSecuredAbstractFilter;
 import ro.polak.http.DefaultServlet;
+import ro.polak.http.ServletDispatcher;
+import ro.polak.http.configuration.DeploymentDescriptorBuilder;
 import ro.polak.http.configuration.ServerConfig;
 import ro.polak.http.configuration.ServerConfigFactory;
-import ro.polak.http.configuration.DeploymentDescriptorBuilder;
 import ro.polak.http.configuration.impl.ServerConfigImpl;
 import ro.polak.http.protocol.parser.impl.RangeParser;
 import ro.polak.http.protocol.serializer.impl.RangePartHeaderSerializer;
-import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.resource.provider.FileSystemResourceProvider;
-import ro.polak.http.ServletDispatcher;
-import ro.polak.http.servlet.impl.ServletContainerImpl;
+import ro.polak.http.resource.provider.ResourceProvider;
 import ro.polak.http.servlet.helper.RangeHelper;
+import ro.polak.http.servlet.impl.ServletContainerImpl;
 import ro.polak.http.servlet.impl.ServletContextImpl;
 import ro.polak.http.session.storage.FileSessionStorage;
 import ro.polak.http.session.storage.SessionStorage;
@@ -101,6 +101,15 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
      */
     protected Set<ResourceProvider> getAdditionalResourceProviders(final ServerConfig serverConfig) {
         return new HashSet<>();
+    }
+
+    /**
+     * Returns default listen port.
+     *
+     * @return
+     */
+    protected int getDefaultListenPort() {
+        return 8080;
     }
 
     /**
@@ -172,13 +181,14 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
         ServerConfigImpl serverConfig;
 
         String tempPath = getTempPath();
+        int defaultListenPort = getDefaultListenPort();
         String basePath = File.separator + "httpd" + File.separator;
 
         try {
-            serverConfig = ServerConfigImpl.createFromPath(baseConfigPath, tempPath);
+            serverConfig = ServerConfigImpl.createFromPath(baseConfigPath, tempPath, defaultListenPort);
         } catch (IOException e) {
             LOGGER.warning("Unable to read server config. Using the default configuration. " + e.getMessage());
-            serverConfig = new ServerConfigImpl(basePath, tempPath, new Properties());
+            serverConfig = new ServerConfigImpl(basePath, tempPath, defaultListenPort, new Properties());
         }
 
         serverConfig.setResourceProviders(selectActiveResourceProviders(serverConfig));

@@ -65,7 +65,7 @@ public final class ProtocolIT extends AbstractIT {
     public void shouldCloseSocketAfterCloseConnectionRequest() {
         String requestBody = RequestBuilder.defaultBuilder()
                 .get("/example/Index")
-                .withHost(HOST + ":" + PORT)
+                .withHost(HOST + ":" + getPort())
                 .withCloseConnection()
                 .toString();
 
@@ -628,7 +628,7 @@ public final class ProtocolIT extends AbstractIT {
     public void shouldReturn505HTTPVersionNotSupported() throws IOException {
         RequestBuilder requestBuilder = RequestBuilder.defaultBuilder()
                 .get("SomeUrl.html")
-                .withHost(HOST + ":" + PORT)
+                .withHost(HOST + ":" + getPort())
                 .withProtocol("HTTP/9.0")
                 .withCloseConnection();
 

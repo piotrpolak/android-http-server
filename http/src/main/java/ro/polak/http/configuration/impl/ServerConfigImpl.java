@@ -52,7 +52,6 @@ public class ServerConfigImpl implements ServerConfig {
     private static final String ATTRIBUTE_DEFAULT_MIME_TYPE = "server.mimeType.defaultMimeType";
     private static final String ATTRIBUTE_MIME_TYPE = "server.mimeType.filePath";
     private static final String ATTRIBUTE_DIRECTORY_INDEX = "server.static.directoryIndex";
-    private static final int DEFAULT_PORT = 8080;
     private static final int DEFAULT_MAX_THREADS = 10;
 
     private List<String> directoryIndex;
@@ -69,12 +68,16 @@ public class ServerConfigImpl implements ServerConfig {
     private Properties properties;
     private ServletDispatcher servletDispatcher;
 
-    public ServerConfigImpl(final String basePath, final String tempPath, final Properties properties) {
+    public ServerConfigImpl(final String basePath,
+                            final String tempPath,
+                            final int defaultListenPort,
+                            final Properties properties
+    ) {
         this.tempPath = tempPath;
         this.basePath = basePath;
         this.properties = properties;
 
-        assignListenPort(properties, DEFAULT_PORT);
+        assignListenPort(properties, defaultListenPort);
         assignDocumentRoot(basePath, properties, basePath + "www" + File.separator);
         assignMaxThreads(properties, DEFAULT_MAX_THREADS);
         assignKeepAlive(properties, false);
@@ -91,13 +94,17 @@ public class ServerConfigImpl implements ServerConfig {
     /**
      * @param basePath
      * @param tempPath
+     * @param defaultListenPort
      * @return
      * @throws IOException
      */
-    public static ServerConfigImpl createFromPath(final String basePath, final String tempPath) throws IOException {
+    public static ServerConfigImpl createFromPath(final String basePath,
+                                                  final String tempPath,
+                                                  final int defaultListenPort
+    ) throws IOException {
         Properties properties = loadProperties(basePath);
 
-        ServerConfigImpl serverConfig = new ServerConfigImpl(basePath, tempPath, properties);
+        ServerConfigImpl serverConfig = new ServerConfigImpl(basePath, tempPath, defaultListenPort, properties);
         serverConfig.basePath = basePath;
         return serverConfig;
     }

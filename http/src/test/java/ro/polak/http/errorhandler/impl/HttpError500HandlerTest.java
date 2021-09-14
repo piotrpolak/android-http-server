@@ -1,23 +1,25 @@
 package ro.polak.http.errorhandler.impl;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.MockitoAnnotations;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import ro.polak.http.servlet.impl.HttpServletResponseImpl;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import ro.polak.http.servlet.impl.HttpServletResponseImpl;
+
 // CHECKSTYLE.OFF: JavadocType
+@ExtendWith(MockitoExtension.class)
 public final class HttpError500HandlerTest {
 
     private static HttpServletResponseImpl httpServletResponse;
@@ -29,7 +31,6 @@ public final class HttpError500HandlerTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         httpServletResponse = mock(HttpServletResponseImpl.class);
         printWriter = mock(PrintWriter.class);
         when(httpServletResponse.getWriter()).thenReturn(printWriter);

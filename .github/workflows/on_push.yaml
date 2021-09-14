@@ -17,7 +17,7 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build with Gradle
-        run: ./gradlew build assemble --stacktrace
+        run: ./gradlew clean build assemble :cli:fatJar --stacktrace
       - name: Upload Code Coverage report
         uses: codecov/codecov-action@v2
         with:
@@ -26,12 +26,22 @@ jobs:
           name: codecov-umbrella
           fail_ci_if_error: true
           verbose: true
-      - name: Upload unsigned APK to Dropbox
-        uses: whalemare/action-dropbox@v1.0.0
+      - name: Prepare release
+        run: |
+          mkdir -p ./app/build/_release/android-http-server
+          mv ./app/build/outputs/apk/release/app-release-unsigned.apk ./app/build/_release/android-http-server/android-http-server-latest-unsigned.apk
+          mv ./cli/build/libs/cli-all.jar ./app/build/_release/android-http-server/android-http-server-cli-fatjar-latest.jar
+      - name: Push release to another repo
+        uses: cpina/github-action-push-to-another-repository@2ebe0cc15fc6a8e63c3658c119525bf1aead4418
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.GITHUB_TOKEN }}
         with:
-          accessToken: ${{ secrets.DROPBOX_TOKEN }}
-          destination: /android-http-server
-          file: ./app/build/outputs/apk/release/app-release-unsigned.apk
+          source-directory: ./app/build/_release/
+          user-name: 'piotrpolak'
+          destination-github-username: 'piotrpolak'
+          destination-repository-name: 'android-http-server-release'
+          user-email: piotr@polak.ro
+          target-branch: main
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.

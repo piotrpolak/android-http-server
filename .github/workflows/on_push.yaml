@@ -17,14 +17,21 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
       - name: Build with Gradle
-        run: ./gradlew build --stacktrace
-      - uses: codecov/codecov-action@v2
+        run: ./gradlew build assemble --stacktrace
+      - name: Upload Code Coverage report
+        uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./http/build/jacoco/test.exec
           name: codecov-umbrella
           fail_ci_if_error: true
           verbose: true
+      - name: Upload unsigned APK to Dropbox
+        uses: whalemare/action-dropbox@v1.0.0
+        with:
+          accessToken: ${{ secrets.DROPBOX_TOKEN }}
+          destination: /android-http-server
+          file: ./app/build/outputs/apk/release/app-release-unsigned.apk
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.

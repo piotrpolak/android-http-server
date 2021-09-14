@@ -37,12 +37,14 @@ jobs:
           dropbox_access_token: ${{ secrets.DROPBOX_TOKEN }}
           src: ./app/build/_release/android-http-server/android-http-server-latest-unsigned.apk
           dest: /android-http-server/
+          mode: overwrite
       - name: Upload CLI jar to Dropbox
         uses: deka0106/upload-to-dropbox@v2.0.0
         with:
           dropbox_access_token: ${{ secrets.DROPBOX_TOKEN }}
           src: ./app/build/_release/android-http-server/android-http-server-cli-fatjar-latest.jar
           dest: /android-http-server/
+          mode: overwrite
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.

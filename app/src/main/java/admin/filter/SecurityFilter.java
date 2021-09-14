@@ -7,6 +7,8 @@
 
 package admin.filter;
 
+import static admin.LoginServlet.RELOCATE_PARAM_NAME;
+
 import java.io.IOException;
 
 import admin.logic.AccessControl;
@@ -17,8 +19,6 @@ import ro.polak.http.servlet.FilterChain;
 import ro.polak.http.servlet.FilterConfig;
 import ro.polak.http.servlet.HttpServletRequest;
 import ro.polak.http.servlet.HttpServletResponse;
-
-import static admin.LoginServlet.RELOCATE_PARAM_NAME;
 
 /**
  * Provides a security check before executing the servlet logic.

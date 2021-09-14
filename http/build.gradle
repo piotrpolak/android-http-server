@@ -2,7 +2,13 @@ apply plugin: 'java'
 apply plugin: 'jacoco'
 apply plugin: 'info.solidsoft.pitest'
 
-sourceCompatibility = 1.7
+compileJava {
+    sourceCompatibility = 1.7
+}
+
+compileTestJava {
+    sourceCompatibility = 1.8
+}
 
 // Added here to enable http subproject to be built without the root project
 repositories {
@@ -19,13 +25,13 @@ buildscript {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
-    testCompile 'org.mockito:mockito-core:3.2.0'
-    testCompile 'org.hamcrest:hamcrest-library:2.2'
-    testCompile 'com.squareup.okhttp3:okhttp:4.9.1'
-    testCompile project(path: ':cli')
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.1'
+    testImplementation 'org.mockito:mockito-core:3.2.0'
+    testImplementation 'org.hamcrest:hamcrest-library:2.2'
+    testImplementation 'com.squareup.okhttp3:okhttp:4.9.1'
+    testImplementation project(path: ':cli')
 }
 
 jacocoTestReport {

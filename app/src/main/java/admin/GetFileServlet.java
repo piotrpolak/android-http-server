@@ -7,8 +7,8 @@
 
 package admin;
 
-import android.os.Environment;
-import android.support.annotation.NonNull;
+import android.app.Activity;
+import androidx.annotation.NonNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +32,14 @@ import ro.polak.http.utilities.StringUtilities;
 public class GetFileServlet extends HttpServlet {
 
     private static final String ATTR_ADMIN_DRIVE_ACCESS_ENABLED = "admin.driveAccess.enabled";
+
+    File externalStorageDirectory;
+
+    @Override
+    public void init() {
+        externalStorageDirectory = ((Activity) getServletContext()
+                .getAttribute("android.content.Context")).getFilesDir();
+    }
 
     /**
      * {@inheritDoc}
@@ -67,7 +75,7 @@ public class GetFileServlet extends HttpServlet {
 
     @NonNull
     private String getPathname(final HttpServletRequest request) {
-        return Environment.getExternalStorageDirectory() + StringUtilities.urlDecode(request.getQueryString());
+        return externalStorageDirectory + StringUtilities.urlDecode(request.getQueryString());
     }
 
     private void serveFile(final File file, final HttpServletResponse response) throws IOException {

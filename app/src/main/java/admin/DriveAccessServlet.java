@@ -7,7 +7,7 @@
 
 package admin;
 
-import android.os.Environment;
+import android.app.Activity;
 
 import java.io.File;
 import java.util.StringTokenizer;
@@ -31,6 +31,14 @@ public class DriveAccessServlet extends HttpServlet {
     private static final String ADMIN_DRIVE_ACCESS_ENABLED = "admin.driveAccess.enabled";
 
     private static final FileIconMapper MAPPER = new FileIconMapper();
+
+    File externalStorageDirectory;
+
+    @Override
+    public void init() {
+        externalStorageDirectory = ((Activity) getServletContext()
+                .getAttribute("android.content.Context")).getFilesDir();
+    }
 
     /**
      * {@inheritDoc}
@@ -57,7 +65,7 @@ public class DriveAccessServlet extends HttpServlet {
 
         renderBreadcrubms(doc, path);
 
-        File file = new File(Environment.getExternalStorageDirectory() + path);
+        File file = new File(externalStorageDirectory + path);
 
         if (file.exists() && file.isDirectory()) {
             renderDirectoryList(doc, path, file);

@@ -1,8 +1,13 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+compileJava {
+    sourceCompatibility = 1.7
+}
+
+compileTestJava {
+    sourceCompatibility = 1.8
+}
 
 jar {
     manifest {
@@ -16,13 +21,13 @@ task fatJar(type: Jar) {
                 'Main-Class': 'ro.polak.http.cli.DefaultCliServerGui'
     }
     baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(path: ':http')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(path: ':http')
 }
 
 

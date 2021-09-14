@@ -12,7 +12,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.telephony.SmsManager;
 
 import java.util.ArrayList;
@@ -55,8 +55,8 @@ public final class SmsBox {
 
     private final Activity context;
 
-    public SmsBox(final Activity contentResolver) {
-        this.context = contentResolver;
+    public SmsBox(final Activity context) {
+        this.context = context;
     }
 
     @NonNull

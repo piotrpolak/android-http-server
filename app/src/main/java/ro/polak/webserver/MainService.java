@@ -8,7 +8,7 @@
 package ro.polak.webserver;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import impl.AndroidServerConfigFactory;
 import ro.polak.webserver.base.BaseMainService;

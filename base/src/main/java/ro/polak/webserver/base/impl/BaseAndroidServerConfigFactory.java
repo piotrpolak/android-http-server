@@ -9,7 +9,6 @@ package ro.polak.webserver.base.impl;
 
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.os.Environment;
 
 import java.io.File;
 import java.util.HashMap;
@@ -50,7 +49,7 @@ public class BaseAndroidServerConfigFactory extends DefaultServerConfigFactory {
     protected String getBasePath() {
         String baseConfigPath;
         if (context != null) {
-            baseConfigPath = Environment.getExternalStorageDirectory() + "/httpd/";
+            baseConfigPath = context.getFilesDir() + "/httpd/";
         } else {
             baseConfigPath = "./app/src/main/assets/conf/";
         }

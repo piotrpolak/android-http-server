@@ -58,6 +58,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
     private static final Logger LOGGER = Logger.getLogger(DefaultServerConfigFactory.class.getName());
     private static final long SERVLET_TIME_TO_LIVE_IN_MS = 1800L * 1000L;
     private static final long MONITORING_INTERVAL_IN_MS = SERVLET_TIME_TO_LIVE_IN_MS / 10L;
+    private static final int DEFAULT_LISTEN_PORT = 8080;
 
     /**
      * {@inheritDoc}
@@ -109,7 +110,7 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
      * @return
      */
     protected int getDefaultListenPort() {
-        return 8080;
+        return DEFAULT_LISTEN_PORT;
     }
 
     /**

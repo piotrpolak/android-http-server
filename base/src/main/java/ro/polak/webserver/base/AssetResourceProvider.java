@@ -9,7 +9,7 @@ package ro.polak.webserver.base;
 
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;

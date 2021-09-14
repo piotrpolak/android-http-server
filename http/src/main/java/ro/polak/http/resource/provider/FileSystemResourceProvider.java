@@ -166,7 +166,6 @@ public class FileSystemResourceProvider implements ResourceProvider {
         }
         response.flushHeaders();
 
-        // TODO Test with large values, greater than those of BufferedInputStream internal buffer
         InputStream fileInputStream = new BufferedInputStream(new FileInputStream(file));
         if (ranges.size() == 1) {
             response.serveStream(fileInputStream, ranges.get(0));

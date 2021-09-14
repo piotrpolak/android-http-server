@@ -7,6 +7,8 @@
 
 package ro.polak.webserver.base;
 
+import static ro.polak.http.configuration.impl.ServerConfigImpl.PROPERTIES_FILE_NAME;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,10 +19,9 @@ import android.content.res.AssetManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
-import android.os.Environment;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,8 +42,6 @@ import ro.polak.http.controller.impl.ControllerImpl;
 import ro.polak.http.gui.ServerGui;
 import ro.polak.webserver.base.impl.BaseAndroidServerConfigFactory;
 import ro.polak.webserver.base.logic.AssetUtil;
-
-import static ro.polak.http.configuration.impl.ServerConfigImpl.PROPERTIES_FILE_NAME;
 
 /**
  * Main application service that holds http server.
@@ -199,9 +198,12 @@ public abstract class BaseMainService extends Service implements ServerGui {
     protected abstract Class<? extends BaseMainActivity> getActivityClass();
 
     private void doFirstRunChecks(final ServerConfigFactory serverConfigFactory) {
+
+        File externalStorageDirectory = activity.getFilesDir();
+
         ServerConfig serverConfig = serverConfigFactory.getServerConfig();
-        String basePath = Environment.getExternalStorageDirectory() + serverConfig.getBasePath();
-        String staticDirPath = Environment.getExternalStorageDirectory() + serverConfig.getDocumentRootPath();
+        String basePath = externalStorageDirectory + serverConfig.getBasePath();
+        String staticDirPath = externalStorageDirectory + serverConfig.getDocumentRootPath();
 
         File baseDir = new File(basePath);
         if (!baseDir.exists() && !baseDir.mkdirs()) {

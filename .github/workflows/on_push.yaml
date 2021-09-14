@@ -31,17 +31,18 @@ jobs:
           mkdir -p ./app/build/_release/android-http-server
           mv ./app/build/outputs/apk/release/app-release-unsigned.apk ./app/build/_release/android-http-server/android-http-server-latest-unsigned.apk
           mv ./cli/build/libs/cli-all.jar ./app/build/_release/android-http-server/android-http-server-cli-fatjar-latest.jar
-      - name: Push release to another repo
-        uses: cpina/github-action-push-to-another-repository@2ebe0cc15fc6a8e63c3658c119525bf1aead4418
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload APK to Dropbox
+        uses: deka0106/upload-to-dropbox@v2.0.0
         with:
-          source-directory: ./app/build/_release/
-          user-name: 'piotrpolak'
-          destination-github-username: 'piotrpolak'
-          destination-repository-name: 'android-http-server-release'
-          user-email: piotr@polak.ro
-          target-branch: main
+          dropbox_access_token: ${{ secrets.DROPBOX_TOKEN }}
+          src: ./app/build/_release/android-http-server/android-http-server-latest-unsigned.apk
+          dest: /android-http-server/
+      - name: Upload CLI jar to Dropbox
+        uses: deka0106/upload-to-dropbox@v2.0.0
+        with:
+          dropbox_access_token: ${{ secrets.DROPBOX_TOKEN }}
+          src: ./app/build/_release/android-http-server/android-http-server-cli-fatjar-latest.jar
+          dest: /android-http-server/
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.

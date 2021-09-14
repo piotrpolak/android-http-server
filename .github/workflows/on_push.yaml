@@ -22,10 +22,8 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./http/build/jacoco/test.exec
-          name: codecov-umbrella
-          fail_ci_if_error: true
-          verbose: true
+          files: ./http/build/reports/jacoco/test/jacocoTestReport.xml
+          flags: unittests
       - name: Prepare release
         run: |
           mkdir -p ./app/build/_release/android-http-server

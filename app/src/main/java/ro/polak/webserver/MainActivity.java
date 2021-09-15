@@ -49,20 +49,20 @@ public class MainActivity extends BaseMainActivity {
 
         setContentView(R.layout.activity_main);
 
-        imgView = (ImageView) findViewById(R.id.ImageView01);
-        status = (TextView) findViewById(R.id.TextView01);
-        ipText = (TextView) findViewById(R.id.TextView02);
-        consoleText = (TextView) findViewById(R.id.textView1);
-        actionButton = (Button) findViewById(R.id.Button01);
+        imgView = findViewById(R.id.ImageView01);
+        status = findViewById(R.id.TextView01);
+        ipText = findViewById(R.id.TextView02);
+        consoleText = findViewById(R.id.textView1);
+        actionButton = findViewById(R.id.Button01);
         actionButton.setOnClickListener(new ButtonListener(this));
 
-        backgroundButton = (Button) findViewById(R.id.Button02);
+        backgroundButton = findViewById(R.id.Button02);
         backgroundButton.setOnClickListener(new ButtonListener(this));
 
-        quitButton = (Button) findViewById(R.id.Button03);
+        quitButton = findViewById(R.id.Button03);
         quitButton.setOnClickListener(new ButtonListener(this));
 
-        requestPermissionsButton = (Button) findViewById(R.id.Button04);
+        requestPermissionsButton = findViewById(R.id.Button04);
         requestPermissionsButton.setOnClickListener(new ButtonListener(this));
 
         status.setText("Initializing");

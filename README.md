@@ -92,7 +92,7 @@ Code coverage should be kept above 90%.
 
 ### Android SDK compatibility issues
 
-All application code is targeted to Java 7. It also compiles for Android SDK versions < 19
+All application code is targeted to Java 7. It also compiles for the Android SDK versions < 19
 (try with resources is not supported, use
 [IOUtilities.closeSilently(closeable)](../../tree/master/http/src/main/java/ro/polak/http/utilities/IOUtilities.java)
 in a `finally` block as an alternative when closing streams).

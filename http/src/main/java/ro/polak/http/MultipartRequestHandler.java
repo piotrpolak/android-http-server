@@ -224,7 +224,7 @@ public class MultipartRequestHandler {
             }
         } else {
             if (currentFile != null) {
-                fileOutputStream.write(bytes, start, end);
+                fileOutputStream.write(bytes, start, end - start);
             } else {
                 for (int i = start; i < end; i++) {
                     valueStringBuffered.append((char) bytes[i]);

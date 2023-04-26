@@ -1,34 +1,50 @@
-name: Java CI
+name: Build Master
 
-on: [push]
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - name: Set up JDK 11
         uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'adopt'
           cache: gradle
+
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+
       - name: Build with Gradle
         run: ./gradlew clean build assemble :cli:fatJar --stacktrace
+
       - name: Upload Code Coverage report
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./http/build/reports/jacoco/test/jacocoTestReport.xml
           flags: unittests
+
       - name: Prepare release
         run: |
           mkdir -p ./app/build/_release/android-http-server
           mv ./app/build/outputs/apk/release/app-release-unsigned.apk ./app/build/_release/android-http-server/android-http-server-latest-unsigned.apk
           mv ./cli/build/libs/cli-all.jar ./app/build/_release/android-http-server/android-http-server-cli-fatjar-latest.jar
+
       - name: Upload APK to Dropbox
         uses: deka0106/upload-to-dropbox@v2.0.0
         with:
@@ -36,6 +52,7 @@ jobs:
           src: ./app/build/_release/android-http-server/android-http-server-latest-unsigned.apk
           dest: /android-http-server/
           mode: overwrite
+
       - name: Upload CLI jar to Dropbox
         uses: deka0106/upload-to-dropbox@v2.0.0
         with:
@@ -43,12 +60,14 @@ jobs:
           src: ./app/build/_release/android-http-server/android-http-server-cli-fatjar-latest.jar
           dest: /android-http-server/
           mode: overwrite
+
       - name: Deploy to Heroku
         uses: AkhileshNS/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "android-http-server-demo"
           heroku_email: "piotr@polak.ro"
+
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.

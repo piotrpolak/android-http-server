@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 import example.ChunkedServlet;
 import example.ChunkedWithDelayServlet;
 import example.CookiesServlet;
+import example.FileUploadServlet;
 import example.ForbiddenByFilterServlet;
 import example.ForbiddenServlet;
 import example.IndexServlet;
@@ -174,6 +175,10 @@ public class DefaultServerConfigFactory implements ServerConfigFactory {
                     .addServlet()
                         .withUrlPattern(Pattern.compile("^/secured/ForbiddenByFilter"))
                         .withServletClass(ForbiddenByFilterServlet.class)
+                    .end()
+                    .addServlet()
+                        .withUrlPattern(Pattern.compile("^/FileUpload$"))
+                        .withServletClass(FileUploadServlet.class)
                     .end()
                 .end();
     }

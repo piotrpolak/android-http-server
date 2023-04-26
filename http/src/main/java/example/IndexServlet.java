@@ -62,6 +62,7 @@ public class IndexServlet extends HttpServlet {
         printWriter.println("<li><a href='Streaming'>Streaming</a></li>");
         printWriter.println("<li><a href='Chunked'>Chunked</a></li>");
         printWriter.println("<li><a href='ChunkedWithDelay'>Chunked with a delay</a></li>");
+        printWriter.println("<li><a href='FileUpload'>File upload example page</a></li>");
         printWriter.println("</ul>");
     }
 }

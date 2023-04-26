@@ -5,12 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -25,6 +24,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import ro.polak.http.utilities.StringUtilities;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -413,16 +413,17 @@ public final class ProtocolIT extends AbstractIT {
 
     @Test
     public void shouldReturn200ForMultipartFilePost() throws IOException {
-        File uploadFile = createRandomContentsFile();
+        String randomContent = StringUtilities.generateRandom(2048);
         RequestBody formBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("someParam", "someValue")
                 .addFormDataPart("file", "somefile.dat",
-                        RequestBody.create(uploadFile, MediaType.parse("application/octet-stream")))
+                        RequestBody.create(randomContent.getBytes(Charset.defaultCharset()),
+                                MediaType.parse("application/octet-stream")))
                 .build();
 
         Request request = new Request.Builder()
-                .url(getFullUrl("/example/"))
+                .url(getFullUrl("/example/FileUpload"))
                 .post(formBody)
                 .build();
 
@@ -430,7 +431,7 @@ public final class ProtocolIT extends AbstractIT {
         assertThat(response.isSuccessful(), is(true));
         assertThat(response.code(), is(200));
         String responseBodyString = response.body().string();
-        assertThat(responseBodyString, is(not(emptyOrNullString())));
+        assertThat(responseBodyString, is(randomContent));
     }
 
     @Test
@@ -447,13 +448,6 @@ public final class ProtocolIT extends AbstractIT {
         // CHECKSTYLE.OFF: LineLength
         assertThat(responseBodyString, is("This is an example of chunked transfer type. Chunked transfer type can be used when the final length of the data is not known."));
         // CHECKSTYLE.ON: LineLength
-    }
-
-    private File createRandomContentsFile() throws IOException {
-        File file = File.createTempFile("servertest", ".tmp");
-        RandomAccessFile f = new RandomAccessFile(file, "rw");
-        f.setLength(1024);
-        return file;
     }
 
     @Test

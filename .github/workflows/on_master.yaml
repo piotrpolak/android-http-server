@@ -61,13 +61,6 @@ jobs:
           dest: /android-http-server/
           mode: overwrite
 
-      - name: Deploy to Heroku
-        uses: AkhileshNS/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "android-http-server-demo"
-          heroku_email: "piotr@polak.ro"
-
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.

@@ -31,8 +31,8 @@ public class FileUploadServlet extends HttpServlet {
         if ("get".equalsIgnoreCase(request.getMethod())) {
             PrintWriter printWriter = response.getWriter();
             printWriter.println("<h2>Uploaded file will be returned in the response</h2>");
-            printWriter.println("<form action=\"\">");
-            printWriter.println("<input type=\"file\" id=\"myFile\" name=\"filename\">");
+            printWriter.println("<form action=\"\" enctype=\"multipart/form-data\" method=\"post\">");
+            printWriter.println("<input type=\"file\" id=\"file\" name=\"file\">");
             printWriter.println("<input type=\"submit\">");
             printWriter.println("</form>");
         } else {

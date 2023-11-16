@@ -20,7 +20,7 @@ task fatJar(type: Jar) {
         attributes 'Implementation-Title': 'StandaloneHTTP server',
                 'Main-Class': 'ro.polak.http.cli.DefaultCliServerGui'
     }
-    baseName = project.name + '-all'
+    //baseName = project.name + '-all'
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }

@@ -11,9 +11,13 @@ allprojects {
         maxWarnings = 0
         showViolations = true
     }
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.deprecation = true
         options.compilerArgs += ['-Werror']
+        options.compilerArgs += ['-Xlint:-options'] // TODO: source value 7 obsolete workaround
+        javaCompiler = javaToolchains.compilerFor {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
     }
 }
 

@@ -22,7 +22,6 @@ import java.util.Set;
 
 import ro.polak.webserver.base.BaseMainActivity;
 import ro.polak.webserver.base.BaseMainService;
-import ro.polak.webserver.webserver.R;
 
 /**
  * The main server Android activity.

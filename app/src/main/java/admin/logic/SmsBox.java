@@ -103,6 +103,7 @@ public final class SmsBox {
         return message;
     }
 
+    @SuppressWarnings("deprecation")
     public void sendMessage(final String phoneNumber, final String message) {
         Intent intent = new Intent(context, context.getClass());
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, 0);

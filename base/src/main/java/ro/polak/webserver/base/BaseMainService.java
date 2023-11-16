@@ -40,6 +40,7 @@ import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.controller.Controller;
 import ro.polak.http.controller.impl.ControllerImpl;
 import ro.polak.http.gui.ServerGui;
+import ro.polak.webserver.R;
 import ro.polak.webserver.base.impl.BaseAndroidServerConfigFactory;
 import ro.polak.webserver.base.logic.AssetUtil;
 
@@ -260,6 +261,7 @@ public abstract class BaseMainService extends Service implements ServerGui {
      *
      * @return String
      */
+    @SuppressWarnings("deprecation")
     private String getLocalIpAddress() {
         try {
             WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);

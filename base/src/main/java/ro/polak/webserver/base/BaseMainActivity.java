@@ -181,7 +181,7 @@ public abstract class BaseMainActivity extends AppCompatActivity {
     protected Set<String> getRequiredPermissions() {
         return new HashSet<>(Arrays.asList(
                 Manifest.permission.INTERNET,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                // Manifest.permission.WRITE_EXTERNAL_STORAGE, // TODO: be backwards compatiable for older SDK versions
                 Manifest.permission.ACCESS_WIFI_STATE
         ));
     }

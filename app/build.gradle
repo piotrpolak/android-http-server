@@ -2,24 +2,24 @@ apply plugin: 'com.android.application'
 
 buildscript {
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.0'
+        classpath 'com.android.tools.build:gradle:8.1.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
     repositories {
-        jcenter()
+        mavenCentral()
         google()
     }
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion '30.0.2'
+    compileSdkVersion 33
+    buildToolsVersion '33.0.1'
     defaultConfig {
         applicationId "ro.polak.webserver"
-        minSdkVersion 19
-        targetSdkVersion 29
+        minSdkVersion 28
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
     }
@@ -29,6 +29,10 @@ android {
         }
     }
     productFlavors {
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 

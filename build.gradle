@@ -1,6 +1,6 @@
 allprojects {
     repositories {
-        jcenter()
+        mavenCentral()
         google()
     }
     apply plugin: 'checkstyle'
@@ -19,7 +19,7 @@ allprojects {
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         google()
     }
 }

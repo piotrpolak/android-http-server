@@ -12,12 +12,12 @@ compileTestJava {
 
 // Added here to enable http subproject to be built without the root project
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.6.0'

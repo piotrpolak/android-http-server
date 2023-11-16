@@ -14,7 +14,7 @@ buildscript {
 }
 
 android {
-    namespace = "ro.polak.webserver"
+    namespace = "ro.polak.webserver.base"
     compileSdkVersion 33
     buildToolsVersion '33.0.1'
     defaultConfig {

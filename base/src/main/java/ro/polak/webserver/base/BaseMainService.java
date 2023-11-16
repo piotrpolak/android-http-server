@@ -9,6 +9,7 @@ package ro.polak.webserver.base;
 
 import static ro.polak.http.configuration.impl.ServerConfigImpl.PROPERTIES_FILE_NAME;
 
+import android.os.Build;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -40,7 +41,6 @@ import ro.polak.http.configuration.ServerConfigFactory;
 import ro.polak.http.controller.Controller;
 import ro.polak.http.controller.impl.ControllerImpl;
 import ro.polak.http.gui.ServerGui;
-import ro.polak.webserver.R;
 import ro.polak.webserver.base.impl.BaseAndroidServerConfigFactory;
 import ro.polak.webserver.base.logic.AssetUtil;
 
@@ -172,7 +172,12 @@ public abstract class BaseMainService extends Service implements ServerGui {
         }
 
         Intent notificationIntent = new Intent(this, getActivityClass());
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent pIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         setNotification(getNotificationBuilder(pIntent, "Started", R.drawable.online).build());
     }
 
@@ -186,7 +191,12 @@ public abstract class BaseMainService extends Service implements ServerGui {
         }
 
         Intent notificationIntent = new Intent(this, getActivityClass());
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent pIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
         setNotification(getNotificationBuilder(pIntent, "Stopped", R.drawable.offline).build());
     }
 
